@@ -4,6 +4,25 @@ import Foundation
 
 let Naam = "Hello playground"
 
+
+enum Result<A> {
+    case Error(NSError)
+    case Result(A)
+}
+
+
+
+var str : NSString = "Hello, my name is"
+
+str.substringToIndex(str.length-1)
+
+//var range: NSRange = NSRange()
+//range.length = count(str)
+//range.location = 0
+//
+//str.substringWithRange(range)
+
+
 protocol EndpointProtocol {
     func endpoint() -> String
 }

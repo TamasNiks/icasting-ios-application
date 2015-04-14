@@ -8,210 +8,95 @@
 
 import Foundation
 
-private typealias BuilderClosure = (URLBuilder) -> ()
 
-private struct Host {
-    static let API : String = "api-demo.icasting.net"
-    static let Media : String = "media-demo.icasting.net"
+
+// The URL consists of certain parts: the total url could be: 
+// [http://] + [api.demo.com] + [/version1] + [/resource/(insert)/detail/(insert)] + [?param1="val"+param2="val"]
+private struct URLBuilder {
+    let scheme : String = "https"
+    var host : String?
+    var version : String?
+    var uri : EndpointProtocol?
+    var insert : [String]?
+    var params : [String:String]?
 }
-
-protocol URLCommandProtocol {
-    func execute(uri: EndpointProtocol, id: String?) -> NSURL
-}
-
 
 class URLSimpleFactory {
-
-//    class func createURL(uri: EndpointProtocol, id: String?) -> NSURL {
-//
-//        let b : URLBuilder = URLBuilder {
-//            $0.host = Host.API
-//            $0.version = "/api/v1"
-//            $0.endpoint = uri
-//            $0.id = id
-//        }
-//        
-//        let url : NSURL = URL(builder: b).nsurl
-//        
-//        return url
-//    }
-//    
-//    class func createMediaURL(uri: EndpointProtocol, id: String) -> NSURL {
-//        
-//        let b : URLBuilder = URLBuilder {
-//            $0.host = Host.Media
-//            $0.endpoint = uri
-//            $0.id = id
-//            $0.uri.append("200x200")
-//        }
-//        
-//        let url : NSURL = URL(builder: b).nsurl
-//        
-//        return url
-//    }
     
-    class func createURL(uri: EndpointProtocol, id:String?) -> NSURL {
+    class func createURL(uri: EndpointProtocol, insert:[String]?, params:paramsType) -> NSURL {
 
-        var command: URLCommandProtocol
+        var builder: URLBuilder
         
+        // A URL to load media, like images, has another host, determine which host.
         if let _uri = uri as? APIMedia {
-            command = MediaURLCommand()
+
+            builder = URLBuilder(host: Host.Media, version: nil, uri: uri, insert: insert, params: params)
         }
         else {
-            command = NormalURLCommand()
-        }
-        return command.execute(uri, id: id)
-    }
-    
-
-}
-
-
-extension URLSimpleFactory {
-    
-    class func createURL2(uri: EndpointProtocol, id: [String]?) -> NSURL {
-        
-        var sUri:String
-        if let id = id {
-            sUri = ApiURL(uri: uri, id: id).resolve()
-        } else {
-            sUri = uri.endpoint()
+            builder = URLBuilder(host: Host.API, version: "/api/v\(Host.APIVersion)", uri: uri, insert: insert, params: params)
         }
         
-        
-        return NSURL()
-        
-    }
-    
-    
-    
-    
-    
-}
-
-private class TestURLCommand : URLCommandProtocol {
-    
-    private func execute(uri: EndpointProtocol, id: String?) -> NSURL {
-        let b : URLBuilder = URLBuilder {
-            $0.host = Host.API
-            $0.version = "/api/v1"
-            $0.endpoint = uri
-            $0.id = id
-        }
-        return URL(builder: b).nsurl
+        return URLResolver(builder: builder).nsurl
     }
 }
 
-
-
-private class NormalURLCommand : URLCommandProtocol {
+private class URLResolver {
     
-    private func execute(uri: EndpointProtocol, id: String?) -> NSURL {
-        let b : URLBuilder = URLBuilder {
-            $0.host = Host.API
-            $0.version = "/api/v1"
-            $0.endpoint = uri
-            $0.id = id
-        }
-        return URL(builder: b).nsurl
-    }
-}
-
-private class MediaURLCommand : URLCommandProtocol {
-    
-    private func execute(uri: EndpointProtocol, id: String?) -> NSURL {
-        let b : URLBuilder = URLBuilder {
-            $0.host = Host.Media
-            $0.endpoint = uri
-            $0.id = id
-            $0.uri.append("200x200")
-        }
-        return URL(builder: b).nsurl
-    }
-}
-
-/* URL BUILDER */
-
-private class URLBuilderTest {
-
-    let scheme : String = "https"
-    var host : String?
-    var version : String?
-    var endpoint : String?
-
-    init(buildClosure: (URLBuilderTest) -> ()) {
-        buildClosure(self)
-    }
-}
-
-private class URLBuilder {
-
-    let scheme : String = "https"
-    var host : String?
-    var version : String?
-    var endpoint : EndpointProtocol?
-    var id : String?
-    var uri : [String] = [String]()
-    
-    init(buildClosure: BuilderClosure) {
-        buildClosure(self)
-    }
-}
-
-private struct URL {
-    
-    var scheme: String? = nil
-    var host: String? = nil
-    var version: String? = nil
-    var endpoint: EndpointProtocol? = nil
-    var id: String? = nil
-    var uri: [String] = [String]()
-    
-    var nsurl: NSURL = NSURL()
+    var nsurl : NSURL = NSURL()
     
     init(builder: URLBuilder) {
-
-        self.scheme = builder.scheme
-        self.host = builder.host
-        self.version = builder.version
-        self.endpoint = builder.endpoint
-        self.id = builder.id
-        self.uri = builder.uri
         
         func endpointNSURL() -> NSURL {
+
+            // Start the resolving proces and creation of an NSURL
+            var resolved : NSString = ""
             
-            var resolved : String = ""
-            
-            if let _version = self.version {
+            if let _version = builder.version {
                 resolved = _version
             }
             
-            if let _endpoint = self.endpoint {
-                resolved = "\(resolved)/\(_endpoint.endpoint())"
+            
+            // Check if the insert array contains variable url parts to insert into URI endpoint
+            func insertFragments() -> NSString {
+                var sUri:String
+                if let insert = builder.insert {
+                    println("Will insert fragments into url")
+                    sUri = ApiURL(uri: builder.uri!, insert: insert).resolve()
+                } else {
+                    sUri = builder.uri!.endpoint()
+                }
+                resolved = "\(resolved)/\(sUri)"
+                return resolved
+            }
+
+            // Add the query string to the path
+            func queryString() -> NSString {
+
+                if let params = builder.params {
+                    
+                    resolved = "\(resolved)?"
+                    for (key, val) in params {
+                        resolved = "\(resolved)\(key)=\(val)&"
+                    }
+                    // Remove the last & char from the query string
+                    resolved = resolved.substringToIndex(resolved.length-1)
+                }
+                return resolved
             }
             
-            if let _id = self.id {
-                resolved = "\(resolved)/\(_id)"
-            }
-            
-            if self.uri.count > 0 {
-                resolved = "\(resolved)/"+self.uri[0]
-            }
+            resolved = insertFragments()
+            resolved = queryString()
             
             let url : NSURL = NSURL(
-                scheme: scheme!,
-                host: host,
-                path: resolved)!
+                scheme: builder.scheme,
+                host: builder.host,
+                path: resolved as String)!
             
             return url
         }
-        
+
         self.nsurl = endpointNSURL()
-        println("api call:\(self.nsurl)")
-        
+        println("Resolved URL: \(self.nsurl)")
     }
-
+    
  }
-
-
-

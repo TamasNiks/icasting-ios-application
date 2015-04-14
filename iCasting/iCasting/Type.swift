@@ -8,4 +8,3 @@
 
 import Foundation
 
-typealias RequestClosure = (data:AnyObject) -> ()

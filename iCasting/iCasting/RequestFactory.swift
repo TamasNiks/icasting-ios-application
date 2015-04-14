@@ -8,14 +8,6 @@
 
 import Foundation
 
-//struct Methods {
-//    static let POST : String = "POST"
-//    static let GET : String = "GET"
-//    static let PUT : String = "PUT"
-//    static let PATCH : String = "PATCH"
-//    static let DELETE : String = "DELETE"
-//}
-
 enum Method {
     case post,get,put,patch,delete
     
@@ -31,9 +23,25 @@ enum Method {
     }
 }
 
+typealias paramsType = [String:String]?
+
+/* Define the protocols for the Requests */
+
 protocol RequestProtocol {
-    func request(endpoint:EndpointProtocol, content: (id:String?, body:[String:AnyObject]?)) -> NSURLRequest
+    func request(endpoint:EndpointProtocol, content: (insert:[String]?, params:paramsType)) -> NSURLRequest
 }
+protocol JSONRequestProtocol {
+    func request(endpoint:EndpointProtocol, content:(insert:[String]?, params:[String:AnyObject]) ) -> NSURLRequest
+}
+protocol RequestHeaderProtocol {
+    func request(endpoint:EndpointProtocol, content:(insert:[String]?, params:[String:AnyObject]), withHeaders: [String:String] ) -> NSURLRequest
+    func request(endpoint:EndpointProtocol, content:(insert:[String]?, params:paramsType), withHeaders: [String:String] ) -> NSURLRequest
+}
+protocol SerializerCommand {
+    func execute() -> NSData
+}
+
+/* The factory get the right request type depending on the given Method */
 
 class RequestFactory {
     
@@ -52,43 +60,36 @@ class RequestFactory {
         
         return requestType
     }
-    
-    }
+}
 
+/* All the request types  */
 
 private struct GetRequest: RequestProtocol {
     
-    func request(endpoint:EndpointProtocol, content: (id:String?, body:[String:AnyObject]?) ) -> NSURLRequest {
+    func request(endpoint:EndpointProtocol, content: (insert:[String]?, params:paramsType) ) -> NSURLRequest {
         
-        var contentID : String? = nil
-        if let id = content.id {
-            contentID = id
-        }
-        
-        let url: NSURL = URLSimpleFactory.createURL(endpoint, id: contentID)
+        let url: NSURL = URLSimpleFactory.createURL(endpoint, insert: content.insert, params: content.params)
         let request = NSURLRequest(URL: url)
-        
         return request
     }
-    
-    
 }
 
-private struct PostRequest: RequestProtocol {
-
-    func request(endpoint:EndpointProtocol, content: (id:String?, body:[String:AnyObject]?) ) -> NSURLRequest {
+private struct PostRequest: RequestProtocol, JSONRequestProtocol {
+    
+    /* Normal request */
+    func request(endpoint:EndpointProtocol, content: (insert:[String]?, params:paramsType) ) -> NSURLRequest {
         
-        let url: NSURL = URLSimpleFactory.createURL(endpoint, id: content.id!)
+        println("PostRequest: Will invoke normal request")
+        let url: NSURL = URLSimpleFactory.createURL(endpoint, insert: content.insert, params: nil)
         var request = NSMutableURLRequest(URL: url)
         request.HTTPMethod = Method.post.getDescription()
+        request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField:"Content-Type")
         
-        if let body = content.body {
-            
-            let errorPointer : NSErrorPointer = NSErrorPointer()
-            request.HTTPBody = NSJSONSerialization.dataWithJSONObject(
-                body,
-                options: NSJSONWritingOptions.PrettyPrinted,
-                error: errorPointer)
+        // Check if the params are set, which needs to be with a post request
+        if let p = content.params {
+            println("Parameters to set: ")
+            println(p)
+            request.HTTPBody = SerializeParametersCommand(params:p).execute()
         }
         else {
             println("Post request doesn't have a body")
@@ -97,26 +98,94 @@ private struct PostRequest: RequestProtocol {
         return request
     }
     
+    /* JSON Request */
+    func request(endpoint:EndpointProtocol, content:(insert:[String]?, params:[String:AnyObject]) ) -> NSURLRequest {
+        
+        let url: NSURL = URLSimpleFactory.createURL(endpoint, insert: content.insert, params: nil)
+        var request = NSMutableURLRequest(URL: url)
+        request.HTTPBody = SerializeJSONCommand(params: content.params).execute()
+        return request
+    }
+
 }
 
-private struct PutRequest: RequestProtocol {
-    
-    private func request(endpoint: EndpointProtocol, content: (id: String?, body: [String : AnyObject]?)) -> NSURLRequest {
-        
-        return NSURLRequest()
-        
+extension PostRequest : RequestHeaderProtocol {
+
+    /* Normal Request with headers */
+    func request(endpoint:EndpointProtocol, content:(insert:[String]?, params:paramsType), withHeaders: [String:String] ) -> NSURLRequest {
+        println("PostRequest: Will invoke normal request with headers")
+        var request: NSMutableURLRequest = self.request(endpoint, content: content) as! NSMutableURLRequest
+        for (key, value) in withHeaders {
+            request.addValue(value, forHTTPHeaderField: key)
+            println(key, value)
+        }
+        return request
     }
     
+    /* JSON Request with headers */
+    func request(endpoint:EndpointProtocol, content:(insert:[String]?, params:[String:AnyObject]), withHeaders: [String:String] ) -> NSURLRequest {
+        
+        var request: NSMutableURLRequest = self.request(endpoint, content: content) as! NSMutableURLRequest
+        for (key, value) in withHeaders { request.addValue(key, forHTTPHeaderField: value) }
+        return request
+    }
+
 }
 
-private struct DeleteRequest: RequestProtocol {
+/* The commands to serialize the request data to send */
+
+private struct SerializeJSONCommand : SerializerCommand {
     
-    private func request(endpoint: EndpointProtocol, content: (id: String?, body: [String : AnyObject]?)) -> NSURLRequest {
+    var params:[String:AnyObject]
+    func execute() -> NSData {
+        var data : NSData
+        if NSJSONSerialization.isValidJSONObject(params) {
+
+            let errorPointer : NSErrorPointer = NSErrorPointer()
+            data = NSJSONSerialization.dataWithJSONObject(
+                params,
+                options: nil,
+                error: errorPointer
+            )!
+        } else {
+            println("Not valid JSON object")
+            data = NSData()
+        }
+        return data
+    }
+}
+
+private struct SerializeParametersCommand : SerializerCommand {
+    
+    var params:paramsType
+    func execute() -> NSData {
         
-        return NSURLRequest()
-        
+        var data : NSData = self.encode().dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
+        return data
     }
     
+    func construct() -> String {
+        var str : String = ""
+        for (key, value) in params!  {
+            str = str+key+"="+value+"&"
+        }
+        str = (str as NSString).substringToIndex(count(str)-1)
+        return str
+    }
+    
+    func encode() -> String {
+        
+        var mcs : NSMutableCharacterSet = NSMutableCharacterSet.alphanumericCharacterSet()
+        mcs.addCharactersInString(".=&")
+        
+        var str : String  = self.construct().stringByAddingPercentEncodingWithAllowedCharacters(mcs)!
+        
+        return str
+    }
 }
+
+
+
+
 
 

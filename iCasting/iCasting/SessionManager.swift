@@ -8,16 +8,18 @@
 
 import Foundation
 
-private struct _SessionManager {
-    static let sharedInstance : SessionManager = SessionManager()
-}
+//enum Result<A> {
+//    case Error(NSError)
+//    case Value(A)
+//}
+
+typealias ResultTuple = (success:AnyObject?, failure:NSError?)
+typealias RequestClosure = (ResultTuple) -> ()
 
 class SessionManager: NSObject, NSURLSessionTaskDelegate {
     
     /* Singleton class */
-    class func sharedInstance() -> SessionManager {
-        return _SessionManager.sharedInstance
-    }
+    static let sharedInstance : SessionManager = SessionManager()
     
     var delegate : AnyObject?
     
@@ -28,17 +30,34 @@ class SessionManager: NSObject, NSURLSessionTaskDelegate {
     */
     func request(request : NSURLRequest, callbackClosure: RequestClosure) {
 
-        let session = NSURLSession.sharedSession()
+        var session = NSURLSession.sharedSession()
+        
+//        var config : NSURLSessionConfiguration = NSURLSessionConfiguration.ephemeralSessionConfiguration()
+//        config.HTTPAdditionalHeaders = ["Content-Type":"application/json; charset=UTF-8"]
+//        session = NSURLSession(configuration: config)
+        
         let task:NSURLSessionDataTask = session.dataTaskWithRequest(request) {
 
             (data:NSData!, response:NSURLResponse!, error:NSError!) -> Void in
             
-            var result: AnyObject = JSONParser.JSONParse(data)
+            var result: AnyObject = JSONParser.Parse(data)
+
+            //var data: NSData = self.currentRequest.HTTPBody
+            
+            
+            println("HTTP TASK FINNISHED ")
+            println("Result: ")
+            println(result)
+            println("Description: ")
+            println(response.description)
             
             NSOperationQueue.mainQueue().addOperationWithBlock() {
-                callbackClosure(data: result)
+                
+                var err : NSError? = nil
+                if let err = error {}
+                callbackClosure((success:result, failure:err))
             }
-            
+
         }
         
         task.resume()

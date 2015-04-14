@@ -21,12 +21,12 @@ class NewsTableViewController: UITableViewController {
 
 
         // When the view is loaded, get all the news items from the news model
-        news.get() { data in
-            
-            self.newsItems = data as! [AnyObject]
-            self.tableView.reloadData()
+//        news.get() { result in
 
-        }
+//            self.newsItems = data as! [AnyObject]
+//            self.tableView.reloadData()
+
+  //      }
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false

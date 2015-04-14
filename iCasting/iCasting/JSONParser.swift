@@ -14,14 +14,14 @@ class JSONParser {
     class func mockJSONParse(jsonString: String) -> AnyObject? {
         
         if let data = jsonString.dataUsingEncoding(NSUTF8StringEncoding) {
-            return JSONParser.JSONParse(data)
+            return JSONParser.Parse(data)
         }
         
         return nil
     }
     
     
-    class func JSONParse(data: NSData) -> AnyObject {
+    class func Parse(data: NSData) -> AnyObject {
         
         if let string = NSString(data: data, encoding: NSUTF8StringEncoding) {
          
@@ -34,6 +34,8 @@ class JSONParser {
             else if (string as NSString).substringToIndex(1) == "{" {
                 println("JSONParser: Will invoke dictionary")
                 return JSONParseDictionary(data)
+            } else {
+                println("JSONParser: Won't parse anything")
             }
         }
         

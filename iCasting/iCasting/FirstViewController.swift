@@ -10,11 +10,23 @@ import UIKit
 
 class FirstViewController: UIViewController {
     
+    
+    let email : String = "boyd.rehorst+talent@icasting.com"
+    let password : String = "abc"
+//    let email : String = "tim.van.steenoven@icasting.com"
+//    let password : String = "test"
+    
     @IBOutlet weak var testLabel: UILabel!
     
-    @IBAction func onButtonClick(sender: UIButton) {
+    @IBAction func onButtonClickLogin(sender: UIButton) {
         
+        User.sharedInstance.login(email, password: password)
         
+    }
+
+    @IBAction func onButtonClickLogout(sender: UIButton) {
+        
+        User.sharedInstance.logout()
     }
     
     override func viewDidLoad() {

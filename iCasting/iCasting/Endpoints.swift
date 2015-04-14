@@ -8,20 +8,14 @@
 
 import Foundation
 
-protocol EndpointProtocol {
-    func endpoint() -> String
+internal struct Host {
+    static let API : String = "api-demo.icasting.net"
+    static let Media : String = "media-demo.icasting.net"
+    static let APIVersion : String = "1"
 }
 
-enum APITest: Int, EndpointProtocol {
-    
-    case TestID
-    
-    func endpoint() -> String {
-        switch self {
-        default:
-            return "test/:id"
-        }
-    }
+protocol EndpointProtocol {
+    func endpoint() -> String
 }
 
 enum APIAuth : Int, EndpointProtocol {
@@ -49,13 +43,15 @@ enum APIAuth : Int, EndpointProtocol {
 
 enum APINews : Int, EndpointProtocol {
     
-    case newsItem, newsItems
+    case newsItemID, newsItems, testItemIDresourceIDlala
     
     func endpoint() -> String {
         
         switch self {
-        case .newsItem:
-            return "newsItem"
+        case .newsItemID:
+            return "newsItem/:part"
+        case .testItemIDresourceIDlala:
+            return "testItem/:part/resource/:part/lala"
         default:
             return "newsItems"
         }
@@ -69,7 +65,7 @@ enum APIMedia : Int, EndpointProtocol {
     func endpoint() -> String {
         switch self {
         case .images:
-            return "url/site/images"
+            return "url/site/images/:part/200x200"
         default:
             return ""
         }
@@ -79,24 +75,31 @@ enum APIMedia : Int, EndpointProtocol {
 struct ApiURL {
     
     var uri : EndpointProtocol
-    var id : [String]
+    var insert : [String]
     
     func resolve() -> String {
         
-        var arr : [AnyObject] = uri.endpoint().componentsSeparatedByString(":id")
+        var fragments : [AnyObject] = uri.endpoint().componentsSeparatedByString(":part")
         
         var resolved: String = ""
-        if arr.count > 1 {
-            for i in 0..<arr.count-1 {
-                var part : String = arr[i] as! String
-                var _id : String = id[i]
-                resolved = resolved + part + _id
+        
+        var fc : Int = fragments.count
+        var ic : Int = insert.count
+        
+        if fc > 1 {
+            for i in 0..<fc {
+                var part : String = fragments[i] as! String
+                
+                var _insert : String = i < ic ? insert[i] : String()
+
+                resolved = resolved + part + _insert
             }
         }
         else {
             resolved = uri.endpoint()
         }
         
+        println(resolved)
         return resolved
     }
 }
