@@ -43,12 +43,12 @@ enum APIAuth : Int, EndpointProtocol {
 
 enum APINews : Int, EndpointProtocol {
     
-    case newsItemID, newsItems, testItemIDresourceIDlala
+    case newsItems, newsItemWithID, testItemIDresourceIDlala
     
     func endpoint() -> String {
         
         switch self {
-        case .newsItemID:
+        case .newsItemWithID:
             return "newsItem/:part"
         case .testItemIDresourceIDlala:
             return "testItem/:part/resource/:part/lala"
@@ -60,19 +60,19 @@ enum APINews : Int, EndpointProtocol {
 
 enum APIMedia : Int, EndpointProtocol {
     
-    case images
+    case imageWithID, imageWithIDSize
     
     func endpoint() -> String {
         switch self {
-        case .images:
-            return "url/site/images/:part/200x200"
+        case .imageWithIDSize:
+            return "site/images/:part/:part"
         default:
-            return ""
+            return "site/images/:part"
         }
     }
 }
 
-struct ApiURL {
+internal struct ApiURL {
     
     var uri : EndpointProtocol
     var insert : [String]

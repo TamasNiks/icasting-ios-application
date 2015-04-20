@@ -40,24 +40,37 @@ class SessionManager: NSObject, NSURLSessionTaskDelegate {
 
             (data:NSData!, response:NSURLResponse!, error:NSError!) -> Void in
             
-            var result: AnyObject = JSONParser.Parse(data)
-
-            //var data: NSData = self.currentRequest.HTTPBody
-            
-            
             println("HTTP TASK FINNISHED ")
-            println("Result: ")
-            println(result)
-            println("Description: ")
-            println(response.description)
             
-            NSOperationQueue.mainQueue().addOperationWithBlock() {
-                
-                var err : NSError? = nil
-                if let err = error {}
-                callbackClosure((success:result, failure:err))
-            }
+            // Check if there is a response, if there is
+            if let res = response {
 
+                var res: NSHTTPURLResponse = response as! NSHTTPURLResponse
+                var allHeaderFields: [NSObject : AnyObject] = res.allHeaderFields
+
+                println("Status Code", res.statusCode)
+                //println("Description: ")
+                //println(res.description)
+                
+                // Check for a content type, if there is one, it will be json, invoke the json parser
+                var resultObject: AnyObject?
+                var contentType: String? = allHeaderFields["Content-Type"] as? String
+                if let str = contentType {
+                    
+                    resultObject = JSONParser.Parse(data)
+
+                }
+                // Because there is no content type, the server will return a data object, which needs to converted to a string
+                else {
+                    resultObject = data
+                }
+                
+                // Go to the main queueu, where the interfaces exists
+                NSOperationQueue.mainQueue().addOperationWithBlock() {
+                    
+                    callbackClosure((success:resultObject, failure:error))
+                }
+            }
         }
         
         task.resume()
@@ -65,13 +78,12 @@ class SessionManager: NSObject, NSURLSessionTaskDelegate {
     
     /* DELEGATE METHODS */
     func URLSession(session: NSURLSession, task: NSURLSessionTask, didCompleteWithError error: NSError?) {
-        
-        
+        println(error!.localizedDescription)
+        println(error!.localizedFailureReason)
+        println(error!.localizedRecoverySuggestion)
     }
     
-    
-    
-    
-    
-    
+    func URLSessionDidFinishEventsForBackgroundURLSession(session: NSURLSession) {
+        
+    }
 }

@@ -8,31 +8,35 @@
 
 import UIKit
 
+
+
+
 class NewsTableViewController: UITableViewController {
 
-        
-    let _newsItemID : String = "54e6fbf172a116be7fe7f8ab"
     let news : News = News()
-    var newsItems : [AnyObject] = []
-    var item : String = "NIL"
+    var item : NSDictionary?
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
 
         // When the view is loaded, get all the news items from the news model
-//        news.get() { result in
+        news.all() { result in
 
-//            self.newsItems = data as! [AnyObject]
-//            self.tableView.reloadData()
-
-  //      }
+            if let success: AnyObject = result.success {
+                
+                self.tableView.reloadData()
+                
+            }
+            
+            if let failure: NSError = result.failure {
+                
+                println(failure.localizedDescription)
+                
+            }
+        }
         
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
 
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
 
     override func didReceiveMemoryWarning() {
@@ -47,27 +51,61 @@ class NewsTableViewController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.newsItems.count
+        return news.newsItems.count
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("NewsItemCell", forIndexPath: indexPath) as! UITableViewCell
-
-        var summary : String = self.newsItems[indexPath.row]["summary"] as! String
+        let cell = tableView.dequeueReusableCellWithIdentifier("NewsItemCell", forIndexPath: indexPath) as! NewsTableViewCell
         
+        //var summary:String = self.newsItems[indexPath.row]["summary"] as! String
+        
+        let item: AnyObject = news.newsItems[indexPath.row]
+        
+        var summary: String = item["summary"] as! String
+        var id: String = item["id"] as! String
+        var image: String = item["image"] as! String
+
         cell.textLabel?.text = summary
+
+        news.image(image, size: ImageSize.Thumbnail) { result in
+            
+            var im:UIImage
+            if result.success is NSDictionary {
+                
+                im = UIImage(named: "male")!
+                
+            } else {
+                
+                im = UIImage(data: result.success! as! NSData)!
+                
+            }
+            
+            cell.imageView?.image = im
+            cell.setNeedsLayout()
+            
+            
+        }
         
         return cell
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
-        var str : String = self.newsItems[indexPath.row]["body"] as! String
-        self.item = str
-        performSegueWithIdentifier("ShowDetailNews", sender: self)
+        self.item = news.newsItems[indexPath.row] as? NSDictionary
+        performSegueWithIdentifier("ShowDetail2News", sender: self)
     
     }
 
+    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return 65
+    }
+    
+    override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        
+        return 100
+        
+    }
+    
     /*
     // Override to support conditional editing of the table view.
     override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
@@ -109,8 +147,21 @@ class NewsTableViewController: UITableViewController {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         // Get the new view controller using [segue destinationViewController].
         // Pass the selected object to the new view controller.
-        var vc : NewsDetailViewController = segue.destinationViewController as! NewsDetailViewController
-        vc.news = self.item
+        
+        
+        if let item = self.item {
+            
+            if segue.destinationViewController is NewsDetailViewController {
+                var vc: NewsDetailViewController = segue.destinationViewController as! NewsDetailViewController
+                vc.item = item
+            } else {
+                var vc: NewsDetail2ViewController = segue.destinationViewController as! NewsDetail2ViewController
+                vc.item = item
+            }
+
+        }
+    
+        
         //println(self.item)
         
     }

@@ -10,16 +10,23 @@ import UIKit
 
 class NewsDetailViewController: UIViewController {
 
-    @IBOutlet weak var body: UITextView!
-    
-    
-    var news : String = "Geen nieuws"
+    @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var imageView: UIImageView!
+    //@IBOutlet weak var bodyTextView: UITextView!
+    @IBOutlet weak var bodyLabel: UILabel!
+
+    var item: NSDictionary?
+    var image: UIImage?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        self.body.text = news;
+
         // Do any additional setup after loading the view.
+        self.scrollView.contentSize = CGSize(width: 500, height: 1000)
+        
+        self.bodyLabel.lineBreakMode = NSLineBreakMode.ByWordWrapping
+        self.bodyLabel.numberOfLines = 0
+
     }
 
     override func didReceiveMemoryWarning() {
@@ -27,7 +34,25 @@ class NewsDetailViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        var imageID : String = self.item?.objectForKey(NewsKey.ImageID) as! String
+        var news: News = News()
 
+        
+        news.image(imageID, size: ImageSize.Thumbnail) { result in
+            
+            var im: UIImage = UIImage(data: result.success! as! NSData)!
+            self.imageView.image = im
+            
+        }
+
+        
+        self.bodyLabel.text = self.item?.objectForKey(NewsKey.Body) as? String
+        
+    }
+    
     /*
     // MARK: - Navigation
 

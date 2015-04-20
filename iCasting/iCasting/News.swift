@@ -8,44 +8,81 @@
 
 import Foundation
 
-class News {
+protocol Model {
     
-    let sessionManager : SessionManager = SessionManager.sharedInstance
-    
-//    init() {
-//        
-//    }
-    
-    // TODO: On the end, we want to encapsulate the making of the request, 
-    // for the time being construct the requests in the Model
-    
-    func get(callBack: RequestClosure) {
-        
-        var requestType : RequestProtocol = RequestFactory.requestType(Method.get)!
-        var request = requestType.request(APINews.newsItems, content:(insert: nil, params: nil))
-        
-        sessionManager.request(request) { result in
-            
-            callBack(result)
-            
-        }
-    }
-    
-    func item(id: NSString, callBack : RequestClosure) {
-        
-        var requestType : RequestProtocol = RequestFactory.requestType(Method.get)!
-        var request = requestType.request(APINews.newsItemID, content:(insert: [id as String], params: nil))
-        
-        sessionManager.request(request) { result in
-            
-            callBack(result)
-            
-        }
-    }
-    
-    func image(id : NSString, callBack : RequestClosure) {
-        
-    }
-    
+    func all (callBack: RequestClosure)
+    func one (id: String, callBack: RequestClosure)
     
 }
+
+enum ImageSize {
+    case Full, Thumbnail
+    func toString() -> String {
+        switch self {
+            case .Full: return ""
+            case .Thumbnail: return "200x200"
+        }
+    }
+}
+
+struct NewsKey {
+    static let Summary: String = "summary"
+    static let Body: String = "body"
+    static let ImageID: String = "image"
+    static let ID: String = "id"
+
+}
+
+class News : Model {
+    
+    let sessionManager : SessionManager = SessionManager.sharedInstance
+    var newsItems : [AnyObject] = []
+    
+    /* Asks for all the items */
+    func all(callBack: RequestClosure) {
+        
+        
+        var request: NSURLRequest = RequestFactory.GET.create(APINews.newsItems, content:(insert: nil, params: nil))
+        
+        sessionManager.request(request) { result in
+            
+            if let success: AnyObject = result.success {
+                self.newsItems = success as! [AnyObject]
+            }
+            
+            callBack(result)
+            
+        }
+    }
+    
+    /* Asks for one item for a given id */
+    func one(id: String, callBack: RequestClosure) {
+        
+        var request: NSURLRequest = RequestFactory
+            .request(.get)
+            .create(APINews.newsItemWithID, content:(insert: [id], params: nil))
+
+        sessionManager.request(request) { result in
+            
+            callBack(result)
+   
+        }
+    }
+}
+
+extension News {
+    
+    func image(id: String, size: ImageSize, callBack : RequestClosure) {
+        
+        var request: NSURLRequest = RequestFactory
+            .request(.get)
+            .create(APIMedia.imageWithIDSize, content: (insert: [id, size.toString()], params: nil))
+        
+        sessionManager.request(request) { result in
+
+            callBack(result)
+            
+        }
+    }
+}
+

@@ -28,14 +28,14 @@ typealias paramsType = [String:String]?
 /* Define the protocols for the Requests */
 
 protocol RequestProtocol {
-    func request(endpoint:EndpointProtocol, content: (insert:[String]?, params:paramsType)) -> NSURLRequest
+    func create(endpoint:EndpointProtocol, content: (insert:[String]?, params:paramsType)) -> NSURLRequest
 }
 protocol JSONRequestProtocol {
-    func request(endpoint:EndpointProtocol, content:(insert:[String]?, params:[String:AnyObject]) ) -> NSURLRequest
+    func create(endpoint:EndpointProtocol, content:(insert:[String]?, params:[String:AnyObject]) ) -> NSURLRequest
 }
 protocol RequestHeaderProtocol {
-    func request(endpoint:EndpointProtocol, content:(insert:[String]?, params:[String:AnyObject]), withHeaders: [String:String] ) -> NSURLRequest
-    func request(endpoint:EndpointProtocol, content:(insert:[String]?, params:paramsType), withHeaders: [String:String] ) -> NSURLRequest
+    func create(endpoint:EndpointProtocol, content:(insert:[String]?, params:[String:AnyObject]), withHeaders: [String:String] ) -> NSURLRequest
+    func create(endpoint:EndpointProtocol, content:(insert:[String]?, params:paramsType), withHeaders: [String:String] ) -> NSURLRequest
 }
 protocol SerializerCommand {
     func execute() -> NSData
@@ -45,9 +45,9 @@ protocol SerializerCommand {
 
 class RequestFactory {
     
-    class func requestType(method:Method) -> RequestProtocol? {
+    class func request(method:Method) -> RequestProtocol {
         
-        var requestType:RequestProtocol?
+        var requestType:RequestProtocol
         
         switch method {
         case .get:
@@ -55,10 +55,18 @@ class RequestFactory {
         case .post:
             requestType = PostRequest()
         default:
-            requestType = nil
+            requestType = GetRequest()
         }
         
         return requestType
+    }
+    
+    static var GET: RequestProtocol {
+        return GetRequest()
+    }
+
+    static var POST: RequestProtocol {
+        return PostRequest()
     }
 }
 
@@ -66,7 +74,7 @@ class RequestFactory {
 
 private struct GetRequest: RequestProtocol {
     
-    func request(endpoint:EndpointProtocol, content: (insert:[String]?, params:paramsType) ) -> NSURLRequest {
+    func create(endpoint:EndpointProtocol, content: (insert:[String]?, params:paramsType) ) -> NSURLRequest {
         
         let url: NSURL = URLSimpleFactory.createURL(endpoint, insert: content.insert, params: content.params)
         let request = NSURLRequest(URL: url)
@@ -74,10 +82,10 @@ private struct GetRequest: RequestProtocol {
     }
 }
 
-private struct PostRequest: RequestProtocol, JSONRequestProtocol {
+private struct PostRequest: RequestProtocol {
     
     /* Normal request */
-    func request(endpoint:EndpointProtocol, content: (insert:[String]?, params:paramsType) ) -> NSURLRequest {
+    func create(endpoint:EndpointProtocol, content: (insert:[String]?, params:paramsType) ) -> NSURLRequest {
         
         println("PostRequest: Will invoke normal request")
         let url: NSURL = URLSimpleFactory.createURL(endpoint, insert: content.insert, params: nil)
@@ -97,24 +105,26 @@ private struct PostRequest: RequestProtocol, JSONRequestProtocol {
         
         return request
     }
+}
+
+extension PostRequest : JSONRequestProtocol {
     
     /* JSON Request */
-    func request(endpoint:EndpointProtocol, content:(insert:[String]?, params:[String:AnyObject]) ) -> NSURLRequest {
+    func create(endpoint:EndpointProtocol, content:(insert:[String]?, params:[String:AnyObject]) ) -> NSURLRequest {
         
         let url: NSURL = URLSimpleFactory.createURL(endpoint, insert: content.insert, params: nil)
         var request = NSMutableURLRequest(URL: url)
         request.HTTPBody = SerializeJSONCommand(params: content.params).execute()
         return request
     }
-
 }
 
 extension PostRequest : RequestHeaderProtocol {
 
     /* Normal Request with headers */
-    func request(endpoint:EndpointProtocol, content:(insert:[String]?, params:paramsType), withHeaders: [String:String] ) -> NSURLRequest {
+    func create(endpoint:EndpointProtocol, content:(insert:[String]?, params:paramsType), withHeaders: [String:String] ) -> NSURLRequest {
         println("PostRequest: Will invoke normal request with headers")
-        var request: NSMutableURLRequest = self.request(endpoint, content: content) as! NSMutableURLRequest
+        var request: NSMutableURLRequest = self.create(endpoint, content: content) as! NSMutableURLRequest
         for (key, value) in withHeaders {
             request.addValue(value, forHTTPHeaderField: key)
             println(key, value)
@@ -123,9 +133,9 @@ extension PostRequest : RequestHeaderProtocol {
     }
     
     /* JSON Request with headers */
-    func request(endpoint:EndpointProtocol, content:(insert:[String]?, params:[String:AnyObject]), withHeaders: [String:String] ) -> NSURLRequest {
+    func create(endpoint:EndpointProtocol, content:(insert:[String]?, params:[String:AnyObject]), withHeaders: [String:String] ) -> NSURLRequest {
         
-        var request: NSMutableURLRequest = self.request(endpoint, content: content) as! NSMutableURLRequest
+        var request: NSMutableURLRequest = self.create(endpoint, content: content) as! NSMutableURLRequest
         for (key, value) in withHeaders { request.addValue(key, forHTTPHeaderField: value) }
         return request
     }
