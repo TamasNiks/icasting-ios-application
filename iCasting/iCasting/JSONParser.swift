@@ -14,7 +14,7 @@ class JSONParser {
     class func mockJSONParse(jsonString: String) -> AnyObject? {
         
         if let data = jsonString.dataUsingEncoding(NSUTF8StringEncoding) {
-            return JSONParser.Parse(data)
+            return JSONParser.Parse2(data)
         }
         
         return nil

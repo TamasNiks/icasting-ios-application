@@ -21,4 +21,23 @@ class MatchTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
 
+
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        self.clipsToBounds = true
+        self.selectionStyle = UITableViewCellSelectionStyle.None
+        
+        var label: UILabel = UILabel(frame: CGRectMake(20,9, 147, 26))
+        label.font = UIFont(name: "HelveticaNeue-Medium", size: 17)
+        label.textColor = UIColor.redColor()
+        
+        self.contentView.addSubview(label)
+    }
+
+    required init(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
 }

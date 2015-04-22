@@ -18,6 +18,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         var storyBoard = UIStoryboard(name: "Main", bundle: nil)
         var initialViewController = storyBoard.instantiateViewControllerWithIdentifier("dashboard") as? UIViewController
+        
+        (initialViewController as? UITabBarController)?.selectedIndex = 1
+        
         self.window?.rootViewController = initialViewController
         self.window?.makeKeyAndVisible()
         

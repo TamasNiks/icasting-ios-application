@@ -5,11 +5,37 @@ import Foundation
 let Naam = "Hello playground"
 
 
-enum Result<A> {
-    case Error(NSError)
-    case Result(A)
+//enum Result<A> {
+//    case Error(NSError)
+//    case Result(A)
+//}
+
+
+enum Integer: Int {
+    
+    case A=00,B,C
+    case D=10, E
+    
+    func getDescription() -> String {
+    
+        switch self {
+            
+        case A:
+            return "A"
+        case B:
+            return "B"
+        case C:
+            return "C"
+        case D:
+            return "D"
+        case E:
+            return "E"
+        }
+        
+    }
 }
 
+let i = Integer(rawValue: 11)?.rawValue
 
 
 var str : NSString = "Hello, my name is"

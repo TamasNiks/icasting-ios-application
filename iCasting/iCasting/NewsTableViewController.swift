@@ -8,9 +8,6 @@
 
 import UIKit
 
-
-
-
 class NewsTableViewController: UITableViewController {
 
     let news : News = News()
@@ -35,8 +32,6 @@ class NewsTableViewController: UITableViewController {
                 
             }
         }
-        
-
     }
 
     override func didReceiveMemoryWarning() {
