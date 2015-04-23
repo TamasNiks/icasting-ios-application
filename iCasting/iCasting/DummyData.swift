@@ -10,6 +10,38 @@ import Foundation
 
 class Dummy {
     
+    /*
+
+    Error handling: If the user is on the screen and the time is running out on the server, the user cannot accept a match anymore, and so the server should respond with an error, which needs to be handled correctly by the app
+    
+    For the job data look at:
+    
+    job {
+        contract {
+            dateTime {
+                dateStart:"2017-03-03T00:00:00.000Z"
+                timeEnd = "16:00"
+                timeStart = "13:00"
+            },
+            location {
+                address {
+                    city
+                    country
+                    street
+                    streetNumber
+                    zipCode
+                }
+            }
+        },
+        profile {
+            actor(), gender, near{type}, skinColor(), type
+    
+        }
+    
+    
+    }
+    
+    */
     static var matches: AnyObject {
         
         get {

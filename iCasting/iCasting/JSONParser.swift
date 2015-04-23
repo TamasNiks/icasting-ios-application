@@ -9,16 +9,6 @@
 import Foundation
 
 class JSONParser {
-
-    
-    class func mockJSONParse(jsonString: String) -> AnyObject? {
-        
-        if let data = jsonString.dataUsingEncoding(NSUTF8StringEncoding) {
-            return JSONParser.Parse2(data)
-        }
-        
-        return nil
-    }
     
     class func Parse(data: NSData) -> AnyObject {
         
@@ -101,5 +91,90 @@ extension JSONParser {
         
         return nil
     }
+}
+
+extension JSONParser {
+    
+    class func mockJSONParse(jsonString: String) -> AnyObject? {
+        
+        if let data = jsonString.dataUsingEncoding(NSUTF8StringEncoding) {
+            return JSONParser.Parse2(data)
+        }
+        
+        return nil
+    }
     
 }
+
+extension JSONParser {
+    
+    typealias CustomDictionaryType = NSDictionary
+    
+    func parseForTableView(source: NSDictionary, route:[String]) -> CustomDictionaryType {
+        
+        var toLook: NSDictionary = source
+        for r: String in route {
+            toLook = toLook.objectForKey(r) as! NSDictionary
+        }
+        var final: CustomDictionaryType = recusiveParser(toLook, toArray:false)
+        //println(final)
+        return final
+    }
+    
+    private func recusiveParser(dict: CustomDictionaryType, toArray: Bool = true) -> CustomDictionaryType {
+        
+        var sub: NSMutableDictionary = NSMutableDictionary()
+        
+        // Loop through the data set
+        
+        for (i, val) in enumerate(dict) {
+            
+            var key: String = val.key as! String
+            
+            // Check the types of the value
+            
+            if val.value is CustomDictionaryType {
+                
+                var d = val.value as! CustomDictionaryType
+                var insert: CustomDictionaryType = self.recusiveParser(d, toArray: toArray)
+                
+                // if toArray is true, every key value pairs will be inserted into an array element to improve looping
+                
+                if toArray == true {
+                    var arr: [CustomDictionaryType] = [CustomDictionaryType]()
+                    for (i, val) in enumerate(insert) {
+                        var d: CustomDictionaryType = CustomDictionaryType(object: val.value, forKey: val.key as! String)
+                        arr.append(d)
+                    }
+                    sub.setValue(arr, forKey: key)
+                } else {
+                    sub.setValue(insert, forKey: key)
+                }
+                
+            }
+            else if val.value is NSArray {
+                sub.setValue(val.value as! NSArray, forKey: key)
+            }
+            else {
+                // Ignore false Boolean values
+                if val.value is Bool {
+                    if val.value as! Bool == false {
+                        sub.setValue("false", forKey: key)
+                    } else {
+                        sub.setValue("true", forKey: key)
+                    }
+                    
+                } else {
+                    sub.setValue(val.value, forKey: key)
+                }
+                
+            }
+        }
+        
+        return sub
+    }
+
+}
+
+
+

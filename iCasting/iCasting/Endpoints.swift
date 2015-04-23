@@ -72,6 +72,24 @@ enum APIMedia : Int, EndpointProtocol {
     }
 }
 
+enum APIMatch : Int, EndpointProtocol {
+    
+    case matchCards
+    
+    func endpoint() -> String {
+        
+        switch self {
+            
+        case .matchCards:
+            return "matchCards"
+            
+        }
+        
+    }
+    
+    
+}
+
 internal struct ApiURL {
     
     var uri : EndpointProtocol
