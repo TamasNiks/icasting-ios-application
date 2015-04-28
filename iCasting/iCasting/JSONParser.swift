@@ -146,6 +146,8 @@ extension JSONParser {
                         var d: CustomDictionaryType = CustomDictionaryType(object: val.value, forKey: val.key as! String)
                         arr.append(d)
                     }
+                    //return CustomDictionaryType(object: arr, forKey: "test")
+
                     sub.setValue(arr, forKey: key)
                 } else {
                     sub.setValue(insert, forKey: key)

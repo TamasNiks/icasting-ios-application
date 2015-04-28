@@ -6,13 +6,13 @@ let string = "[ {\"name\": \"John\", \"age\": 21}, {\"name\": \"Bob\", \"age\": 
 
 //func JSONParseArray(jsonString: String) -> [AnyObject] {
     
-    if let data = string.dataUsingEncoding(NSUTF8StringEncoding) {
-        if let array = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: nil)  as? [AnyObject] {
-            
-            let name = array[0]["name"] as String
-
-        }
-    }
+//    if let data = string.dataUsingEncoding(NSUTF8StringEncoding) {
+//        if let array = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: nil)  as? [AnyObject] {
+//            
+//            let name = array[0]["name"] as String
+//
+//        }
+//    }
 
 //}
 

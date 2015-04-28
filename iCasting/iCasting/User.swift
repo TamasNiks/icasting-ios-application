@@ -13,17 +13,21 @@ struct Credentials {
     var password : String = "test"
 }
 
-struct Auth {
+struct Authentication {
     var id : String = "551d58a226042f74fb745533"
     var access_token : String? = "551d58a226042f74fb745533$c5YojiozAZ24r0R9hLOxLi5MIFz7a8yShNJO9a51HT4="
 }
+
+//public struct
 
 class User {
 
     static let sharedInstance : User = User()
     
-    var auth : Auth = Auth()
-    var credentials : Credentials = Credentials()
+    private var _auth: Authentication = Authentication()
+    var auth: Authentication { return self._auth }
+    
+    var credentials: Credentials = Credentials()
     
     
     func login(credentials: Credentials, callBack: RequestClosure) {
@@ -38,7 +42,7 @@ class User {
             
             if let data: AnyObject = result.success {
 
-                self.auth = Auth(
+                self._auth = Authentication(
                     id: (data["id"] as? String)!,
                     access_token: (data["access_token"] as? String)!)
                 self.credentials = credentials
@@ -66,7 +70,7 @@ class User {
             SessionManager.sharedInstance.request(request) { result in
                 if let data: AnyObject = result.success {
                     println(data)
-                    self.auth.access_token = nil
+                    self._auth.access_token = nil
                 }
                 
                 callBack(result)

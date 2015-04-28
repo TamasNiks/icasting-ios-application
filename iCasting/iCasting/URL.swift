@@ -21,7 +21,7 @@ private struct URLBuilder {
     var params : [String:String]?
 }
 
-class URLSimpleFactory {
+class ICURL {
     
     class func createURL(uri: EndpointProtocol, insert:[String]?, params:paramsType) -> NSURL {
 
@@ -39,6 +39,16 @@ class URLSimpleFactory {
         return URLResolver(builder: builder).nsurl
     }
 }
+
+extension ICURL {
+    class func createURL(uri: EndpointProtocol) -> String {
+        var nsurl: NSURL = createURL(uri, insert: nil, params: nil)
+        return nsurl.absoluteString!
+    }
+}
+
+
+
 
 private class URLResolver {
     

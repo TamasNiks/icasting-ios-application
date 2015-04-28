@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum Method {
+enum ICMethod {
     case post,get,put,patch,delete
     
     func getDescription() -> String {
@@ -41,11 +41,11 @@ protocol SerializerCommand {
     func execute() -> NSData
 }
 
-/* The factory get the right request type depending on the given Method */
+/* The factory get the right request type depending on the given ICMethod */
 
 class RequestFactory {
     
-    class func request(method:Method) -> RequestProtocol {
+    class func request(method:ICMethod) -> RequestProtocol {
         
         var requestType:RequestProtocol
         
@@ -76,7 +76,7 @@ private struct GetRequest: RequestProtocol {
     
     func create(endpoint:EndpointProtocol, content: (insert:[String]?, params:paramsType) ) -> NSURLRequest {
         
-        let url: NSURL = URLSimpleFactory.createURL(endpoint, insert: content.insert, params: content.params)
+        let url: NSURL = ICURL.createURL(endpoint, insert: content.insert, params: content.params)
         let request = NSURLRequest(URL: url)
         return request
     }
@@ -88,9 +88,9 @@ private struct PostRequest: RequestProtocol {
     func create(endpoint:EndpointProtocol, content: (insert:[String]?, params:paramsType) ) -> NSURLRequest {
         
         println("PostRequest: Will invoke normal request")
-        let url: NSURL = URLSimpleFactory.createURL(endpoint, insert: content.insert, params: nil)
+        let url: NSURL = ICURL.createURL(endpoint, insert: content.insert, params: nil)
         var request = NSMutableURLRequest(URL: url)
-        request.HTTPMethod = Method.post.getDescription()
+        request.HTTPMethod = ICMethod.post.getDescription()
         request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField:"Content-Type")
         
         // Check if the params are set, which needs to be with a post request
@@ -112,7 +112,7 @@ extension PostRequest : JSONRequestProtocol {
     /* JSON Request */
     func create(endpoint:EndpointProtocol, content:(insert:[String]?, params:[String:AnyObject]) ) -> NSURLRequest {
         
-        let url: NSURL = URLSimpleFactory.createURL(endpoint, insert: content.insert, params: nil)
+        let url: NSURL = ICURL.createURL(endpoint, insert: content.insert, params: nil)
         var request = NSMutableURLRequest(URL: url)
         request.HTTPBody = SerializeJSONCommand(params: content.params).execute()
         return request

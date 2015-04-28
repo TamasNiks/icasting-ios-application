@@ -36,49 +36,43 @@ enum MatchCells: Int, CellsProtocol {
     }
 }
 
-
 // MARK: - MatchDetailTableViewController
 
 class MatchDetailTableViewController: UITableViewController {
-    
-    var timeAndLocationCount = 5
-    let sectionFields: [String] = ["Specifieke opdrachtinformatie", "Vergoeding", "Afkoop", "Tijd&Locatie", "Uiterlijke kenmerken", "Talen"]
-    var match: NSDictionary?
-    var final: NSDictionary = NSDictionary()
-    let rowsForStaticSection: Int = 3
-    var staticSectionAmount: Int = 1
-    var dynamicSectionAmount: Int = 0
-    
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        NSIndexPath.defaultCellType = AbstractCellsType.matchCells
-        NSIndexPath.defaultCellValue = MatchCells.DetailCell.rawValue
+
+    struct SectionCount {
+        var numberOfStaticSections: Int = 0
+        var numberOfdynamicSections: Int = 0
+        var sections: Int {
+            return numberOfStaticSections + numberOfdynamicSections
+        }
+        func getDynamicSection(section: Int) -> Int {
+            return section - numberOfStaticSections
+        }
     }
     
+    var match: Match = Match()
+    var sectionCount: SectionCount = SectionCount(numberOfStaticSections: 1, numberOfdynamicSections: 0)
     
+    let rowsForStaticSection: Int = 3
+    //let sectionFields: [String] = ["Vergoeding", "Afkoop", "Tijd", "Locatie"]
+    
+    var matchDetails: MatchDetailsReturnValue?
+    
+    override func viewDidLoad() {
+        
+        super.viewDidLoad()
+        
+        NSIndexPath.defaultCellType = AbstractCellsType.matchCells
+        NSIndexPath.defaultCellValue = MatchCells.DetailCell.rawValue
+        
+        self.matchDetails = self.match.getMatchDetails()
+    }
+    
+
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        
-        self.final = JSONParser().parseForTableView(self.match!, route: ["job", "formSource", "contract"])
-        //println(final)
-
-        var set:NSSet = final.keysOfEntriesPassingTest { (key, obj, stop) -> Bool in
-            if obj is NSDictionary {
-                return true
-            }
-            return false
-        }
-        
-        var a: [AnyObject] = set.allObjects
-        var b: [AnyObject] = self.final.objectsForKeys(a, notFoundMarker: [])
-        self.final = NSDictionary(objects: b, forKeys: a)
-        
-        println(final)
-        
-        dynamicSectionAmount = set.count
-        
-        self.tableView.reloadData()
+        //self.tableView.reloadData()
     }
     
     
@@ -86,12 +80,10 @@ class MatchDetailTableViewController: UITableViewController {
         super.didReceiveMemoryWarning()
     }
 
-    
-    
     // MARK: - Table view data source
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return staticSectionAmount + dynamicSectionAmount
+        return self.sectionCount.sections
     }
 
     
@@ -101,16 +93,11 @@ class MatchDetailTableViewController: UITableViewController {
         if section == 0 {
             return 3
         }
-        
-        // Measure rows for dynamic content in secion
-        var sectionForDynamic: Int = section - staticSectionAmount
-        var values: NSArray = self.final.allValues
-        var element: AnyObject = values[sectionForDynamic]
-//        if element is NSArray {
-//            return (element as! NSArray).count
-//        }
         return 1
-        
+        // Measure rows for dynamic content in secion
+//        var sectionForDynamic: Int = section - staticSectionAmount
+//        var values: NSArray = self.final.allValues
+//        var obj: AnyObject = values[sectionForDynamic]
     }
 
     
@@ -131,14 +118,9 @@ class MatchDetailTableViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
-        if section == 0 {
-            return nil
-        }
-        
-        var sectionForDynamic: Int = section - staticSectionAmount
-        //var values: NSArray = self.final.allValues
-        var keys: NSArray = self.final.allKeys
-        var label: String = keys[sectionForDynamic] as! String
+        if section == 0 {return nil}
+        var sectionForDynamic: Int = self.sectionCount.getDynamicSection(section)
+        var label: String = "lala"
         return createHeaderLabel(label)
     }
     
@@ -150,15 +132,25 @@ class MatchDetailTableViewController: UITableViewController {
     }
     
     
+    
+    
+    
+    // MARK: - PRIVATE FUNCTIONS
+    
     private func configCell(inout cell: UITableViewCell, identifier: MatchCells, indexPath: NSIndexPath) {
         
         switch identifier {
             
         case .HeaderCell:
             
-            (cell.contentView.viewWithTag(1) as! UILabel).font = UIFont.fontAwesomeOfSize(30)
-            (cell.contentView.viewWithTag(1) as! UILabel).text = String.fontAwesomeIconWithName(FontAwesome.Building)
-            (cell.contentView.viewWithTag(2) as! UILabel).text = "Dit een persoon"
+            (cell.contentView.viewWithTag(10) as! UILabel).font = UIFont.fontAwesomeOfSize(20)
+            (cell.contentView.viewWithTag(10) as! UILabel).text = String.fontAwesomeIconWithName(FontAwesome.Building)
+            (cell.contentView.viewWithTag(20) as! UILabel).font = UIFont.fontAwesomeOfSize(25)
+            (cell.contentView.viewWithTag(20) as! UILabel).text = String.fontAwesomeIconWithName(FontAwesome.Male)
+            
+            
+            (cell.contentView.viewWithTag(1) as! UILabel).text = matchDetails!.header[.ClientCompany] ?? "Niet ingevuld"
+            (cell.contentView.viewWithTag(2) as! UILabel).text = matchDetails!.header[.ClientName] ?? "Niet ingevuld"
             //let attributes = [NSFontAttributeName: UIFont.fontAwesomeOfSize(20)] as Dictionary!
             
             var imv: UIImageView = cell.contentView.viewWithTag(3) as! UIImageView
@@ -166,8 +158,8 @@ class MatchDetailTableViewController: UITableViewController {
             
         case .SummaryCell:
             
-            cell.textLabel?.text = (self.match!.objectForKey("job") as! NSDictionary).objectForKey("title") as? String
-            cell.detailTextLabel?.text = (self.match!.objectForKey("job") as! NSDictionary).objectForKey("desc") as? String
+            cell.textLabel?.text = matchDetails!.header[.JobTitle]!
+            cell.detailTextLabel?.text = matchDetails!.header[.JobDescription]!
             
         case .DetailCell:
             
@@ -185,28 +177,8 @@ class MatchDetailTableViewController: UITableViewController {
         
         // Measure rows for dynamic content in secion
         
-        var sectionForDynamic: Int = indexPath.section - staticSectionAmount
-        var values: NSArray = self.final.allValues
-        var keys: NSArray = self.final.allKeys
-        
-        // Get the value of a section element, this can be an array, another dictionary or a value.
-        var val: AnyObject = values[sectionForDynamic]
-        
-        var txt: String = String()
-        if val is NSArray {
-            txt = (val as! NSArray).componentsJoinedByString(", ")
-        } else if val is NSDictionary {
-            
-        } else {
-            txt = val as! String
-        }
-//            txt = element[indexPath.row] as! String
-//        } else {
-//        
-//            //txt = element as! String
-//        }
-        
-        cell.textLabel?.text = txt
+        var sectionForDynamic: Int = self.sectionCount.getDynamicSection(indexPath.section)
+        cell.textLabel?.text = "txt"
     }
     
     
@@ -247,4 +219,16 @@ class MatchDetailTableViewController: UITableViewController {
     // Pass the selected object to the new view controller.
     }
     */
+    
+    
+    @IBAction func onAccept(sender: AnyObject) {
+        println("I ACCEPT")
+    }
+    
+    
+    @IBAction func onReject(sender: AnyObject) {
+        println("I REJECT")
+    }
+    
+    
 }

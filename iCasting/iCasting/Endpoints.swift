@@ -41,52 +41,59 @@ enum APIAuth : Int, EndpointProtocol {
     }
 }
 
-enum APINews : Int, EndpointProtocol {
+enum APINews : EndpointProtocol {
     
-    case newsItems, newsItemWithID, testItemIDresourceIDlala
+    case NewsItems, NewsItem(String), TestItemIDresourceIDlala(String, String)
     
     func endpoint() -> String {
         
         switch self {
-        case .newsItemWithID:
-            return "newsItem/:part"
-        case .testItemIDresourceIDlala:
-            return "testItem/:part/resource/:part/lala"
-        default:
+        case .NewsItems:
             return "newsItems"
+        case .NewsItem(let id):
+            return "newsItem/\(id)"
+        case .TestItemIDresourceIDlala(let itemID, let resourceID):
+            return "testItem/:part/resource/:part/lala"
         }
+    }
+    
+    var value: String {
+        get {return ICURL.createURL(self)}
     }
 }
 
-enum APIMedia : Int, EndpointProtocol {
+
+enum APIMedia : EndpointProtocol {
     
-    case imageWithID, imageWithIDSize
+    case Image(String), ImageWithSize(String, String)
     
     func endpoint() -> String {
         switch self {
-        case .imageWithIDSize:
-            return "site/images/:part/:part"
-        default:
-            return "site/images/:part"
+        case .Image(let id):
+            return "site/images/\(id)"
+        case .ImageWithSize(let id, let size):
+            return "site/images/\(id)/\(size)"
         }
+    }
+    
+    var value: String {
+        get {return ICURL.createURL(self)}
     }
 }
 
 enum APIMatch : Int, EndpointProtocol {
     
-    case matchCards
+    case MatchCards
     
     func endpoint() -> String {
         
         switch self {
-            
-        case .matchCards:
+        case .MatchCards:
             return "matchCards"
-            
         }
-        
     }
     
+    var value: String { return ICURL.createURL(self) }
     
 }
 

@@ -21,6 +21,28 @@ class iCastingTests: XCTestCase {
         super.tearDown()
     }
     
+    
+    func testMatchDetail() {
+        
+        
+        var match: Match = Match()
+        
+        match.all() { result in
+            
+            
+            match.setMatch(0)
+            var detail: MatchDetailsReturnValue = match.getMatchDetails()
+            
+            var company: String = detail.header[.ClientCompany]!!
+            var name: String = detail.header[.ClientName]!!
+            
+            
+            XCTAssertEqual(company, "Wouter Baan Bedrijf", "company is equal")
+            XCTAssertEqual(name, "Wouter Baan", "name is equal")            
+        }
+        
+    }
+    
     func testValidator() {
         
         var c : Credentials = Credentials(email: "", password: "")
@@ -37,7 +59,7 @@ class iCastingTests: XCTestCase {
     func testRequest() {
         
         var params : [String:String] = ["access_token":"551d58a226042f74fb745533$aav7DtkBMnG/vBDzb5RHfIzuZY++39r1vCXrj4jxVHA="]
-        var type : RequestProtocol = RequestFactory.request(Method.post)
+        var type : RequestProtocol = RequestFactory.request(ICMethod.post)
         var request = type.create(APIAuth.Logout, content: (insert: nil, params: params))
         
         var data : NSData = request.HTTPBody!
@@ -52,7 +74,7 @@ class iCastingTests: XCTestCase {
         
         var params : [String:String] = ["access_token":"placeholder_token"]
         
-        var type : RequestProtocol = RequestFactory.request(Method.post)
+        var type : RequestProtocol = RequestFactory.request(ICMethod.post)
         var request = type.create(APIAuth.Logout, content: (insert: nil, params: params))
 
         var values = request.allHTTPHeaderFields!
@@ -100,24 +122,24 @@ class iCastingTests: XCTestCase {
     
     func testURLBuilder() {
         
-        let url: NSURL = URLSimpleFactory.createURL(APINews.newsItems, insert: nil, params: nil)
+        let url: NSURL = ICURL.createURL(APINews.NewsItems, insert: nil, params: nil)
         XCTAssert(url.absoluteString == "https://api-demo.icasting.net/api/v1/newsItems", "URL create successful")
         
-        let url2: NSURL = URLSimpleFactory.createURL(APINews.newsItemWithID, insert: ["2323123132313133"], params: nil)
-        XCTAssert(url2.absoluteString == "https://api-demo.icasting.net/api/v1/newsItem/2323123132313133", "URL create successful")
+//        let url2: NSURL = ICURL.createURL(APINews.newsItemWithID, insert: ["2323123132313133"], params: nil)
+//        XCTAssert(url2.absoluteString == "https://api-demo.icasting.net/api/v1/newsItem/2323123132313133", "URL create successful")
+//        
+//        let url3: NSURL = ICURL.createURL(APINews.testItemIDresourceIDlala, insert: ["1","2"], params: nil)
+//        XCTAssert(url3.absoluteString == "https://api-demo.icasting.net/api/v1/testItem/1/resource/2/lala", "URL create successful")
         
-        let url3: NSURL = URLSimpleFactory.createURL(APINews.testItemIDresourceIDlala, insert: ["1","2"], params: nil)
-        XCTAssert(url3.absoluteString == "https://api-demo.icasting.net/api/v1/testItem/1/resource/2/lala", "URL create successful")
+//        let url4: NSURL = ICURL.createURL(APIMedia.imageWithIDSize, insert: ["2323123132313133", "200x200"], params: nil)
+//        XCTAssert(url4.absoluteString == "https://media-demo.icasting.net/site/images/2323123132313133/200x200", "Media url created successful")
+//        
+//        let urlWithParams: NSURL = ICURL.createURL(APIMedia.imageWithIDSize, insert: ["2323123132313133", "200x200"],
+//            params: ["key":"val", "key2":"val2"])
         
-        let url4: NSURL = URLSimpleFactory.createURL(APIMedia.imageWithIDSize, insert: ["2323123132313133", "200x200"], params: nil)
-        XCTAssert(url4.absoluteString == "https://media-demo.icasting.net/site/images/2323123132313133/200x200", "Media url created successful")
-        
-        let urlWithParams: NSURL = URLSimpleFactory.createURL(APIMedia.imageWithIDSize, insert: ["2323123132313133", "200x200"],
-            params: ["key":"val", "key2":"val2"])
-        
-        XCTAssertEqual(urlWithParams.absoluteString!,
-            "https://media-demo.icasting.net/site/images/2323123132313133/200x200?key=val&key2=val2",
-            "Media url created successful")
+//        XCTAssertEqual(urlWithParams.absoluteString!,
+//            "https://media-demo.icasting.net/site/images/2323123132313133/200x200?key=val&key2=val2",
+//            "Media url created successful")
     }
     
     func testExample() {

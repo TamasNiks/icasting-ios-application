@@ -26,9 +26,9 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         
         // Create the credentials and check them against validation rules
         var c: Credentials = Credentials(email: emailTextField.text, password: passwordTextField.text)
-        var v: Validator = Validator(credentials: c)
-        
-        if let list = v.check() {
+
+        // Check for errors through the Validator class
+        if let list = Validator(credentials: c).check() {
             for error: ErrorValidator in list {
                 println("Error: \(error.getDescription())")
             }

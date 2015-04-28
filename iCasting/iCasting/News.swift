@@ -8,21 +8,11 @@
 
 import Foundation
 
-protocol Model {
-    
-    func all (callBack: RequestClosure)
-    func one (id: String, callBack: RequestClosure)
-    
-}
 
-enum ImageSize {
-    case Full, Thumbnail
-    func toString() -> String {
-        switch self {
-            case .Full: return ""
-            case .Thumbnail: return "200x200"
-        }
-    }
+
+enum ImageSize: String {
+    case Full = "",
+    Thumbnail = "200x200"
 }
 
 struct NewsKey {
@@ -33,55 +23,49 @@ struct NewsKey {
 
 }
 
-class News : Model {
+class News : ModelProtocol {
     
-    let sessionManager : SessionManager = SessionManager.sharedInstance
     var newsItems : [AnyObject] = []
     
     /* Asks for all the items */
     func all(callBack: RequestClosure) {
+
         
-        
-        var request: NSURLRequest = RequestFactory.GET.create(APINews.newsItems, content:(insert: nil, params: nil))
-        
-        sessionManager.request(request) { result in
-            
-            if let success: AnyObject = result.success {
-                self.newsItems = success as! [AnyObject]
+        var url: String = APINews.NewsItems.value
+        request(.GET, url).responseJSON { (_, _, JSON, _) -> Void in
+            if let result: AnyObject = JSON {
+                self.newsItems = result as! [AnyObject]
+                var returnValue: ResultTuple = (success:result, failure:nil)
+                callBack(returnValue)
             }
-            
-            callBack(result)
-            
         }
     }
     
     /* Asks for one item for a given id */
     func one(id: String, callBack: RequestClosure) {
         
-        var request: NSURLRequest = RequestFactory
-            .request(.get)
-            .create(APINews.newsItemWithID, content:(insert: [id], params: nil))
-
-        sessionManager.request(request) { result in
-            
-            callBack(result)
-   
+        var url: String = APINews.NewsItem(id).value
+        request(.GET, url).responseJSON { (_, _, JSON, _) -> Void in
+            if let result: AnyObject = JSON {
+                self.newsItems = result as! [AnyObject]
+                var returnValue: ResultTuple = (success:result, failure:nil)
+                callBack(returnValue)
+            }
         }
+        
     }
 }
+
 
 extension News {
     
     func image(id: String, size: ImageSize, callBack : RequestClosure) {
-        
-        var request: NSURLRequest = RequestFactory
-            .request(.get)
-            .create(APIMedia.imageWithIDSize, content: (insert: [id, size.toString()], params: nil))
-        
-        sessionManager.request(request) { result in
 
-            callBack(result)
-            
+        var url: String = APIMedia.ImageWithSize(id, size.rawValue).value
+        request(.GET, url).response { (request, response, data, error) -> Void in
+            if let result: AnyObject = data {
+                callBack((success:result, failure:nil))
+            }
         }
     }
 }
