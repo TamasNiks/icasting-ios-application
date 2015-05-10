@@ -8,6 +8,14 @@
 
 import UIKit
 
+class NewsCell: UITableViewCell {
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.imageView?.bounds = CGRectMake(0, 0, 55, 55)
+    }
+}
+
 class NewsTableViewController: UITableViewController {
 
     let news : News = News()
@@ -18,17 +26,15 @@ class NewsTableViewController: UITableViewController {
 
 
         // When the view is loaded, get all the news items from the news model
-        news.all() { result in
-
-            if let success: AnyObject = result.success {
+        news.all() { failure in
+            
+            if let failure: ICErrorInfo = failure {
+                
+                println(failure.description)
+                
+            } else {
                 
                 self.tableView.reloadData()
-                
-            }
-            
-            if let failure: NSError = result.failure {
-                
-                println(failure.localizedDescription)
                 
             }
         }
@@ -50,32 +56,27 @@ class NewsTableViewController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("NewsItemCell", forIndexPath: indexPath) as! NewsTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("NewsItemCell", forIndexPath: indexPath) as! NewsCell
         
         //var summary:String = self.newsItems[indexPath.row]["summary"] as! String
         
         let item: AnyObject = news.newsItems[indexPath.row]
         
-        var summary: String = item["summary"] as! String
-        var id: String = item["id"] as! String
-        var image: String = item["image"] as! String
-
-        cell.textLabel?.text = summary
-
+        var title: String? = item[NewsKey.Title] as? String
+        var image: String = item[NewsKey.ImageID] as? String ?? ""
+        var published: String? =  (item[NewsKey.Published] as? String ?? "").ICdateToString(ICDateFormat.News) //?? "no valid date"
+        
+        
+        cell.textLabel?.text = title
+        cell.detailTextLabel?.text = published
+        
         news.image(image, size: ImageSize.Thumbnail) { result in
             
-            var im:UIImage
             if result.success is NSDictionary {
-                
-                im = UIImage(named: "male")!
-                
             } else {
-                
-                im = UIImage(data: result.success! as! NSData)!
-                
+                cell.imageView?.image = UIImage(data: result.success as! NSData)
             }
             
-            cell.imageView?.image = im
             cell.setNeedsLayout()
             
             
@@ -97,7 +98,7 @@ class NewsTableViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         
-        return 100
+        return 0
         
     }
     
@@ -146,13 +147,13 @@ class NewsTableViewController: UITableViewController {
         
         if let item = self.item {
             
-            if segue.destinationViewController is NewsDetailViewController {
+//            if segue.destinationViewController is NewsDetailViewController {
+//                var vc: NewsDetailViewController = segue.destinationViewController as! NewsDetailViewController
+//                vc.item = item
+//            } else {
                 var vc: NewsDetailViewController = segue.destinationViewController as! NewsDetailViewController
                 vc.item = item
-            } else {
-                var vc: NewsDetail2ViewController = segue.destinationViewController as! NewsDetail2ViewController
-                vc.item = item
-            }
+//            }
 
         }
     

@@ -16,13 +16,15 @@ enum ImageSize: String {
 }
 
 struct NewsKey {
+    static let Title: String = "title"
     static let Summary: String = "summary"
     static let Body: String = "body"
     static let ImageID: String = "image"
     static let ID: String = "id"
-
+    static let Published: String = "published"
 }
 
+// TODO: Make use of JSON class and add getter functionalities to data
 class News : ModelProtocol {
     
     var newsItems : [AnyObject] = []
@@ -35,8 +37,7 @@ class News : ModelProtocol {
         request(.GET, url).responseJSON { (_, _, JSON, _) -> Void in
             if let result: AnyObject = JSON {
                 self.newsItems = result as! [AnyObject]
-                var returnValue: ResultTuple = (success:result, failure:nil)
-                callBack(returnValue)
+                callBack(failure: nil)
             }
         }
     }
@@ -48,8 +49,7 @@ class News : ModelProtocol {
         request(.GET, url).responseJSON { (_, _, JSON, _) -> Void in
             if let result: AnyObject = JSON {
                 self.newsItems = result as! [AnyObject]
-                var returnValue: ResultTuple = (success:result, failure:nil)
-                callBack(returnValue)
+                callBack(failure: nil)
             }
         }
         
@@ -59,7 +59,7 @@ class News : ModelProtocol {
 
 extension News {
     
-    func image(id: String, size: ImageSize, callBack : RequestClosure) {
+    func image(id: String, size: ImageSize, callBack : ((success:AnyObject, failure:NSError?)) -> () ) {
 
         var url: String = APIMedia.ImageWithSize(id, size.rawValue).value
         request(.GET, url).response { (request, response, data, error) -> Void in

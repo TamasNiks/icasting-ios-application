@@ -22,6 +22,36 @@ class iCastingTests: XCTestCase {
     }
     
     
+    func testSockets() {
+        
+        let socket = SocketIOClient(socketURL: "https://ws-demo.icasting.net/?auth=2574dfa254b540999a44a055c65df372bf7cf39355476603fd5f86e446c58945554779c4fd5f86e446c58fc0f7d14955")
+        
+        socket.on("connect") {data, ack in
+            println("socket connected")
+        }
+        
+        
+        
+    }
+    
+    
+    func testNewMatchClass() {
+        
+        var match: Match = Match()
+        match.all { (r) -> () in
+            
+            
+            let fields = [Fields.JobTitle, Fields.ClientName, Fields.ClientCompany, Fields.JobDateStart]
+            println(match.getMatchData(fields, index:nil))
+        
+        }
+        
+        
+        
+        
+    }
+    
+    
     func testMatchDetail() {
         
         

@@ -5,3 +5,53 @@
   Created by Tim van Steenoven on 27/04/15.
   Copyright (c) 2015 T. van Steenoven. All rights reserved.
 */
+
+/* General */
+
+"true" = "Ja";
+"false" = "Nee";
+
+/* Specific */
+
+"dateTime" = "Datum & Tijd";
+"location" = "Locatie";
+"travelExpenses" = "Reiskostenvergoeding";
+
+"type" = "Type";
+"city" = "Stad";
+"street" = "Straat";
+"streetNumber" = "Huisnummer";
+"zipcode" = "Postcode";
+"dateStart" = "Startdatum";
+"dateEnd" = "Einddatum";
+"timeStart" = "Starttijd";
+"timeEnd" = "Eindtijd";
+
+"payment" = "Vergoeding";
+"budget" = "Vergoeding";
+"hasTravelExpenses" = "Reiskostenvergoeding";
+"paymentMethod" = "Betaalmethode";
+
+"Are you sure?" = "Weet u het zeker?";
+"AcceptMessage" = "Als u een job accepteert, krijgt de client een melding. Als de client ook accepteert kan de onderhandeling beginnen.";
+"RejectMessage" = "Als u een job weigert, wordt u verwijderd uit de lijst van matches. De client krijgt hiervan geen melding.";
+"Accept" = "Accepteer";
+"Reject" = "Weiger";
+"Cancel" = "Annuleer";
+
+/* iCasting System text */
+
+"icasting.chat.system.text.welcome" = "Welkom in een conversatie";
+
+/* API Errors */
+
+"AuthenticationError" = "Inloggen is niet gelukt, vul uw juist gegevens in.";
+"InsufficientCreditsError" = "U heeft niet genoeg credits om door te gaan.";
+"NoErrorDescription" = "Onbekende fout";
+
+/* Validation Errors */
+
+"Error" = "Fout";
+"EmptyEmail" = "Het e-mail veld is leeg.";
+"EmptyPassword" = "Het wachtwoord veld is leeg.";
+"WrongEmail" = "Vul een juist e-mailadres in.";

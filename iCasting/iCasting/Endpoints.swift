@@ -11,11 +11,44 @@ import Foundation
 internal struct Host {
     static let API : String = "api-demo.icasting.net"
     static let Media : String = "media-demo.icasting.net"
+    static let Socket: String = "ws-demo.icasting.net"
     static let APIVersion : String = "1"
 }
 
 protocol EndpointProtocol {
     func endpoint() -> String
+}
+
+
+enum APIUser: EndpointProtocol {
+
+    case User(String)
+    
+    func endpoint() -> String {
+        switch self {
+        case .User(let id):
+            return "user/\(id)"
+        }
+    }
+    var value: String { return ICURL.createURL(self) }
+}
+
+
+enum APICastingObject: EndpointProtocol {
+    
+    case UserCastingObject(String), CastingObject(String)
+    
+    func endpoint() -> String {
+        
+        switch self {
+            
+        case .UserCastingObject(let userid):
+            return "user/\(userid)/castingObjects"
+        case .CastingObject(let id):
+            return "castingObject/\(id)"
+        }
+    }
+    var value: String { return ICURL.createURL(self) }
 }
 
 enum APIAuth : Int, EndpointProtocol {
@@ -39,6 +72,8 @@ enum APIAuth : Int, EndpointProtocol {
             return ""
         }
     }
+    
+    var value: String { return ICURL.createURL(self) }
 }
 
 enum APINews : EndpointProtocol {
@@ -57,13 +92,11 @@ enum APINews : EndpointProtocol {
         }
     }
     
-    var value: String {
-        get {return ICURL.createURL(self)}
-    }
+    var value: String { return ICURL.createURL(self) }
 }
 
 
-enum APIMedia : EndpointProtocol {
+enum APIMedia: EndpointProtocol {
     
     case Image(String), ImageWithSize(String, String)
     
@@ -76,20 +109,25 @@ enum APIMedia : EndpointProtocol {
         }
     }
     
-    var value: String {
-        get {return ICURL.createURL(self)}
-    }
+    var value: String { return ICURL.createURL(self) }
 }
 
-enum APIMatch : Int, EndpointProtocol {
+enum APIMatch: EndpointProtocol {
     
-    case MatchCards
+    case MatchCards, MatchAcceptTalent(String), MatchRejectTalent(String), MatchConversation(String), MatchConversationToken(String)
     
     func endpoint() -> String {
-        
         switch self {
         case .MatchCards:
             return "matchCards"
+        case .MatchAcceptTalent(let id):
+            return "match/\(id)/acceptTalent"
+        case .MatchRejectTalent(let id):
+            return "match/\(id)/rejectTalent"
+        case .MatchConversation(let id):
+            return "match/\(id)/conversation"
+        case .MatchConversationToken(let id):
+            return "match/\(id)/conversationToken"
         }
     }
     

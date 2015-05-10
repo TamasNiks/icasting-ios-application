@@ -8,8 +8,31 @@ import UIKit
 
 
 
-var str = "Hello, playground"
-let string = "[ {\"name\": \"John\", \"age\": 21}, {\"name\": \"Bob\", \"age\": 35} ]"
+
+let str1 = "[ {\"name\": \"John\", \"age\": 21}, {\"name\": \"Bob\", \"age\": 35} ]"
+var data: NSData = str1.dataUsingEncoding(NSUTF8StringEncoding)!
+var json: AnyObject? = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: nil)
+
+
+
+
+let dateFormatter = NSDateFormatter()
+dateFormatter.dateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'+'ss':'ss"
+
+//2015-05-06T00:00:00+00:00
+//var usLocale: NSLocale = NSLocale(localeIdentifier: "en_US")
+//var gbLocale: NSLocale = NSLocale(localeIdentifier: "en_GB")
+
+//var dateComponents: String =
+if let  date: NSDate = dateFormatter.dateFromString("2015-05-06T00:00:00+00:00") {
+
+    let visibleFormatter = NSDateFormatter()
+    visibleFormatter.timeStyle = NSDateFormatterStyle.NoStyle
+    visibleFormatter.dateStyle = NSDateFormatterStyle.LongStyle
+    var str: String = visibleFormatter.stringFromDate(date)
+
+}
+
 
 
 var sEndcoding : String = "bo@yd.reho1rst+talent@icasting.com"
@@ -65,4 +88,11 @@ for (key, val) in params {
 }
 // Remove the last & char from the query string
 resolved = resolved.substringToIndex(resolved.length-1)
+
+var l: String = "tim,tim"
+var range = l.rangeOfString(",")
+var index = range?.startIndex
+index = index?.successor()
+l.substringFromIndex(index!)
+
 

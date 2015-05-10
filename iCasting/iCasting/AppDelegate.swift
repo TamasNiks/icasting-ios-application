@@ -12,19 +12,57 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    var drawerController: DrawerController!
+    
+    /*func setupDrawerController() {
+        drawerController.drawerVisualStateBlock = { (drawerController, drawerSide, percentVisible) in
+            let block = ExampleDrawerVisualStateManager.sharedManager.drawerVisualStateBlockForDrawerSide(drawerSide)
+            block?(drawerController, drawerSide, percentVisible)
+        }
+        drawerController.showsShadows = false
+        drawerController.restorationIdentifier = "Drawer"
+        drawerController.maximumRightDrawerWidth = 200.0
+        drawerController.openDrawerGestureModeMask = .All
+        drawerController.closeDrawerGestureModeMask = .All
+    }*/
+    
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
         
+        // Configuration of the drawer controller
         var storyBoard = UIStoryboard(name: "Main", bundle: nil)
-        var initialViewController = storyBoard.instantiateViewControllerWithIdentifier("dashboard") as? UIViewController
         
-        (initialViewController as? UITabBarController)?.selectedIndex = 1
+        let initialViewController = storyBoard.instantiateViewControllerWithIdentifier("login") as? UIViewController
+        //let initialViewController = storyBoard.instantiateViewControllerWithIdentifier("dashboard") as? UIViewController
+        //(initialViewController as? UITabBarController)?.selectedIndex = 3
+        //let leftSideDrawerViewController = ExampleLeftSideDrawerViewController()
+        
+        //let leftSideNavController = UINavigationController(rootViewController: leftSideDrawerViewController)
+        //leftSideNavController.restorationIdentifier = "ExampleLeftNavigationControllerRestorationKey"
+        //self.drawerController = DrawerController(centerViewController: centerViewController, leftDrawerViewController: leftSideDrawerViewController)
+        //self.setupDrawerController()
         
         self.window?.rootViewController = initialViewController
         self.window?.makeKeyAndVisible()
         
+        UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName : UIColor.whiteColor()]
+        UINavigationBar.appearance().barTintColor = UIColor(red: 213/255, green: 0, blue: 42/255, alpha: 1) //D5002A
         UINavigationBar.appearance().tintColor = UIColor.whiteColor()
+        
+        /*
+        // iOS 7:
+        UITableView.appearance().separatorStyle = .SingleLine
+        UITableView.appearance().separatorInset = UIEdgeInsetsZero
+        UITableViewCell.appearance().separatorInset = UIEdgeInsetsZero
+        
+        // iOS 8:
+        if UITableView.instancesRespondToSelector("setLayoutMargins:") {
+            UITableView.appearance().layoutMargins = UIEdgeInsetsZero
+            UITableViewCell.appearance().layoutMargins = UIEdgeInsetsZero
+            UITableViewCell.appearance().preservesSuperviewLayoutMargins = false
+        }
+        */
         
         return true
     }

@@ -26,14 +26,14 @@ enum ErrorValidator {
         }
     }
     
-    func getDescription() -> String {
+    func getLocalizedDescription() -> String {
         switch self {
         case .EmptyEmail:
-            return "The e-mail is empty"
+            return NSLocalizedString("EmptyEmail", comment: "Validating email text")
         case .EmptyPassword:
-            return "The password field is empty"
+            return NSLocalizedString("EmptyPassword", comment: "Validating password text")
         case .WrongEmail:
-            return "Fill in a good e-mail"
+            return NSLocalizedString("WrongEmail", comment: "Validating email text")
         }
     }
     
@@ -82,7 +82,7 @@ class Validator {
             errors.append(.EmptyPassword)
         }
         
-        if errors.count > 0 {
+        if errors.isEmpty == false {
             return errors
         }
         

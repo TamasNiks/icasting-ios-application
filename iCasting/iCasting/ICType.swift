@@ -8,3 +8,4 @@
 
 import Foundation
 
+typealias RequestClosure = (failure:ICErrorInfo?) -> ()

@@ -74,6 +74,12 @@ func int(input: [NSObject:AnyObject], key: String) -> Int? {
 func bool(input: [NSObject:AnyObject], key: String) -> Bool? {
     return number(input,key).map { $0.boolValue }
 }
+//func date(input: [NSObject:AnyObject], key:String) -> NSDate? {
+//    return input[key] >>>= {
+//        
+//        
+//    }
+//}
 
 
 func curry<A,B,R>(f: (A,B) -> R) -> A -> B -> R {

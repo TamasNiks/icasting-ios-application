@@ -5,3 +5,53 @@
   Created by Tim van Steenoven on 27/04/15.
   Copyright (c) 2015 T. van Steenoven. All rights reserved.
 */
+
+/* General */
+
+"true" = "Yes";
+"false" = "No";
+
+/* Specific */
+
+"dateTime" = "Date & Time";
+"location" = "Location";
+"travelExpenses" = "Travel Expenses";
+
+"type" = "Type";
+"city" = "City";
+"street" = "Street";
+"streetNumber" = "Street Number";
+"zipcode" = "Zip Code";
+"dateStart" = "Start Date";
+"dateEnd" = "End Date";
+"timeStart" = "Start Time";
+"timeEnd" = "End Time";
+
+"payment" = "Payment";
+"budget" = "Payment";
+"hasTravelExpenses" = "Travel Expenses";
+"paymentMethod" = "Payment Method";
+
+"Are you sure?" = "Are you sure?";
+"AcceptMessage" = "If you accept a job, the client gets notified. If the client accepts as well, you can start the negotiation";
+"RejectMessage" = "If you reject a job, you will be removed on the list of matches, the client won't get notified";
+"Accept" = "Accept";
+"Reject" = "Reject";
+"Cancel" = "Cancel";
+
+/* iCasting System text */
+
+"icasting.chat.system.text.welcome" = "Welcome to the conversation";
+
+/* API Errors */
+
+"AuthenticationError" = "Login did not work, please fill in the right credentials.";
+"InsufficientCreditsError" = "You do not have enough credits to purchase this product.";
+"NoErrorDescription" = "Unknown error";
+
+/* Validation Errors */
+
+"Error" = "Error";
+"EmptyEmail" = "The e-mail field is empty.";
+"EmptyPassword" = "The password field is empty.";
+"WrongEmail" = "Fill in a good e-mail.";

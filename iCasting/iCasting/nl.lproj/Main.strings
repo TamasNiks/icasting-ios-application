@@ -5,6 +5,9 @@
 /* Class = "UILabel"; text = "Label"; ObjectID = "0mV-v2-3We"; */
 "0mV-v2-3We.text" = "Label";
 
+/* Class = "UITabBarItem"; title = "Onderhandelingen"; ObjectID = "1dz-kJ-C9E"; */
+"1dz-kJ-C9E.title" = "Onderhandelingen";
+
 /* Class = "UILabel"; text = "Title"; ObjectID = "2g7-5q-e91"; */
 "2g7-5q-e91.text" = "Title";
 
@@ -17,11 +20,23 @@
 /* Class = "UILabel"; text = "Title"; ObjectID = "7UP-Fo-JqZ"; */
 "7UP-Fo-JqZ.text" = "Title";
 
+/* Class = "UILabel"; text = "Title"; ObjectID = "8Oo-je-b4Q"; */
+"8Oo-je-b4Q.text" = "Title";
+
 /* Class = "UITableViewController"; title = "NewsOverview"; ObjectID = "8S2-8C-u1d"; */
 "8S2-8C-u1d.title" = "NewsOverview";
 
+/* Class = "UILabel"; text = "subtitle"; ObjectID = "9oe-F5-xlR"; */
+"9oe-F5-xlR.text" = "subtitle";
+
 /* Class = "UIViewController"; title = "Login"; ObjectID = "9pv-A4-QxB"; */
 "9pv-A4-QxB.title" = "Login";
+
+/* Class = "UILabel"; text = "title"; ObjectID = "BsU-jA-UZd"; */
+"BsU-jA-UZd.text" = "title";
+
+/* Class = "UILabel"; text = "Detail"; ObjectID = "FL7-5k-mjD"; */
+"FL7-5k-mjD.text" = "Detail";
 
 /* Class = "UITabBarItem"; title = "Nieuws"; ObjectID = "FpU-yf-duC"; */
 "FpU-yf-duC.title" = "Nieuws";
@@ -29,17 +44,35 @@
 /* Class = "UINavigationItem"; title = "Matches"; ObjectID = "HFP-w8-LJr"; */
 "HFP-w8-LJr.title" = "Matches";
 
-/* Class = "UILabel"; text = "Subtitle"; ObjectID = "HyA-Y5-uAh"; */
-"HyA-Y5-uAh.text" = "Subtitle";
+/* Class = "UINavigationController"; title = "ConversationsNavigation"; ObjectID = "Izq-jK-1bU"; */
+"Izq-jK-1bU.title" = "ConversationsNavigation";
 
-/* Class = "UIButton"; normalTitle = "Wijger"; ObjectID = "JMC-0f-hHa"; */
-"JMC-0f-hHa.normalTitle" = "Wijger";
+/* Class = "UIButton"; normalTitle = "Afwijzen"; ObjectID = "JMC-0f-hHa"; */
+"JMC-0f-hHa.normalTitle" = "Afwijzen";
+
+/* Class = "UILabel"; text = "subtitle"; ObjectID = "JMm-o4-zvr"; */
+"JMm-o4-zvr.text" = "subtitle";
 
 /* Class = "UITabBarItem"; title = "Matches"; ObjectID = "Jam-WV-to2"; */
 "Jam-WV-to2.title" = "Matches";
 
+/* Class = "UILabel"; text = "Detail"; ObjectID = "Na3-X0-UdD"; */
+"Na3-X0-UdD.text" = "Detail";
+
+/* Class = "UILabel"; text = "Detail"; ObjectID = "QVs-DK-bl8"; */
+"QVs-DK-bl8.text" = "Detail";
+
+/* Class = "UINavigationItem"; title = "Onderhandelingen"; ObjectID = "QYk-k1-MkW"; */
+"QYk-k1-MkW.title" = "Onderhandelingen";
+
 /* Class = "UILabel"; text = "Title"; ObjectID = "Smv-uc-M3J"; */
 "Smv-uc-M3J.text" = "Title";
+
+/* Class = "UILabel"; text = "date"; ObjectID = "Wf4-1e-bl8"; */
+"Wf4-1e-bl8.text" = "date";
+
+/* Class = "UILabel"; text = "date"; ObjectID = "XBA-hg-c2P"; */
+"XBA-hg-c2P.text" = "date";
 
 /* Class = "UIViewController"; title = "NewsDetail"; ObjectID = "Ycn-n3-6J0"; */
 "Ycn-n3-6J0.title" = "NewsDetail";
@@ -56,14 +89,23 @@
 /* Class = "UIButton"; normalTitle = "Accepteer"; ObjectID = "awb-6J-aFT"; */
 "awb-6J-aFT.normalTitle" = "Accepteer";
 
-/* Class = "UINavigationItem"; title = "Root View Controller"; ObjectID = "cEC-tl-3sP"; */
-"cEC-tl-3sP.title" = "Root View Controller";
+/* Class = "UINavigationItem"; title = "Nieuws"; ObjectID = "cEC-tl-3sP"; */
+"cEC-tl-3sP.title" = "Nieuws";
+
+/* Class = "UILabel"; text = "system message"; ObjectID = "dWi-4w-05J"; */
+"dWi-4w-05J.text" = "system message";
 
 /* Class = "UITableViewController"; title = "Matches"; ObjectID = "dpI-DT-rud"; */
 "dpI-DT-rud.title" = "Matches";
 
+/* Class = "UILabel"; text = "left"; ObjectID = "e9m-fv-6bz"; */
+"e9m-fv-6bz.text" = "left";
+
 /* Class = "UITextField"; placeholder = "Wachtwoord"; ObjectID = "egR-rc-xvq"; */
 "egR-rc-xvq.placeholder" = "Wachtwoord";
+
+/* Class = "UITextField"; text = "test"; ObjectID = "egR-rc-xvq"; */
+"egR-rc-xvq.text" = "test";
 
 /* Class = "UIButton"; normalTitle = "Login"; ObjectID = "eha-MQ-fPX"; */
 "eha-MQ-fPX.normalTitle" = "Login";
@@ -74,8 +116,29 @@
 /* Class = "UITextField"; placeholder = "E-mail"; ObjectID = "gR0-vM-adL"; */
 "gR0-vM-adL.placeholder" = "E-mail";
 
+/* Class = "UITextField"; text = "tim.van.steenoven@icasting.com"; ObjectID = "gR0-vM-adL"; */
+"gR0-vM-adL.text" = "tim.van.steenoven@icasting.com";
+
+/* Class = "UILabel"; text = "title"; ObjectID = "gpy-sa-haE"; */
+"gpy-sa-haE.text" = "title";
+
 /* Class = "UINavigationController"; title = "NewsNavigation"; ObjectID = "he1-HE-Xbf"; */
 "he1-HE-Xbf.title" = "NewsNavigation";
 
-/* Class = "UILabel"; text = "Title"; ObjectID = "tHX-ho-GK3"; */
-"tHX-ho-GK3.text" = "Title";
+/* Class = "UILabel"; text = "Title"; ObjectID = "huq-VI-XAZ"; */
+"huq-VI-XAZ.text" = "Title";
+
+/* Class = "UITableViewController"; title = "Negotiation"; ObjectID = "iKk-vB-jcg"; */
+"iKk-vB-jcg.title" = "Onderhandeling";
+
+/* Class = "UITabBarItem"; title = "Dashboard"; ObjectID = "k1X-tl-gce"; */
+"k1X-tl-gce.title" = "Dashboard";
+
+/* Class = "UILabel"; text = "right"; ObjectID = "lmS-8C-XiE"; */
+"lmS-8C-XiE.text" = "right";
+
+/* Class = "UINavigationItem"; title = "Profiel"; ObjectID = "rIo-FO-why"; */
+"rIo-FO-why.title" = "Profiel";
+
+/* Class = "UITableViewController"; title = "Conversations"; ObjectID = "tBD-Yv-QpF"; */
+"tBD-Yv-QpF.title" = "Onderhandelingen";

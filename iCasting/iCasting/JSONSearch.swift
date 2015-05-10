@@ -69,46 +69,17 @@ class Search: GenericSearch {
 }
 
 
-//func parseBlog(blog: AnyObject) -> MatchData? {
-//    
-//    let mkBlog = curry { id, name, needsPassword, url in
-//        Blog(id: id, name: name, needsPassword: needsPassword, url: url)
-//    }
-//    
-//    return asDict(blog) >>>= {
-//        mkBlog <*> int($0,"id")
-//            <*> string($0,"name")
-//            <*> bool($0,"needspassword")
-//            <*> (string($0, "url") >>>= toURL)
-//    }
-//}
-
-
-//func parseJSON() {
-//    
-//    
-//    let blogs = dictionary(parsedJSON, "blogs") >>>= {
-//        array($0, "blog") >>>= {
-//            join($0.map(parseBlog))
-//        }
-//    }
-//    
-//    println("posts: \(blogs)")
-//}
-
-
-
 class JSONSearchFacade {
     private static let JSONSearch: Search = Search()
     
     class func stringSearch(#source: NSDictionary, fields: Fields) -> String? {
-        return JSONSearch.search(source, fields: fields.getPath().path)
+        return ""//JSONSearch.search(source, fields: fields.getPath())
     }
     class func arraySearch(#source: NSDictionary, fields: Fields) -> NSArray? {
-        return JSONSearch.search(source, fields: fields.getPath().path)
+        return []//JSONSearch.search(source, fields: fields.getPath())
     }
     class func dictionarySearch(#source: NSDictionary, fields: Fields) -> NSDictionary? {
-        return JSONSearch.search(source, fields: fields.getPath().path)
+        return [:]//JSONSearch.search(source, fields: fields.getPath())
     }
     
     class func search(#source: NSDictionary, fields: Fields) -> NSDictionary {
@@ -117,8 +88,6 @@ class JSONSearchFacade {
         
 
     }
-    
-
     
 }
 

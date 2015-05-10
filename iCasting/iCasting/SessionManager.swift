@@ -13,9 +13,6 @@ import Foundation
 //    case Value(A)
 //}
 
-typealias ResultTuple = (success:AnyObject?, failure:NSError?)
-typealias RequestClosure = (ResultTuple) -> ()
-
 class SessionManager: NSObject, NSURLSessionTaskDelegate {
     
     /* Singleton class */
@@ -28,7 +25,7 @@ class SessionManager: NSObject, NSURLSessionTaskDelegate {
     * will be handled by operation queues on the background, we don't really need to care about it.
     * We should be care about that interface elements will be executed on the main queue.
     */
-    func request(request : NSURLRequest, callbackClosure: RequestClosure) {
+    func request(request : NSURLRequest, callbackClosure: ((success:AnyObject?, failure:NSError?)) -> ()) {
 
         var session = NSURLSession.sharedSession()
         

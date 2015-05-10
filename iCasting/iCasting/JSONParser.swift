@@ -175,6 +175,20 @@ extension JSONParser {
         
         return sub
     }
+    
+    private func getDeepestObject(d: NSDictionary, inout c:NSMutableArray) -> NSDictionary? {
+        
+        var col: NSMutableArray = NSMutableArray()
+        for (key, val) in d {
+            if val is NSDictionary {
+                col.addObject(val)
+            }
+        }
+        for val in col {
+            c.addObject(getDeepestObject(val as! NSDictionary, c: &c)!)
+        }
+        return d
+    }
 
 }
 

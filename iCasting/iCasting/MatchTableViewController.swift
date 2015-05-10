@@ -8,27 +8,41 @@
 
 import UIKit
 
-class MatchTableViewController: UITableViewController {
+class MatchOverviewCell: UITableViewCell {
+    @IBOutlet weak var customTitle: UILabel!
+    @IBOutlet weak var customSubtitle: UILabel!
+    @IBOutlet weak var customImageView: UIImageView!
+    @IBOutlet weak var customDate: UILabel!
+    @IBOutlet weak var customNegotiationIcon: UIImageView!
+}
 
-    var match: Match = Match()
+
+class MatchTableViewController: UITableViewController, MatchDetailDelegate {
+
+    var matchModel: Match = TalentMatch()
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        //self.setupLeftMenuButton()
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        
+        self.matchModel.all() { result in
+            
+            self.matchModel.filter(field: FilterStatusFields.Closed, allExcept: true)
+            self.tableView.reloadData()
+        }
+        
     }
 
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         
-        self.match.all() { result in
-            
-            self.tableView.reloadData()
-        }
+
     }
     
     override func didReceiveMemoryWarning() {
@@ -47,26 +61,58 @@ class MatchTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete method implementation.
         // Return the number of rows in the section.
-        return self.match.matches.count
+        return self.matchModel.matches.count
     }
 
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("matchDetailCellIdentifier", forIndexPath: indexPath) as! UITableViewCell
+        
+        let cell = tableView.dequeueReusableCellWithIdentifier("matchDetailCellIdentifier", forIndexPath: indexPath) as! MatchOverviewCell
 
-        var info: [String:String] = self.match.getCellInfo(index: indexPath.row)
-        cell.textLabel!.text = info["title"]
-        cell.detailTextLabel!.text = info["description"]
-
+        var data: [Fields: String] = self.matchModel.getMatchData([.JobTitle, .JobDescription, .JobDateStart, .ClientAvatar, .Status], index: indexPath.row)
+        
+        
+        //var info: [String:String] = self.match.getCellInfo(index: indexPath.row)
+        cell.customTitle.text = data[.JobTitle]
+        cell.customSubtitle.text = data[.JobDescription]
+        cell.customDate.text = String(format: "Start: %@", data[.JobDateStart] ?? "no date")
+        
+        var base64: String = data[.ClientAvatar]!
+        if let image: UIImage = ICImages.ImageWithString(base64).image {
+            cell.customImageView.image = image
+        } else {
+            cell.customImageView.image = ICImages.PlaceHolderClientAvatar.image
+        }
+        
+        
+        // Configure the cell conform the status of the match (talent accepted, negotiation, pending)
+        
+        if let status = data[.Status] {
+            if let statusField: FilterStatusFields = FilterStatusFields.allValues[status] {
+                if statusField == .Negotiations || statusField == .TalentAccepted {
+                    cell.customImageView.makeRound(35, borderWidth: 4, withBorderColor: UIColor(red: 123/255, green: 205/255, blue: 105/255, alpha: 1))
+                    if statusField == .Negotiations {
+                        cell.customNegotiationIcon.hidden = false
+                    }
+                    return cell
+                }
+            }
+        }
+        
+        cell.customImageView.makeRound(35, borderWidth:nil)
         return cell
     }
 
+    
+    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return 90
+    }
 
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
     
         //var item: NSDictionary = self.match.matches[indexPath.row] as! NSDictionary
-        self.match.setMatch(indexPath.row)
+        self.matchModel.setMatch(indexPath.row)
         performSegueWithIdentifier("showMatchID", sender: self)
     }
     
@@ -79,8 +125,39 @@ class MatchTableViewController: UITableViewController {
         // Pass the selected object to the new view controller.
         
         var destination = segue.destinationViewController as! MatchDetailTableViewController
-        destination.match = self.match
+        destination.delegate = self
+        destination.match = self.matchModel
     }
-
-
+    
+    // MARK: MatchDetailViewController Delegates
+    
+    func didRejectMatch() {
+        
+        println("DID REJECT MATCH DELEGATE CALL, MATCHES COUNT: %@", self.matchModel.matches.count)
+        
+        if let indexPath: NSIndexPath? = self.tableView.indexPathForSelectedRow() {
+            self.tableView.deleteRowsAtIndexPaths([indexPath as! AnyObject], withRowAnimation: UITableViewRowAnimation.Left)
+        }
+    }
+    
+    func didAcceptMatch() {
+        
+        println("DID ACCEPT MATCH DELEGATE CALL")
+        
+        if let indexPath: NSIndexPath? = self.tableView.indexPathForSelectedRow() {
+            self.tableView.reloadRowsAtIndexPaths([indexPath as! AnyObject], withRowAnimation: UITableViewRowAnimation.None)
+        }
+    }
+    
+    /*func setupLeftMenuButton() {
+        let leftDrawerButton = DrawerBarButtonItem(target: self, action: "leftDrawerButtonPress:")
+        self.navigationItem.setLeftBarButtonItem(leftDrawerButton, animated: true)
+    }
+    
+    // MARK: - Button Handlers
+    
+    func leftDrawerButtonPress(sender: AnyObject?) {
+        self.evo_drawerController?.toggleDrawerSide(.Left, animated: true, completion: nil)
+    }*/
+    
 }

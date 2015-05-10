@@ -1,57 +1,65 @@
 //
-//  NewsDetailViewController.swift
+//  NewsDetail2ViewController.swift
 //  iCasting
 //
-//  Created by T. van Steenoven on 10-04-15.
+//  Created by T. van Steenoven on 20-04-15.
 //  Copyright (c) 2015 T. van Steenoven. All rights reserved.
 //
 
 import UIKit
 
-class NewsDetailViewController: UIViewController {
+class NewsDetailViewController: UIViewController, UIWebViewDelegate {
 
-    @IBOutlet weak var scrollView: UIScrollView!
-    @IBOutlet weak var imageView: UIImageView!
-    //@IBOutlet weak var bodyTextView: UITextView!
-    @IBOutlet weak var bodyLabel: UILabel!
-
+    @IBOutlet weak var webView: UIWebView!
+    
     var item: NSDictionary?
-    var image: UIImage?
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        self.scrollView.contentSize = CGSize(width: 500, height: 1000)
-        
-        self.bodyLabel.lineBreakMode = NSLineBreakMode.ByWordWrapping
-        self.bodyLabel.numberOfLines = 0
-
     }
 
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        var news: News = News()
+        var body: String = (self.item?.objectForKey(NewsKey.Body) as? String)!
+
+        var html: String = "<html>"
+        html += "<head>"
+        html += "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">"
+        html += "<style> body { font-family:Arial; } </style>"
+        html += "</head>"
+        html += "<body>"
+        html += body
+        html += "</body>"
+        html += "</html>"
+        webView.loadHTMLString(html, baseURL: nil)
+        webView.delegate = self
+    }
+    
+    func webViewDidFinishLoad(webView: UIWebView) {
+        
+        let contentSize: CGSize = self.webView.scrollView.contentSize
+        let viewSize: CGSize = self.view.bounds.size
+        
+        let rw: CGFloat = viewSize.width / contentSize.width;
+        
+        self.webView.scrollView.minimumZoomScale = rw;
+        self.webView.scrollView.maximumZoomScale = rw;
+        self.webView.scrollView.zoomScale = rw;
+        
+    }
+    
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        var imageID : String = self.item?.objectForKey(NewsKey.ImageID) as! String
-        var news: News = News()
 
-        
-        news.image(imageID, size: ImageSize.Thumbnail) { result in
-            
-            var im: UIImage = UIImage(data: result.success! as! NSData)!
-            self.imageView.image = im
-            
-        }
-
-        
-        self.bodyLabel.text = self.item?.objectForKey(NewsKey.Body) as? String
-        
-    }
+    
     
     /*
     // MARK: - Navigation
