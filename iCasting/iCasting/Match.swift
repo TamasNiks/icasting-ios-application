@@ -126,7 +126,7 @@ class Match {
     // Contains one match from the matches based on index
     var selectedMatch: JSON?
     
-    // TODO: It is safer to do the comparisons by match id than index id, for now it is more convenient
+    // TODO: It is safer to do the comparisons by match id than index, for example, if the user would like to filter all the closed matches, we need to change the status on the original _matches array and the filtered matches array. If you compare by index, than the index can be different between original _maatches and filtered matches. For now it is more convenient
     private var selectedMatchIndex: Int?
 
 }
@@ -201,10 +201,22 @@ extension Match {
             matches = _matches
         }
     }
+ 
+    private func getRightMatch(index: Int?) -> JSON {
+        var item: JSON = selectedMatch!
+        if let i = index {
+            if i >= 0 && i < matches.endIndex {
+                item = matches[i]
+            }
+        }
+        return item
+    }
     
 }
 
-// Generic extension methods to extract values from a match
+
+/* Generic extension methods to extract values from a match */
+
 extension Match {
     
     // To make the process of getting data from JSON data slightly more dynamic, let other classes decide what to get from the model
@@ -263,20 +275,12 @@ extension Match {
         return json
     }
     
-    private func getRightMatch(index: Int?) -> JSON {
-        var item: JSON = selectedMatch!
-        if let i = index {
-            if i >= 0 && i < matches.endIndex {
-                item = matches[i]
-            }
-        }
-        return item
-    }
-    
 }
 
 
-// Extension to get specific values from Match
+
+/* Extension to get specific values from Match */
+
 extension Match {
     
     func getStatus() -> FilterStatusFields? {
@@ -399,8 +403,6 @@ extension Match {
 /* A specialized model class for talents */
 
 class TalentMatch: Match {
-    
-    //TODO: These methods are very similar, so it might be better to make it one method
     
     func accept(callBack:RequestClosure) {
         

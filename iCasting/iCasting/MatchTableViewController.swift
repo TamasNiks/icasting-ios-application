@@ -85,7 +85,7 @@ class MatchTableViewController: UITableViewController, MatchDetailDelegate {
         }
         
         
-        // Configure the cell conform the status of the match (talent accepted, negotiation, pending)
+        // Configure the cell conform the status of the match (ex: talent accepted, negotiation, pending, closed)
         
         if let status = data[.Status] {
             if let statusField: FilterStatusFields = FilterStatusFields.allValues[status] {
