@@ -94,7 +94,8 @@ class NegotiationDetailTableViewController: UITableViewController, UIScrollViewD
             let message: Message = messages[indexPath.row]
             
             
-            if message.type == TextType.SystemText {
+            if message.type == TextType.SystemText ||
+                message.type == TextType.SystemContractFieldsUnaccepted {
                 cell = tableView.dequeueReusableCellWithIdentifier(
                     MessageCellIdentifier.SystemMessageCell,
                     forIndexPath: indexPath) as! SystemMessageCell

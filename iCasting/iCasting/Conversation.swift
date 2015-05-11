@@ -13,17 +13,19 @@ enum Role: Int {
     case User, Partner, System
 }
 
+// TODO: improve enum
 enum TextType: String {
     case
     SystemText = "system text",
+    SystemContractFieldsUnaccepted = "system contract fields unaccepted",
     Text = "text"
     
     static func fromType(type:String) -> TextType {
         switch type {
         case TextType.SystemText.rawValue:
             return TextType.SystemText
-        case TextType.Text.rawValue:
-            return TextType.Text
+        case TextType.SystemContractFieldsUnaccepted.rawValue:
+            return TextType.SystemContractFieldsUnaccepted
         default:
             return TextType.Text
         }
@@ -53,7 +55,7 @@ struct ConversationToken : Printable {
 
 class Conversation {
 
-    let socket = SocketIOClient(socketURL: "localhost:8900")//"https://ws-demo.icasting.net/chat")
+    //let socket = SocketIOClient(socketURL: "https://ws-demo.icasting.net")
     let matchID:String
     var messages:[Message] = [Message]()
 
@@ -94,6 +96,8 @@ extension Conversation {
                             println(request)
                             println(response)
                         }
+                        
+                        println(messagesJSON)
                         
                         if let tokenJSON: AnyObject = json {
                             

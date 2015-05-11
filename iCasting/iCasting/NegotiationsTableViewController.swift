@@ -93,7 +93,7 @@ class NegotiationsTableViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
-        
+        self.match.setMatch(indexPath.row)
         performSegueWithIdentifier("showConversation", sender: self)
         
     }
