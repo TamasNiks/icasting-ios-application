@@ -21,6 +21,24 @@ class MatchTableViewController: UITableViewController, MatchDetailDelegate {
 
     var matchModel: Match = TalentMatch()
     
+    func handleRefresh(sender: AnyObject) {
+        let popTime = dispatch_time(DISPATCH_TIME_NOW, Int64(NSEC_PER_SEC))
+        dispatch_after(popTime, dispatch_get_main_queue(), {
+            self.handleRequest()
+        })
+    }
+    
+    func handleRequest() {
+        
+        self.matchModel.all() { failure in
+            self.refreshControl?.endRefreshing()
+            println(failure?.description)
+            self.matchModel.filter(field: FilterStatusFields.Closed, allExcept: true)
+            self.tableView.reloadData()
+        }
+    }
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -30,19 +48,13 @@ class MatchTableViewController: UITableViewController, MatchDetailDelegate {
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
-        
-        self.matchModel.all() { result in
-            
-            self.matchModel.filter(field: FilterStatusFields.Closed, allExcept: true)
-            self.tableView.reloadData()
-        }
-        
+        refreshControl = UIRefreshControl()
+        refreshControl?.addTarget(self, action: ("handleRefresh:"), forControlEvents: UIControlEvents.ValueChanged)
+        handleRequest()
     }
 
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        
-
     }
     
     override func didReceiveMemoryWarning() {
@@ -102,12 +114,14 @@ class MatchTableViewController: UITableViewController, MatchDetailDelegate {
         cell.customImageView.makeRound(35, borderWidth:nil)
         return cell
     }
-
     
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return 90
     }
-
+    
+    override func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return 90
+    }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
     

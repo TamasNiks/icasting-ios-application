@@ -15,7 +15,7 @@ struct Credentials {
 
 struct Authentication {
     var user_id : String = ""// = "551d58a226042f74fb745533"
-    var access_token : String? // = "551d58a226042f74fb745533$YENvtqK2Eis3oKCG6vo76IgilplRXFO9h+LMKT1HdRo="
+    var access_token : String? = "551d58a226042f74fb745533$YENvtqK2Eis3oKCG6vo76IgilplRXFO9h+LMKT1HdRo="
 }
 
 typealias LoginClosure = RequestClosure
@@ -197,9 +197,9 @@ class CastingObjectRequest: RequestCommand {
             }
             
             if let json: AnyObject = json {
+                
                 println("CastingObjectRequest call success")
                 let json = JSON(json)
-                
                 let errors: ICErrorInfo? = ICError(json: json).getErrors()
                 
                 if errors == nil {

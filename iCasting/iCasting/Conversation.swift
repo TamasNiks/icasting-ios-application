@@ -112,12 +112,7 @@ extension Conversation {
                             //self.initializeSocket()
                             callBack()
                         }
-                        
-                        
-                        
                     }
-                    
-                    
                 }
         }
         

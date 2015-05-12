@@ -23,6 +23,25 @@ class NegotiationsTableViewController: UITableViewController {
     
     var match: Match = Match()
     
+    func handleRefresh(sender: AnyObject) {
+        let popTime = dispatch_time(DISPATCH_TIME_NOW, Int64(NSEC_PER_SEC))
+        dispatch_after(popTime, dispatch_get_main_queue(), {
+            self.handleRequest()
+        })
+    }
+    
+    func handleRequest() {
+        
+        self.match.all() { failure in
+            self.refreshControl?.endRefreshing()
+            println(failure?.description)
+            self.match.filter(field: .Negotiations)
+            println(self.match.matches)
+            self.tableView.reloadData()
+        }
+        
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -32,16 +51,13 @@ class NegotiationsTableViewController: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
         //self.title = NSLocalizedString("News", nil);
-        
+        refreshControl = UIRefreshControl()
+        refreshControl?.addTarget(self, action: ("handleRefresh:"), forControlEvents: UIControlEvents.ValueChanged)
+        handleRequest()
     }
     
     override func viewDidAppear(animated: Bool) {
-        self.match.all() { result in
-            self.match.filter(field: .Negotiations)
-            println(self.match.matches)
-            
-            self.tableView.reloadData()
-        }
+        super.viewDidAppear(animated)
     }
 
     override func didReceiveMemoryWarning() {

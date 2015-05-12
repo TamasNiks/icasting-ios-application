@@ -133,23 +133,38 @@ class Match {
 
 extension Match {
     
-    func all(callBack: ()->()) {
+    func all(callBack: RequestClosure) {
         
         //self.matches = Dummy.matches.arrayValue
-        
-        var url: String = APIMatch.MatchCards.value
-        var access_token: AnyObject = Auth.auth.access_token as! AnyObject
-        var params: [String : AnyObject] = ["access_token":access_token]
-        
-        request(Method.GET, url, parameters: params, encoding: ParameterEncoding.URL).responseJSON { (_, _, json, _) -> Void in
+        if let access_token: AnyObject = Auth.auth.access_token {
+            var url: String = APIMatch.MatchCards.value
+            var params: [String : AnyObject] = ["access_token":access_token]
             
-            if let j: AnyObject = json {
-                self._matches = JSON(j).arrayValue
-                self.filter()
-                self.setMatch(0)
-                callBack()
+            request(Method.GET, url, parameters: params, encoding: ParameterEncoding.URL).responseJSON { (_, _, json, error) -> Void in
+                
+                if let error = error {
+                    let errors: ICErrorInfo? = ICError(error: error).getErrors()
+                    callBack(failure: errors)
+                }
+                
+                if let json: AnyObject = json {
+                
+                    let json = JSON(json)
+                    let errors: ICErrorInfo? = ICError(json: json).getErrors()
+                    
+                    if errors == nil {
+                        self._matches = json.arrayValue
+                        self.filter()
+                        self.setMatch(0)
+                    }
+                    callBack(failure: errors)
+                }
             }
+            
+            return Void()
         }
+        
+        callBack(failure: nil)
     }
     
     // Because the matches will be an array, you can set a specific match based on it's index

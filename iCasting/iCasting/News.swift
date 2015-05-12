@@ -34,8 +34,14 @@ class News : ModelProtocol {
 
         
         var url: String = APINews.NewsItems.value
-        request(.GET, url).responseJSON { (_, _, JSON, _) -> Void in
-            if let result: AnyObject = JSON {
+        request(.GET, url).responseJSON { (_, _, json, error) -> Void in
+            
+            if let error = error {
+                let errors: ICErrorInfo? = ICError(error: error).getErrors()
+                callBack(failure: errors)
+            }
+            
+            if let result: AnyObject = json {
                 self.newsItems = result as! [AnyObject]
                 callBack(failure: nil)
             }
@@ -46,13 +52,12 @@ class News : ModelProtocol {
     func one(id: String, callBack: RequestClosure) {
         
         var url: String = APINews.NewsItem(id).value
-        request(.GET, url).responseJSON { (_, _, JSON, _) -> Void in
-            if let result: AnyObject = JSON {
+        request(.GET, url).responseJSON { (_, _, json, error) -> Void in
+            if let result: AnyObject = json {
                 self.newsItems = result as! [AnyObject]
                 callBack(failure: nil)
             }
         }
-        
     }
 }
 

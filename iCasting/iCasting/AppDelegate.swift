@@ -33,7 +33,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Configuration of the drawer controller
         var storyBoard = UIStoryboard(name: "Main", bundle: nil)
         
-        let initialViewController = storyBoard.instantiateViewControllerWithIdentifier("login") as? UIViewController
+        let initialViewController = storyBoard.instantiateViewControllerWithIdentifier("dashboard") as? UIViewController
         //let initialViewController = storyBoard.instantiateViewControllerWithIdentifier("dashboard") as? UIViewController
         //(initialViewController as? UITabBarController)?.selectedIndex = 3
         //let leftSideDrawerViewController = ExampleLeftSideDrawerViewController()

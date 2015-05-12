@@ -20,32 +20,39 @@ class NewsTableViewController: UITableViewController {
 
     let news : News = News()
     var item : NSDictionary?
+
+    func handleRefresh(sender: AnyObject) {
+        let popTime = dispatch_time(DISPATCH_TIME_NOW, Int64(NSEC_PER_SEC))
+        dispatch_after(popTime, dispatch_get_main_queue(), {
+            self.handleRequest()
+        })
+    }
+    
+    func handleRequest() {
+        news.all() { failure in
+            self.refreshControl!.endRefreshing()
+            if let failure: ICErrorInfo = failure {
+                println(failure.description)
+            } else {
+                self.tableView.reloadData()
+            }
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        refreshControl = UIRefreshControl()
+        refreshControl?.addTarget(self, action: ("handleRefresh:"), forControlEvents: UIControlEvents.ValueChanged)
 
         // When the view is loaded, get all the news items from the news model
-        news.all() { failure in
-            
-            if let failure: ICErrorInfo = failure {
-                
-                println(failure.description)
-                
-            } else {
-                
-                self.tableView.reloadData()
-                
-            }
-        }
+        handleRequest()
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
-    // MARK: - Table view data source
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1
