@@ -36,7 +36,7 @@ class NegotiationsTableViewController: UITableViewController {
             self.refreshControl?.endRefreshing()
             println(failure?.description)
             self.match.filter(field: .Negotiations)
-            println(self.match.matches)
+            //println(self.match.matches)
             self.tableView.reloadData()
         }
         

@@ -367,10 +367,10 @@ extension Match {
             // LOCATION
             details[.JobContractLocation] = [[String:String?]]()
             details[.JobContractLocation]?.append(["type" : getMatchJSON(.JobContractLocation)["type"].string ])
-            details[.JobContractLocation]?.append(["city" : getMatchJSON(.JobContractLocation)["address", "city"].string ])
-            details[.JobContractLocation]?.append(["street" : getMatchJSON(.JobContractLocation)["address", "street"].string ])
-            details[.JobContractLocation]?.append(["streetNumber" : getMatchJSON(.JobContractLocation)["address", "streetNumber"].string ])
-            details[.JobContractLocation]?.append(["zipcode" : getMatchJSON(.JobContractLocation)["address", "zipCode"].string ])
+            details[.JobContractLocation]?.append(["city" : getMatchJSON(.JobContractLocation)["address", "city"].string ?? "-" ])
+            details[.JobContractLocation]?.append(["street" : getMatchJSON(.JobContractLocation)["address", "street"].string ?? "-" ])
+            details[.JobContractLocation]?.append(["streetNumber" : getMatchJSON(.JobContractLocation)["address", "streetNumber"].string ?? "-" ])
+            details[.JobContractLocation]?.append(["zipcode" : getMatchJSON(.JobContractLocation)["address", "zipCode"].string ?? "-" ])
 
             // TRAVEL EXPENSES
             details[.JobPayment] = [[String:String?]]()
