@@ -101,11 +101,18 @@ class MatchTableViewController: UITableViewController, MatchDetailDelegate {
         
         if let status = data[.Status] {
             if let statusField: FilterStatusFields = FilterStatusFields.allValues[status] {
+                
                 if statusField == .Negotiations || statusField == .TalentAccepted {
-                    cell.customImageView.makeRound(35, borderWidth: 4, withBorderColor: UIColor(red: 123/255, green: 205/255, blue: 105/255, alpha: 1))
+
+                    if statusField == .TalentAccepted {
+                        cell.customImageView.makeRound(35, borderWidth: 4, withBorderColor: UIColor.orangeColor())
+                    }
+                    
                     if statusField == .Negotiations {
+                        cell.customImageView.makeRound(35, borderWidth: 4, withBorderColor: UIColor(red: 123/255, green: 205/255, blue: 105/255, alpha: 1))
                         cell.customNegotiationIcon.hidden = false
                     }
+                    
                     return cell
                 }
             }

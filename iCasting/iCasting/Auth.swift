@@ -14,8 +14,23 @@ struct Credentials {
 }
 
 struct Authentication {
+    
+    let TOKEN_KEY: String = "access_token"
+    
     var user_id : String = ""// = "551d58a226042f74fb745533"
-    var access_token : String? = "551d58a226042f74fb745533$YENvtqK2Eis3oKCG6vo76IgilplRXFO9h+LMKT1HdRo="
+    var access_token: String? {
+        willSet {
+            NSUserDefaults.standardUserDefaults().setValue(newValue, forKey: TOKEN_KEY)
+            //="551d58a226042f74fb745533$YENvtqK2Eis3oKCG6vo76IgilplRXFO9h+LMKT1HdRo="
+        }
+    }
+    
+    private var _access_token : String? {
+        get {
+            return NSUserDefaults.standardUserDefaults().stringForKey(TOKEN_KEY)
+        }
+    }
+    
 }
 
 typealias LoginClosure = RequestClosure
@@ -25,6 +40,12 @@ class Auth {
     static var auth: Authentication = Authentication()
     
     func login(credentials: Credentials, callBack: LoginClosure) {
+        
+        if let access_token = Auth.auth._access_token {
+            println("NSUserDefaults: \(access_token)")
+            callBack(failure: nil)
+            return
+        }
         
         LoginRequest(credentials: credentials).execute { errors -> () in
         
@@ -40,15 +61,10 @@ class Auth {
                     return
                 }
                 
-                CastingObjectRequest().execute { errors -> () in
+                CastingObjectRequest().execute { error -> () in
                  
-
                     self.printResults()
-                    callBack(failure: errors)
-                    
-//                    self.logout({ (result) -> () in
-//                        
-//                    })
+                    callBack(failure: error)
                 }
             }
         }
@@ -57,26 +73,34 @@ class Auth {
     
     func logout(callBack: RequestClosure) {
         
-        //TODO: Change logout with new HTTP system
-
         if let token = Auth.auth.access_token {
             
-            println("logout token: ")
-            println(token)
-            
             var params : [String:String] = ["access_token":token]
-            var request : NSURLRequest = (RequestFactory
+            var req : NSURLRequest = (RequestFactory
                 .request(.post) as? RequestHeaderProtocol)!
-                .create(APIAuth.Logout, content: (insert: nil, params: params),withHeaders: ["Authorization":""])
+                .create(APIAuth.Logout, content: (insert: nil, params: params), withHeaders: ["Authorization":""])
             
-            SessionManager.sharedInstance.request(request) { result in
-                if let data: AnyObject = result.success {
-                    println(data)
-                    Auth.auth.access_token = nil
+            request(req).responseJSON(completionHandler: { (request, response, json, error) -> Void in
+               
+                if let error = error {
+                    let error: ICErrorInfo? = ICError(error: error).getErrors()
+                    callBack(failure: error)
                 }
                 
-                callBack(failure: ICError(error: result.failure).getErrors())
-            }
+                if let json: AnyObject = json {
+                    
+                    let json = JSON(json)
+                    let errors: ICErrorInfo? = ICError(json: json).getErrors()
+                    
+                    if errors == nil {
+                        println(json)
+                        Auth.auth.access_token = nil
+                    }
+                    
+                    callBack(failure: errors)
+                }
+                
+            })
         }
     }
     
@@ -150,76 +174,20 @@ class LoginRequest: RequestCommand {
 
 
 class UserRequest: RequestCommand {
-    
     func execute(callBack:LoginClosure) {
-        
-        let url: String = APIUser.User(Auth.auth.user_id).value
-        var params: [String : AnyObject] = ["access_token":Auth.auth.access_token!]
-        request(.GET, url, parameters: params).responseJSON() { (request, response, json, error) in
-            
-            if(error != nil) {
-                NSLog("Error: \(error)")
-                println(request)
-                println(response)
-            }
-            
-            if let json: AnyObject = json {
-                println("UserRequest call success")
-                let json = JSON(json)
-                let errors: ICErrorInfo? = ICError(json: json).getErrors()
-                
-                if errors == nil {
-                    User.sharedInstance.displayName = json["name"]["display"].string
-                    User.sharedInstance.credits = json["credits"]["total"].number!
-                    User.sharedInstance.avatar = json["avatar"]["thumb"].string
-                    User.sharedInstance.roles = json["roles"].array
-                }
-                
-                callBack(failure: errors)
-            }
+        User.sharedInstance.get { (failure) -> () in
+            callBack(failure: failure)
         }
     }
 }
 
 
 class CastingObjectRequest: RequestCommand {
-    
     func execute(callBack:LoginClosure) {
-        
-        let url: String = APICastingObject.UserCastingObject(Auth.auth.user_id).value
-        var params: [String : AnyObject] = ["access_token":Auth.auth.access_token!]
-        request(.GET, url, parameters: params).responseJSON() { (request, response, json, error) in
-            
-            if (error != nil) {
-                NSLog("Error: \(error)")
-                println(request)
-                println(response)
-            }
-            
-            if let json: AnyObject = json {
-                
-                println("CastingObjectRequest call success")
-                let json = JSON(json)
-                let errors: ICErrorInfo? = ICError(json: json).getErrors()
-                
-                if errors == nil {
-                    var castingObjectIDs:[String] = [String]()
-                    for (index: String, subJSON: JSON) in json {
-                        let id: String = subJSON["id"].stringValue
-                        castingObjectIDs.append(id)
-                    }
-                    
-                    User.sharedInstance.castingObjectIDs = castingObjectIDs
-                    User.sharedInstance.setCastingObject(0)
-                }
-                
-                callBack(failure:errors)
-            }
-            
+        CastingObject().get { (failure) -> () in
+            callBack(failure: failure)
         }
-        
     }
-    
 }
 
 

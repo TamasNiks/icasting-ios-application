@@ -10,7 +10,7 @@ import Foundation
 
 protocol ModelProtocol {
 
-    func all (callBack: RequestClosure)
-    func one (id: String, callBack: RequestClosure)
+    //func all (callBack: RequestClosure)
+    //func one (id: String, callBack: RequestClosure)
     
 }

@@ -96,8 +96,8 @@ class NegotiationsTableViewController: UITableViewController {
         } else {
             cell.customImageView.image = ICImages.PlaceHolderClientAvatar.image
         }
-        cell.customImageView.makeRound(35, borderWidth: nil)
-
+        cell.customImageView.makeRound(35, borderWidth: 4, withBorderColor: UIColor(red: 123/255, green: 205/255, blue: 105/255, alpha: 1))
+        
         return cell
     }
 

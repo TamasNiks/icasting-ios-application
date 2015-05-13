@@ -53,9 +53,7 @@ class SessionManager: NSObject, NSURLSessionTaskDelegate {
                 var resultObject: AnyObject?
                 var contentType: String? = allHeaderFields["Content-Type"] as? String
                 if let str = contentType {
-                    
                     resultObject = JSONParser.Parse(data)
-
                 }
                 // Because there is no content type, the server will return a data object, which needs to converted to a string
                 else {

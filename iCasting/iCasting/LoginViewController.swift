@@ -24,13 +24,17 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         // Do any additional setup after loading the view, typically from a nib.
 
         NSNotificationCenter.defaultCenter()
-            .addObserver(self, selector: "handleKayboardWillShow:", name: UIKeyboardWillShowNotification, object: nil)
+            .addObserver(self, selector: "handleKeyboardWillShow:", name: UIKeyboardWillShowNotification, object: nil)
         
         NSNotificationCenter.defaultCenter()
             .addObserver(self, selector: "handleKeyboardDidShow:", name: UIKeyboardDidShowNotification, object: nil)
         
         NSNotificationCenter.defaultCenter()
             .addObserver(self, selector: "handleKeyboardWillHide:", name: UIKeyboardWillHideNotification, object: nil)
+        
+        if let access_token = Auth.auth.access_token {
+            self.performSegueWithIdentifier("showMain", sender: self)
+        }
         
     }
 
@@ -54,7 +58,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     // MARK: Notification Methods
     
-    func handleKayboardWillShow(notification: NSNotification) {
+    func handleKeyboardWillShow(notification: NSNotification) {
 
         println("keyboard will show")
         // Get the frame of the keyboard and place it in a CGRect
@@ -148,15 +152,28 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                 return
             }
             
+            // TEST LOGOUT
+            //Auth().logout({ (failure) -> () in println(failure) })
+            
             // Finally if there are no errors found, continue to main interface
             self.performSegueWithIdentifier("showMain", sender: self)
         }
         
     }
     
+    @IBAction func prepareForUnwind(segue:UIStoryboardSegue) {
+        
+        
+    }
+    
+    
     deinit {
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
+    
+    
+
+    
     
 
 }
