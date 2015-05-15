@@ -33,7 +33,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             .addObserver(self, selector: "handleKeyboardWillHide:", name: UIKeyboardWillHideNotification, object: nil)
         
         if let access_token = Auth.auth.access_token {
-            self.performSegueWithIdentifier("showMain", sender: self)
+            self.performSegueWithIdentifier("showCastingObjects", sender: self)
         }
         
     }
@@ -41,6 +41,12 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(false)
 
+        
+//        self.emailTextField.text = "tim.van.steenoven@icasting.com"
+//        self.passwordTextField.text = "test"
+        
+        self.emailTextField.text = "boyd.rehorst+familie-account@icasting.com"
+        self.passwordTextField.text = "abc"
     }
     
     override func didReceiveMemoryWarning() {
@@ -156,7 +162,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             //Auth().logout({ (failure) -> () in println(failure) })
             
             // Finally if there are no errors found, continue to main interface
-            self.performSegueWithIdentifier("showMain", sender: self)
+            self.performSegueWithIdentifier("showCastingObjects", sender: self)
         }
         
     }

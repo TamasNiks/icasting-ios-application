@@ -163,6 +163,7 @@ class LoginRequest: RequestCommand {
                     let user_id: String =  json["user_id"].stringValue
                     let access_token: String = json["access_token"].stringValue
                     let authentication: Authentication = Authentication(user_id: user_id, access_token: access_token)
+                    println("access_token: " + access_token)
                     Auth.auth = authentication
                 }
                 
@@ -172,10 +173,9 @@ class LoginRequest: RequestCommand {
     }
 }
 
-
 class UserRequest: RequestCommand {
     func execute(callBack:LoginClosure) {
-        User.sharedInstance.get { (failure) -> () in
+        (User.sharedInstance as ModelRequest).get { (failure) -> () in
             callBack(failure: failure)
         }
     }
@@ -184,7 +184,7 @@ class UserRequest: RequestCommand {
 
 class CastingObjectRequest: RequestCommand {
     func execute(callBack:LoginClosure) {
-        CastingObject().get { (failure) -> () in
+        (CastingObject() as ModelRequest).get { (failure) -> () in
             callBack(failure: failure)
         }
     }

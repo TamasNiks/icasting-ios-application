@@ -36,13 +36,14 @@ enum APIUser: EndpointProtocol {
 
 enum APICastingObject: EndpointProtocol {
     
-    case UserCastingObject(String), CastingObject(String)
+    case UserCastingObjectsSummary(String), UserCastingObjects(String), CastingObject(String)
     
     func endpoint() -> String {
         
         switch self {
-            
-        case .UserCastingObject(let userid):
+        case .UserCastingObjectsSummary(let userid):
+            return "user/\(userid)/castingObjects/summary"
+        case .UserCastingObjects(let userid):
             return "user/\(userid)/castingObjects"
         case .CastingObject(let id):
             return "castingObject/\(id)"
@@ -114,12 +115,22 @@ enum APIMedia: EndpointProtocol {
 
 enum APIMatch: EndpointProtocol {
     
-    case MatchCards, MatchAcceptTalent(String), MatchRejectTalent(String), MatchConversation(String), MatchConversationToken(String)
+    case MatchCards,
+    MatchesCastingObject(String),
+    MatchesCastingObjectCards(String),
+    MatchAcceptTalent(String),
+    MatchRejectTalent(String),
+    MatchConversation(String),
+    MatchConversationToken(String)
     
     func endpoint() -> String {
         switch self {
         case .MatchCards:
             return "matchCards"
+        case .MatchesCastingObject(let id):
+            return "castingObject/\(id)/matches"
+        case .MatchesCastingObjectCards(let id):
+            return "castingObject/\(id)/matches/cards"
         case .MatchAcceptTalent(let id):
             return "match/\(id)/acceptTalent"
         case .MatchRejectTalent(let id):

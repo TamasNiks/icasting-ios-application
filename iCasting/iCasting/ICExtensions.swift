@@ -54,7 +54,7 @@ extension String {
 
 extension UIImageView {
     
-    public func makeRound(
+    func makeRound(
         amount:CGFloat,
         borderWidth withBorderWidth: CGFloat? = 2.0,
         withBorderColor:UIColor = UIColor(white: 1.0, alpha: 1.0)) {
@@ -68,6 +68,19 @@ extension UIImageView {
             self.layer.borderWidth = bw
         }
 
+    }
+    
+}
+
+extension UITableView {
+    
+    func setTableHeaderViewNoResults(text: String) {
+        var label: UILabel = UILabel(frame: CGRectMake(0, 0, self.frame.size.width, 90))
+        // Define the left padding through white spaces, check https://www.cs.tut.fi/~jkorpela/chars/spaces.html
+        label.text = "\u{2003}"+text+"\u{2002}"
+        label.textAlignment = NSTextAlignment.Center
+        label.adjustsFontSizeToFitWidth = true
+        self.tableHeaderView = label
     }
     
 }

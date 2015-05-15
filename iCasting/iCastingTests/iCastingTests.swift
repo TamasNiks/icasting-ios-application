@@ -38,7 +38,7 @@ class iCastingTests: XCTestCase {
     func testNewMatchClass() {
         
         var match: Match = Match()
-        match.all { (r) -> () in
+        match.get { (r) -> () in
             
             
             let fields = [Fields.JobTitle, Fields.ClientName, Fields.ClientCompany, Fields.JobDateStart]
@@ -57,7 +57,7 @@ class iCastingTests: XCTestCase {
         
         var match: Match = Match()
         
-        match.all() { result in
+        match.get() { result in
             
             
             match.setMatch(0)

@@ -113,16 +113,31 @@ typealias MatchDetailType = [Fields: [ [String:String?] ] ] // Dictionary with F
 typealias MatchDetailsReturnValue = (header: MatchHeaderType, details: MatchDetailType)
 
 
+
+
+
+
+
 /* MATCH MODEL */
 
 class Match {
     
-    // Contains the original matches from the request
+    // Contains the original matches from the request, all changes to the matches array must mirror the _matches array
     private var _matches: [JSON] = [JSON]()
+
+    // Contains the original matches filtered by casting object
+    private var matchesFromCastingObject: [JSON] {
+        get {
+            return _matches.filter() { includeElement in
+                return (includeElement["castingObject"].stringValue == User.sharedInstance.castingObjectID)
+            }
+        }
+    }
     
     // Contains the filtered matches if there are any filters applied
     var matches: [JSON] = [JSON]()
 
+    
     // Contains one match from the matches based on index
     var selectedMatch: JSON?
     
@@ -131,12 +146,16 @@ class Match {
 
 }
 
-extension Match {
+extension Match : ModelRequest {
     
-    func all(callBack: RequestClosure) {
+    func get(callBack: RequestClosure) {
         
         //self.matches = Dummy.matches.arrayValue
         if let access_token: AnyObject = Auth.auth.access_token {
+            
+            println("CastingObjectID: "+User.sharedInstance.castingObjectID)
+            
+            var castingObjectID: String = User.sharedInstance.castingObjectID
             var url: String = APIMatch.MatchCards.value
             var params: [String : AnyObject] = ["access_token":access_token]
             
@@ -148,15 +167,18 @@ extension Match {
                 }
                 
                 if let json: AnyObject = json {
-                
+                    
                     let json = JSON(json)
                     let errors: ICErrorInfo? = ICError(json: json).getErrors()
                     
                     if errors == nil {
+                        
                         self._matches = json.arrayValue
-                        self.filter()
+                        self.filter(field: nil, allExcept: false, original: true)
                         self.setMatch(0)
+                        
                     }
+                    
                     callBack(failure: errors)
                 }
             }
@@ -167,6 +189,7 @@ extension Match {
         callBack(failure: nil)
     }
     
+    
     // Because the matches will be an array, you can set a specific match based on it's index
     func setMatch(index: Int) {
         if index >= 0 && index < matches.endIndex {
@@ -176,48 +199,63 @@ extension Match {
     }
     
     func removeMatch() {
-        if let index = selectedMatchIndex {
-            matches.removeAtIndex(index)
+        
+        // Remove from originalMatches
+//        let id: String = self.getID(FieldID.MatchCardID)!
+//        let c: Int = _matches.count
+//        for i in 0..<c {
+//            let key: [SubscriptType] = FieldID.MatchCardID.getPath()
+//            if _matches[i][key].stringValue == id {
+//                _matches.removeAtIndex(i)
+//            }
+//        }
+
+        // Remove from matches
+        if let i = selectedMatchIndex {
+            matches.removeAtIndex(i)
         }
+        // Set originalMatches
+        _matches = matches
+        
+        /*if let id: String = getID(FieldID.MatchCardID) {
+            let c: Int = matches.count
+            for i in 0..<c {
+                let key: [SubscriptType] = FieldID.MatchCardID.getPath()
+                if matches[i][key].stringValue == id {
+                    matches.removeAtIndex(i)
+                }
+            }
+        }*/
     }
     
-    // Filter the matches based on the status of a match, allExcept means that the result of the filter will not contain the provided status. If original is true, it will filter the original requested matches.
-    func filter(field:FilterStatusFields? = nil, allExcept:Bool = false, original:Bool = true) {
+    
+    // Filter the matches based on the status of a match, parameter "allExcept" means that the result of the filter will contain everything, except the provided status. If parameter "original" == true, it will filter from the original requested "_matches" global var.
+    func filter(field:FilterStatusFields? = nil, allExcept:Bool = false, original:Bool = false) {
         
-        var mathesToFilter:[JSON] = _matches
-        
-        if original == false {
-            mathesToFilter = matches
-        }
+        var mathesToFilter:[JSON] = (original == true) ? matchesFromCastingObject : matches
         
         if let f = field {
+            
             var filtered = mathesToFilter.filter { (obj) -> Bool in
                 
                 let key: [SubscriptType] = Fields.Status.getPath()
                 let status = obj[key].stringValue
-                
                 if allExcept == false {
-                    if FilterStatusFields.allValues[status] == f {
-                        return true
-                    }
-                    return false
+                    return (FilterStatusFields.allValues[status] == f)
                 } else {
-                    if FilterStatusFields.allValues[status] != f {
-                        return true
-                    }
-                    return false
+                    return (FilterStatusFields.allValues[status] != f)
                 }
             }
-            
             matches = filtered
         }
         else {
-            // If no method parameters are set, go back to the original, it is actually better to reload the data from the server
-            matches = _matches
+            // If no method parameters are set, go back to the original, all changes in one, should mirror the other, otherwise, you can get unexpected results, reload the data from the server instead.
+            matches = matchesFromCastingObject
         }
     }
  
-    private func getRightMatch(index: Int?) -> JSON {
+    
+    private func getMatchFromIndex(index: Int?) -> JSON {
         var item: JSON = selectedMatch!
         if let i = index {
             if i >= 0 && i < matches.endIndex {
@@ -237,7 +275,7 @@ extension Match {
     // To make the process of getting data from JSON data slightly more dynamic, let other classes decide what to get from the model
     func getMatchData(fields: [Fields], index: Int? = nil) -> [Fields:String] {
         
-        let item = getRightMatch(index)
+        let item = getMatchFromIndex(index)
         
         var returnValue: [Fields:String] = [Fields:String]()
         
@@ -263,7 +301,7 @@ extension Match {
     // To just recieve one value, use this method instead
     func getMatchValue(field: Fields, index: Int? = nil) -> String? {
         
-        let item = getRightMatch(index)
+        let item = getMatchFromIndex(index)
         
         let keys:[SubscriptType] = field.getPath()
         
@@ -284,7 +322,7 @@ extension Match {
     }
     
     private func getMatchJSON(field: Fields, index: Int? = nil) -> JSON {
-        let item = getRightMatch(index)
+        let item = getMatchFromIndex(index)
         let keys:[SubscriptType] = field.getPath()
         var json = item[keys]
         return json
@@ -317,6 +355,22 @@ extension Match {
                     selectedMatch![key].string = str
                     // After changing it to the selected match, update the matches as well with the selectedMatch.
                     matches[selectedMatchIndex!] = selectedMatch!
+                    // Set status of originalMatch
+                    _matches = matches
+//                    let id: String = self.getID(FieldID.MatchCardID)!
+//                    let key: [SubscriptType] = FieldID.MatchCardID.getPath()
+//                    _matches = _matches.map({ (transform: JSON) -> JSON in
+//                        return (transform[key].stringValue == id) ? self.selectedMatch! : transform
+//                    })
+                    
+//                    let c: Int = _matches.count
+//                    for i in 0..<c {
+//                        let key: [SubscriptType] = FieldID.MatchCardID.getPath()
+//                        if _matches[i][key].stringValue == id {
+//                            _matches[i] = selectedMatch!
+//                        }
+//                    }
+                    
                 }
             }
         }
@@ -334,7 +388,7 @@ extension Match {
     
     func getProfile(index:Int? = nil) -> [String:JSON] {
         
-        let item = getRightMatch(index)
+        let item = getMatchFromIndex(index)
         let profile: JSON = item[Fields.JobProfile.getPath()]
         return profile.dictionaryValue
     }

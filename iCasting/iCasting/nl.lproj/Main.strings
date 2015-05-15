@@ -1,114 +1,102 @@
 
-/* Class = "UILabel"; text = "-"; ObjectID = "0C7-v9-GBm"; */
-"0C7-v9-GBm.text" = "-";
+///* Class = "UILabel"; text = "-"; ObjectID = "0C7-v9-GBm"; */
+//"0C7-v9-GBm.text" = "-";
 
-/* Class = "UILabel"; text = "Label"; ObjectID = "0mV-v2-3We"; */
-"0mV-v2-3We.text" = "Label";
+/* Class = "UITabBarItem"; title = "Negotiations"; ObjectID = "1dz-kJ-C9E"; */
+"1dz-kJ-C9E.title" = "Onderhandelen";
 
-/* Class = "UITabBarItem"; title = "Onderhandelingen"; ObjectID = "1dz-kJ-C9E"; */
-"1dz-kJ-C9E.title" = "Onderhandelingen";
+/* Class = "UILabel"; text = "Logout"; ObjectID = "25P-D5-PBV"; */
+"25P-D5-PBV.text" = "Uitloggen";
 
-/* Class = "UILabel"; text = "Title"; ObjectID = "2g7-5q-e91"; */
-"2g7-5q-e91.text" = "Title";
+///* Class = "UILabel"; text = "Title"; ObjectID = "2g7-5q-e91"; */
+//"2g7-5q-e91.text" = "Title";
+//
+///* Class = "UILabel"; text = "Title"; ObjectID = "7UP-Fo-JqZ"; */
+//"7UP-Fo-JqZ.text" = "Title";
 
-/* Class = "UITabBarController"; title = "Dashboard"; ObjectID = "49e-Tb-3d3"; */
-"49e-Tb-3d3.title" = "Dashboard";
-
-/* Class = "UINavigationController"; title = "MatchNavigation"; ObjectID = "73O-SS-C5c"; */
-"73O-SS-C5c.title" = "MatchNavigation";
-
-/* Class = "UILabel"; text = "Title"; ObjectID = "7UP-Fo-JqZ"; */
-"7UP-Fo-JqZ.text" = "Title";
-
-/* Class = "UILabel"; text = "Title"; ObjectID = "8Oo-je-b4Q"; */
-"8Oo-je-b4Q.text" = "Title";
-
-/* Class = "UITableViewController"; title = "NewsOverview"; ObjectID = "8S2-8C-u1d"; */
-"8S2-8C-u1d.title" = "NewsOverview";
-
-/* Class = "UILabel"; text = "subtitle"; ObjectID = "9oe-F5-xlR"; */
-"9oe-F5-xlR.text" = "subtitle";
+///* Class = "UILabel"; text = "subtitle"; ObjectID = "9oe-F5-xlR"; */
+//"9oe-F5-xlR.text" = "subtitle";
 
 /* Class = "UIViewController"; title = "Login"; ObjectID = "9pv-A4-QxB"; */
-"9pv-A4-QxB.title" = "Login";
+"9pv-A4-QxB.title" = "Inloggen";
 
-/* Class = "UILabel"; text = "title"; ObjectID = "BsU-jA-UZd"; */
-"BsU-jA-UZd.text" = "title";
+///* Class = "UILabel"; text = "Title"; ObjectID = "BoY-re-eBt"; */
+//"BoY-re-eBt.text" = "Title";
+//
+///* Class = "UILabel"; text = "title"; ObjectID = "BsU-jA-UZd"; */
+//"BsU-jA-UZd.text" = "title";
 
-/* Class = "UILabel"; text = "Detail"; ObjectID = "FL7-5k-mjD"; */
-"FL7-5k-mjD.text" = "Detail";
-
-/* Class = "UITabBarItem"; title = "Nieuws"; ObjectID = "FpU-yf-duC"; */
+/* Class = "UITabBarItem"; title = "News"; ObjectID = "FpU-yf-duC"; */
 "FpU-yf-duC.title" = "Nieuws";
 
 /* Class = "UINavigationItem"; title = "Matches"; ObjectID = "HFP-w8-LJr"; */
 "HFP-w8-LJr.title" = "Matches";
 
-/* Class = "UINavigationController"; title = "ConversationsNavigation"; ObjectID = "Izq-jK-1bU"; */
-"Izq-jK-1bU.title" = "ConversationsNavigation";
+/* Class = "UIButton"; normalTitle = "Reject"; ObjectID = "JMC-0f-hHa"; */
+"JMC-0f-hHa.normalTitle" = "Afslaan";
 
-/* Class = "UIButton"; normalTitle = "Afwijzen"; ObjectID = "JMC-0f-hHa"; */
-"JMC-0f-hHa.normalTitle" = "Afwijzen";
-
-/* Class = "UILabel"; text = "subtitle"; ObjectID = "JMm-o4-zvr"; */
-"JMm-o4-zvr.text" = "subtitle";
+///* Class = "UILabel"; text = "subtitle"; ObjectID = "JMm-o4-zvr"; */
+//"JMm-o4-zvr.text" = "subtitle";
 
 /* Class = "UITabBarItem"; title = "Matches"; ObjectID = "Jam-WV-to2"; */
 "Jam-WV-to2.title" = "Matches";
 
-/* Class = "UILabel"; text = "Detail"; ObjectID = "Na3-X0-UdD"; */
-"Na3-X0-UdD.text" = "Detail";
-
 /* Class = "UILabel"; text = "Detail"; ObjectID = "QVs-DK-bl8"; */
 "QVs-DK-bl8.text" = "Detail";
 
-/* Class = "UINavigationItem"; title = "Onderhandelingen"; ObjectID = "QYk-k1-MkW"; */
+/* Class = "UINavigationItem"; title = "Negotiations"; ObjectID = "QYk-k1-MkW"; */
 "QYk-k1-MkW.title" = "Onderhandelingen";
 
-/* Class = "UILabel"; text = "Title"; ObjectID = "Smv-uc-M3J"; */
-"Smv-uc-M3J.text" = "Title";
+///* Class = "UILabel"; text = "Title"; ObjectID = "Smv-uc-M3J"; */
+//"Smv-uc-M3J.text" = "Title";
 
 /* Class = "UILabel"; text = "date"; ObjectID = "Wf4-1e-bl8"; */
-"Wf4-1e-bl8.text" = "date";
+"Wf4-1e-bl8.text" = "datum";
 
 /* Class = "UILabel"; text = "date"; ObjectID = "XBA-hg-c2P"; */
-"XBA-hg-c2P.text" = "date";
+"XBA-hg-c2P.text" = "datum";
 
-/* Class = "UIViewController"; title = "NewsDetail"; ObjectID = "Ycn-n3-6J0"; */
-"Ycn-n3-6J0.title" = "NewsDetail";
+///* Class = "UILabel"; text = "-"; ObjectID = "ZTe-ta-GJL"; */
+//"ZTe-ta-GJL.text" = "-";
 
-/* Class = "UILabel"; text = "-"; ObjectID = "ZTe-ta-GJL"; */
-"ZTe-ta-GJL.text" = "-";
+///* Class = "UILabel"; text = "Subtitle"; ObjectID = "Zbr-8W-Crb"; */
+//"Zbr-8W-Crb.text" = "Subtitle";
+//
+///* Class = "UITabBarItem"; title = "Second"; ObjectID = "acW-dT-cKf"; */
+//"acW-dT-cKf.title" = "Second";
 
-/* Class = "UILabel"; text = "Subtitle"; ObjectID = "Zbr-8W-Crb"; */
-"Zbr-8W-Crb.text" = "Subtitle";
+/* Class = "UIButton"; disabledTitle = "Geaccepteerd"; ObjectID = "awb-6J-aFT"; */
+"awb-6J-aFT.disabledTitle" = "Geaccepteerd";
 
-/* Class = "UITabBarItem"; title = "Second"; ObjectID = "acW-dT-cKf"; */
-"acW-dT-cKf.title" = "Second";
-
-/* Class = "UIButton"; normalTitle = "Accepteer"; ObjectID = "awb-6J-aFT"; */
+/* Class = "UIButton"; normalTitle = "Accept"; ObjectID = "awb-6J-aFT"; */
 "awb-6J-aFT.normalTitle" = "Accepteer";
 
-/* Class = "UINavigationItem"; title = "Nieuws"; ObjectID = "cEC-tl-3sP"; */
+/* Class = "UINavigationItem"; title = "News"; ObjectID = "cEC-tl-3sP"; */
 "cEC-tl-3sP.title" = "Nieuws";
 
+/* Class = "UINavigationItem"; title = "Family"; ObjectID = "cYo-nH-7QH"; */
+"cYo-nH-7QH.title" = "Familie";
+
 /* Class = "UILabel"; text = "system message"; ObjectID = "dWi-4w-05J"; */
-"dWi-4w-05J.text" = "system message";
+"dWi-4w-05J.text" = "Systeembericht";
 
 /* Class = "UITableViewController"; title = "Matches"; ObjectID = "dpI-DT-rud"; */
 "dpI-DT-rud.title" = "Matches";
 
-/* Class = "UILabel"; text = "left"; ObjectID = "e9m-fv-6bz"; */
-"e9m-fv-6bz.text" = "left";
+///* Class = "UILabel"; text = "left"; ObjectID = "e9m-fv-6bz"; */
+//"e9m-fv-6bz.text" = "left";
 
-/* Class = "UITextField"; placeholder = "Wachtwoord"; ObjectID = "egR-rc-xvq"; */
+/* Class = "UITextField"; placeholder = "Password"; ObjectID = "egR-rc-xvq"; */
 "egR-rc-xvq.placeholder" = "Wachtwoord";
 
-/* Class = "UITextField"; text = "test"; ObjectID = "egR-rc-xvq"; */
-"egR-rc-xvq.text" = "test";
+///* Class = "UITextField"; text = "test"; ObjectID = "egR-rc-xvq"; */
+//"egR-rc-xvq.text" = "test";
 
 /* Class = "UIButton"; normalTitle = "Login"; ObjectID = "eha-MQ-fPX"; */
-"eha-MQ-fPX.normalTitle" = "Login";
+"eha-MQ-fPX.normalTitle" = "Inloggen";
+
+/* Class = "UINavigationItem"; title = "Settings"; ObjectID = "fXM-8s-L6V"; */
+"fXM-8s-L6V.title" = "Settings";
 
 /* Class = "UINavigationItem"; title = "Details"; ObjectID = "g27-5t-DqM"; */
 "g27-5t-DqM.title" = "Details";
@@ -116,29 +104,23 @@
 /* Class = "UITextField"; placeholder = "E-mail"; ObjectID = "gR0-vM-adL"; */
 "gR0-vM-adL.placeholder" = "E-mail";
 
-/* Class = "UITextField"; text = "tim.van.steenoven@icasting.com"; ObjectID = "gR0-vM-adL"; */
-"gR0-vM-adL.text" = "tim.van.steenoven@icasting.com";
+///* Class = "UITextField"; text = "tim.van.steenoven@icasting.com"; ObjectID = "gR0-vM-adL"; */
+//"gR0-vM-adL.text" = "tim.van.steenoven@icasting.com";
 
-/* Class = "UILabel"; text = "title"; ObjectID = "gpy-sa-haE"; */
-"gpy-sa-haE.text" = "title";
+///* Class = "UILabel"; text = "title"; ObjectID = "gpy-sa-haE"; */
+//"gpy-sa-haE.text" = "title";
+//
+///* Class = "UILabel"; text = "right"; ObjectID = "lmS-8C-XiE"; */
+//"lmS-8C-XiE.text" = "right";
 
-/* Class = "UINavigationController"; title = "NewsNavigation"; ObjectID = "he1-HE-Xbf"; */
-"he1-HE-Xbf.title" = "NewsNavigation";
+/* Class = "UINavigationItem"; title = "Messages"; ObjectID = "maK-3y-qlx"; */
+"maK-3y-qlx.title" = "Berichten";
 
-/* Class = "UILabel"; text = "Title"; ObjectID = "huq-VI-XAZ"; */
-"huq-VI-XAZ.text" = "Title";
+/* Class = "UILabel"; text = "Choose Family member"; ObjectID = "oPh-72-5sB"; */
+"oPh-72-5sB.text" = "Maak een keuze tussen een familielid";
 
-/* Class = "UITableViewController"; title = "Negotiation"; ObjectID = "iKk-vB-jcg"; */
-"iKk-vB-jcg.title" = "Onderhandeling";
+///* Class = "UILabel"; text = "Subtitle"; ObjectID = "uMN-B0-fV0"; */
+//"uMN-B0-fV0.text" = "Subtitle";
 
-/* Class = "UITabBarItem"; title = "Dashboard"; ObjectID = "k1X-tl-gce"; */
-"k1X-tl-gce.title" = "Dashboard";
-
-/* Class = "UILabel"; text = "right"; ObjectID = "lmS-8C-XiE"; */
-"lmS-8C-XiE.text" = "right";
-
-/* Class = "UINavigationItem"; title = "Profiel"; ObjectID = "rIo-FO-why"; */
-"rIo-FO-why.title" = "Profiel";
-
-/* Class = "UITableViewController"; title = "Conversations"; ObjectID = "tBD-Yv-QpF"; */
-"tBD-Yv-QpF.title" = "Onderhandelingen";
+/* Class = "UITabBarItem"; title = "Settings"; ObjectID = "umu-NK-b96"; */
+"umu-NK-b96.title" = "Settings";

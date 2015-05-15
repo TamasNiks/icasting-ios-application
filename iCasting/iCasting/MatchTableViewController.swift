@@ -21,6 +21,41 @@ class MatchTableViewController: UITableViewController, MatchDetailDelegate {
 
     var matchModel: Match = TalentMatch()
     
+    @IBAction func onFilterBarButtonTouch(sender: AnyObject) {
+        
+        println("FILTER")
+        
+        let ac = UIAlertController(title: "Filter status", message: "Which status do you want to see?", preferredStyle: UIAlertControllerStyle.ActionSheet)
+
+        ac.addAction(UIAlertAction(title: NSLocalizedString("AllFilter", comment: "Filter matches"),
+            style: UIAlertActionStyle.Default) { (action) -> Void in
+            self.matchModel.filter(field: FilterStatusFields.Closed, allExcept: true, original: true)
+            self.tableView.reloadSections(NSIndexSet(index: 0), withRowAnimation: UITableViewRowAnimation.Fade)
+        })
+        
+        ac.addAction(UIAlertAction(title: NSLocalizedString("NegotiationFilter", comment: "Filter matches"),
+            style: UIAlertActionStyle.Default) { (action) -> Void in
+            self.matchModel.filter(field: FilterStatusFields.Negotiations, allExcept: false, original: true)
+            self.tableView.reloadSections(NSIndexSet(index: 0), withRowAnimation: UITableViewRowAnimation.Fade)
+        })
+        
+        ac.addAction(UIAlertAction(title: NSLocalizedString("PendingFilter", comment: "Filter matches"),
+            style: UIAlertActionStyle.Default) { (action) -> Void in
+            self.matchModel.filter(field: FilterStatusFields.Pending, allExcept: false, original: true)
+            self.tableView.reloadSections(NSIndexSet(index: 0), withRowAnimation: UITableViewRowAnimation.Fade)
+        })
+        
+        ac.addAction(UIAlertAction(title: NSLocalizedString("TalentAcceptedFilter", comment: "Filter matches"),
+            style: UIAlertActionStyle.Default) { (action) -> Void in
+            self.matchModel.filter(field: FilterStatusFields.TalentAccepted, allExcept: false, original: true)
+            self.tableView.reloadSections(NSIndexSet(index: 0), withRowAnimation: UITableViewRowAnimation.Fade)
+        })
+        
+        self.presentViewController(ac, animated: true, completion: nil)
+        
+    }
+    
+    
     func handleRefresh(sender: AnyObject) {
         let popTime = dispatch_time(DISPATCH_TIME_NOW, Int64(NSEC_PER_SEC))
         dispatch_after(popTime, dispatch_get_main_queue(), {
@@ -29,11 +64,21 @@ class MatchTableViewController: UITableViewController, MatchDetailDelegate {
     }
     
     func handleRequest() {
-        
-        self.matchModel.all() { failure in
+    
+        self.matchModel.get() { failure in
             self.refreshControl?.endRefreshing()
             println(failure?.description)
-            self.matchModel.filter(field: FilterStatusFields.Closed, allExcept: true)
+            self.matchModel.filter(field: FilterStatusFields.Closed, allExcept: true, original: true)
+            
+            println(self.matchModel.getStatus()?.rawValue)
+            
+            if self.matchModel.matches.isEmpty {
+                self.tableView.setTableHeaderViewNoResults(NSLocalizedString("NoMatches", comment: ""))
+    
+            } else {
+                self.tableView.tableHeaderView = nil
+                self.tableView.reloadData()
+            }
             self.tableView.reloadData()
         }
     }
@@ -50,6 +95,9 @@ class MatchTableViewController: UITableViewController, MatchDetailDelegate {
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
         refreshControl = UIRefreshControl()
         refreshControl?.addTarget(self, action: ("handleRefresh:"), forControlEvents: UIControlEvents.ValueChanged)
+        
+        // When the view is loaded, get all the content from the model
+        refreshControl?.beginRefreshing()
         handleRequest()
     }
 
@@ -80,9 +128,11 @@ class MatchTableViewController: UITableViewController, MatchDetailDelegate {
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCellWithIdentifier("matchDetailCellIdentifier", forIndexPath: indexPath) as! MatchOverviewCell
-
-        var data: [Fields: String] = self.matchModel.getMatchData([.JobTitle, .JobDescription, .JobDateStart, .ClientAvatar, .Status], index: indexPath.row)
+        cell.customNegotiationIcon.hidden = true
+        cell.customImageView.makeRound(0)
         
+        
+        var data: [Fields: String] = self.matchModel.getMatchData([.JobTitle, .JobDescription, .JobDateStart, .ClientAvatar, .Status], index: indexPath.row)
         
         //var info: [String:String] = self.match.getCellInfo(index: indexPath.row)
         cell.customTitle.text = data[.JobTitle]
@@ -105,10 +155,12 @@ class MatchTableViewController: UITableViewController, MatchDetailDelegate {
                 if statusField == .Negotiations || statusField == .TalentAccepted {
 
                     if statusField == .TalentAccepted {
+                        println("TalentAccepted")
                         cell.customImageView.makeRound(35, borderWidth: 4, withBorderColor: UIColor.orangeColor())
                     }
                     
                     if statusField == .Negotiations {
+                        println("Negotiations")
                         cell.customImageView.makeRound(35, borderWidth: 4, withBorderColor: UIColor(red: 123/255, green: 205/255, blue: 105/255, alpha: 1))
                         cell.customNegotiationIcon.hidden = false
                     }
@@ -118,7 +170,7 @@ class MatchTableViewController: UITableViewController, MatchDetailDelegate {
             }
         }
         
-        cell.customImageView.makeRound(35, borderWidth:nil)
+        cell.customImageView.makeRound(35, borderWidth:0)
         return cell
     }
     

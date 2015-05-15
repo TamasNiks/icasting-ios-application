@@ -20,7 +20,6 @@ class ConversationCell: UITableViewCell {
 
 class NegotiationsTableViewController: UITableViewController {
 
-    
     var match: Match = Match()
     
     func handleRefresh(sender: AnyObject) {
@@ -32,14 +31,19 @@ class NegotiationsTableViewController: UITableViewController {
     
     func handleRequest() {
         
-        self.match.all() { failure in
+        self.match.get() { failure in
             self.refreshControl?.endRefreshing()
             println(failure?.description)
             self.match.filter(field: .Negotiations)
             //println(self.match.matches)
-            self.tableView.reloadData()
+            
+            if self.match.matches.isEmpty {
+                self.tableView.setTableHeaderViewNoResults(NSLocalizedString("NoNegotiations", comment: ""))
+            } else {
+                self.tableView.tableHeaderView = nil
+                self.tableView.reloadData()
+            }
         }
-        
     }
     
     override func viewDidLoad() {
@@ -51,6 +55,7 @@ class NegotiationsTableViewController: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
         //self.title = NSLocalizedString("News", nil);
+        
         refreshControl = UIRefreshControl()
         refreshControl?.addTarget(self, action: ("handleRefresh:"), forControlEvents: UIControlEvents.ValueChanged)
         handleRequest()

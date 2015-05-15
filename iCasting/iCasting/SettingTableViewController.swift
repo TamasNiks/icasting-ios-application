@@ -8,27 +8,13 @@
 
 import UIKit
 
+
 class SettingTableViewController: UITableViewController {
 
     enum ReuseIdentifiers: String {
-        
-        case
-        LogOut = "uitloggenIdentifier"
-        
-//        func isReuseIdentifier(ID: String) -> Bool {
-//            
-//            switch self {
-//                
-//            case .LogOut.rawValue:
-//                
-//                
-//            }
-//            
-//        }
-        
+        case LogOut = "logoutCellID"
+        case ChangeCastingObject = "changeCastingObjectCellID"
     }
-    
-    
     
     @IBOutlet weak var logoutCell: UITableViewCell!
     
@@ -69,18 +55,24 @@ class SettingTableViewController: UITableViewController {
             
             if let reuseIdentifier = cell.reuseIdentifier {
                 
-                if reuseIdentifier == ReuseIdentifiers.LogOut.rawValue {
+                switch reuseIdentifier {
+                    
+                case ReuseIdentifiers.LogOut.rawValue:
                     
                     Auth().logout() { failure in
-                        
                         if failure == nil {
                             println("Logout successfully: access_token is now unset")
                             self.performSegueWithIdentifier("unwindToLogin", sender: self)
                         }
-                        
                     }
+                    
+                case ReuseIdentifiers.ChangeCastingObject.rawValue:
+                    
+                    self.performSegueWithIdentifier("unwindToChooseCastingObject", sender: self)
+                    
+                default:
+                    println("Warning: Not added to reuseIdentifiers enum.")
                 }
-                
             }
             
             cell.setSelected(false, animated: true)

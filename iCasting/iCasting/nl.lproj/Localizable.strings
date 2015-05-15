@@ -39,6 +39,20 @@
 "Reject" = "Weiger";
 "Cancel" = "Annuleer";
 
+/* Family: Casting Objects */
+"CastingObjectsHeader" = "Maak een keuze tussen een familielid";
+"NoFamilyMembers" = "Er zijn nog geen familieleden toegevoegd voor deze gebruiker.";
+
+/* Negotiations */
+"NoNegotiations" = "Er zijn geen onderhandelingen.";
+
+/* Matches */
+"NoMatches" = "Er zijn geen matches.";
+"AllFilter" = "Alles";
+"NegotiationFilter" = "Onderhandelingen";
+"PendingFilter" = "Onbeslist";
+"TalentAcceptedFilter" = "Talent Geacepteerd";
+
 /* iCasting System text */
 
 "icasting.chat.system.text.welcome" = "Welkom in een conversatie";

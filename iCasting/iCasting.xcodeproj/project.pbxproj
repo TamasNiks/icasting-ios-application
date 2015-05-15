@@ -54,7 +54,6 @@
 		22392D291AD811720086BE5F /* ICType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2273B7621AD6B54600CC3EFB /* ICType.swift */; };
 		223A7DD21AFD16B8002FB978 /* SwiftSpinner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223A7DD11AFD16B8002FB978 /* SwiftSpinner.swift */; };
 		223E49C21B02389B00BB6BB3 /* SettingTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223E49C11B02389B00BB6BB3 /* SettingTableViewController.swift */; };
-		22429E151AE69C8F00D0340B /* MatchAcceptHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 22429E141AE69C8F00D0340B /* MatchAcceptHeaderView.xib */; };
 		22429E161AE6CB5900D0340B /* FontAwesome.otf in Resources */ = {isa = PBXBuildFile; fileRef = 22103B2E1AE5598100C34C89 /* FontAwesome.otf */; };
 		224A5A761ADE8BDB00E22DE1 /* ICError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224A5A751ADE8BDB00E22DE1 /* ICError.swift */; };
 		224A5A771ADE8BDB00E22DE1 /* ICError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224A5A751ADE8BDB00E22DE1 /* ICError.swift */; };
@@ -111,6 +110,10 @@
 		227C7BDD1AEA5FB600624E12 /* JSONSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227C7BDB1AEA5FB600624E12 /* JSONSearch.swift */; };
 		2289BFFF1B0373DF00A7307C /* CastingObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2289BFFE1B0373DF00A7307C /* CastingObject.swift */; };
 		2289C0001B0373DF00A7307C /* CastingObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2289BFFE1B0373DF00A7307C /* CastingObject.swift */; };
+		2289C0021B0393BE00A7307C /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2289C0011B0393BE00A7307C /* MainViewController.swift */; };
+		2289C0031B0393BE00A7307C /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2289C0011B0393BE00A7307C /* MainViewController.swift */; };
+		2289C0051B03968600A7307C /* CastingObjectsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2289C0041B03968600A7307C /* CastingObjectsTableViewController.swift */; };
+		2289C0061B03968600A7307C /* CastingObjectsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2289C0041B03968600A7307C /* CastingObjectsTableViewController.swift */; };
 		228E35171ADC4655006D0BEA /* RequestFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220587F41AD565590010DA92 /* RequestFactory.swift */; };
 		22A464C21AE93955000100C9 /* ICProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A464C11AE93955000100C9 /* ICProtocols.swift */; };
 		22AD0DAD1AD6C3DE00F0496A /* JSONParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22AD0DAC1AD6C3DE00F0496A /* JSONParser.swift */; };
@@ -165,11 +168,10 @@
 		221B57F21AF3E686004ABE43 /* Match.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Match.swift; sourceTree = "<group>"; };
 		222014E51AEF92D7004500FA /* JSONParsePlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = JSONParsePlayground.playground; sourceTree = "<group>"; };
 		222014E61AEFA394004500FA /* JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSON.swift; sourceTree = "<group>"; };
-		223A7DA11AFCF041002FB978 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Main.strings; sourceTree = "<group>"; };
-		223A7DA21AFCF051002FB978 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Main.strings; sourceTree = "<group>"; };
+		223360B71B0524A0008CF109 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Main.strings; sourceTree = "<group>"; };
+		223360B81B0529AE008CF109 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		223A7DD11AFD16B8002FB978 /* SwiftSpinner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftSpinner.swift; sourceTree = "<group>"; };
 		223E49C11B02389B00BB6BB3 /* SettingTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingTableViewController.swift; sourceTree = "<group>"; };
-		22429E141AE69C8F00D0340B /* MatchAcceptHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MatchAcceptHeaderView.xib; sourceTree = "<group>"; };
 		224A5A741ADE817300E22DE1 /* PropertiesPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = PropertiesPlayground.playground; sourceTree = "<group>"; };
 		224A5A751ADE8BDB00E22DE1 /* ICError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ICError.swift; sourceTree = "<group>"; };
 		224A5A781ADE8F3C00E22DE1 /* ICValidator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ICValidator.swift; sourceTree = "<group>"; };
@@ -208,7 +210,6 @@
 		2268C54D1ACE905D00E58BF4 /* iCastingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iCastingTests.swift; sourceTree = "<group>"; };
 		2268C55B1ACEA3E000E58BF4 /* MyPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; name = MyPlayground.playground; path = ../MyPlayground.playground; sourceTree = "<group>"; };
 		226A9E871AEECAB300AB9EFF /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
-		226A9E891AEECAB500AB9EFF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		226A9E8A1AEECAB600AB9EFF /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		226A9E8B1AEED71400AB9EFF /* Alamofire.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Alamofire.swift; sourceTree = "<group>"; };
 		226C27C21AD5310F00A6A2EE /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
@@ -222,6 +223,8 @@
 		22740F841AD7CD1B00755146 /* GeneralPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = GeneralPlayground.playground; sourceTree = "<group>"; };
 		227C7BDB1AEA5FB600624E12 /* JSONSearch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONSearch.swift; sourceTree = "<group>"; };
 		2289BFFE1B0373DF00A7307C /* CastingObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CastingObject.swift; sourceTree = "<group>"; };
+		2289C0011B0393BE00A7307C /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		2289C0041B03968600A7307C /* CastingObjectsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CastingObjectsTableViewController.swift; sourceTree = "<group>"; };
 		22A464BD1AE92D7F000100C9 /* DictionaryPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = DictionaryPlayground.playground; sourceTree = "<group>"; };
 		22A464C11AE93955000100C9 /* ICProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ICProtocols.swift; sourceTree = "<group>"; };
 		22AD0DAB1AD6C0E100F0496A /* JSONPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = JSONPlayground.playground; sourceTree = "<group>"; };
@@ -268,7 +271,6 @@
 				2256CDD31AF254FD005D40EB /* Auth.swift */,
 				2289BFFE1B0373DF00A7307C /* CastingObject.swift */,
 				22082C8D1AF9F89500AF5EDB /* Conversation.swift */,
-				220587F81AD572520010DA92 /* HTTP */,
 				221B57F21AF3E686004ABE43 /* Match.swift */,
 				2273B75F1AD6AAC000CC3EFB /* News.swift */,
 				226C27C21AD5310F00A6A2EE /* User.swift */,
@@ -307,6 +309,22 @@
 				2256CE051AF2C7BF005D40EB /* DrawerController */,
 			);
 			name = Vendor;
+			sourceTree = "<group>";
+		};
+		2249D5B61B05D9E900473A20 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				22E39EAA1AEFBD1E00F01BA0 /* JSON */,
+				220587F81AD572520010DA92 /* HTTP */,
+				22103B221AE527B300C34C89 /* DummyData.swift */,
+				224A5A751ADE8BDB00E22DE1 /* ICError.swift */,
+				22BFA6C91AE6FCAD007E76C7 /* ICExtensions.swift */,
+				224F77F51AF0F6BE00D88F99 /* ICImage.swift */,
+				22A464C11AE93955000100C9 /* ICProtocols.swift */,
+				2273B7621AD6B54600CC3EFB /* ICType.swift */,
+				224A5A781ADE8F3C00E22DE1 /* ICValidator.swift */,
+			);
+			name = Classes;
 			sourceTree = "<group>";
 		};
 		2256CE051AF2C7BF005D40EB /* DrawerController */ = {
@@ -375,22 +393,15 @@
 		2268C5321ACE905D00E58BF4 /* iCasting */ = {
 			isa = PBXGroup;
 			children = (
-				22E39EAA1AEFBD1E00F01BA0 /* JSON */,
-				22103B2F1AE559E300C34C89 /* Vendor */,
 				2268C5351ACE905D00E58BF4 /* AppDelegate.swift */,
-				224A5A781ADE8F3C00E22DE1 /* ICValidator.swift */,
-				2273B7621AD6B54600CC3EFB /* ICType.swift */,
-				22103B221AE527B300C34C89 /* DummyData.swift */,
-				22A464C11AE93955000100C9 /* ICProtocols.swift */,
-				22BFA6C91AE6FCAD007E76C7 /* ICExtensions.swift */,
-				224F77F51AF0F6BE00D88F99 /* ICImage.swift */,
-				224A5A751ADE8BDB00E22DE1 /* ICError.swift */,
+				2249D5B61B05D9E900473A20 /* Classes */,
 				220587F91AD573130010DA92 /* Models */,
 				2273B75C1AD69E4F00CC3EFB /* Controllers */,
 				2294185B1AD8753000BD83C6 /* Views */,
 				2268C53E1ACE905D00E58BF4 /* Images.xcassets */,
 				226C27C81AD551BA00A6A2EE /* Playgrounds */,
 				2268C5331ACE905D00E58BF4 /* Supporting Files */,
+				22103B2F1AE559E300C34C89 /* Vendor */,
 			);
 			path = iCasting;
 			sourceTree = "<group>";
@@ -453,13 +464,15 @@
 			isa = PBXGroup;
 			children = (
 				2268C5371ACE905D00E58BF4 /* LoginViewController.swift */,
-				22AD0DAE1AD6CDB900F0496A /* NewsTableViewController.swift */,
-				225C11501AE50197008654A7 /* NewsDetailViewController.swift */,
+				2289C0011B0393BE00A7307C /* MainViewController.swift */,
 				22103B2A1AE549DF00C34C89 /* MatchTableViewController.swift */,
 				22103B281AE542D400C34C89 /* MatchDetailTableViewController.swift */,
 				22082C871AF7C24A00AF5EDB /* NegotiationsTableViewController.swift */,
 				22082C931AFA2C2A00AF5EDB /* NegotiationDetailTableViewController.swift */,
+				22AD0DAE1AD6CDB900F0496A /* NewsTableViewController.swift */,
+				225C11501AE50197008654A7 /* NewsDetailViewController.swift */,
 				223E49C11B02389B00BB6BB3 /* SettingTableViewController.swift */,
+				2289C0041B03968600A7307C /* CastingObjectsTableViewController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -469,7 +482,6 @@
 			children = (
 				2268C53B1ACE905D00E58BF4 /* Main.storyboard */,
 				2268C5401ACE905D00E58BF4 /* LaunchScreen.xib */,
-				22429E141AE69C8F00D0340B /* MatchAcceptHeaderView.xib */,
 				225C11521AE51C05008654A7 /* MatchTableViewCell.swift */,
 				22082C901AFA243000AF5EDB /* MessageCell.swift */,
 			);
@@ -573,7 +585,6 @@
 				22429E161AE6CB5900D0340B /* FontAwesome.otf in Resources */,
 				2268C5421ACE905D00E58BF4 /* LaunchScreen.xib in Resources */,
 				2268C53F1ACE905D00E58BF4 /* Images.xcassets in Resources */,
-				22429E151AE69C8F00D0340B /* MatchAcceptHeaderView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -633,6 +644,7 @@
 				22082CD51AFB927A00AF5EDB /* SocketAckManager.swift in Sources */,
 				226C27C51AD5321300A6A2EE /* Endpoints.swift in Sources */,
 				22528FE61AF3A7B700F550F8 /* SwiftyJSON.swift in Sources */,
+				2289C0021B0393BE00A7307C /* MainViewController.swift in Sources */,
 				226C27C31AD5310F00A6A2EE /* User.swift in Sources */,
 				22103B291AE542D400C34C89 /* MatchDetailTableViewController.swift in Sources */,
 				221B57F31AF3E686004ABE43 /* Match.swift in Sources */,
@@ -650,6 +662,7 @@
 				22082CE51AFB927A00AF5EDB /* SocketPacket.swift in Sources */,
 				2256CDD41AF254FD005D40EB /* Auth.swift in Sources */,
 				2256CE1F1AF2CD17005D40EB /* ExampleCenterTableViewController.swift in Sources */,
+				2289C0051B03968600A7307C /* CastingObjectsTableViewController.swift in Sources */,
 				22082CE11AFB927A00AF5EDB /* SocketIOClient.swift in Sources */,
 				22103B2D1AE5597800C34C89 /* FontAwesome.swift in Sources */,
 				2268C5381ACE905D00E58BF4 /* LoginViewController.swift in Sources */,
@@ -670,6 +683,7 @@
 				22082C961AFA2C2A00AF5EDB /* NegotiationDetailTableViewController.swift in Sources */,
 				224A5A7A1ADE8F3C00E22DE1 /* ICValidator.swift in Sources */,
 				224F77FB1AF1342200D88F99 /* MatchDetailTableViewController.swift in Sources */,
+				2289C0031B0393BE00A7307C /* MainViewController.swift in Sources */,
 				22740F831AD7BE1300755146 /* JSONParser.swift in Sources */,
 				22082CE81AFB927A00AF5EDB /* SocketParser.swift in Sources */,
 				2268C54E1ACE905D00E58BF4 /* iCastingTests.swift in Sources */,
@@ -703,6 +717,7 @@
 				2256CE291AF2D4D3005D40EB /* DrawerVisualState.swift in Sources */,
 				22E39EAB1AEFD3A500F01BA0 /* JSON.swift in Sources */,
 				2289C0001B0373DF00A7307C /* CastingObject.swift in Sources */,
+				2289C0061B03968600A7307C /* CastingObjectsTableViewController.swift in Sources */,
 				22528FE71AF3A7B700F550F8 /* SwiftyJSON.swift in Sources */,
 				224F77F91AF133D200D88F99 /* ICImage.swift in Sources */,
 				2256CDD51AF254FD005D40EB /* Auth.swift in Sources */,
@@ -724,8 +739,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				2268C53C1ACE905D00E58BF4 /* Base */,
-				223A7DA11AFCF041002FB978 /* en */,
-				223A7DA21AFCF051002FB978 /* nl */,
+				223360B71B0524A0008CF109 /* nl */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -742,8 +756,8 @@
 			isa = PBXVariantGroup;
 			children = (
 				226A9E871AEECAB300AB9EFF /* Base */,
-				226A9E891AEECAB500AB9EFF /* en */,
 				226A9E8A1AEECAB600AB9EFF /* nl */,
+				223360B81B0529AE008CF109 /* en */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";

@@ -39,6 +39,20 @@
 "Reject" = "Reject";
 "Cancel" = "Cancel";
 
+/* Family: Casting Objects */
+"CastingObjectsHeader" = "Choose a family member.";
+"NoFamilyMembers" = "There are no family members for this user.";
+
+/* Negotiations */
+"NoNegotiations" = "There are no negotiations.";
+
+/* Matches */
+"NoMatches" = "There are no matches.";
+"AllFilter" = "All";
+"NegotiationFilter" = "Negotiations";
+"PendingFilter" = "Pending";
+"TalentAcceptedFilter" = "Talent Accepted";
+
 /* iCasting System text */
 
 "icasting.chat.system.text.welcome" = "Welcome to the conversation";

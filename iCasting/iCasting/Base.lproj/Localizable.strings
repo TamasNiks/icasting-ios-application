@@ -8,50 +8,65 @@
 
 /* General */
 
-"true" = "Ja";
-"false" = "Nee";
+"true" = "Yes";
+"false" = "No";
 
 /* Specific */
 
-"dateTime" = "Datum & Tijd";
-"location" = "Locatie";
-"travelExpenses" = "Reiskostenvergoeding";
+"dateTime" = "Date & Time";
+"location" = "Location";
+"travelExpenses" = "Travel Expenses";
 
 "type" = "Type";
-"city" = "Stad";
-"street" = "Straat";
-"streetNumber" = "Huisnummer";
-"zipcode" = "Postcode";
-"dateStart" = "Startdatum";
-"dateEnd" = "Einddatum";
-"timeStart" = "Starttijd";
-"timeEnd" = "Eindtijd";
+"city" = "City";
+"street" = "Street";
+"streetNumber" = "Street Number";
+"zipcode" = "Zip Code";
+"dateStart" = "Start Date";
+"dateEnd" = "End Date";
+"timeStart" = "Start Time";
+"timeEnd" = "End Time";
 
-"payment" = "Vergoeding";
-"budget" = "Vergoeding";
-"hasTravelExpenses" = "Reiskostenvergoeding";
-"paymentMethod" = "Betaalmethode";
+"payment" = "Payment";
+"budget" = "Payment";
+"hasTravelExpenses" = "Travel Expenses";
+"paymentMethod" = "Payment Method";
 
-"Are you sure?" = "Weet u het zeker?";
-"AcceptMessage" = "Als u een job accepteert, krijgt de client een melding. Als de client ook accepteert kan de onderhandeling beginnen.";
-"RejectMessage" = "Als u een job weigert, wordt u verwijderd uit de lijst van matches. De client krijgt hiervan geen melding.";
-"Accept" = "Accepteer";
-"Reject" = "Weiger";
-"Cancel" = "Annuleer";
+"Are you sure?" = "Are you sure?";
+"AcceptMessage" = "If you accept a job, the client gets notified. If the client accepts as well, you can start the negotiation";
+"RejectMessage" = "If you reject a job, you will be removed on the list of matches, the client won't get notified";
+"Accept" = "Accept";
+"Reject" = "Reject";
+"Cancel" = "Cancel";
+
+/* Family: Casting Objects */
+
+"CastingObjectsHeader" = "Choose a family member.";
+"NoFamilyMembers" = "There are no family members for this user.";
+
+/* Negotiations */
+"NoNegotiations" = "There are no negotiations.";
+
+/* Matches */
+"NoMatches" = "There are no matches.";
+"AllFilter" = "All";
+"NegotiationFilter" = "Negotiations";
+"PendingFilter" = "Pending";
+"TalentAcceptedFilter" = "Talent Accepted";
 
 /* iCasting System text */
 
-"icasting.chat.system.text.welcome" = "Welkom in een conversatie";
+"icasting.chat.system.text.welcome" = "Welcome to the conversation";
 
 /* API Errors */
 
-"AuthenticationError" = "Inloggen is niet gelukt, vul uw juist gegevens in.";
-"InsufficientCreditsError" = "U heeft niet genoeg credits om door te gaan.";
-"NoErrorDescription" = "Onbekende fout";
+"AuthenticationError" = "Login did not work, please fill in the right credentials.";
+"InsufficientCreditsError" = "You do not have enough credits to purchase this product.";
+"NoErrorDescription" = "Unknown error";
 
 /* Validation Errors */
 
-"Error" = "Fout";
-"EmptyEmail" = "Het e-mail veld is leeg.";
-"EmptyPassword" = "Het wachtwoord veld is leeg.";
-"WrongEmail" = "Vul een juist e-mailadres in.";
+"Error" = "Error";
+"EmptyEmail" = "The e-mail field is empty.";
+"EmptyPassword" = "The password field is empty.";
+"WrongEmail" = "Fill in a good e-mail.";

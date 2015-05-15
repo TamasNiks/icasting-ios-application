@@ -3,10 +3,11 @@
 import UIKit
 
 
+//var blabla = (1 == 1)
 
 
 
-
+/*
 
 
 let str1 = "[ {\"name\": \"John\", \"age\": 21}, {\"name\": \"Bob\", \"age\": 35} ]"
@@ -95,4 +96,4 @@ var index = range?.startIndex
 index = index?.successor()
 l.substringFromIndex(index!)
 
-
+*/

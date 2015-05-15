@@ -8,9 +8,10 @@
 
 import Foundation
 
-struct UserGeneral {
+protocol UserCastingObject {
     
-
+    func setCastingObject(index: Int) -> Bool
+    func castingObjectForIndex(index: Int) -> CastingObject
 }
 
 class User {
@@ -18,9 +19,12 @@ class User {
     static let sharedInstance: User = User()
 
     internal var credentials: Credentials = Credentials()
+    internal var castingObjects: [CastingObject] = [CastingObject]()
     
-    var castingObjectIDs: [String] = [String]()
-    var castingObjectID: String = String()
+    var castingObject: CastingObject = CastingObject()
+    var castingObjectID: String {
+        get { return castingObject.id() ?? String() }
+    }
 
     var displayName: String?
     var avatar: String?
@@ -28,14 +32,24 @@ class User {
     var roles: [JSON]?
 }
 
-extension User {
+extension User : UserCastingObject {
     
-    func setCastingObject(index:Int) {
-        self.castingObjectID = self.castingObjectIDs[index]
+    func setCastingObject(index: Int) -> Bool {
+        
+        let isEmpty = castingObjects.isEmpty
+        if isEmpty == false {
+            self.castingObject = self.castingObjects[index]
+        }
+        return (isEmpty) ? false : true
     }
+    
+    func castingObjectForIndex(index: Int) -> CastingObject {
+        return self.castingObjects[index]
+    }
+    
 }
 
-extension User {
+extension User : ModelRequest {
     
     internal func get(callBack:RequestClosure) {
         

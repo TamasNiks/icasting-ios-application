@@ -14,3 +14,9 @@ protocol ModelProtocol {
     //func one (id: String, callBack: RequestClosure)
     
 }
+
+protocol ModelRequest {
+    
+    func get(callBack: RequestClosure)
+    
+}

@@ -8,19 +8,50 @@
 
 import Foundation
 
-class CastingObject : ModelProtocol {
+// Expose an interface to get values from the casting object json
+protocol CastingObjectValueProvider {
+    func avatar() -> String?
+    func name() -> String?
+}
+
+
+class CastingObject : CastingObjectValueProvider {
     
+    let castingObject: JSON
     
+    init(json: JSON) {
+        self.castingObject = json
+    }
+    
+    init() {
+        self.castingObject = JSON("")
+    }
+    
+    func id() -> String? {
+        return self.castingObject["_id"].string
+    }
+    
+    func avatar() -> String? {
+        return self.castingObject["avatar"]["thumb"].string
+    }
+    
+    func name() -> String? {
+        return self.castingObject["name"]["display"].string
+    }
+    
+//    func summary() -> CastingObjectSummary {
+//        
+//    }
     
 }
 
-extension CastingObject {
+extension CastingObject : ModelRequest {
     
-    func get(callBack: RequestClosure) {
+    internal func get(callBack: RequestClosure) {
         
         if let access_token = Auth.auth.access_token {
             
-            let url: String = APICastingObject.UserCastingObject(Auth.auth.user_id).value
+            let url: String = APICastingObject.UserCastingObjectsSummary(Auth.auth.user_id).value
             var params: [String : AnyObject] = ["access_token":access_token]
             
             request(.GET, url, parameters: params).responseJSON() { (request, response, json, error) in
@@ -38,14 +69,9 @@ extension CastingObject {
                     let errors: ICErrorInfo? = ICError(json: json).getErrors()
                     
                     if errors == nil {
-                        var castingObjectIDs:[String] = [String]()
-                        for (index: String, subJSON: JSON) in json {
-                            let id: String = subJSON["id"].stringValue
-                            castingObjectIDs.append(id)
-                        }
                         
-                        User.sharedInstance.castingObjectIDs = castingObjectIDs
-                        User.sharedInstance.setCastingObject(0)
+                        var castingObjects:[CastingObject] = json.arrayValue.map { CastingObject(json: $0) }
+                        User.sharedInstance.castingObjects = castingObjects
                     }
                     
                     callBack(failure:errors)
