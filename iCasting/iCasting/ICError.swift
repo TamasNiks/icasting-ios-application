@@ -1,5 +1,5 @@
 //
-//  Error.swift
+//  ICError.swift
 //  iCasting
 //
 //  Created by T. van Steenoven on 15-04-15.

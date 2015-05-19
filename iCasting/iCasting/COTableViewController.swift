@@ -5,6 +5,7 @@
 //  Created by Tim van Steenoven on 13/05/15.
 //  Copyright (c) 2015 T. van Steenoven. All rights reserved.
 //
+// This castingobject overview controler handles the overview of all family members (casting objects) of the current user
 
 import UIKit
 
@@ -16,13 +17,13 @@ class CastingObjectCell: UITableViewCell {
         super.layoutSubviews()
         
         let size: CGSize = CGSize(width: 50, height: 50) // default cell height is 43
-        self.imageView?.makeRound(size.width / 2, borderWidth: 0)
+        self.imageView?.makeRound(size.width / 2) //, borderWidth: 0)
         self.imageView?.bounds = CGRectMake(0, 0, size.width, size.height)
 
     }
 }
 
-class CastingObjectsTableViewController: UITableViewController {
+class COTableViewController: UITableViewController {
 
     
     /*func positionForBar(bar: UIBarPositioning) -> UIBarPosition {
@@ -76,9 +77,9 @@ class CastingObjectsTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCellWithIdentifier("castingObjectCellID", forIndexPath: indexPath) as! UITableViewCell
 
         // Configure the cell...
-        let castingObject: CastingObjectValueProvider = User.sharedInstance.castingObjectForIndex(indexPath.row)
-        cell.textLabel?.text = castingObject.name()
-        cell.imageView?.image = ICImages.ImageWithString(castingObject.avatar() ?? "").image
+        let castingObject: CastingObjectValueProvider = User.sharedInstance.castingObjectAtIndex(indexPath.row)
+        cell.textLabel?.text = castingObject.name
+        cell.imageView?.image = ICImages.ImageWithString(castingObject.avatar ?? "").image
         //cell.imageView?.makeRound(22)
         
         return cell
@@ -111,7 +112,8 @@ class CastingObjectsTableViewController: UITableViewController {
         label.font = UIFont.boldSystemFontOfSize(12)
         label.textAlignment = NSTextAlignment.Center
         label.numberOfLines = 0
-        label.backgroundColor = UIColor(red: 221/255, green: 33/255, blue: 49/255, alpha: 1.0) //UIColor(white: 0.9, alpha: 1.0)
+        //label.backgroundColor = UIColor(red: 221/255, green: 33/255, blue: 49/255, alpha: 1.0) //UIColor(white: 0.9, alpha: 1.0)
+        label.backgroundColor = UIColor(red: 172/255, green: 9/255, blue: 33/255, alpha: 1.0) //UIColor(white: 0.9, alpha: 1.0)
         label.textColor = UIColor.whiteColor()
         return label
     }

@@ -39,6 +39,11 @@
 "Reject" = "Weiger";
 "Cancel" = "Annuleer";
 
+"Announcement" = "Mededeling";
+
+/* Login */
+"login.alert.client.notsupported" = "Voor deze versie van de app wordt de client nog niet ondersteund. We laten het u weten als client ondersteuning wordt ondersteund in toekomstige versies";
+
 /* Family: Casting Objects */
 "CastingObjectsHeader" = "Maak een keuze tussen een familielid";
 "NoFamilyMembers" = "Er zijn nog geen familieleden toegevoegd voor deze gebruiker.";
@@ -48,10 +53,15 @@
 
 /* Matches */
 "NoMatches" = "Er zijn geen matches.";
-"AllFilter" = "Alles";
-"NegotiationFilter" = "Onderhandelingen";
-"PendingFilter" = "Onbeslist";
-"TalentAcceptedFilter" = "Talent Geacepteerd";
+"matches.filter.actionsheet.title" = "Filter status";
+"matches.filter.actionsheet.message" = "Welke status wilt u tonen?";
+
+"ActiveFilter" = "Alle actieve";
+"UnansweredFilter" = "Onbeantwoord";
+"PendingClientFilter" = "Wachten op client";
+"NegotiationFilter" = "Onderhandeling";
+"FinishedFilter" = "Voltooid";
+"ClosedFilter" = "Afgewezen";
 
 /* iCasting System text */
 

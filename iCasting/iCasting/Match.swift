@@ -8,143 +8,132 @@
 
 import Foundation
 
-protocol FieldPathProtocol {
-    func getPath() -> [SubscriptType]
-}
-
-
-private enum FieldRoots: Int, FieldPathProtocol {
-    case RootJobContract, RootJobProfile
+enum FilterStatusFields: String {
+    case // These String values are the localization tokens
+    Negotiations    = "NegotiationFilter",
+    Pending         = "UnansweredFilter",
+    TalentAccepted  = "PendingClientFilter",
+    Closed          = "ClosedFilter",
+    Completed       = "FinishedFilter"
     
-    func getPath() -> [SubscriptType] {
-        switch self {
-        case .RootJobContract:
-            return ["job", "formSource", "contract"]
-        case .RootJobProfile:
-            return ["job", "formSource", "profile"]
-        }
-    }
+    // The keys are corresponding with the json keys
+    static let allValues = [
+        "negotiating"       :   Negotiations,   // Accepted by either the client and the talent
+        "pending"           :   Pending,        // Unanswered by the talent
+        "talent accepted"   :   TalentAccepted, // Accepted by the talent
+        "closed"            :   Closed,         // Rejected by the talent
+        "completed"         :   Completed       // Match finnished
+    ]
 }
-
-enum FieldID: Int, FieldPathProtocol {
-    case MatchCardID, JobID
-    
-    func getPath() -> [SubscriptType] {
-        switch self {
-        case .MatchCardID:
-            return ["_id"]
-        case .JobID:
-            return ["job","_id"]
-        }
-    }
-}
-
-enum Fields: Int, FieldPathProtocol {
-
-    case Status
-    case ClientName, ClientCompany, ClientAvatar
-    case JobTitle, JobDescription
-    case JobContractDateTime, JobDateStart, JobDateEnd, JobTimeStart, JobTimeEnd
-    case JobContractLocation
-    case JobProfile
-    case JobPayment, JobContractPaymentMethod, JobContractBudget, JobContractTravelExpenses
-    
-    func getPath() -> [SubscriptType] {
-        switch self {
-        case .Status:
-            return ["status"]
-        case .ClientName:
-            return ["client","name","display"]
-        case .ClientCompany:
-            return ["client","company","name"]
-        case .ClientAvatar:
-            return ["client","avatar","thumb"]
-        case .JobTitle:
-            return ["job","title"]
-        case .JobDescription:
-            return ["job","desc"]
-        case .JobDateStart:
-            return ["job", "formSource", "contract", "dateTime", "dateStart"]
-        case .JobDateEnd:
-            return ["job", "formSource", "contract", "dateTime", "dateEnd"]
-        case .JobTimeStart:
-            return ["job", "formSource", "contract", "dateTime", "timeStart"]
-        case .JobTimeEnd:
-            return ["job", "formSource", "contract", "dateTime", "timeEnd"]
-        case .JobContractLocation:
-            return ["job", "formSource", "contract", "location"]
-        case .JobContractPaymentMethod:
-            return ["job", "formSource", "contract", "paymentMethod", "type"]
-        case .JobContractBudget:
-            return ["job", "formSource", "contract", "budget", "times1000"]
-        case .JobContractTravelExpenses:
-            return ["job", "formSource", "contract", "travelExpenses", "hasTravelExpenses"]
-        case .JobProfile:
-            return FieldRoots.RootJobProfile.getPath()
-        default:
-            return []
-        }
-    }
-    
-    var header: String {
-        switch self {
-        case .JobContractDateTime:
-            return NSLocalizedString("dateTime", comment: "Header text for all the time properties")
-        case .JobContractLocation:
-            return NSLocalizedString("location", comment: "Header text for all the location properties")
-        case .JobContractTravelExpenses:
-            return NSLocalizedString("travelExpenses", comment: "Header text for all the travelexpenses properties")
-        case .JobPayment:
-            return NSLocalizedString("payment", comment: "Header text for all the travelexpenses properties")
-        default:
-            return "To developer: No header"
-        }
-    }
-}
-
-enum FilterStatusFields: Int {
-    case Negotiations, Pending, TalentAccepted, Closed
-    static let allValues = ["negotiating":Negotiations, "pending":Pending, "talent accepted":TalentAccepted, "closed": Closed]
-}
-
-// Convenient shortcut to get all the detail values
-typealias MatchHeaderType = [Fields:String?]
-typealias MatchDetailType = [Fields: [ [String:String?] ] ] // Dictionary with Fields key and a an array of Dictionaries of type String key values
-typealias MatchDetailsReturnValue = (header: MatchHeaderType, details: MatchDetailType)
-
-
-
-
-
 
 
 /* MATCH MODEL */
 
-class Match {
+class Match : NSObject, MatchCardDelegate {
     
     // Contains the original matches from the request, all changes to the matches array must mirror the _matches array
-    private var _matches: [JSON] = [JSON]()
+    private var _matches: [MatchCard] = [MatchCard]()
 
     // Contains the original matches filtered by casting object
-    private var matchesFromCastingObject: [JSON] {
+    private var matchesFromCastingObject: [MatchCard] {
         get {
-            return _matches.filter() { includeElement in
-                return (includeElement["castingObject"].stringValue == User.sharedInstance.castingObjectID)
+            return _matches.filter { (obj) -> Bool in
+                return obj.raw["castingObject"].stringValue == User.sharedInstance.castingObjectID
             }
         }
     }
     
     // Contains the filtered matches if there are any filters applied
-    var matches: [JSON] = [JSON]()
+    var matches: [MatchCard] = [MatchCard]()
 
-    
     // Contains one match from the matches based on index
-    var selectedMatch: JSON?
+    var selectedMatch: MatchCard?
     
-    // TODO: It is safer to do the comparisons by match id than index, for example, if the user would like to filter all the closed matches, we need to change the status on the original _matches array and the filtered matches array. If you compare by index, than the index can be different between original _maatches and filtered matches. For now it is more convenient
+    // Contains the selected match index
     private var selectedMatchIndex: Int?
-
+    
+    // If the user selects a status, this var will be set
+    var currentStatusField: FilterStatusFields?
 }
+
+
+
+
+extension Match {
+    
+    func setMatch(index: Int) {
+        
+        if index >= 0 && index < matches.endIndex {
+            selectedMatch = matches[index]
+            selectedMatchIndex = index
+            selectedMatch?.delegate = self
+        }
+    }
+    
+    private func getMatch(index: Int?) -> MatchCard? {
+        
+        var item: MatchCard? = selectedMatch
+        if let i = index {
+            if i >= 0 && i < matches.endIndex {
+                item = matches[i]
+            }
+        }
+        return item
+    }
+    
+    // Remove the selected match from the filtered matches and from the original matches collection
+    func removeMatch() {
+        
+        if let selectedMatch = selectedMatch, selectedMatchIndex = selectedMatchIndex {
+
+            var i = 0, found = false
+            while found == false && i < _matches.endIndex {
+                if _matches[i] == selectedMatch {
+                    _matches.removeAtIndex(i)
+                    found = true
+                }
+                i++
+            }
+            
+            matches.removeAtIndex(selectedMatchIndex)
+        }
+    }
+    
+    
+    // After any updates on the selected match, the the original matches collection needs to reflect these changes as well.
+    func mirrorMatch() {
+        
+        if let selectedMatch = selectedMatch {
+            for i in 0..<_matches.endIndex {
+                if _matches[i] == selectedMatch {
+                    _matches[i] = selectedMatch
+                }
+            }
+        }
+        
+    }
+    
+}
+
+
+// Match delegate
+
+extension Match {
+    
+    // TIP: If there are more changes that should reflect the main matches, use a proxy or use a general onUpdate delegate method
+    func didRejectMatch() {
+        println("---- MATCH: Will remove from match model")
+        removeMatch()
+    }
+    
+    func didAcceptMatch() {
+        println("---- MATCH: Will mirror match model")
+        mirrorMatch()
+    }
+}
+
+
+
 
 extension Match : ModelRequest {
     
@@ -172,11 +161,7 @@ extension Match : ModelRequest {
                     let errors: ICErrorInfo? = ICError(json: json).getErrors()
                     
                     if errors == nil {
-                        
-                        self._matches = json.arrayValue
-                        self.filter(field: nil, allExcept: false, original: true)
-                        self.setMatch(0)
-                        
+                        self.initializeModel(json)
                     }
                     
                     callBack(failure: errors)
@@ -189,355 +174,52 @@ extension Match : ModelRequest {
         callBack(failure: nil)
     }
     
-    
-    // Because the matches will be an array, you can set a specific match based on it's index
-    func setMatch(index: Int) {
-        if index >= 0 && index < matches.endIndex {
-            selectedMatch = matches[index]
-            selectedMatchIndex = index
-        }
+    private func initializeModel(json: JSON) {
+        self._matches = json.arrayValue.map() { return TalentMatchCard(matchCard: $0) }
+        self.filter()
+        self.setMatch(0)
     }
     
-    func removeMatch() {
-        
-        // Remove from originalMatches
-//        let id: String = self.getID(FieldID.MatchCardID)!
-//        let c: Int = _matches.count
-//        for i in 0..<c {
-//            let key: [SubscriptType] = FieldID.MatchCardID.getPath()
-//            if _matches[i][key].stringValue == id {
-//                _matches.removeAtIndex(i)
-//            }
-//        }
+}
 
-        // Remove from matches
-        if let i = selectedMatchIndex {
-            matches.removeAtIndex(i)
-        }
-        // Set originalMatches
-        _matches = matches
-        
-        /*if let id: String = getID(FieldID.MatchCardID) {
-            let c: Int = matches.count
-            for i in 0..<c {
-                let key: [SubscriptType] = FieldID.MatchCardID.getPath()
-                if matches[i][key].stringValue == id {
-                    matches.removeAtIndex(i)
-                }
-            }
-        }*/
-    }
-    
+extension Match {
     
     // Filter the matches based on the status of a match, parameter "allExcept" means that the result of the filter will contain everything, except the provided status. If parameter "original" == true, it will filter from the original requested "_matches" global var.
-    func filter(field:FilterStatusFields? = nil, allExcept:Bool = false, original:Bool = false) {
+    func filter(field:FilterStatusFields? = nil, allExcept:Bool = false) {
         
-        var mathesToFilter:[JSON] = (original == true) ? matchesFromCastingObject : matches
+        currentStatusField = (allExcept == true) ? nil : field
+        
+        var mathesToFilter:[MatchCard] = matchesFromCastingObject
         
         if let f = field {
             
             var filtered = mathesToFilter.filter { (obj) -> Bool in
                 
-                let key: [SubscriptType] = Fields.Status.getPath()
-                let status = obj[key].stringValue
+                //let path: [SubscriptType] = Fields.Status.getPath()
+                //let status = obj[path].stringValue
+                
+                let status = obj.getStatus()
+                
                 if allExcept == false {
-                    return (FilterStatusFields.allValues[status] == f)
+                    return status == f
                 } else {
-                    return (FilterStatusFields.allValues[status] != f)
+                    return status != f
                 }
             }
             matches = filtered
         }
+            
         else {
+            
             // If no method parameters are set, go back to the original, all changes in one, should mirror the other, otherwise, you can get unexpected results, reload the data from the server instead.
             matches = matchesFromCastingObject
         }
-    }
- 
-    
-    private func getMatchFromIndex(index: Int?) -> JSON {
-        var item: JSON = selectedMatch!
-        if let i = index {
-            if i >= 0 && i < matches.endIndex {
-                item = matches[i]
-            }
-        }
-        return item
-    }
-    
-}
-
-
-/* Generic extension methods to extract values from a match */
-
-extension Match {
-    
-    // To make the process of getting data from JSON data slightly more dynamic, let other classes decide what to get from the model
-    func getMatchData(fields: [Fields], index: Int? = nil) -> [Fields:String] {
         
-        let item = getMatchFromIndex(index)
-        
-        var returnValue: [Fields:String] = [Fields:String]()
-        
-        for field: Fields in fields {
-            
-            let keys:[SubscriptType] = field.getPath()
-            var str: String = item[keys].string ?? "-"
-            
-            //if let error = item[keys].error {
-            //println("Error: \(error)")
-            //}
-            
-            if let result: String = customizeField(field, source: str) as? String {
-                str = result
-            }
-            
-            returnValue[field] = str
-        }
-        
-        return returnValue
-    }
-    
-    // To just recieve one value, use this method instead
-    func getMatchValue(field: Fields, index: Int? = nil) -> String? {
-        
-        let item = getMatchFromIndex(index)
-        
-        let keys:[SubscriptType] = field.getPath()
-        
-        var str: String? = item[keys].string
-        
-        //if let error = item[keys].error {
-        //println("Error: \(error)")
-        //}
-        
-        
-        if let s = str {
-            if let result: String = customizeField(field, source: s) as? String {
-                str = result
-            }
-        }
-        
-        return str
-    }
-    
-    private func getMatchJSON(field: Fields, index: Int? = nil) -> JSON {
-        let item = getMatchFromIndex(index)
-        let keys:[SubscriptType] = field.getPath()
-        var json = item[keys]
-        return json
     }
     
 }
 
 
 
-/* Extension to get specific values from Match */
-
-extension Match {
-    
-    func getStatus() -> FilterStatusFields? {
-        
-        if let sm = selectedMatch {
-            let key: [SubscriptType] = Fields.Status.getPath()
-            let status = sm[key].stringValue
-            return FilterStatusFields.allValues[status]
-        }
-        return nil
-    }
-
-    func setStatus(status: FilterStatusFields) {
-        
-        if let sm = selectedMatch {
-            let key: [SubscriptType] = Fields.Status.getPath()
-            for (str, val) in FilterStatusFields.allValues {
-                if val == status {
-                    selectedMatch![key].string = str
-                    // After changing it to the selected match, update the matches as well with the selectedMatch.
-                    matches[selectedMatchIndex!] = selectedMatch!
-                    // Set status of originalMatch
-                    _matches = matches
-//                    let id: String = self.getID(FieldID.MatchCardID)!
-//                    let key: [SubscriptType] = FieldID.MatchCardID.getPath()
-//                    _matches = _matches.map({ (transform: JSON) -> JSON in
-//                        return (transform[key].stringValue == id) ? self.selectedMatch! : transform
-//                    })
-                    
-//                    let c: Int = _matches.count
-//                    for i in 0..<c {
-//                        let key: [SubscriptType] = FieldID.MatchCardID.getPath()
-//                        if _matches[i][key].stringValue == id {
-//                            _matches[i] = selectedMatch!
-//                        }
-//                    }
-                    
-                }
-            }
-        }
-    }
-
-    // This gets the matchcard id, not the job ID
-    func getID(ID: FieldID) -> String? {
-        
-        let key: [SubscriptType] = ID.getPath()
-        if let sm = selectedMatch {
-            return sm[key].string
-        }
-        return nil
-    }
-    
-    func getProfile(index:Int? = nil) -> [String:JSON] {
-        
-        let item = getMatchFromIndex(index)
-        let profile: JSON = item[Fields.JobProfile.getPath()]
-        return profile.dictionaryValue
-    }
-    
-    // TODO: Because the model is not responsible for the view display, the structure of data for the view should go to the controller
-    func getMatchDetails() -> MatchDetailsReturnValue {
-        
-        var header: [Fields:String?] = [Fields:String?]()
-        var details: MatchDetailType = MatchDetailType()
-        
-        if selectedMatch?.count > 0 {
-            
-            header[.ClientAvatar] = "lala"
-            
-            // Header
-            header[.ClientAvatar] = getMatchValue(.ClientAvatar) ?? "no avatar"
-            header[.ClientCompany] = getMatchValue(.ClientCompany) ?? "-"
-            header[.ClientName] = getMatchValue(.ClientName) ?? "-"
-            header[.JobTitle] = getMatchValue(.JobTitle) ?? "-"
-            header[.JobDescription] = getMatchValue(.JobDescription) ?? "-"
-            
-            // DATE TIME
-            details[.JobContractDateTime] = [[String:String?]]()
-            //details[.JobContractDateTime]?.append([ "type" : "type" ])
-            details[.JobContractDateTime]?.append([ "dateStart" : getMatchValue(.JobDateStart) ?? "-" ])
-            details[.JobContractDateTime]?.append([ "dateEnd" : getMatchValue(.JobDateStart) ?? "-" ])
-            details[.JobContractDateTime]?.append([ "timeStart" : getMatchValue(.JobTimeStart) ?? "-" ])
-            details[.JobContractDateTime]?.append([ "timeEnd" : getMatchValue(.JobTimeEnd) ?? "-" ])
-            
-            // LOCATION
-            details[.JobContractLocation] = [[String:String?]]()
-            details[.JobContractLocation]?.append(["type" : getMatchJSON(.JobContractLocation)["type"].string ])
-            details[.JobContractLocation]?.append(["city" : getMatchJSON(.JobContractLocation)["address", "city"].string ?? "-" ])
-            details[.JobContractLocation]?.append(["street" : getMatchJSON(.JobContractLocation)["address", "street"].string ?? "-" ])
-            details[.JobContractLocation]?.append(["streetNumber" : getMatchJSON(.JobContractLocation)["address", "streetNumber"].string ?? "-" ])
-            details[.JobContractLocation]?.append(["zipcode" : getMatchJSON(.JobContractLocation)["address", "zipCode"].string ?? "-" ])
-
-            // TRAVEL EXPENSES
-            details[.JobPayment] = [[String:String?]]()
-            details[.JobPayment]?.append(["budget": customizeField(.JobContractBudget, source: getMatchJSON(.JobContractBudget).intValue) as? String ])
-            details[.JobPayment]?.append(["hasTravelExpenses": NSLocalizedString(getMatchJSON(.JobContractTravelExpenses).boolValue.description, comment:"") ])
-            details[.JobPayment]?.append(["paymentMethod": getMatchValue(.JobContractPaymentMethod) ?? "-" ])
-
-            
-            //let profileData: [String:JSON] = self.getProfile()
-            
-            //details[.JobProfile] //?//.append(profileData)
-            
-            println(details[.JobContractDateTime])
-            println(details[.JobContractLocation])
-            println(details[.JobPayment])
-        }
-        
-        return (header: header, details: details)
-    }
-    
-    
-    // Further customize specific field data
-    private func customizeField(field: Fields, source: AnyObject) -> AnyObject? {
-        
-        switch field {
-        case .JobDateStart:
-            return (source as! String).ICdateToString(ICDateFormat.Matches)
-        case .JobDateEnd:
-            return (source as! String).ICdateToString(ICDateFormat.Matches)
-        case .JobTimeStart:
-            return (source as! String).ICTime()
-        case .JobTimeEnd:
-            return (source as! String).ICTime()
-        case .JobContractBudget:
-            return "\((source as! Int) / 1000)"
-        default:
-            return nil
-            
-        }
-    }
-}
 
 
-
-/* A specialized model class for talents */
-
-class TalentMatch: Match {
-    
-    func accept(callBack:RequestClosure) {
-        
-        if let ID = super.getID(FieldID.MatchCardID) {
-        
-            var url: String = APIMatch.MatchAcceptTalent(ID).value
-            var access_token: AnyObject = Auth.auth.access_token as! AnyObject
-            var params: [String : AnyObject] = ["access_token":access_token]
-            
-            // Test
-            //var errorInfo: ICErrorInfo? = ICError(json: JSON("test")).getErrors()
-            //callBack(failure: errorInfo)
-
-            request(.POST, url, parameters: params).responseJSON() { (request, response, json, error) in
-                
-                if (error != nil) {
-                    NSLog("Error: \(error)")
-                    println(request)
-                    println(response)
-                }
-                
-                if let json: AnyObject = json {
-                    
-                    let parsedJSON = JSON(json)
-                    var errorInfo: ICErrorInfo? = ICError(json: parsedJSON).getErrors()
-                    callBack(failure: errorInfo)
-                }
-                
-                println(response)
-                println(json)
-                
-            }
-        }
-    }
-    
-    func reject(callBack:RequestClosure) {
-        
-        if let ID = super.getID(FieldID.MatchCardID) {
-            
-            var url: String = APIMatch.MatchRejectTalent(ID).value
-            var access_token: AnyObject = Auth.auth.access_token as! AnyObject
-            var params: [String : AnyObject] = ["access_token":access_token]
-            
-            // Test
-            //var errorInfo: ICErrorInfo? = ICError(json: JSON("test")).getErrors()
-            //callBack(failure: errorInfo)
-            
-            request(.POST, url, parameters: params).responseJSON() { (request, response, json, error) in
-                
-                if (error != nil) {
-                    NSLog("Error: \(error)")
-                    println(request)
-                    println(response)
-                }
-                
-                if let json: AnyObject = json {
-                    
-                    let parsedJSON = JSON(json)
-                    var errorInfo: ICErrorInfo? = ICError(json: parsedJSON).getErrors()
-                    callBack(failure: errorInfo)
-                }
-                
-                println(response)
-                println(json)
-                
-            }
-        }
-    }
-}

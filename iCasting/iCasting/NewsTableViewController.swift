@@ -76,12 +76,16 @@ class NewsTableViewController: UITableViewController {
         
         cell.textLabel?.text = title
         cell.detailTextLabel?.text = published
+        cell.imageView?.alpha = 0
         
         news.image(image, size: ImageSize.Thumbnail) { result in
             
             if result.success is NSDictionary {
             } else {
                 cell.imageView?.image = UIImage(data: result.success as! NSData)
+                UIView.animateWithDuration(0.25, animations: { () -> Void in
+                    cell.imageView?.alpha = 1
+                })
             }
             cell.indentationLevel = 0
             cell.setNeedsLayout()

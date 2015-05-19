@@ -74,13 +74,38 @@ extension UIImageView {
 
 extension UITableView {
     
+    // Define the left padding through white spaces, check https://www.cs.tut.fi/~jkorpela/chars/spaces.html
+    
     func setTableHeaderViewNoResults(text: String) {
+        
         var label: UILabel = UILabel(frame: CGRectMake(0, 0, self.frame.size.width, 90))
-        // Define the left padding through white spaces, check https://www.cs.tut.fi/~jkorpela/chars/spaces.html
         label.text = "\u{2003}"+text+"\u{2002}"
         label.textAlignment = NSTextAlignment.Center
         label.adjustsFontSizeToFitWidth = true
         self.tableHeaderView = label
+    }
+
+    func setTableHeaderViewWithResults(text: String) {
+        
+        var label: UILabel = UILabel(frame: CGRectMake(0, 0, self.frame.size.width, 35))
+        label.backgroundColor = UIColor(red: 172/255, green: 9/255, blue: 33/255, alpha: 1.0)
+        label.textColor = UIColor.whiteColor()
+        label.text = "\u{2003}"+text+"\u{2002}"
+        label.textAlignment = NSTextAlignment.Center
+        label.adjustsFontSizeToFitWidth = true
+        self.tableHeaderView = label
+    }
+    
+    
+    func setWholeSeperatorLines() {
+        
+        if self.respondsToSelector("setSeparatorInset:") {
+            self.separatorInset = UIEdgeInsetsZero
+        }
+        if self.respondsToSelector("setLayoutMargins:") {
+            self.layoutMargins = UIEdgeInsetsZero
+        }
+        self.layoutIfNeeded()
     }
     
 }

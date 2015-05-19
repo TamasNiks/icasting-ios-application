@@ -11,11 +11,31 @@ import Foundation
 protocol UserCastingObject {
     
     func setCastingObject(index: Int) -> Bool
-    func castingObjectForIndex(index: Int) -> CastingObject
+    func castingObjectAtIndex(index: Int) -> CastingObject
 }
 
-class User {
 
+protocol ValueProvider {
+    
+}
+
+struct UserGeneral : Printable {
+    let name: String
+    let avatar: String
+    let credits: NSNumber
+    let roles: [String]
+    
+    var description: String {
+        return "name: \(name), credits: \(credits), roles\(roles)"
+    }
+}
+
+class User : Printable {
+
+    var description: String {
+        return "User: \(general?.description) \n castingObjects count: \(User.sharedInstance.castingObjects.count) \n castingObjectID: \(User.sharedInstance.castingObjectID) "
+    }
+    
     static let sharedInstance: User = User()
 
     internal var credentials: Credentials = Credentials()
@@ -23,14 +43,32 @@ class User {
     
     var castingObject: CastingObject = CastingObject()
     var castingObjectID: String {
-        get { return castingObject.id() ?? String() }
+        get { return castingObject.id ?? String() }
     }
 
-    var displayName: String?
-    var avatar: String?
-    var credits: NSNumber?
-    var roles: [JSON]?
+    var general: UserGeneral?
+    
 }
+
+
+extension User : ValueProvider {
+    
+    func getGeneral() -> UserGeneral? {
+        return general
+    }
+    
+    private func setGeneral(json: JSON) {
+        
+        User.sharedInstance.general = UserGeneral(
+            name: json["name"]["display"].string ?? "No name",
+            avatar: json["avatar"]["thumb"].string ?? "",
+            credits: json["credits"]["total"].number ?? 0,
+            roles: json["roles"].arrayValue.map { return $0.stringValue }
+        )
+    }
+    
+}
+
 
 extension User : UserCastingObject {
     
@@ -43,7 +81,7 @@ extension User : UserCastingObject {
         return (isEmpty) ? false : true
     }
     
-    func castingObjectForIndex(index: Int) -> CastingObject {
+    func castingObjectAtIndex(index: Int) -> CastingObject {
         return self.castingObjects[index]
     }
     
@@ -53,9 +91,12 @@ extension User : ModelRequest {
     
     internal func get(callBack:RequestClosure) {
         
-        if let access_token = Auth.auth.access_token {
+        if let
+            access_token = Auth.auth.access_token,
+            user_id = Auth.auth.user_id
+        {
         
-            let url: String = APIUser.User(Auth.auth.user_id).value
+            let url: String = APIUser.User(user_id).value
             var params: [String : AnyObject] = ["access_token":access_token]
             
             request(.GET, url, parameters: params).responseJSON() { (request, response, json, error) in
@@ -73,10 +114,9 @@ extension User : ModelRequest {
                     let errors: ICErrorInfo? = ICError(json: json).getErrors()
                     
                     if errors == nil {
-                        User.sharedInstance.displayName = json["name"]["display"].string
-                        User.sharedInstance.credits = json["credits"]["total"].number!
-                        User.sharedInstance.avatar = json["avatar"]["thumb"].string
-                        User.sharedInstance.roles = json["roles"].array
+//                        println("USER JSON")
+//                        println(json)
+                        User.sharedInstance.setGeneral(json)
                     }
                     
                     callBack(failure: errors)

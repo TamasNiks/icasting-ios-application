@@ -16,7 +16,10 @@ protocol ModelProtocol {
 }
 
 protocol ModelRequest {
-    
     func get(callBack: RequestClosure)
-    
+}
+
+protocol MatchCardDelegate {
+    func didRejectMatch()
+    func didAcceptMatch()
 }

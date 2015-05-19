@@ -35,7 +35,7 @@ class NegotiationsTableViewController: UITableViewController {
             self.refreshControl?.endRefreshing()
             println(failure?.description)
             self.match.filter(field: .Negotiations)
-            //println(self.match.matches)
+            //println(self.match.matches[1].getData([Fields.JobTitle]))
             
             if self.match.matches.isEmpty {
                 self.tableView.setTableHeaderViewNoResults(NSLocalizedString("NoNegotiations", comment: ""))
@@ -48,17 +48,20 @@ class NegotiationsTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
-        //self.title = NSLocalizedString("News", nil);
         
         refreshControl = UIRefreshControl()
         refreshControl?.addTarget(self, action: ("handleRefresh:"), forControlEvents: UIControlEvents.ValueChanged)
+        refreshControl?.beginRefreshing()
         handleRequest()
+        
+        let ac = UIAlertController(
+            title: NSLocalizedString("Announcement", comment: ""),
+            message: "This feature is in development yet, we will inform you of further versions",
+            preferredStyle: UIAlertControllerStyle.Alert)
+        ac.addAction(UIAlertAction(title: NSLocalizedString("Ok", comment: ""),
+            style: UIAlertActionStyle.Cancel, handler: { (action) -> Void in
+        }))
+        self.presentViewController(ac, animated: true, completion: nil)
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -87,7 +90,8 @@ class NegotiationsTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("conversationCellidentifier", forIndexPath: indexPath) as! ConversationCell
 
-        var data: [Fields: String] = self.match.getMatchData([.JobTitle, .JobDescription, .JobDateStart, .ClientAvatar], index: indexPath.row)
+        let matchAtIndex: MatchCard = self.match.matches[indexPath.row]
+        var data: [Fields: String] = matchAtIndex.getData([.JobTitle, .JobDescription, .JobDateStart, .ClientAvatar])
         
         
         //var info: [String:String] = self.match.getCellInfo(index: indexPath.row)
@@ -110,7 +114,6 @@ class NegotiationsTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return 90
     }
-
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
@@ -127,7 +130,7 @@ class NegotiationsTableViewController: UITableViewController {
         // Pass the selected object to the new view controller.
         
         var vc = segue.destinationViewController as! NegotiationDetailTableViewController
-        vc.matchID = self.match.getID(FieldID.MatchCardID)
+        vc.matchID = self.match.selectedMatch!.getID(FieldID.MatchCardID)
         
     }
 

@@ -61,7 +61,7 @@ class SettingTableViewController: UITableViewController {
                     
                     Auth().logout() { failure in
                         if failure == nil {
-                            println("Logout successfully: access_token is now unset")
+                            println("Logout request successfully, unwind to login")
                             self.performSegueWithIdentifier("unwindToLogin", sender: self)
                         }
                     }

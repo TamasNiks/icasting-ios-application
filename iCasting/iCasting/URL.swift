@@ -41,13 +41,12 @@ class ICURL {
 }
 
 extension ICURL {
+    
     class func createURL(uri: EndpointProtocol) -> String {
         var nsurl: NSURL = createURL(uri, insert: nil, params: nil)
         return nsurl.absoluteString!
     }
 }
-
-
 
 
 private class URLResolver {

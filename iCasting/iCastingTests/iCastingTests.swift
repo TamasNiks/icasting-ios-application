@@ -35,27 +35,9 @@ class iCastingTests: XCTestCase {
     }
     
     
-    func testNewMatchClass() {
-        
-        var match: Match = Match()
-        match.get { (r) -> () in
-            
-            
-            let fields = [Fields.JobTitle, Fields.ClientName, Fields.ClientCompany, Fields.JobDateStart]
-            println(match.getMatchData(fields, index:nil))
-        
-        }
-        
-        
-        
-        
-    }
-    
-    
     func testMatchDetail() {
         
-        
-        var match: Match = Match()
+        /*var match: Match = Match()
         
         match.get() { result in
             
@@ -69,8 +51,7 @@ class iCastingTests: XCTestCase {
             
             XCTAssertEqual(company, "Wouter Baan Bedrijf", "company is equal")
             XCTAssertEqual(name, "Wouter Baan", "name is equal")            
-        }
-        
+        }*/
     }
     
     func testValidator() {

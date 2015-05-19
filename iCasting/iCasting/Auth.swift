@@ -15,40 +15,57 @@ struct Credentials {
 
 struct Authentication {
     
-    let TOKEN_KEY: String = "access_token"
+    static let TOKEN_KEY: String = "access_token"
+    static let USERID_KEY: String = "user_id"
     
-    var user_id : String = ""// = "551d58a226042f74fb745533"
-    var access_token: String? {
-        willSet {
-            NSUserDefaults.standardUserDefaults().setValue(newValue, forKey: TOKEN_KEY)
-            //="551d58a226042f74fb745533$YENvtqK2Eis3oKCG6vo76IgilplRXFO9h+LMKT1HdRo="
-        }
+    private var _user_id : String? // = "551d58a226042f74fb745533"
+    private var _access_token: String? //="551d58a226042f74fb745533$YENvtqK2Eis3oKCG6vo76IgilplRXFO9h+LMKT1HdRo="
+    
+    private func saveAuthentication() {
+        println("Token will be saved")
+        NSUserDefaults.standardUserDefaults().setObject(_access_token, forKey: Authentication.TOKEN_KEY)
+        NSUserDefaults.standardUserDefaults().setObject(_user_id, forKey: Authentication.USERID_KEY)
+        //NSUserDefaults.standardUserDefaults().synchronize()
+    }
+
+    private mutating func clearAuthentication() {
+        _user_id = nil
+        _access_token = nil
+        saveAuthentication()
+        println("Authentication successfully cleared")
     }
     
-    private var _access_token : String? {
-        get {
-            return NSUserDefaults.standardUserDefaults().stringForKey(TOKEN_KEY)
-        }
+    var access_token : String? {
+
+        var value: String? = NSUserDefaults.standardUserDefaults().objectForKey(Authentication.TOKEN_KEY) as? String
+        println("Token from NSuserDefaults: " + (value ?? "No token set"))
+        return value
     }
     
+    var user_id : String? {
+
+        var value: String? = NSUserDefaults.standardUserDefaults().objectForKey(Authentication.USERID_KEY) as? String
+        println("UserID from NSuserDefaults: " + (value ?? "No userid set"))
+        return value
+    }
+    
+
 }
 
 typealias LoginClosure = RequestClosure
 
 class Auth {
     
-    static var auth: Authentication = Authentication()
+    static var auth: Authentication = Authentication() {
+        willSet {
+            newValue.saveAuthentication()
+        }
+    }
     
     func login(credentials: Credentials, callBack: LoginClosure) {
         
-        if let access_token = Auth.auth._access_token {
-            println("NSUserDefaults: \(access_token)")
-            callBack(failure: nil)
-            return
-        }
-        
         LoginRequest(credentials: credentials).execute { errors -> () in
-        
+
             if let errors = errors {
                 callBack(failure: errors)
                 return
@@ -63,7 +80,7 @@ class Auth {
                 
                 CastingObjectRequest().execute { error -> () in
                  
-                    self.printResults()
+                    println(User.sharedInstance)
                     callBack(failure: error)
                 }
             }
@@ -75,7 +92,7 @@ class Auth {
         
         if let token = Auth.auth.access_token {
             
-            var params : [String:String] = ["access_token":token]
+            var params : [String:String] = [Authentication.TOKEN_KEY:token]
             var req : NSURLRequest = (RequestFactory
                 .request(.post) as? RequestHeaderProtocol)!
                 .create(APIAuth.Logout, content: (insert: nil, params: params), withHeaders: ["Authorization":""])
@@ -93,8 +110,8 @@ class Auth {
                     let errors: ICErrorInfo? = ICError(json: json).getErrors()
                     
                     if errors == nil {
-                        println(json)
-                        Auth.auth.access_token = nil
+                        //println(json)
+                        Auth.auth.clearAuthentication()
                     }
                     
                     callBack(failure: errors)
@@ -106,33 +123,11 @@ class Auth {
     
 }
 
-extension Auth {
-    
-    func printResults() {
-        
-        println("Login request sequence successfull")
-        
-        // TODO: Make User class Printable
-        
-//        println("castingObjectIDs")
-//        println(User.sharedInstance.castingObjectIDs)
-//        println("castingObjectID")
-//        println(User.sharedInstance.castingObjectID)
-//        println("credits")
-//        println(User.sharedInstance.credits)
-//        println("display")
-//        println(User.sharedInstance.displayName)
-//        println("avatar")
-//        println(User.sharedInstance.avatar)
-//        println("roles")
-//        println(User.sharedInstance.roles)
-    }
-    
-}
 
 protocol RequestCommand {
     func execute(callBack:LoginClosure)
 }
+
 
 class LoginRequest: RequestCommand {
     
@@ -142,6 +137,15 @@ class LoginRequest: RequestCommand {
     }
     
     func execute(callBack:LoginClosure) {
+        
+        // If there already exist an access_token AND user_id, skip the Basic login
+        if let
+        access_token = Auth.auth.access_token,
+        user_id = Auth.auth.user_id
+        {
+            callBack(failure: nil)
+            return
+        }
         
         let url: String = APIAuth.Login.value
         var params : [String:AnyObject] = ["email":credentials.email, "password":credentials.password]
@@ -160,11 +164,14 @@ class LoginRequest: RequestCommand {
                 let errors: ICErrorInfo? = ICError(json: json).getErrors()
                 
                 if errors == nil {
+                    
                     let user_id: String =  json["user_id"].stringValue
-                    let access_token: String = json["access_token"].stringValue
-                    let authentication: Authentication = Authentication(user_id: user_id, access_token: access_token)
-                    println("access_token: " + access_token)
+                    let token: String = json[Authentication.TOKEN_KEY].stringValue
+                    let authentication: Authentication = Authentication(_user_id: user_id, _access_token: token)
+
+                    println("Token from server: " + token)
                     Auth.auth = authentication
+                    //Auth.auth.saveAuthentication()
                 }
                 
                 callBack(failure: errors)
