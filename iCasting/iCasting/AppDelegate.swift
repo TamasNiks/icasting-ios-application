@@ -7,6 +7,8 @@
 //
 //190, 38, 52
 import UIKit
+import FBSDKCoreKit
+import FBSDKLoginKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -90,6 +92,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     
+    func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject?) -> Bool {
+        
+        return FBSDKApplicationDelegate.sharedInstance().application(application, openURL: url, sourceApplication: sourceApplication, annotation: annotation)
+        
+    }
+    
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
@@ -136,8 +144,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Change the global appearence190, 38, 52
         UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName : UIColor.whiteColor()]
         //UINavigationBar.appearance().barTintColor = UIColor(red: 213/255, green: 0, blue: 42/255, alpha: 1) //D5002A
-        UINavigationBar.appearance().barTintColor = UIColor(red: 221/255, green: 33/255, blue: 49/255, alpha: 1) //D5002A //sRGB
+        //UINavigationBar.appearance().barTintColor = UIColor(red: 221/255, green: 33/255, blue: 49/255, alpha: 1) //D5002A //sRGB
         //UINavigationBar.appearance().barTintColor = UIColor(red: 190/255, green: 38/255, blue: 52/255, alpha: 1) //D5002A //Adobe RGB
+        UINavigationBar.appearance().barTintColor = UIColor.ICRedDefaultColor()
         UINavigationBar.appearance().tintColor = UIColor.whiteColor()
         
         /*
@@ -154,7 +163,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         */
         
-        return true
+        return FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
     }
 
     func applicationWillResignActive(application: UIApplication) {
@@ -173,6 +182,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationDidBecomeActive(application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        FBSDKAppEvents.activateApp()
     }
 
     func applicationWillTerminate(application: UIApplication) {

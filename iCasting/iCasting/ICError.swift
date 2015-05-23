@@ -8,6 +8,11 @@
 
 import Foundation
 
+
+enum ICAPIErrorNames: String {
+    case PassportAuthenticationError = "PassportAuthenticationError"
+}
+
 protocol ICErrorInfo : Printable {
     var type: ICErrorType { get }
     var localizedFailureReason: String { get }

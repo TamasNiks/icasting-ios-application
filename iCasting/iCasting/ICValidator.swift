@@ -61,10 +61,10 @@ enum ErrorValidator {
 
 class Validator {
     
-    var credentials: Credentials
+    var credentials: UserCredentials
     var errors: [ErrorValidator] = [ErrorValidator]()
     
-    init(credentials: Credentials) {
+    init(credentials: UserCredentials) {
         self.credentials = credentials
     }
     

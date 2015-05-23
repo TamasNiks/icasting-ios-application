@@ -81,7 +81,7 @@ class MatchDetailTableViewController: UITableViewController {
         self.tableView.setWholeSeperatorLines()
         
         //println(self.matchCard!.profileGeneral)
-        println(self.matchCard!)
+        //println(self.matchCard!)
         
         //self.tableView.rowHeight = UITableViewAutomaticDimension // not actually necessary
         //self.tableView.estimatedRowHeight = 100 // turn on automatic cell variable sizing!

@@ -45,11 +45,23 @@
 "login.alert.client.notsupported" = "Voor deze versie van de app wordt de client nog niet ondersteund. We laten het u weten als client ondersteuning wordt ondersteund in toekomstige versies";
 
 /* Family: Casting Objects */
-"CastingObjectsHeader" = "Maak een keuze tussen een familielid";
-"NoFamilyMembers" = "Er zijn nog geen familieleden toegevoegd voor deze gebruiker.";
+"castingobjects.navigationitem.title" = "Welkom %@";
+"CastingObjectsHeader" = "Gebruik iCasting als:";
+"NoFamilyMembers" = "Er zijn nog geen familieleden toegevoegd voor dit gebruikersaccount. Voeg eerst een familielid toe.";
 
 /* Negotiations */
 "NoNegotiations" = "Er zijn geen onderhandelingen.";
+
+/* Notifications */
+"notification.desc.achievement-complete" = "Je hebt \"%@\" voltooid en %@ XP verdient";
+"notification.desc.match-matched" = "Je bent gematcht met \"%@\"";
+"notification.desc.match-client_accepted" = "Je reactie voor \"%@\" is geacepteerd";
+"notification.desc.chat-message" = "U heeft een bericht ontvangen in een onderhandeling voor \"%@\"";
+
+"notification.title.achievement-complete" = "Je hebt een prestatie voltooid!";
+"notification.title.match-matched" = "Je bent gematcht!";
+"notification.title.match-client_accepted" = "Je bent geaccepteerd door een opdrachtgever.";
+"notification.title.chat-message" = "U heeft een nieuw bericht ontvangen.";
 
 /* Matches */
 "NoMatches" = "Er zijn geen matches.";

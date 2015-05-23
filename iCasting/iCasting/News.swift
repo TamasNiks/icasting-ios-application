@@ -28,10 +28,39 @@ struct NewsKey {
 class News : ModelProtocol {
     
     var newsItems : [AnyObject] = []
-    
-    /* Asks for all the items */
-    func all(callBack: RequestClosure) {
 
+    func initializeModel(json: JSON) {
+        
+    }
+    
+//    func initializeModel<U>(json: U) {
+//        
+//    }
+    
+//    /* Asks for all the items */
+//    func all(callBack: RequestClosure) {
+//
+//        
+//
+//    }
+    
+    /* Asks for one item for a given id */
+//    func one(id: String, callBack: RequestClosure) {
+//        
+//        var url: String = APINews.NewsItem(id).value
+//        request(.GET, url).responseJSON { (_, _, json, error) -> Void in
+//            if let result: AnyObject = json {
+//                self.newsItems = result as! [AnyObject]
+//                callBack(failure: nil)
+//            }
+//        }
+//    }
+}
+
+
+extension News : ModelRequest {
+    
+    func get(callBack: RequestClosure) {
         
         var url: String = APINews.NewsItems.value
         request(.GET, url).responseJSON { (_, _, json, error) -> Void in
@@ -47,22 +76,6 @@ class News : ModelProtocol {
             }
         }
     }
-    
-    /* Asks for one item for a given id */
-    func one(id: String, callBack: RequestClosure) {
-        
-        var url: String = APINews.NewsItem(id).value
-        request(.GET, url).responseJSON { (_, _, json, error) -> Void in
-            if let result: AnyObject = json {
-                self.newsItems = result as! [AnyObject]
-                callBack(failure: nil)
-            }
-        }
-    }
-}
-
-
-extension News {
     
     func image(id: String, size: ImageSize, callBack : ((success:AnyObject, failure:NSError?)) -> () ) {
 

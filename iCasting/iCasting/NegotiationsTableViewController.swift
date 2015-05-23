@@ -38,7 +38,7 @@ class NegotiationsTableViewController: UITableViewController {
             //println(self.match.matches[1].getData([Fields.JobTitle]))
             
             if self.match.matches.isEmpty {
-                self.tableView.setTableHeaderViewNoResults(NSLocalizedString("NoNegotiations", comment: ""))
+                self.tableView.setTableHeaderViewWithoutResults(NSLocalizedString("NoNegotiations", comment: ""))
             } else {
                 self.tableView.tableHeaderView = nil
                 self.tableView.reloadData()

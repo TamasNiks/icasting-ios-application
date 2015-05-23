@@ -29,9 +29,10 @@ class NewsDetailViewController: UIViewController, UIWebViewDelegate {
         var html: String = "<html>"
         html += "<head>"
         html += "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">"
-        html += "<style> body { font-family:Arial; } </style>"
+        html += "<style> body {font-family:Helvetica; font-size:0.75em;} img {max-width:300px;} h1{color:#3C3C3C} </style>"
         html += "</head>"
         html += "<body>"
+        html += "<h1>\(self.item?.objectForKey(NewsKey.Title) ?? String())</h1>"
         html += body
         html += "</body>"
         html += "</html>"

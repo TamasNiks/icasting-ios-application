@@ -9,3 +9,4 @@
 import Foundation
 
 typealias RequestClosure = (failure:ICErrorInfo?) -> ()
+typealias ICDateFormat = String.ICDateFormat

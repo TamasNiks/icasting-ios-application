@@ -19,54 +19,79 @@ protocol ValueProvider {
     
 }
 
-struct UserGeneral : Printable {
+struct UserValues : Printable {
     let name: String
+    let first: String
     let avatar: String
     let credits: NSNumber
     let roles: [String]
     
     var description: String {
-        return "name: \(name), credits: \(credits), roles\(roles)"
+        return "name: \(name), first: \(first), credits: \(credits), roles\(roles)"
     }
 }
 
-class User : Printable {
-
-    var description: String {
-        return "User: \(general?.description) \n castingObjects count: \(User.sharedInstance.castingObjects.count) \n castingObjectID: \(User.sharedInstance.castingObjectID) "
-    }
+class User : Printable, ModelProtocol {
     
     static let sharedInstance: User = User()
 
+    var values: UserValues?
+    
     internal var credentials: Credentials = Credentials()
     internal var castingObjects: [CastingObject] = [CastingObject]()
     
     var castingObject: CastingObject = CastingObject()
     var castingObjectID: String {
-        get { return castingObject.id ?? String() }
+        return castingObject.id ?? String()
     }
 
-    var general: UserGeneral?
+    // If the user is a family account, return true
+    var isManager: Bool {
+        if let values = values {
+            for val: String in values.roles {
+                if val == "manager" {
+                    return true
+                }
+            }
+        }
+        return false
+    }
     
+    var isClient: Bool {
+        if let values = values {
+            return values.roles[0] == "client"
+        }
+        return false
+    }
+    
+    func initializeModel(json: JSON) {
+        println("USER JSON")
+        println(json)
+        User.sharedInstance.setValues(json)
+    }
+    
+    var description: String {
+        return "User: \(values?.description) \n castingObjects count: \(User.sharedInstance.castingObjects.count) \n castingObjectID: \(User.sharedInstance.castingObjectID) "
+    }
 }
 
 
 extension User : ValueProvider {
     
-    func getGeneral() -> UserGeneral? {
-        return general
+    func getValues() -> UserValues? {
+        return values
     }
     
-    private func setGeneral(json: JSON) {
+    private func setValues(json: JSON) {
         
-        User.sharedInstance.general = UserGeneral(
-            name: json["name"]["display"].string ?? "No name",
-            avatar: json["avatar"]["thumb"].string ?? "",
-            credits: json["credits"]["total"].number ?? 0,
-            roles: json["roles"].arrayValue.map { return $0.stringValue }
+        User.sharedInstance.values = UserValues(
+            name:       json["name"]["display"].string ?? "No name",
+            first:      json["name"]["first"].string ?? "member",
+            avatar:     json["avatar"]["thumb"].string ?? "",
+            credits:    json["credits"]["total"].number ?? 0,
+            roles:      json["roles"].arrayValue.map { return $0.stringValue }
         )
     }
-    
 }
 
 
@@ -76,10 +101,12 @@ extension User : UserCastingObject {
         
         let isEmpty = castingObjects.isEmpty
         if isEmpty == false {
+            println("UserCastingObject: Will set casting object at index")
             self.castingObject = self.castingObjects[index]
         }
         return (isEmpty) ? false : true
     }
+    
     
     func castingObjectAtIndex(index: Int) -> CastingObject {
         return self.castingObjects[index]
@@ -114,9 +141,7 @@ extension User : ModelRequest {
                     let errors: ICErrorInfo? = ICError(json: json).getErrors()
                     
                     if errors == nil {
-//                        println("USER JSON")
-//                        println(json)
-                        User.sharedInstance.setGeneral(json)
+                        self.initializeModel(json)
                     }
                     
                     callBack(failure: errors)

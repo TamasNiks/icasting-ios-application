@@ -9,7 +9,7 @@
 
 import UIKit
 
-class CODetailTableViewController: UITableViewController {
+class DashboardTableViewController: UITableViewController {
 
     
     @IBOutlet weak var tableHeaderView: UIView!
@@ -23,14 +23,30 @@ class CODetailTableViewController: UITableViewController {
     @IBOutlet weak var profileLevelCell: UITableViewCell!
     @IBOutlet weak var jobRatingCell: UITableViewCell!
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        configureTableHeaderView()
+        configureCells()
+    }
+
+    
+    func configureTableHeaderView() {
+        
+        var rect: CGRect = tableHeaderView.frame
+        rect.size.height = 150
+        tableHeaderView.frame = rect
+        tableHeaderView.backgroundColor = UIColor.ICShadowRedColor()
+    }
+    
     func configureCells() {
         
         let user: User = User.sharedInstance
-        if let general = user.getGeneral() {
-        
+        if let general = user.getValues() {
+            
             let castingObject: CastingObjectValueProvider = user.castingObject
             
-            avatar.image = ICImages.ImageWithString(castingObject.avatar ?? String()).image
+            avatar.image = (castingObject.avatar != nil) ? ICImages.ImageWithString(castingObject.avatar!).image : ICImages.PlaceHolderClientAvatar.image
             displayName.text = castingObject.name
             creditCell.detailTextLabel?.text = "\(general.credits)"
             
@@ -43,27 +59,6 @@ class CODetailTableViewController: UITableViewController {
     }
     
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
-        
-        println("SELECTED CASTING OBJECT")
-        println(User.sharedInstance.castingObject.castingObject)
-        
-        var rect: CGRect = tableHeaderView.frame
-        rect.size.height = 150
-        tableHeaderView.frame = rect
-        
-        configureCells()
-        
-        
-    }
-
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

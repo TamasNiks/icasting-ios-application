@@ -8,13 +8,58 @@
 
 import UIKit
 
-enum ICDateFormat: String {
-    case
-    Matches = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'+'ss':'ss",
-    News = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'000'Z'" //2015-01-31T23:00:00.000Z
+
+extension UIColor {
+    
+    // Main interface color
+    class func ICRedDefaultColor() -> UIColor {
+        return UIColor(red: 223/255, green: 31/255, blue: 54/255, alpha: 1.0)
+    }
+
+    // Color for emphasize on default red
+    class func ICDarkenedRedColor() -> UIColor {
+        return UIColor(red: 190/255, green: 28/255, blue: 47/255, alpha: 1.0)
+    }
+    
+    // Color to add details interface elements on default red
+    class func ICShadowRedColor() -> UIColor {
+        return UIColor(red: 201/255, green: 27/255, blue: 48/255, alpha: 1.0)
+    }
+    
+    // Color for footer
+    class func ICDarkGrayColor() -> UIColor {
+        return UIColor(red: 75/255, green: 73/255, blue: 75/255, alpha: 1.0)
+    }
+    
+    // Color for header backgrounds
+    class func ICLightGrayColor() -> UIColor {
+        return UIColor(red: 153/255, green: 153/255, blue: 153/255, alpha: 1.0)
+    }
+
+    // Color for buttons
+    class func ICGreenColor() -> UIColor {
+        return UIColor(red: 46/255, green: 204/255, blue: 113/255, alpha: 1.0)
+    }
+    
+    // Color for header text
+    class func ICTextDarkGrayColor() -> UIColor {
+        return UIColor(white: 77/255, alpha: 1.0) //UIColor(red: 77/255, green: 77/255, blue: 77/255, alpha: 1.0)
+    }
+    
+    // Color for main text
+    class func ICTextLightGrayColor() -> UIColor {
+        return UIColor(white: 138/255, alpha: 1.0) //UIColor(red: 138/255, green: 138/255, blue: 138/255, alpha: 1.0)
+    }
 }
 
+
 extension String {
+
+    enum ICDateFormat: String {
+        case
+        Matches = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'+'ss':'ss",
+        News = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'000'Z'" //2015-01-31T23:00:00.000Z
+    }
     
     func ICdateToString(format: ICDateFormat) -> String? {
         
@@ -52,6 +97,7 @@ extension String {
     }
 }
 
+
 extension UIImageView {
     
     func makeRound(
@@ -76,19 +122,21 @@ extension UITableView {
     
     // Define the left padding through white spaces, check https://www.cs.tut.fi/~jkorpela/chars/spaces.html
     
-    func setTableHeaderViewNoResults(text: String) {
+    func setTableHeaderViewWithoutResults(text: String) {
         
         var label: UILabel = UILabel(frame: CGRectMake(0, 0, self.frame.size.width, 90))
+        label.font = UIFont.systemFontOfSize(UIFont.smallSystemFontSize())
         label.text = "\u{2003}"+text+"\u{2002}"
         label.textAlignment = NSTextAlignment.Center
         label.adjustsFontSizeToFitWidth = true
+        label.numberOfLines = 0
         self.tableHeaderView = label
     }
 
     func setTableHeaderViewWithResults(text: String) {
         
         var label: UILabel = UILabel(frame: CGRectMake(0, 0, self.frame.size.width, 35))
-        label.backgroundColor = UIColor(red: 172/255, green: 9/255, blue: 33/255, alpha: 1.0)
+        label.backgroundColor = UIColor.ICDarkenedRedColor() //UIColor(red: 172/255, green: 9/255, blue: 33/255, alpha: 1.0)
         label.textColor = UIColor.whiteColor()
         label.text = "\u{2003}"+text+"\u{2002}"
         label.textAlignment = NSTextAlignment.Center

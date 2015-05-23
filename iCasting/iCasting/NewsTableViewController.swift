@@ -28,7 +28,7 @@ class NewsTableViewController: UITableViewController {
     }
     
     func handleRequest() {
-        news.all() { failure in
+        news.get() { failure in
             self.refreshControl!.endRefreshing()
             if let failure: ICErrorInfo = failure {
                 println(failure.description)

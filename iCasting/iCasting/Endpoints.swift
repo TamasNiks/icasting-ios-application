@@ -17,6 +17,7 @@ internal struct Host {
 
 protocol EndpointProtocol {
     func endpoint() -> String
+    var value: String { get }
 }
 
 
@@ -145,6 +146,23 @@ enum APIMatch: EndpointProtocol {
     var value: String { return ICURL.createURL(self) }
     
 }
+
+enum APINotifications: EndpointProtocol {
+    
+    case Notifications
+    
+    func endpoint() -> String {
+        switch self {
+        case .Notifications:
+            return "notifications"
+        }
+    }
+    
+    var value: String { return ICURL.createURL(self) }
+    
+}
+
+
 
 internal struct ApiURL {
     

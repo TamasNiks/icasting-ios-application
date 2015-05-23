@@ -8,6 +8,9 @@
 
 import Foundation
 
+
+
+
 enum FilterStatusFields: String {
     case // These String values are the localization tokens
     Negotiations    = "NegotiationFilter",
@@ -25,6 +28,8 @@ enum FilterStatusFields: String {
         "completed"         :   Completed       // Match finnished
     ]
 }
+
+
 
 
 /* MATCH MODEL */
@@ -116,6 +121,8 @@ extension Match {
 }
 
 
+
+
 // Match delegate
 
 extension Match {
@@ -130,6 +137,46 @@ extension Match {
         println("---- MATCH: Will mirror match model")
         mirrorMatch()
     }
+}
+
+
+
+
+extension Match {
+    
+    // Filter the matches based on the status of a match, parameter "allExcept" means that the result of the filter will contain everything, except the provided status. If parameter "original" == true, it will filter from the original requested "_matches" global var.
+    func filter(field:FilterStatusFields? = nil, allExcept:Bool = false) {
+        
+        currentStatusField = (allExcept == true) ? nil : field
+        
+        var mathesToFilter:[MatchCard] = matchesFromCastingObject
+        
+        if let f = field {
+            
+            var filtered = mathesToFilter.filter { (obj) -> Bool in
+                
+                //let path: [SubscriptType] = Fields.Status.getPath()
+                //let status = obj[path].stringValue
+                
+                let status = obj.getStatus()
+                
+                if allExcept == false {
+                    return status == f
+                } else {
+                    return status != f
+                }
+            }
+            matches = filtered
+        }
+            
+        else {
+            
+            // If no method parameters are set, go back to the original, all changes in one, should mirror the other, otherwise, you can get unexpected results, reload the data from the server instead.
+            matches = matchesFromCastingObject
+        }
+        
+    }
+    
 }
 
 
@@ -178,43 +225,6 @@ extension Match : ModelRequest {
         self._matches = json.arrayValue.map() { return TalentMatchCard(matchCard: $0) }
         self.filter()
         self.setMatch(0)
-    }
-    
-}
-
-extension Match {
-    
-    // Filter the matches based on the status of a match, parameter "allExcept" means that the result of the filter will contain everything, except the provided status. If parameter "original" == true, it will filter from the original requested "_matches" global var.
-    func filter(field:FilterStatusFields? = nil, allExcept:Bool = false) {
-        
-        currentStatusField = (allExcept == true) ? nil : field
-        
-        var mathesToFilter:[MatchCard] = matchesFromCastingObject
-        
-        if let f = field {
-            
-            var filtered = mathesToFilter.filter { (obj) -> Bool in
-                
-                //let path: [SubscriptType] = Fields.Status.getPath()
-                //let status = obj[path].stringValue
-                
-                let status = obj.getStatus()
-                
-                if allExcept == false {
-                    return status == f
-                } else {
-                    return status != f
-                }
-            }
-            matches = filtered
-        }
-            
-        else {
-            
-            // If no method parameters are set, go back to the original, all changes in one, should mirror the other, otherwise, you can get unexpected results, reload the data from the server instead.
-            matches = matchesFromCastingObject
-        }
-        
     }
     
 }

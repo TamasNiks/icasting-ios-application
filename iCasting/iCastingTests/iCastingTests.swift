@@ -21,7 +21,7 @@ class iCastingTests: XCTestCase {
         super.tearDown()
     }
     
-    
+        
     func testSockets() {
         
         let socket = SocketIOClient(socketURL: "https://ws-demo.icasting.net/?auth=2574dfa254b540999a44a055c65df372bf7cf39355476603fd5f86e446c58945554779c4fd5f86e446c58fc0f7d14955")
@@ -56,8 +56,8 @@ class iCastingTests: XCTestCase {
     
     func testValidator() {
         
-        var c : Credentials = Credentials(email: "", password: "")
-        var v : Validator = Validator(credentials: c)
+        let c = UserCredentials(email: "", password: "")
+        var v = Validator(credentials: c)
         
         if let arr = v.check() {
             XCTAssertEqual(arr.count, 3, "Contains 3 errors, which is good")

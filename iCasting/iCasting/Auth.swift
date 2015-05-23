@@ -8,10 +8,28 @@
 
 import Foundation
 
-struct Credentials {
+enum LoginType {
+    case NormalLogin, FacebookLogin
+}
+
+typealias Credentials = AppCredentials
+
+//-----------------------------
+// For every new login method, create an credentials structure and add it to the AppCredentials structure. Use this AppCredentials struct to check which one is set in the LoginRequest class from where follow up actions are decided.
+class AppCredentials {
+    var userCredentials: UserCredentials?
+    var facebookCredentials: FacebookCredentials?
+}
+
+struct UserCredentials {
     var email : String = ""// = "tim.van.steenoven@icasting.com"
     var password : String = ""// = "test"
 }
+
+struct FacebookCredentials {
+    var userID : String
+}
+//-----------------------------
 
 struct Authentication {
     
@@ -22,10 +40,10 @@ struct Authentication {
     private var _access_token: String? //="551d58a226042f74fb745533$YENvtqK2Eis3oKCG6vo76IgilplRXFO9h+LMKT1HdRo="
     
     private func saveAuthentication() {
-        println("Token will be saved")
+        println("Authentication will be saved")
+        // TODO: A better store to save this information is probably the keychain, this is where Facebook it's access_token saves
         NSUserDefaults.standardUserDefaults().setObject(_access_token, forKey: Authentication.TOKEN_KEY)
         NSUserDefaults.standardUserDefaults().setObject(_user_id, forKey: Authentication.USERID_KEY)
-        //NSUserDefaults.standardUserDefaults().synchronize()
     }
 
     private mutating func clearAuthentication() {
@@ -56,6 +74,7 @@ typealias LoginClosure = RequestClosure
 
 class Auth {
     
+    // If a new authentication construct is set, for example, if the login process has been succesfully finished
     static var auth: Authentication = Authentication() {
         willSet {
             newValue.saveAuthentication()
@@ -71,6 +90,7 @@ class Auth {
                 return
             }
             
+            // Get general user information
             UserRequest().execute { errors -> () in
 
                 if let errors = errors {
@@ -78,6 +98,7 @@ class Auth {
                     return
                 }
                 
+                // Get the casting objects from the user account
                 CastingObjectRequest().execute { error -> () in
                  
                     println(User.sharedInstance)
@@ -86,7 +107,6 @@ class Auth {
             }
         }
     }
-    
     
     func logout(callBack: RequestClosure) {
         
@@ -124,6 +144,7 @@ class Auth {
 }
 
 
+
 protocol RequestCommand {
     func execute(callBack:LoginClosure)
 }
@@ -131,12 +152,14 @@ protocol RequestCommand {
 
 class LoginRequest: RequestCommand {
     
+    var loginType: LoginType = LoginType.NormalLogin
     let credentials: Credentials
+    
     init(credentials: Credentials) {
         self.credentials = credentials
     }
     
-    func execute(callBack:LoginClosure) {
+    func execute(callBack: LoginClosure) {
         
         // If there already exist an access_token AND user_id, skip the Basic login
         if let
@@ -147,11 +170,12 @@ class LoginRequest: RequestCommand {
             return
         }
         
-        let url: String = APIAuth.Login.value
-        var params : [String:AnyObject] = ["email":credentials.email, "password":credentials.password]
-        request(.POST, url, parameters: params).responseJSON() { (request, response, json, error) in
+        // Depending on which login credentials are set (facebook or normal), get the specific credentials
+        let rp = getRequestProperties()
+        
+        request(.POST, rp.url, parameters: rp.params).responseJSON() { (request, response, json, error) in
             
-            if(error != nil) {
+            if let error = error {
                 let errors: ICErrorInfo? = ICError(error: error).getErrors()
                 callBack(failure: errors)
             }
@@ -159,26 +183,43 @@ class LoginRequest: RequestCommand {
             if let json: AnyObject = json {
                 
                 println("LoginRequest call success")
-                
                 let json = JSON(json)
                 let errors: ICErrorInfo? = ICError(json: json).getErrors()
                 
                 if errors == nil {
-                    
-                    let user_id: String =  json["user_id"].stringValue
-                    let token: String = json[Authentication.TOKEN_KEY].stringValue
-                    let authentication: Authentication = Authentication(_user_id: user_id, _access_token: token)
 
-                    println("Token from server: " + token)
+                    let authentication: Authentication = Authentication(
+                        _user_id:       json[Authentication.USERID_KEY].string,
+                        _access_token:  json[Authentication.TOKEN_KEY].string)
+
                     Auth.auth = authentication
-                    //Auth.auth.saveAuthentication()
                 }
                 
                 callBack(failure: errors)
             }
         }
     }
+    
+    // In the future there can be more than two login methods, think about a better more loosly coupled implementation to cope with these methods
+    func getRequestProperties() -> (url:String, params:[String:AnyObject]) {
+        
+        // TODO: For a better flow, return nil if no params could be set.
+        var url: String = String()
+        var params: [String:AnyObject] = [String:AnyObject]()
+        
+        if let c = credentials.userCredentials {
+            url = APIAuth.Login.value
+            params = ["email" : c.email, "password" : c.password]
+        }
+        
+        if let c = credentials.facebookCredentials {
+            url = APIAuth.LoginFacebook.value
+            params = ["token" : c.userID]
+        }
+        return (url: url, params: params)
+    }
 }
+
 
 class UserRequest: RequestCommand {
     func execute(callBack:LoginClosure) {

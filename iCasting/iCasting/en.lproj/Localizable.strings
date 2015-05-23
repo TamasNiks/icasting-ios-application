@@ -45,11 +45,23 @@
 "login.alert.client.notsupported" = "The client is not yet supported with this version of the app. We will let you know if client support is added in future versions.";
 
 /* Family: Casting Objects */
-"CastingObjectsHeader" = "Choose a family member.";
-"NoFamilyMembers" = "There are no family members for this user.";
+"castingobjects.navigationitem.title" = "Welcome %@";
+"CastingObjectsHeader" = "Use iCasting as:";
+"NoFamilyMembers" = "There are no family members for this family account. Please create a family member first.";
 
 /* Negotiations */
 "NoNegotiations" = "There are no negotiations.";
+
+/* Notifications */
+"notification.desc.achievement-complete" = "You have completed \"%@\" and earned %@ XP.";
+"notification.desc.match-matched" = "You have a match with \"%@\"";
+"notification.desc.match-client_accepted" = "Your reaction for \"%@\" has been accepted";
+"notification.desc.chat-message" = "You have received a message in a negotiation for \"%@\"";
+
+"notification.title.achievement-complete" = "You have completed an achievement!";
+"notification.title.match-matched" = "You are matched!";
+"notification.title.match-client_accepted" = "You have been accepted by a client.";
+"notification.title.chat-message" = "You received a new message.";
 
 /* Matches */
 "matches.filter.actionsheet.title" = "Filter status";

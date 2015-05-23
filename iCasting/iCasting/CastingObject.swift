@@ -23,7 +23,7 @@ struct CastingObjectValues {
 }
 
 
-class CastingObject : CastingObjectValueProvider {
+class CastingObject : ModelProtocol, CastingObjectValueProvider {
     
     let castingObject: JSON
     
@@ -35,6 +35,15 @@ class CastingObject : CastingObjectValueProvider {
         self.castingObject = JSON("")
     }
     
+    func initializeModel(json: JSON) {
+        var castingObjects:[CastingObject] = json.arrayValue.map { CastingObject(json: $0) }
+        User.sharedInstance.castingObjects = castingObjects
+        User.sharedInstance.setCastingObject(0)
+        
+        println("CASTING OBJECTS JSON")
+        println(json)
+    }
+    
     var id: String? {
         return self.castingObject["_id"].string
     }
@@ -44,7 +53,7 @@ class CastingObject : CastingObjectValueProvider {
     }
     
     var name: String? {
-        return self.castingObject["name"]["display"].string ?? "-"
+        return self.castingObject["name"]["full"].string ?? "-"
     }
     
     var experience: String? {
@@ -64,8 +73,6 @@ class CastingObject : CastingObjectValueProvider {
         return "-"
     }
 
-    
-    
 //    func summary() -> CastingObjectSummary {
 //        
 //    }
@@ -99,9 +106,7 @@ extension CastingObject : ModelRequest {
                     let errors: ICErrorInfo? = ICError(json: json).getErrors()
                     
                     if errors == nil {
-                        
-                        var castingObjects:[CastingObject] = json.arrayValue.map { CastingObject(json: $0) }
-                        User.sharedInstance.castingObjects = castingObjects
+                        self.initializeModel(json)
                     }
                     
                     callBack(failure:errors)

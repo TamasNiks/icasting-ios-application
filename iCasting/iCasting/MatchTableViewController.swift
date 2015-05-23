@@ -27,6 +27,23 @@ class MatchTableViewController: UITableViewController, MatchCardDelegate {
         self.presentViewController(ac, animated: true, completion: nil)
     }
     
+    override func viewDidLoad() {
+        
+        super.viewDidLoad()
+        
+        refreshControl = UIRefreshControl()
+        refreshControl?.addTarget(self, action: ("handleRefresh:"), forControlEvents: UIControlEvents.ValueChanged)
+        refreshControl?.beginRefreshing()
+        handleRequest()
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+    }
     
     func handleRefresh(sender: AnyObject) {
         
@@ -45,7 +62,7 @@ class MatchTableViewController: UITableViewController, MatchCardDelegate {
             self.match.filter(field: FilterStatusFields.Closed, allExcept: true)
             
             if self.match.matches.isEmpty {
-                self.tableView.setTableHeaderViewNoResults(NSLocalizedString("NoMatches", comment: ""))
+                self.tableView.setTableHeaderViewWithoutResults(NSLocalizedString("NoMatches", comment: ""))
     
             } else {
                 self.tableView.setTableHeaderViewWithResults(NSLocalizedString("ActiveFilter", comment: ""))
@@ -54,26 +71,6 @@ class MatchTableViewController: UITableViewController, MatchCardDelegate {
             self.tableView.reloadData()
         }
     }
-    
-    override func viewDidLoad() {
-        
-        super.viewDidLoad()
-        
-        refreshControl = UIRefreshControl()
-        refreshControl?.addTarget(self, action: ("handleRefresh:"), forControlEvents: UIControlEvents.ValueChanged)
-        refreshControl?.beginRefreshing()
-        handleRequest()
-    }
-
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-    }
-
-    
     
     // MARK: - Table view data source
 

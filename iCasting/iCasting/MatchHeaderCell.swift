@@ -23,10 +23,12 @@ extension MatchHeaderCell {
     
     func configureCell(item:MatchContractType) {
         
+        contentView.backgroundColor = UIColor.ICShadowRedColor()
+        
         customIconCompany.font = UIFont.fontAwesomeOfSize(20)
         customIconCompany.text = String.fontAwesomeIconWithName(FontAwesome.Building)
         customIconClient.font = UIFont.fontAwesomeOfSize(25)
-        customIconClient.text = String.fontAwesomeIconWithName(FontAwesome.Male)
+        customIconClient.text = String.fontAwesomeIconWithName(FontAwesome.User)
         
         customCompany.text = item.header[.ClientCompany] ?? "Niet ingevuld"
         customClient.text = item.header[.ClientName] ?? "Niet ingevuld"
