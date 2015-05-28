@@ -14,7 +14,7 @@ protocol FieldPathProtocol {
 }
 
 enum FieldRoots: Int, FieldPathProtocol {
-    case RootJobContract, RootJobProfile
+    case RootJobContract, RootJobProfile, RootClient
     
     func getPath() -> [SubscriptType] {
         switch self {
@@ -22,6 +22,8 @@ enum FieldRoots: Int, FieldPathProtocol {
             return ["job", "formSource", "contract"]
         case .RootJobProfile:
             return ["job", "formSource", "profile"]
+        case .RootClient:
+            return ["client"]
         }
     }
 }
@@ -45,10 +47,11 @@ enum Fields: Int, FieldPathProtocol {
     case Status
     case ClientName, ClientCompany, ClientAvatar
     case JobTitle, JobDescription
-    case JobContractDateTime, JobDateStart, JobDateEnd, JobTimeStart, JobTimeEnd
+    case JobDateTime, JobDateTimeType, JobDateStart, JobDateEnd, JobTimeStart, JobTimeEnd
     case JobContractLocation
     case JobProfile
     case JobPayment, JobContractPaymentMethod, JobContractBudget, JobContractTravelExpenses
+    case JobProfileTalent
     
     func getPath() -> [SubscriptType] {
         switch self {
@@ -64,6 +67,8 @@ enum Fields: Int, FieldPathProtocol {
             return ["job","title"]
         case .JobDescription:
             return ["job","desc"]
+        case .JobDateTime:
+            return ["job", "formSource", "contract", "dateTime"]
         case .JobDateStart:
             return ["job", "formSource", "contract", "dateTime", "dateStart"]
         case .JobDateEnd:
@@ -80,6 +85,8 @@ enum Fields: Int, FieldPathProtocol {
             return ["job", "formSource", "contract", "budget", "times1000"]
         case .JobContractTravelExpenses:
             return ["job", "formSource", "contract", "travelExpenses", "hasTravelExpenses"]
+        case .JobProfileTalent:
+            return ["job", "formSource", "profile", "type"]
         case .JobProfile:
             return FieldRoots.RootJobProfile.getPath()
         default:
@@ -88,15 +95,18 @@ enum Fields: Int, FieldPathProtocol {
     }
     
     var header: String {
+        var comment = "Header text"
         switch self {
-        case .JobContractDateTime:
-            return NSLocalizedString("dateTime", comment: "Header text for all the time properties")
+        case .JobProfile:
+            return NSLocalizedString("specificJobInformation", comment: comment)
+        case .JobDateTime:
+            return NSLocalizedString("dateTime", comment: comment)
         case .JobContractLocation:
-            return NSLocalizedString("location", comment: "Header text for all the location properties")
+            return NSLocalizedString("location", comment: comment)
         case .JobContractTravelExpenses:
-            return NSLocalizedString("travelExpenses", comment: "Header text for all the travelexpenses properties")
+            return NSLocalizedString("travelExpenses", comment: comment)
         case .JobPayment:
-            return NSLocalizedString("payment", comment: "Header text for all the travelexpenses properties")
+            return NSLocalizedString("payment", comment: comment)
         default:
             return "To developer: No header"
         }

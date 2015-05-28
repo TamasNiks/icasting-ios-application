@@ -85,11 +85,16 @@ class MatchTableViewController: UITableViewController, MatchCardDelegate {
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let matchCard: MatchCard = self.match.matches[indexPath.row]
-        var data: [Fields: String] = matchCard.getData([.JobTitle, .JobDescription, .JobDateStart, .ClientAvatar, .Status])
+//        var data: [Fields: String] = matchCard.getData([
+//            .JobTitle,
+//            .JobDescription,
+//            .JobDateStart,
+//            .ClientAvatar,
+//            .Status,
+//            .JobProfileTalent])
         
         let cell = tableView.dequeueReusableCellWithIdentifier("matchDetailCellIdentifier", forIndexPath: indexPath) as! MatchCell
-        cell.configureCell(data)
-        
+        cell.configureCell(matchCard)
         return cell
     }
     

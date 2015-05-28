@@ -42,6 +42,7 @@ enum MatchCells: Int, CellsProtocol {
 
 
 struct SectionCount {
+    
     var numberOfStaticSections: Int = 0
     var numberOfdynamicSections: Int = 0
     var sections: Int {
@@ -64,7 +65,8 @@ class MatchDetailTableViewController: UITableViewController {
     var matchCard: MatchCard? //= TalentMatch()
     var sectionCount: SectionCount = SectionCount(numberOfStaticSections: 1, numberOfdynamicSections: 0)
     let rowsForStaticSection: Int = 4
-    var matchDetails: MatchContractType?
+    var matchDetails: MatchDetailType?
+    
     
     override func viewDidLoad() {
         
@@ -73,21 +75,16 @@ class MatchDetailTableViewController: UITableViewController {
         NSIndexPath.defaultCellType = AbstractCellsType.matchCells
         NSIndexPath.defaultCellValue = MatchCells.DetailCell.rawValue
         
-        self.matchDetails = self.matchCard!.getContract()
+        self.matchDetails = self.matchCard!.getOverview()
+        
         self.sectionCount.numberOfStaticSections = 1
         self.sectionCount.numberOfdynamicSections = self.matchDetails!.details.count
         
         // Setup the seperator lines between the cell
         self.tableView.setWholeSeperatorLines()
-        
-        //println(self.matchCard!.profileGeneral)
-        //println(self.matchCard!)
-        
-        //self.tableView.rowHeight = UITableViewAutomaticDimension // not actually necessary
-        //self.tableView.estimatedRowHeight = 100 // turn on automatic cell variable sizing!
     }
     
-
+    
     // Configure the scrolling behavior of the header cell
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
@@ -103,7 +100,6 @@ class MatchDetailTableViewController: UITableViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
-
 }
 
 
@@ -149,44 +145,58 @@ extension MatchDetailTableViewController {
     
     private func configCell(inout cell: UITableViewCell, identifier: MatchCells, indexPath: NSIndexPath) {
         
-        switch identifier {
-            
-        case .HeaderCell:
+        
+        if cell is MatchHeaderCell {
             (cell as! MatchHeaderCell).configureCell(matchDetails!)
-        case .SummaryCell:
-            cell.textLabel?.text = matchDetails!.header[.JobTitle]!
-            cell.detailTextLabel?.text = matchDetails!.header[.JobDescription]!
-        case .AcceptCell: //Accept and Reject cell
+        }
+        
+        else if cell is MatchSummaryCell {
+            (cell as! MatchSummaryCell).configureCell(matchDetails!)
+        }
+
+        else if cell is MatchAcceptCell {
             (cell as! MatchAcceptCell).configureCell(matchCard!)
-        case .DetailCell:
-            // Config all the normal cells
-            configCell(&cell, indexPath: indexPath)
-        default:
+        }
+        
+        else if cell is MatchDefaultCell {
+         
+            var sectionForDynamic: Int = self.sectionCount.getDynamicSection(indexPath.section)
+            var field:Fields = self.matchDetails!.details.keys.array[sectionForDynamic]
+            var rowValue = self.matchDetails!.details[field]![indexPath.row]
+            (cell as! MatchDefaultCell).configureCell(rowValue)
+        }
+        
+        else {
+            
             println("no cell config")
+            
         }
+        
+//        switch identifier {
+//        
+//        case .HeaderCell:
+//            
+//            (cell as! MatchHeaderCell).configureCell(matchDetails!)
+//            
+//        case .SummaryCell:
+//            
+//            (cell as! MatchSummaryCell).configureCell(matchDetails!)
+//            
+//        case .AcceptCell:
+//            
+//            (cell as! MatchAcceptCell).configureCell(matchCard!)
+//            
+//        case .DetailCell:
+//            
+//            configCell(&cell, indexPath: indexPath)
+//            
+//        default:
+//            
+//            println("no cell config")
+//        }
     }
     
     
-    // Configuration of the default cell, this means the cell which needs to be reused many times.
-    private func configCell(inout cell: UITableViewCell, indexPath: NSIndexPath) {
-        
-        // Measure rows for dynamic content in secion
-        
-        var sectionForDynamic: Int = self.sectionCount.getDynamicSection(indexPath.section)
-        
-        var field:Fields = self.matchDetails!.details.keys.array[sectionForDynamic]
-        var sectionData = self.matchDetails!.details[field]![indexPath.row]
-        
-        //var rowData = sectionData[indexPath.row]
-        var key: String = sectionData.keys.first!
-        var placeholder: String = "-"
-        
-        if let value = sectionData[key] {
-            cell.textLabel?.text = NSLocalizedString(key, comment: "The text labels from a row, gotten from the JSON keys")
-            cell.detailTextLabel?.text = value ?? "found bug"
-        }
-        
-    }
     
 }
 
@@ -207,8 +217,8 @@ extension MatchDetailTableViewController {
         
         if cellIdentifier == .SummaryCell {
             
-            var title: String = matchDetails!.header[.JobTitle]!!
-            var desc: String = matchDetails!.header[.JobDescription]!!
+            var title: String = matchDetails!.general[.JobTitle]!!
+            var desc: String = matchDetails!.general[.JobDescription]!!
 
             let labelWidth: CGFloat = self.tableView.bounds.size.width - TableViewCellInset * 2
             

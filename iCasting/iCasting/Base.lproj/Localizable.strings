@@ -13,10 +13,16 @@
 
 /* Specific */
 
+"specificJobInformation" = "Specific job information";
 "dateTime" = "Date & Time";
 "location" = "Location";
 "travelExpenses" = "Travel Expenses";
 
+"talent" = "Talent";
+"typeTalent" = "Talent type";
+"gender" = "Gender";
+"ageMinimum" = "Minimun age";
+"ageMaximum" = "Maximum age";
 "type" = "Type";
 "city" = "City";
 "street" = "Street";
@@ -66,6 +72,8 @@
 /* Matches */
 "matches.filter.actionsheet.title" = "Filter status";
 "matches.filter.actionsheet.message" = "Which status do you want to show?";
+"matches.values.age.justborn" = "Just born";
+"matches.values.age.years" = "Years old";
 "NoMatches" = "There are no matches found.";
 
 "ActiveFilter" = "All active";
@@ -74,6 +82,10 @@
 "NegotiationFilter" = "Negotiating";
 "FinishedFilter" = "Finished";
 "ClosedFilter" = "Declined";
+
+"matches.details.gender.any" = "No preferences";
+"matches.details.gender.male" = "I'm searching for a male.";
+"matches.details.gender.female" = "I'm searching for a female.";
 
 /* iCasting System text */
 

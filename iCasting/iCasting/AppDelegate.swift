@@ -35,10 +35,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         var tokenAsString = NSMutableString()
         
         var byteBuffer = [UInt8](count: deviceToken.length, repeatedValue: 0x00)
-        deviceToken.getBytes(&byteBuffer, length: deviceToken.length)
+        deviceToken.getBytes(&byteBuffer, length: byteBuffer.count)
         
         for byte in byteBuffer {
-            tokenAsString.appendFormat("%02hhx", byte)
+            tokenAsString.appendFormat("%02hhX", byte)
         }
         
         println("Token = \(tokenAsString)")

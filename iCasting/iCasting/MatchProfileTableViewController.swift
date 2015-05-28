@@ -17,33 +17,30 @@ class MatchProfileTableViewController: UITableViewController {
     var profileLanguage: [[String:String]]?
     
     var model: Array<[[String:String]]?> = Array<[[String:String]]?>()
-    var sectionTitles: Array<String> = ["General", "Near", "Language"]
+    var sectionTitles: Array<String> = ["Specific"]//, "Near", "Language"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
 
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        model.append(matchCard!.specific)
         
-        if let profileGeneral = matchCard?.profileFirstLevel {
-            model.append(profileGeneral)
-        }
+        
+//        if let profileGeneral = matchCard?.profileFirstLevel {
+//            model.append(profileGeneral)
+//        }
         
 //        if let profileHair = matchCard?.profileHair {
 //            model.append(profileHair)
 //        }
         
-        if let profileNear = matchCard?.profileNear {
-            model.append(profileNear)
-        }
+//        if let profileNear = matchCard?.profileNear {
+//            model.append(profileNear)
+//        }
         
-        if let profileLanguage = matchCard?.profileLanguage {
-            model.append(profileLanguage)
-        }
-        
+//        if let profileLanguage = matchCard?.profileLanguage {
+//            model.append(profileLanguage)
+//        }
         
         //model = Array(profileLanguage, profileHair, profileNear, profileLanguage)
         
@@ -74,7 +71,7 @@ class MatchProfileTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifierCell", forIndexPath: indexPath) as! UITableViewCell
         var item = model[indexPath.section]![indexPath.row]
 
-        cell.textLabel?.text = item.keys.first
+        cell.textLabel?.text = NSLocalizedString(item.keys.first!, comment: "The text labels from a row, gotten from the JSON keys")
         cell.detailTextLabel?.text = item.values.first
         return cell
     }
@@ -122,51 +119,5 @@ class MatchProfileTableViewController: UITableViewController {
         return ceil(boundingRectForText.size.height) + TableViewCellInset * 2
     }
 
-    
-    
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return NO if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
-            // Delete the row from the data source
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else if editingStyle == .Insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return NO if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using [segue destinationViewController].
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

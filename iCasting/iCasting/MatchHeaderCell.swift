@@ -15,26 +15,31 @@ class MatchHeaderCell: UITableViewCell {
     @IBOutlet weak var customClient: UILabel!
     @IBOutlet weak var customCompany: UILabel!
     @IBOutlet weak var customImageView: UIImageView!
+    //@IBOutlet weak var customTalentLabel: UILabel!
 
 }
 
 
 extension MatchHeaderCell {
     
-    func configureCell(item:MatchContractType) {
+    func configureCell(item: MatchDetailType) {
         
         contentView.backgroundColor = UIColor.ICShadowRedColor()
         
         customIconCompany.font = UIFont.fontAwesomeOfSize(20)
         customIconCompany.text = String.fontAwesomeIconWithName(FontAwesome.Building)
-        customIconClient.font = UIFont.fontAwesomeOfSize(25)
+        customIconClient.font = UIFont.fontAwesomeOfSize(20)
         customIconClient.text = String.fontAwesomeIconWithName(FontAwesome.User)
         
-        customCompany.text = item.header[.ClientCompany] ?? "Niet ingevuld"
-        customClient.text = item.header[.ClientName] ?? "Niet ingevuld"
-        //let attributes = [NSFontAttributeName: UIFont.fontAwesomeOfSize(20)] as Dictionary!
+        customCompany.text = item.general[.ClientCompany] ?? "Niet ingevuld"
+        customClient.text = item.general[.ClientName] ?? "Niet ingevuld"
         
-        var base64: String = (item.header[.ClientAvatar] ?? "")!
+//        var talent = NSMutableAttributedString(string: "Talent: ", attributes: [NSFontAttributeName: UIFont.systemFontOfSize(14)])
+//        talent.appendAttributedString(NSAttributedString(string: item.job["talent"]!, attributes: [NSFontAttributeName: UIFont.boldSystemFontOfSize(14)]))
+//        customTalentLabel.attributedText = talent
+        //customTalentLabel.text = String(format: "Talent: %@", item.job["talent"]!)
+        
+        var base64: String = (item.general[.ClientAvatar] ?? "") ?? ""
         
         if let image: UIImage = ICImages.ImageWithString(base64).image {
             customImageView.image = image

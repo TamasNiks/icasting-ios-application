@@ -26,11 +26,13 @@ class MatchDefaultCell: UITableViewCell {
 
 extension MatchDefaultCell {
     
-    func configureCell(item:MatchCard) {
+    func configureCell(item: [String:String]) {
      
+        var key: String = item.keys.first!
+        var value: String = item[key] ?? "-"
         
-        
-        
+        textLabel?.text = NSLocalizedString(key, comment: "The text labels from a row, gotten from the JSON keys")
+        detailTextLabel?.text = value
     }
 
     

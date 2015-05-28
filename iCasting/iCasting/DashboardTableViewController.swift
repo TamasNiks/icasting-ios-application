@@ -44,7 +44,7 @@ class DashboardTableViewController: UITableViewController {
         let user: User = User.sharedInstance
         if let general = user.getValues() {
             
-            let castingObject: CastingObjectValueProvider = user.castingObject
+            let castingObject = user.castingObject
             
             avatar.image = (castingObject.avatar != nil) ? ICImages.ImageWithString(castingObject.avatar!).image : ICImages.PlaceHolderClientAvatar.image
             displayName.text = castingObject.name

@@ -111,7 +111,7 @@ class FamilyTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCellWithIdentifier("castingObjectCellID", forIndexPath: indexPath) as! UITableViewCell
 
         // Configure the cell...
-        let castingObject: CastingObjectValueProvider = User.sharedInstance.castingObjectAtIndex(indexPath.row)
+        let castingObject = User.sharedInstance.castingObjectAtIndex(indexPath.row)
         cell.textLabel?.text = castingObject.name
     
         if let avatar = castingObject.avatar {

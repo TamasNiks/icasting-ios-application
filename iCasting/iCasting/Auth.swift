@@ -81,6 +81,17 @@ class Auth {
         }
     }
     
+    // Convenience getter to do the user id and access token check at once.
+    static var passport: (user_id: String, access_token: String)? {
+        if let
+            access_token = Auth.auth.access_token,
+            user_id = Auth.auth.user_id
+        {
+            return (user_id: user_id, access_token: access_token)
+        }
+        return nil
+    }
+    
     func login(credentials: Credentials, callBack: LoginClosure) {
         
         LoginRequest(credentials: credentials).execute { errors -> () in
@@ -98,7 +109,7 @@ class Auth {
                     return
                 }
                 
-                // Get the casting objects from the user account
+                // Get the casting object(s) from the user account
                 CastingObjectRequest().execute { error -> () in
                  
                     println(User.sharedInstance)
@@ -161,11 +172,8 @@ class LoginRequest: RequestCommand {
     
     func execute(callBack: LoginClosure) {
         
-        // If there already exist an access_token AND user_id, skip the Basic login
-        if let
-        access_token = Auth.auth.access_token,
-        user_id = Auth.auth.user_id
-        {
+        // If there already exist an access_token AND user_id set, skip the Basic login
+        if let passport = Auth.passport {
             callBack(failure: nil)
             return
         }

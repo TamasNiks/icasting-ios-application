@@ -8,23 +8,62 @@
 
 import Foundation
 
-// Convenient shortcut to get all the detail values
-typealias MatchHeaderType = [Fields:String?]
-typealias MatchDetailType = [Fields: [ [String:String?] ] ] // Dictionary with Fields key and a an array of Dictionaries of type String key values
-typealias MatchContractType = (header: MatchHeaderType, details: MatchDetailType)
-
-
 typealias ArrayStringValue = [[String:String]]
 typealias ArrayStringStringBool = [[String: [String:Bool]]]
 
 // STATIC VALUE EXTRACTOR AND DYNAMIC VALUE EXTRACTOR
 // Access to singular values as well as group values
 
+enum MatchValue: Any {
+    case Date(String?)
+    case Time(String?)
+    case Budget(Int?)
+    case Boolean(Bool?)
+    case Age(String?)
+    
+    // Further customize specific field data
+    func modify() -> String? {
+        
+        var str: String?
+
+        switch self {
+        case .Date(let val):
+            
+            if let val = val { str = val.ICdateToString(ICDateFormat.Matches) }
+            
+        case .Time(let val):
+            
+            if let val = val { str = val.ICTime() }
+            
+        case .Budget(let val):
+            
+            if let val = val { str = "\(val / 1000)" }
+            
+        case .Boolean(let val):
+            
+            if let val = val { str = NSLocalizedString(val.description, comment:"") }
+            
+        case .Age(let val):
+            
+            if let val = val {
+                if val == "0" {
+                    str = NSLocalizedString("matches.values.age.justborn", comment: "")
+                } else {
+                    let postfix = NSLocalizedString("matches.values.age.years", comment: "")
+                    str = String(format: "%@ %@", arguments: [val, postfix])
+                }
+            }
+        }
+        return str
+    }
+}
 
 func ==(lhs: MatchCard, rhs: MatchCard) -> Bool {
     return lhs.getID(FieldID.MatchCardID) == rhs.getID(FieldID.MatchCardID)
 }
 
+
+// The MatchCard class is an object wrapper to expose certain properties and methods for the generic JSON object
 
 class MatchCard : NSObject, Equatable, Printable {
     
@@ -50,17 +89,221 @@ class MatchCard : NSObject, Equatable, Printable {
         self.matchCard = matchCard
         
         let include = [profileHair, profileFirstLevel, profileLanguage, profileNear]
-        self.profile = filterNil(include)
+        self.profile = filterArrayForNil(include)
     }
     
     subscript(index: Int) -> ArrayStringValue {
         return profile[index]
+    }
+    
+    func getStatus() -> FilterStatusFields? {
+        
+        let key: [SubscriptType] = Fields.Status.getPath()
+        let status = matchCard[key].stringValue
+        return FilterStatusFields.allValues[status]
+    }
+    
+    func setStatus(status: FilterStatusFields) {
+        
+        for (key, val) in FilterStatusFields.allValues {
+            if val == status {
+                let path: [SubscriptType] = Fields.Status.getPath()
+                matchCard[path].string = key
+            }
+        }
     }
 
 }
 
 
 
+
+
+// Extension to retrieve data based on specified Fields or subscript types
+
+extension MatchCard {
+    
+    func getData(fields: [Fields]) -> [Fields:String] {
+        var returnValue: [Fields:String] = [Fields:String]()
+        for field: Fields in fields {
+            let path:[SubscriptType] = field.getPath()
+            var str: String = matchCard[path].string ?? "-"
+            returnValue[field] = str
+        }
+        return returnValue
+    }
+    
+    func getValue(field: Fields) -> String? {
+        let keys:[SubscriptType] = field.getPath()
+        return matchCard[keys].string
+    }
+
+    func getValue(path: [SubscriptType]) -> String? {
+        return matchCard[path].string
+    }
+    
+    private func getJSON(field: FieldPathProtocol) -> JSON {
+        let keys:[SubscriptType] = field.getPath()
+        return matchCard[keys]
+    }
+    
+    private func getJSON(field: Fields) -> JSON {
+        let keys:[SubscriptType] = field.getPath()
+        return matchCard[keys]
+    }
+}
+
+
+
+
+
+// Extension to get specific values from MatchCard
+
+typealias ArrayDictionaryType = [[String:String]]
+typealias MatchStaticFieldType = [Fields:String?]
+typealias MatchDynamicFieldType = [Fields: [[String:String]] ] // Dictionary with Fields key and a an array of Dictionaries of type String key values
+typealias MatchDetailType = (general: MatchStaticFieldType, details: MatchDynamicFieldType)
+
+extension MatchCard {
+    
+    var avatar: String {
+        return getValue(Fields.ClientAvatar) ?? String()
+    }
+    
+    var title: String {
+        return getValue(Fields.JobTitle) ?? "-"
+    }
+
+    var talent: String {
+        return matchCard[profileRoot]["type"].string ?? "-"
+    }
+    
+    var dateStart: String {
+        return MatchValue.Date(getValue(.JobDateStart)).modify() ?? "-"
+    }
+    
+    var typeTalent: String {
+        var stringArray = matchCard[profileRoot][talent].arrayValue.map { $0.stringValue }
+        return String(", ").join(stringArray)
+    }
+    
+    var gender: String? {
+        if let g = matchCard[profileRoot]["gender"].string {
+            var prefix = "matches.details.gender.%@"
+            return NSLocalizedString(String(format: prefix, g), comment: "Match card desciprtion of gender")
+        }
+        return nil
+    }
+    
+    var ageMinimum: String? {
+        return MatchValue.Age(matchCard[profileRoot]["age"]["minimum"].string).modify()
+    }
+
+    var ageMaximum: String? {
+        return MatchValue.Age(matchCard[profileRoot]["age"]["maximum"].string).modify()
+    }
+    
+    func getID(ID: FieldID) -> String? {
+        let key: [SubscriptType] = ID.getPath()
+        return matchCard[key].string
+    }
+    
+    func getProfile() -> [String:JSON] {
+        let profile: JSON = matchCard[Fields.JobProfile.getPath()]
+        return profile.dictionaryValue
+    }
+    
+
+    
+}
+
+
+
+
+
+// An extension to get related values grouped together
+
+extension MatchCard {
+    
+    var general: MatchStaticFieldType {
+        
+        var header: [Fields:String?] = [Fields:String?]()
+        header[.ClientAvatar]   =   getValue(.ClientAvatar)
+        header[.ClientCompany]  =   getValue(.ClientCompany) ?? "-"
+        header[.ClientName]     =   getValue(.ClientName) ?? "-"
+        header[.JobTitle]       =   getValue(.JobTitle) ?? "-"
+        header[.JobDescription] =   getValue(.JobDescription) ?? "-"
+        return header
+    }
+    
+    var dateTime: ArrayDictionaryType {
+        
+        let root = getJSON(.JobDateTime)
+        var value = [[String:String?]]()
+        value.append([ "type"     :   root["type"].string ])
+        value.append([ "dateStart":   dateStart ])
+        value.append([ "dateEnd"  :   MatchValue.Date(root["dateEnd"].string).modify() ])
+        value.append([ "timeStart":   root["timeStart"].string ])
+        value.append([ "timeEnd"  :   root["timeEnd"].string ])
+        return filterDictionaryInArrayForNil(value)
+    }
+    
+    var location: ArrayDictionaryType {
+        
+        let root = getJSON(.JobContractLocation)
+        var value = [[String:String?]]()
+        value.append(["type"          :    root["type"].string ])
+        value.append(["city"          :    root["address", "city"].string ])
+        value.append(["street"        :    root["address", "street"].string ])
+        value.append(["streetNumber"  :    root["address", "streetNumber"].string ])
+        value.append(["zipcode"       :    root["address", "zipCode"].string ])
+        return filterDictionaryInArrayForNil(value)
+    }
+    
+    var payment: ArrayDictionaryType {
+        
+        let root = getJSON(FieldRoots.RootJobContract)
+        var value = [[String:String?]]()
+        value.append(["budget"             : MatchValue.Budget(root["budget", "times1000"].intValue).modify() ])
+        value.append(["hasTravelExpenses"  : MatchValue.Boolean(root["travelExpenses", "hasTravelExpenses"].boolValue).modify() ])
+        value.append(["paymentMethod"      : root["paymentMethod", "type"].string ])
+        return filterDictionaryInArrayForNil(value)
+    }
+    
+    var specific: ArrayDictionaryType {
+        
+        var value = [[String:String?]]()
+        value.append(["typeTalent" : typeTalent])
+        value.append(["gender"     : gender])
+        value.append(["ageMinimum" : ageMinimum])
+        value.append(["ageMaximum" : ageMaximum])
+        return filterDictionaryInArrayForNil(value)
+    }
+    
+//    struct MatchDetailType2 {
+//        let general: MatchStaticFieldType
+//        var details: MatchDynamicFieldType
+//    }
+    
+    func getOverview() -> MatchDetailType {
+        
+        var details = MatchDynamicFieldType()
+        details.updateValue(dateTime, forKey: .JobDateTime)
+        details.updateValue(location, forKey: .JobContractLocation)
+        details.updateValue(payment,  forKey: .JobPayment)
+        
+        //let mdt: MatchDetailType2 = MatchDetailType2(general: general, details: details)
+        
+        return (general: general, details: details)
+    }
+    
+}
+
+
+
+
+
+// Experimenting for the best way of getting dynamic profile data
 
 extension MatchCard {
     
@@ -143,155 +386,6 @@ extension MatchCard {
     
 }
 
-
-
-
-
-extension MatchCard {
-    
-
-    // To make the process of getting data from JSON data slightly more dynamic, let other classes decide what to get from the model
-    func getData(fields: [Fields]) -> [Fields:String] {
-        
-        var returnValue: [Fields:String] = [Fields:String]()
-        
-        for field: Fields in fields {
-            
-            let keys:[SubscriptType] = field.getPath()
-            var str: String = matchCard[keys].string ?? "-"
-            
-            //if let error = item[keys].error {
-            //println("Error: \(error)")
-            //}
-            
-            if let result: String = customizeField(field, source: str) as? String {
-                str = result
-            }
-            
-            returnValue[field] = str
-        }
-        
-        return returnValue
-    }
-    
-    // To just recieve one value, use this method instead
-    func getValue(field: Fields) -> String? {
-        
-        let keys:[SubscriptType] = field.getPath()
-        
-        var str: String? = matchCard[keys].string
-        
-        if let s = str {
-            if let result: String = customizeField(field, source: s) as? String {
-                str = result
-            }
-        }
-        
-        return str
-    }
-    
-
-    private func getJSON(field: Fields, index: Int? = nil) -> JSON {
-
-        let keys:[SubscriptType] = field.getPath()
-        var json = matchCard[keys]
-        return json
-    }
-    
-}
-
-
-
-/* Extension to get specific values from MatchCard */
-
-extension MatchCard {
-    
-    func getStatus() -> FilterStatusFields? {
-        
-        let key: [SubscriptType] = Fields.Status.getPath()
-        let status = matchCard[key].stringValue
-        return FilterStatusFields.allValues[status]
-    }
-    
-    func setStatus(status: FilterStatusFields) {
-        
-        for (key, val) in FilterStatusFields.allValues {
-            if val == status {
-                let path: [SubscriptType] = Fields.Status.getPath()
-                matchCard[path].string = key
-            }
-        }
-    }
-    
-    // This gets the matchcard id, not the job ID
-    func getID(ID: FieldID) -> String? {
-        let key: [SubscriptType] = ID.getPath()
-        return matchCard[key].string
-    }
-    
-    func getProfile() -> [String:JSON] {
-        let profile: JSON = matchCard[Fields.JobProfile.getPath()]
-        return profile.dictionaryValue
-    }
-    
-    func getContract() -> MatchContractType {
-        
-        var header: [Fields:String?] = [Fields:String?]()
-        var details: MatchDetailType = MatchDetailType()
-        
-        // Header
-        header[.ClientAvatar] = getValue(.ClientAvatar) ?? "no avatar"
-        header[.ClientCompany] = getValue(.ClientCompany) ?? "-"
-        header[.ClientName] = getValue(.ClientName) ?? "-"
-        header[.JobTitle] = getValue(.JobTitle) ?? "-"
-        header[.JobDescription] = getValue(.JobDescription) ?? "-"
-        
-        // DATE TIME
-        details[.JobContractDateTime] = [[String:String?]]()
-        //details[.JobContractDateTime]?.append([ "type" : "type" ])
-        details[.JobContractDateTime]?.append([ "dateStart" : getValue(.JobDateStart) ?? "-" ])
-        details[.JobContractDateTime]?.append([ "dateEnd" : getValue(.JobDateStart) ?? "-" ])
-        details[.JobContractDateTime]?.append([ "timeStart" : getValue(.JobTimeStart) ?? "-" ])
-        details[.JobContractDateTime]?.append([ "timeEnd" : getValue(.JobTimeEnd) ?? "-" ])
-        
-        // LOCATION
-        details[.JobContractLocation] = [[String:String?]]()
-        details[.JobContractLocation]?.append(["type" : getJSON(.JobContractLocation)["type"].string ])
-        details[.JobContractLocation]?.append(["city" : getJSON(.JobContractLocation)["address", "city"].string ?? "-" ])
-        details[.JobContractLocation]?.append(["street" : getJSON(.JobContractLocation)["address", "street"].string ?? "-" ])
-        details[.JobContractLocation]?.append(["streetNumber" : getJSON(.JobContractLocation)["address", "streetNumber"].string ?? "-" ])
-        details[.JobContractLocation]?.append(["zipcode" : getJSON(.JobContractLocation)["address", "zipCode"].string ?? "-" ])
-        
-        // TRAVEL EXPENSES
-        details[.JobPayment] = [[String:String?]]()
-        details[.JobPayment]?.append(["budget": customizeField(.JobContractBudget, source: getJSON(.JobContractBudget).intValue) as? String ])
-        details[.JobPayment]?.append(["hasTravelExpenses": NSLocalizedString(getJSON(.JobContractTravelExpenses).boolValue.description, comment:"") ])
-        details[.JobPayment]?.append(["paymentMethod": getValue(.JobContractPaymentMethod) ?? "-" ])
-        
-        return (header: header, details: details)
-    }
-    
-    
-    // Further customize specific field data
-    private func customizeField(field: Fields, source: AnyObject) -> AnyObject? {
-        
-        switch field {
-        case .JobDateStart:
-            return (source as! String).ICdateToString(ICDateFormat.Matches)
-        case .JobDateEnd:
-            return (source as! String).ICdateToString(ICDateFormat.Matches)
-        case .JobTimeStart:
-            return (source as! String).ICTime()
-        case .JobTimeEnd:
-            return (source as! String).ICTime()
-        case .JobContractBudget:
-            return "\((source as! Int) / 1000)"
-        default:
-            return nil
-            
-        }
-    }
-}
 
 
 

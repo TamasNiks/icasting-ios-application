@@ -13,10 +13,16 @@
 
 /* Specific */
 
+"specificJobInformation" = "Specifieke opdrachtinformatie";
 "dateTime" = "Datum & Tijd";
 "location" = "Locatie";
 "travelExpenses" = "Reiskostenvergoeding";
 
+"talent" = "Talent";
+"typeTalent" = "Type talent";
+"gender" = "Geslacht";
+"ageMinimum" = "Minimum leeftijd";
+"ageMaximum" = "Maximum leeftijd";
 "type" = "Type";
 "city" = "Stad";
 "street" = "Straat";
@@ -67,6 +73,8 @@
 "NoMatches" = "Er zijn geen matches.";
 "matches.filter.actionsheet.title" = "Filter status";
 "matches.filter.actionsheet.message" = "Welke status wilt u tonen?";
+"matches.values.age.justborn" = "Net geboren";
+"matches.values.age.years" = "Jaar";
 
 "ActiveFilter" = "Alle actieve";
 "UnansweredFilter" = "Onbeantwoord";
@@ -74,6 +82,10 @@
 "NegotiationFilter" = "Onderhandeling";
 "FinishedFilter" = "Voltooid";
 "ClosedFilter" = "Afgewezen";
+
+"matches.details.gender.any" = "Geen voorkeur";
+"matches.details.gender.male" = "Ik ben opzoek naar een man.";
+"matches.details.gender.female" = "I'm searching for a female.";
 
 /* iCasting System text */
 

@@ -77,8 +77,6 @@ extension String {
         return nil
     }
     
-    
-    
     func ICTime() -> String? {
         
         let dateFormatter = NSDateFormatter()
@@ -117,6 +115,7 @@ extension UIImageView {
     }
     
 }
+
 
 extension UITableView {
     
@@ -183,6 +182,7 @@ extension NSIndexPath {
     var cellIdentifier: CellsProtocol {
         
         get {
+            // Bundle the section and row so it can match the enumeration cell type raw int value
             let index: Int = ("\(self.section)"+"\(self.row)").toInt()!
             var cellType: AbstractCellsType = NSIndexPath.defaultCellType
             var cellValue: Int = NSIndexPath.defaultCellValue!

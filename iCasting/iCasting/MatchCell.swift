@@ -21,16 +21,16 @@ class MatchCell: UITableViewCell {
 
 extension MatchCell {
     
-    func configureCell(data: [Fields:String]  ) {
+    func configureCell(data: MatchCard) {
         
         self.customNegotiationIcon.hidden = true
         self.customImageView.makeRound(0)
         
-        self.customTitle.text = data[.JobTitle]
-        self.customSubtitle.text = data[.JobDescription]
-        self.customDate.text = String(format: "Start: %@", data[.JobDateStart] ?? "no date")
+        self.customTitle.text = data.title
+        self.customSubtitle.text = String(format: "Talent: %@", data.talent) //data[.JobDescription]
+        self.customDate.text = String(format: "Start: %@", data.dateStart)
         self.customImageView.alpha = 0
-        var base64: String = data[.ClientAvatar]!
+        var base64: String = data.avatar
         if let image: UIImage = ICImages.ImageWithString(base64).image {
             self.customImageView.image = image
         } else {
@@ -42,40 +42,34 @@ extension MatchCell {
         })
         
         // Configure the cell conform the status of the match (ex: talent accepted, negotiation, pending, closed, finnished)
-        setStatus(data[.Status])
+        setStatus(data.getStatus())
         
     }
     
     
-    func setStatus(status: String?) {
+    func setStatus(status: FilterStatusFields?) {
         
-        if let status = status {
-            
-            if let statusField: FilterStatusFields = FilterStatusFields.allValues[status] {
+        if let statusField = status {
                 
-                if statusField == .Negotiations || statusField == .TalentAccepted || statusField == .Closed {
-                    
-                    if statusField == .TalentAccepted {
-                        println("TalentAccepted")
-                        self.customImageView.makeRound(35, borderWidth: 4, withBorderColor: UIColor.orangeColor())
-                    }
-                    
-                    if statusField == .Negotiations {
-                        println("Negotiations")
-                        self.customImageView.makeRound(35, borderWidth: 4, withBorderColor: UIColor(red: 123/255, green: 205/255, blue: 105/255, alpha: 1))
-                        self.customNegotiationIcon.hidden = false
-                    }
-                    
-                    if statusField == .Closed {
-                        println("Negotiations")
-                        self.customImageView.makeRound(35, borderWidth: 4, withBorderColor: UIColor.redColor())
-                        self.customNegotiationIcon.hidden = false
-                    }
-                    return
+            if statusField == .Negotiations || statusField == .TalentAccepted || statusField == .Closed {
+                
+                if statusField == .TalentAccepted {
+                    println("TalentAccepted")
+                    self.customImageView.makeRound(35, borderWidth: 4, withBorderColor: UIColor.orangeColor())
                 }
                 
+                if statusField == .Negotiations {
+                    println("Negotiations")
+                    self.customImageView.makeRound(35, borderWidth: 4, withBorderColor: UIColor(red: 123/255, green: 205/255, blue: 105/255, alpha: 1))
+                    self.customNegotiationIcon.hidden = false
+                }
                 
-                
+                if statusField == .Closed {
+                    println("Closed")
+                    self.customImageView.makeRound(35, borderWidth: 4, withBorderColor: UIColor.redColor())
+                    self.customNegotiationIcon.hidden = true
+                }
+                return
             }
         }
         

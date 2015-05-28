@@ -14,28 +14,23 @@ protocol UserCastingObject {
     func castingObjectAtIndex(index: Int) -> CastingObject
 }
 
+class User : Printable, ModelProtocol, ValueProvider {
 
-protocol ValueProvider {
-    
-}
-
-struct UserValues : Printable {
-    let name: String
-    let first: String
-    let avatar: String
-    let credits: NSNumber
-    let roles: [String]
-    
-    var description: String {
-        return "name: \(name), first: \(first), credits: \(credits), roles\(roles)"
+    struct Values : Printable {
+        let name: String
+        let first: String
+        let avatar: String
+        let credits: NSNumber
+        let roles: [String]
+        
+        var description: String {
+            return "name: \(name), first: \(first), credits: \(credits), roles\(roles)"
+        }
     }
-}
-
-class User : Printable, ModelProtocol {
     
     static let sharedInstance: User = User()
 
-    var values: UserValues?
+    var values: Values?
     
     internal var credentials: Credentials = Credentials()
     internal var castingObjects: [CastingObject] = [CastingObject]()
@@ -78,13 +73,13 @@ class User : Printable, ModelProtocol {
 
 extension User : ValueProvider {
     
-    func getValues() -> UserValues? {
+    func getValues() -> User.Values? {
         return values
     }
     
     private func setValues(json: JSON) {
         
-        User.sharedInstance.values = UserValues(
+        User.sharedInstance.values = User.Values(
             name:       json["name"]["display"].string ?? "No name",
             first:      json["name"]["first"].string ?? "member",
             avatar:     json["avatar"]["thumb"].string ?? "",
@@ -118,13 +113,10 @@ extension User : ModelRequest {
     
     internal func get(callBack:RequestClosure) {
         
-        if let
-            access_token = Auth.auth.access_token,
-            user_id = Auth.auth.user_id
-        {
+        if let passport = Auth.passport {
         
-            let url: String = APIUser.User(user_id).value
-            var params: [String : AnyObject] = ["access_token":access_token]
+            let url: String = APIUser.User(passport.user_id).value
+            var params: [String : AnyObject] = ["access_token":passport.access_token]
             
             request(.GET, url, parameters: params).responseJSON() { (request, response, json, error) in
                 
