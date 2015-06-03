@@ -45,8 +45,8 @@ class NotificationsTableViewController: UITableViewController {
         let item = model[indexPath.row]
         cell.textLabel?.text = item.title
         
-        var descAttrStr = NSMutableAttributedString(string: item.desc, attributes: [NSForegroundColorAttributeName: UIColor.ICTextLightGrayColor()]) //UIColor(white: 119/255, alpha: 1)])
-        var dateAttrStr = NSMutableAttributedString(string: item.date, attributes: [NSForegroundColorAttributeName: UIColor.ICTextDarkGrayColor()])//UIColor(white: 60/255, alpha: 1)])
+        var descAttrStr = NSMutableAttributedString(string: item.desc, attributes: [NSForegroundColorAttributeName: UIColor.ICTextLightGrayColor()])
+        var dateAttrStr = NSMutableAttributedString(string: item.date, attributes: [NSForegroundColorAttributeName: UIColor.ICTextDarkGrayColor()])
         descAttrStr.appendAttributedString(NSMutableAttributedString(string:"\r"))
         descAttrStr.appendAttributedString(dateAttrStr)
         cell.detailTextLabel?.numberOfLines = 0

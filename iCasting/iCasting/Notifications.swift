@@ -129,9 +129,7 @@ class Notifications : ModelProtocol {
     }
     
     subscript(index: Int) -> NotificationBody {
-        get {
-            return notifications[index]
-        }
+        return notifications[index]
     }
     
     //    func setNotifications(json: JSON) {

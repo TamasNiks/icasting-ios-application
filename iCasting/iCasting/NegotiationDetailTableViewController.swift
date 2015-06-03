@@ -1,5 +1,5 @@
 //
-//  ConversationTableViewController.swift
+//  NegotiationDetailTableViewController.swift
 //  iCasting
 //
 //  Created by Tim van Steenoven on 06/05/15.
@@ -8,10 +8,40 @@
 
 import UIKit
 
-class NegotiationDetailTableViewController: UITableViewController, UIScrollViewDelegate, UITextFieldDelegate {
+
+// Bind the TextType of the cells with the CellIdentifiers
+
+enum CellIdentifier: String {
+    case
+    MessageCell = "messageCell",
+    UnacceptedCell = "unacceptedMessageCell",
+    GeneralSystemMessageCell = "generalSystemMessageCell",
+    OfferMessageCell = "offerMessageCell"
+    
+    static func fromTextType(type: TextType) -> CellIdentifier? {
+        
+        let ids = [
+            TextType.Text                       :   CellIdentifier.MessageCell,
+            TextType.SystemText                 :   CellIdentifier.GeneralSystemMessageCell,
+            TextType.SystemContractUnaccepted   :   CellIdentifier.UnacceptedCell,
+            TextType.Offer                      :   CellIdentifier.OfferMessageCell
+        ]
+        
+        return ids[type]
+    }
+    
+}
+
+
+class NegotiationDetailTableViewController: UITableViewController, UIScrollViewDelegate, UITextFieldDelegate, MessageOfferCellDelegate {
+    
     
     var matchID: String?
     var conversation: Conversation?
+    var messages: [Message] = [Message]()
+    
+    var sizingCellProvider: SizingCellProvider?
+    var cellReuser: NegotiationDetailCellConfigurationFactory?
     
     
     func initializeFooterView() {
@@ -23,25 +53,24 @@ class NegotiationDetailTableViewController: UITableViewController, UIScrollViewD
 //        self.tableView.tableFooterView?.hidden = true
     }
     
+    
     override func scrollViewDidScroll(scrollView: UIScrollView) {
 //        var x: CGFloat = 0
 //        var y = (self.tableView?.contentOffset.y)! + 40
 //        self.tableView.tableFooterView?.transform = CGAffineTransformMakeTranslation(x, y)
     }
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
         
         self.initializeFooterView()
+        self.sizingCellProvider = SizingCellProvider(tableView: tableView)
+        self.cellReuser = NegotiationDetailCellConfigurationFactory(tableView: tableView)
     
     }
 
+    
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         
@@ -50,7 +79,9 @@ class NegotiationDetailTableViewController: UITableViewController, UIScrollViewD
         }
         
         // Get all the current messages available from the server
-        conversation?.requestMessages() {
+        conversation?.get() { failure in
+            
+            self.messages = self.conversation!.messages
             
             println("ConversationTableViewController: request finnished")
             self.tableView.reloadData()
@@ -64,17 +95,20 @@ class NegotiationDetailTableViewController: UITableViewController, UIScrollViewD
         }
     }
     
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
 
+    
     // MARK: - Table view data source
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1
     }
 
+    
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let c = self.conversation?.messages.count {
             return c
@@ -82,105 +116,132 @@ class NegotiationDetailTableViewController: UITableViewController, UIScrollViewD
         return 0
     }
 
+    
+    func getModelForIndexPath(indexPath: NSIndexPath) -> Message {
+        
+        return messages[indexPath.row]
+    }
+    
+    
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
 
-        // Configure the cell...
-        var cell: UITableViewCell?
-        
-        let messages:[Message]? = self.conversation?.messages
-        if let messages = messages {
+        if let cell = getAndConfigCell(indexPath) {
             
-            let message: Message = messages[indexPath.row]
+            return cell
             
+        } else {
             
-            if message.type == TextType.SystemText ||
-                message.type == TextType.SystemContractFieldsUnaccepted {
-                cell = tableView.dequeueReusableCellWithIdentifier(
-                    MessageCellIdentifier.SystemMessageCell,
-                    forIndexPath: indexPath) as! SystemMessageCell
-                
-                (cell as! SystemMessageCell).systemMessageLabel.text = message.body
-                
-            } else {
-                
-                cell = tableView.dequeueReusableCellWithIdentifier(
-                MessageCellIdentifier.MessageCell,
-                forIndexPath: indexPath) as! MessageCell
-                
-                if message.role == Role.User {
-                    (cell as! MessageCell).rightMessageLabel.text = message.body
-                    (cell as! MessageCell).leftMessageLabel.hidden = true
-                } else {
-                    (cell as! MessageCell).leftMessageLabel.text = message.body
-                    (cell as! MessageCell).rightMessageLabel.hidden = true
-                }
-            }
+            var cell: UITableViewCell = tableView.dequeueReusableCellWithIdentifier(
+                CellIdentifier.MessageCell.rawValue,
+                forIndexPath: indexPath) as! UITableViewCell
             
+            return cell
         }
-        
-        return cell!
     }
 
+    
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         
-//        let cell = tableView.cellForRowAtIndexPath(indexPath)
-//        
-//        if cell is MessageCell {
-//           (cell as! MessageCell).rightMessageLabel.
-//        }
-//        
-        return 60
+        return getHeightForCell(indexPath)
     }
     
     
-    override func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 60
+    func getAndConfigCell(indexPath: NSIndexPath) -> UITableViewCell? {
+        
+        let message: Message = getModelForIndexPath(indexPath)
+        
+        if let identifier = CellIdentifier.fromTextType(message.type) {
+            
+            var cell = cellReuser!.reuseCell(identifier, indexPath: indexPath)
+            var configurator = cellReuser!.getConfigurator()
+            
+            if identifier == CellIdentifier.GeneralSystemMessageCell {
+                
+                configurator?.configureCell(data: [.Description:message.body])
+            }
+            
+            if identifier == CellIdentifier.MessageCell {
+                
+                configurator?.configureCell(data: [.Model:message as Any])
+            }
+            
+            if identifier == CellIdentifier.UnacceptedCell {
+                
+                configurator?.configureCell(data: [.Model:message as Any])
+            }
+            
+            if identifier == CellIdentifier.OfferMessageCell {
+                
+                var data = [
+                    CellKey.Model       :   message as Any,
+                    CellKey.IndexPath   :   indexPath,
+                    CellKey.Delegate    :   self]
+                
+                configurator?.configureCell(data: data)
+            }
+            
+            return cell
+        }
+        
+        return nil
     }
 
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return NO if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
-            // Delete the row from the data source
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else if editingStyle == .Insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return NO if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using [segue destinationViewController].
-        // Pass the selected object to the new view controller.
-    }
-    */
     
+    func getHeightForCell(indexPath: NSIndexPath) -> CGFloat {
+        
+        let message: Message = messages[indexPath.row]
+        let identifier = CellIdentifier.fromTextType(message.type)
+        var height: CGFloat
+        
+        if identifier == CellIdentifier.OfferMessageCell {
+            
+            height = sizingCellProvider!.heightForCustomCell(fromIdentifier: CellIdentifier.OfferMessageCell, calculatorType:.AutoLayout) { (cell) -> () in
+                
+                OfferMessageCellConfigurator(cell: cell).configureCellText(data: [.Model:message as Any])
+            }
+        }
+        else if identifier == CellIdentifier.UnacceptedCell {
+            
+            height = sizingCellProvider!.heightForCustomCell(fromIdentifier: CellIdentifier.UnacceptedCell, calculatorType:.AutoLayout) { (cell) -> () in
+                
+                UnacceptedListMessageCellConfigurator(cell: cell).configureCellText(data: [.Model:message as Any])
+            }
+            
+            println("height for unaccepted: \(height) ")
+            //height = 150
+            
+            
+        }
+        else {
+            
+            height = 60
+        }
+        
+        return height
+    }
+    
+    
+    // Offer cell delegate
+    
+    func offerCell(
+        cell: MessageOfferCell,
+        didPressButtonWithOfferStatus offerStatus: OfferStatus,
+        forIndexPath indexPath: NSIndexPath,
+        startAnimation: () -> ()) {
+        
+        if offerStatus == OfferStatus.Accept {
+            
+            cell.accepted = true
+        }
+        
+        if offerStatus == OfferStatus.Reject {
+            
+            cell.accepted = false
+        }
+        
+        // if everything is complete, do the animation:
+        //startAnimation()
+    }
+
 }

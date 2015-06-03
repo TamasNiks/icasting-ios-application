@@ -157,6 +157,16 @@ extension UITableView {
     
 }
 
+
+extension UITableViewCell {
+    
+    func calculateHeight() -> CGFloat {
+        let size: CGSize = self.contentView.systemLayoutSizeFittingSize(UILayoutFittingCompressedSize)
+        return size.height
+    }
+    
+}
+
 // We create an extension of NSIndexPath to "inject" the cell identifiers to the specific indexPath which will be used by the tableview, don't forget to define a default cell type and value in your view controller: For every tableview, which needs specific reuse identifier, you can create an enum implementation with all the reuse identifiers which conforms to the Cells protocol and add it to the AbstractCellType enum.
 
 protocol CellsProtocol {
@@ -173,6 +183,7 @@ enum AbstractCellsType: Int {
         }
     }
 }
+
 
 extension NSIndexPath {
     
@@ -195,6 +206,51 @@ extension NSIndexPath {
         }
     }
 }
+
+
+extension UIView {
+    
+    @IBInspectable var borderColor: UIColor? {
+        
+        get {
+            return UIColor(CGColor: layer.borderColor)
+        }
+        
+        set {
+            layer.borderColor = newValue?.CGColor
+        }
+        
+    }
+    
+    
+    @IBInspectable var borderWidth: CGFloat {
+        
+        get {
+            return layer.borderWidth
+        }
+        
+        set {
+            layer.borderWidth = newValue
+        }
+        
+    }
+    
+    @IBInspectable var cornerRadius: CGFloat {
+    
+        get {
+            return layer.cornerRadius
+        }
+        
+        set {
+            layer.cornerRadius = newValue
+            layer.masksToBounds = newValue > 0
+        }
+    
+    }
+    
+}
+
+
 
 // A struct that will hold all the cell properties, extend it to add functionality
 

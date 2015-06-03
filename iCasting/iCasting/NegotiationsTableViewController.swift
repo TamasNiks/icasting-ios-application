@@ -61,7 +61,7 @@ class NegotiationsTableViewController: UITableViewController {
         ac.addAction(UIAlertAction(title: NSLocalizedString("Ok", comment: ""),
             style: UIAlertActionStyle.Cancel, handler: { (action) -> Void in
         }))
-        self.presentViewController(ac, animated: true, completion: nil)
+        //self.presentViewController(ac, animated: true, completion: nil)
     }
     
     override func viewDidAppear(animated: Bool) {

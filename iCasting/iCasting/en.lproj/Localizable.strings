@@ -91,6 +91,7 @@
 /* iCasting System text */
 
 "icasting.chat.system.text.welcome" = "Welcome to the conversation";
+"icasting.chat.system.contract.fields.unaccepted" = "Negotiation points";
 
 /* API Errors */
 

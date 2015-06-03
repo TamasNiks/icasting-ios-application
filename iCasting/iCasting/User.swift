@@ -120,24 +120,20 @@ extension User : ModelRequest {
             
             request(.GET, url, parameters: params).responseJSON() { (request, response, json, error) in
                 
-                if(error != nil) {
-                    NSLog("Error: \(error)")
-                    println(request)
-                    println(response)
-                }
-                
+                var errors: ICErrorInfo? = ICError(error: error).getErrors() //(json: json).getErrors()
                 if let json: AnyObject = json {
                     
                     println("UserRequest call success")
                     let json = JSON(json)
-                    let errors: ICErrorInfo? = ICError(json: json).getErrors()
+                    errors = ICError(json: json).getErrors()
                     
                     if errors == nil {
                         self.initializeModel(json)
                     }
                     
-                    callBack(failure: errors)
                 }
+                
+                callBack(failure: errors)
             }
         }
         

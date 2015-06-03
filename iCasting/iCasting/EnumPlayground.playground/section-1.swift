@@ -11,6 +11,12 @@ let Naam = "Hello playground"
 //}
 
 
+enum A : Int {
+    
+    case  AA, AB, AC, AD
+}
+
+
 enum Integer: Int {
     
     case A=00,B,C

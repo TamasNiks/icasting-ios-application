@@ -9,12 +9,18 @@
 /* Begin PBXBuildFile section */
 		220587F51AD565590010DA92 /* RequestFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220587F41AD565590010DA92 /* RequestFactory.swift */; };
 		220587F71AD568660010DA92 /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220587F61AD568660010DA92 /* SessionManager.swift */; };
+		22060E8E1B1EEE30000A3F2C /* SizingCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22060E8B1B1EEE30000A3F2C /* SizingCellProvider.swift */; };
+		22060E8F1B1EEE30000A3F2C /* SizingCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22060E8B1B1EEE30000A3F2C /* SizingCellProvider.swift */; };
+		22060E901B1EEE30000A3F2C /* CellReuseFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22060E8C1B1EEE30000A3F2C /* CellReuseFactory.swift */; };
+		22060E911B1EEE30000A3F2C /* CellReuseFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22060E8C1B1EEE30000A3F2C /* CellReuseFactory.swift */; };
+		22060E921B1EEE30000A3F2C /* CellConfigurators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22060E8D1B1EEE30000A3F2C /* CellConfigurators.swift */; };
+		22060E931B1EEE30000A3F2C /* CellConfigurators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22060E8D1B1EEE30000A3F2C /* CellConfigurators.swift */; };
 		22082C881AF7C24A00AF5EDB /* NegotiationsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22082C871AF7C24A00AF5EDB /* NegotiationsTableViewController.swift */; };
 		22082C891AF7C24A00AF5EDB /* NegotiationsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22082C871AF7C24A00AF5EDB /* NegotiationsTableViewController.swift */; };
 		22082C8E1AF9F89500AF5EDB /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22082C8D1AF9F89500AF5EDB /* Conversation.swift */; };
 		22082C8F1AF9F89500AF5EDB /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22082C8D1AF9F89500AF5EDB /* Conversation.swift */; };
-		22082C911AFA243000AF5EDB /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22082C901AFA243000AF5EDB /* MessageCell.swift */; };
-		22082C921AFA243000AF5EDB /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22082C901AFA243000AF5EDB /* MessageCell.swift */; };
+		22082C911AFA243000AF5EDB /* MessageCells.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22082C901AFA243000AF5EDB /* MessageCells.swift */; };
+		22082C921AFA243000AF5EDB /* MessageCells.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22082C901AFA243000AF5EDB /* MessageCells.swift */; };
 		22082C951AFA2C2A00AF5EDB /* NegotiationDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22082C931AFA2C2A00AF5EDB /* NegotiationDetailTableViewController.swift */; };
 		22082C961AFA2C2A00AF5EDB /* NegotiationDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22082C931AFA2C2A00AF5EDB /* NegotiationDetailTableViewController.swift */; };
 		22082CD51AFB927A00AF5EDB /* SocketAckManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22082CC81AFB927A00AF5EDB /* SocketAckManager.swift */; };
@@ -50,6 +56,8 @@
 		221B57F31AF3E686004ABE43 /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 221B57F21AF3E686004ABE43 /* Match.swift */; };
 		221B57F41AF3E686004ABE43 /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 221B57F21AF3E686004ABE43 /* Match.swift */; };
 		222014E71AEFA394004500FA /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222014E61AEFA394004500FA /* JSON.swift */; };
+		222495DA1B1753F100F021D2 /* MessageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222495D91B1753F100F021D2 /* MessageManager.swift */; };
+		222495DB1B1753F100F021D2 /* MessageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222495D91B1753F100F021D2 /* MessageManager.swift */; };
 		222CBB641B0663D100D91137 /* MatchCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222CBB631B0663D100D91137 /* MatchCard.swift */; };
 		222CBB671B06642B00D91137 /* TalentMatchCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222CBB661B06642B00D91137 /* TalentMatchCard.swift */; };
 		222CBB6A1B0693FD00D91137 /* MatchFields.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222CBB691B0693FD00D91137 /* MatchFields.swift */; };
@@ -147,6 +155,9 @@
 		22A464C21AE93955000100C9 /* ICProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A464C11AE93955000100C9 /* ICProtocols.swift */; };
 		22AD0DAD1AD6C3DE00F0496A /* JSONParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22AD0DAC1AD6C3DE00F0496A /* JSONParser.swift */; };
 		22AD0DAF1AD6CDB900F0496A /* NewsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22AD0DAE1AD6CDB900F0496A /* NewsTableViewController.swift */; };
+		22B06AF41B1C4EF8002A7805 /* DilemmaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B06AF31B1C4EF8002A7805 /* DilemmaView.swift */; };
+		22B06AF51B1C538A002A7805 /* DilemmaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B06AF31B1C4EF8002A7805 /* DilemmaView.swift */; };
+		22B06AF81B1C53FC002A7805 /* DilemmaView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 22B06AF71B1C53FC002A7805 /* DilemmaView.xib */; };
 		22BFA6CA1AE6FCAD007E76C7 /* ICExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BFA6C91AE6FCAD007E76C7 /* ICExtensions.swift */; };
 		22C224D11ADD175C00202BF9 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 226C27C21AD5310F00A6A2EE /* User.swift */; };
 		22C224D21ADD18D300202BF9 /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220587F61AD568660010DA92 /* SessionManager.swift */; };
@@ -176,10 +187,13 @@
 		220587F61AD568660010DA92 /* SessionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionManager.swift; sourceTree = "<group>"; };
 		220587FA1AD576B40010DA92 /* URLPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = URLPlayground.playground; sourceTree = "<group>"; };
 		220587FB1AD57EC30010DA92 /* HttpPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = HttpPlayground.playground; sourceTree = "<group>"; };
+		22060E8B1B1EEE30000A3F2C /* SizingCellProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SizingCellProvider.swift; sourceTree = "<group>"; };
+		22060E8C1B1EEE30000A3F2C /* CellReuseFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellReuseFactory.swift; sourceTree = "<group>"; };
+		22060E8D1B1EEE30000A3F2C /* CellConfigurators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellConfigurators.swift; sourceTree = "<group>"; };
 		2206936B1ADD63160082126F /* StringEncodePlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = StringEncodePlayground.playground; sourceTree = "<group>"; };
 		22082C871AF7C24A00AF5EDB /* NegotiationsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NegotiationsTableViewController.swift; sourceTree = "<group>"; };
 		22082C8D1AF9F89500AF5EDB /* Conversation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
-		22082C901AFA243000AF5EDB /* MessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
+		22082C901AFA243000AF5EDB /* MessageCells.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageCells.swift; sourceTree = "<group>"; };
 		22082C931AFA2C2A00AF5EDB /* NegotiationDetailTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NegotiationDetailTableViewController.swift; sourceTree = "<group>"; };
 		22082CC81AFB927A00AF5EDB /* SocketAckManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketAckManager.swift; sourceTree = "<group>"; };
 		22082CC91AFB927A00AF5EDB /* SocketAnyEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketAnyEvent.swift; sourceTree = "<group>"; };
@@ -203,6 +217,7 @@
 		221B57F21AF3E686004ABE43 /* Match.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Match.swift; sourceTree = "<group>"; };
 		222014E51AEF92D7004500FA /* JSONParsePlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = JSONParsePlayground.playground; sourceTree = "<group>"; };
 		222014E61AEFA394004500FA /* JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSON.swift; sourceTree = "<group>"; };
+		222495D91B1753F100F021D2 /* MessageManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageManager.swift; sourceTree = "<group>"; };
 		222CBB631B0663D100D91137 /* MatchCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchCard.swift; sourceTree = "<group>"; };
 		222CBB661B06642B00D91137 /* TalentMatchCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TalentMatchCard.swift; sourceTree = "<group>"; };
 		222CBB691B0693FD00D91137 /* MatchFields.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchFields.swift; sourceTree = "<group>"; };
@@ -282,6 +297,8 @@
 		22AD0DAB1AD6C0E100F0496A /* JSONPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = JSONPlayground.playground; sourceTree = "<group>"; };
 		22AD0DAC1AD6C3DE00F0496A /* JSONParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONParser.swift; sourceTree = "<group>"; };
 		22AD0DAE1AD6CDB900F0496A /* NewsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsTableViewController.swift; sourceTree = "<group>"; };
+		22B06AF31B1C4EF8002A7805 /* DilemmaView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DilemmaView.swift; sourceTree = "<group>"; };
+		22B06AF71B1C53FC002A7805 /* DilemmaView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DilemmaView.xib; sourceTree = "<group>"; };
 		22BB6D2C1ADEB43500C5C6C1 /* ValidatorPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = ValidatorPlayground.playground; sourceTree = "<group>"; };
 		22BFA6C91AE6FCAD007E76C7 /* ICExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ICExtensions.swift; sourceTree = "<group>"; };
 		22C9085F1AD5542E0067A378 /* EndpointsPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = EndpointsPlayground.playground; sourceTree = "<group>"; };
@@ -326,10 +343,10 @@
 		220587F91AD573130010DA92 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				22082C8D1AF9F89500AF5EDB /* Conversation.swift */,
 				2273B75F1AD6AAC000CC3EFB /* News.swift */,
 				22647DB41B0DE60B00F18C71 /* Notifications.swift */,
 				222CBB651B06641800D91137 /* Match */,
+				222495DC1B1753FA00F021D2 /* Negotiation */,
 				222CBB681B068C0800D91137 /* User */,
 			);
 			name = Models;
@@ -366,6 +383,15 @@
 				2256CE051AF2C7BF005D40EB /* DrawerController */,
 			);
 			name = Vendor;
+			sourceTree = "<group>";
+		};
+		222495DC1B1753FA00F021D2 /* Negotiation */ = {
+			isa = PBXGroup;
+			children = (
+				22082C8D1AF9F89500AF5EDB /* Conversation.swift */,
+				222495D91B1753F100F021D2 /* MessageManager.swift */,
+			);
+			name = Negotiation;
 			sourceTree = "<group>";
 		};
 		222CBB651B06641800D91137 /* Match */ = {
@@ -593,6 +619,19 @@
 			name = Views;
 			sourceTree = "<group>";
 		};
+		22B06AF61B1C53DB002A7805 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				22060E8B1B1EEE30000A3F2C /* SizingCellProvider.swift */,
+				22060E8C1B1EEE30000A3F2C /* CellReuseFactory.swift */,
+				22060E8D1B1EEE30000A3F2C /* CellConfigurators.swift */,
+				22082C901AFA243000AF5EDB /* MessageCells.swift */,
+				22B06AF31B1C4EF8002A7805 /* DilemmaView.swift */,
+				22B06AF71B1C53FC002A7805 /* DilemmaView.xib */,
+			);
+			name = Cells;
+			sourceTree = "<group>";
+		};
 		22E39EAA1AEFBD1E00F01BA0 /* JSON */ = {
 			isa = PBXGroup;
 			children = (
@@ -606,7 +645,7 @@
 		22FB747D1B14BF6B000C6373 /* Messages */ = {
 			isa = PBXGroup;
 			children = (
-				22082C901AFA243000AF5EDB /* MessageCell.swift */,
+				22B06AF61B1C53DB002A7805 /* Cells */,
 				22FB747E1B14BF89000C6373 /* MessageView.swift */,
 			);
 			name = Messages;
@@ -711,6 +750,7 @@
 				22429E161AE6CB5900D0340B /* FontAwesome.otf in Resources */,
 				2268C5421ACE905D00E58BF4 /* LaunchScreen.xib in Resources */,
 				2268C53F1ACE905D00E58BF4 /* Images.xcassets in Resources */,
+				22B06AF81B1C53FC002A7805 /* DilemmaView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -745,7 +785,7 @@
 				2256CE0A1AF2C7BF005D40EB /* AnimatedMenuButton.swift in Sources */,
 				22082CE71AFB927A00AF5EDB /* SocketParser.swift in Sources */,
 				227C7BDC1AEA5FB600624E12 /* JSONSearch.swift in Sources */,
-				22082C911AFA243000AF5EDB /* MessageCell.swift in Sources */,
+				22082C911AFA243000AF5EDB /* MessageCells.swift in Sources */,
 				22FB74CC1B16F70A000C6373 /* MatchSummaryCell.swift in Sources */,
 				22FB747F1B14BF89000C6373 /* MessageView.swift in Sources */,
 				2249D5B81B05FA6600473A20 /* DashboardTableViewController.swift in Sources */,
@@ -762,11 +802,13 @@
 				22082CDF1AFB927A00AF5EDB /* SocketFixUTF8.swift in Sources */,
 				2256CE201AF2CD17005D40EB /* ExampleLeftSideDrawerViewController.swift in Sources */,
 				2273B7631AD6B54600CC3EFB /* ICType.swift in Sources */,
+				22060E901B1EEE30000A3F2C /* CellReuseFactory.swift in Sources */,
 				222014E71AEFA394004500FA /* JSON.swift in Sources */,
 				226B2E9A1B07BE86001DA2BD /* MatchHeaderCell.swift in Sources */,
 				2289BFFF1B0373DF00A7307C /* CastingObject.swift in Sources */,
 				226A9E8C1AEED71400AB9EFF /* Alamofire.swift in Sources */,
 				22082CD91AFB927A00AF5EDB /* SocketEngine.swift in Sources */,
+				22B06AF41B1C4EF8002A7805 /* DilemmaView.swift in Sources */,
 				222CBB671B06642B00D91137 /* TalentMatchCard.swift in Sources */,
 				22082CEB1AFB927A00AF5EDB /* SwiftRegex.swift in Sources */,
 				224F77F61AF0F6BE00D88F99 /* ICImage.swift in Sources */,
@@ -774,6 +816,7 @@
 				2256CE211AF2CD17005D40EB /* ExampleRightSideDrawerViewController.swift in Sources */,
 				22082CED1AFB927A00AF5EDB /* WebSocket.swift in Sources */,
 				2256CE1C1AF2CD17005D40EB /* SideDrawerSectionHeaderView.swift in Sources */,
+				22060E921B1EEE30000A3F2C /* CellConfigurators.swift in Sources */,
 				220587F71AD568660010DA92 /* SessionManager.swift in Sources */,
 				225C11511AE50197008654A7 /* NewsDetailViewController.swift in Sources */,
 				223A7DD21AFD16B8002FB978 /* SwiftSpinner.swift in Sources */,
@@ -801,10 +844,12 @@
 				22082CDB1AFB927A00AF5EDB /* SocketEngineClient.swift in Sources */,
 				22082CE51AFB927A00AF5EDB /* SocketPacket.swift in Sources */,
 				2256CDD41AF254FD005D40EB /* Auth.swift in Sources */,
+				22060E8E1B1EEE30000A3F2C /* SizingCellProvider.swift in Sources */,
 				2256CE1F1AF2CD17005D40EB /* ExampleCenterTableViewController.swift in Sources */,
 				2289C0051B03968600A7307C /* FamilyTableViewController.swift in Sources */,
 				222CBB6A1B0693FD00D91137 /* MatchFields.swift in Sources */,
 				22082CE11AFB927A00AF5EDB /* SocketIOClient.swift in Sources */,
+				222495DA1B1753F100F021D2 /* MessageManager.swift in Sources */,
 				22103B2D1AE5597800C34C89 /* FontAwesome.swift in Sources */,
 				2268C5381ACE905D00E58BF4 /* LoginViewController.swift in Sources */,
 			);
@@ -822,8 +867,10 @@
 				22082CEA1AFB927A00AF5EDB /* SocketTypes.swift in Sources */,
 				226B2E941B079C06001DA2BD /* MatchCell.swift in Sources */,
 				226B2E9E1B07C2E9001DA2BD /* MatchAcceptCell.swift in Sources */,
+				22060E911B1EEE30000A3F2C /* CellReuseFactory.swift in Sources */,
 				2256CE261AF2D3D2005D40EB /* DrawerBarButtonItem.swift in Sources */,
 				222CBB6C1B06940B00D91137 /* MatchFields.swift in Sources */,
+				22060E8F1B1EEE30000A3F2C /* SizingCellProvider.swift in Sources */,
 				228E35171ADC4655006D0BEA /* RequestFactory.swift in Sources */,
 				224FF3041B08A989007D9CA7 /* iCastingMatchCardTest.swift in Sources */,
 				22FB74801B14BF89000C6373 /* MessageView.swift in Sources */,
@@ -832,6 +879,7 @@
 				224A5A7A1ADE8F3C00E22DE1 /* ICValidator.swift in Sources */,
 				224F77FB1AF1342200D88F99 /* MatchDetailTableViewController.swift in Sources */,
 				2289C0031B0393BE00A7307C /* MainViewController.swift in Sources */,
+				22060E931B1EEE30000A3F2C /* CellConfigurators.swift in Sources */,
 				22740F831AD7BE1300755146 /* JSONParser.swift in Sources */,
 				22082CE81AFB927A00AF5EDB /* SocketParser.swift in Sources */,
 				2268C54E1ACE905D00E58BF4 /* iCastingTests.swift in Sources */,
@@ -840,10 +888,11 @@
 				22082CE61AFB927A00AF5EDB /* SocketPacket.swift in Sources */,
 				22082CD81AFB927A00AF5EDB /* SocketAnyEvent.swift in Sources */,
 				22392D281AD810B40086BE5F /* Endpoints.swift in Sources */,
-				22082C921AFA243000AF5EDB /* MessageCell.swift in Sources */,
+				22082C921AFA243000AF5EDB /* MessageCells.swift in Sources */,
 				226B2EA51B0814B7001DA2BD /* MatchProfileTableViewController.swift in Sources */,
 				226A9E8D1AEED71400AB9EFF /* Alamofire.swift in Sources */,
 				226B2EA11B07C667001DA2BD /* MatchDefaultCell.swift in Sources */,
+				22B06AF51B1C538A002A7805 /* DilemmaView.swift in Sources */,
 				22082CE21AFB927A00AF5EDB /* SocketIOClient.swift in Sources */,
 				22740F851AD80EC700755146 /* URL.swift in Sources */,
 				2256CE271AF2D443005D40EB /* AnimatedMenuButton.swift in Sources */,
@@ -853,6 +902,7 @@
 				227C7BDD1AEA5FB600624E12 /* JSONSearch.swift in Sources */,
 				22C224D21ADD18D300202BF9 /* SessionManager.swift in Sources */,
 				226B2E9B1B07BE86001DA2BD /* MatchHeaderCell.swift in Sources */,
+				222495DB1B1753F100F021D2 /* MessageManager.swift in Sources */,
 				225029581B09DBDF00228582 /* ICFunctions.swift in Sources */,
 				22082CE01AFB927A00AF5EDB /* SocketFixUTF8.swift in Sources */,
 				22FB74CD1B16F70A000C6373 /* MatchSummaryCell.swift in Sources */,
