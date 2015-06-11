@@ -103,26 +103,42 @@ class DilemmaView: UIView {
     }
     
     
-    func startRejectAnimation() {
+    func startRightAnimation() {
         
+        UIView.animateWithDuration(
+            ANIMATION_DURATION,
+            delay: 0,
+            options: UIViewAnimationOptions.CurveEaseOut,
+            animations: { () -> Void in
 
-        UIView.animateWithDuration(ANIMATION_DURATION, delay: 0, options: UIViewAnimationOptions.CurveEaseOut, animations: { () -> Void in
-            
-            self.finalSettingsView(self.rightView)
-            self.finalSettingsMiddleViewForRight(self.buttonView)
-            
+            self.setRightView()
             }, completion: nil)
     }
     
-    func startAcceptAnimation() {
+    func startLeftAnimation() {
         
-        UIView.animateWithDuration(ANIMATION_DURATION, delay: 0, options: UIViewAnimationOptions.CurveEaseOut, animations: { () -> Void in
+        UIView.animateWithDuration(
+            ANIMATION_DURATION,
+            delay: 0,
+            options: UIViewAnimationOptions.CurveEaseOut,
+            animations: { () -> Void in
             
-            self.finalSettingsView(self.leftView)
-            self.finalSettingsMiddleViewForLeft(self.buttonView)
-            
+            self.setLeftView()
             }, completion: nil)
     }
+    
+    
+    func setLeftView() {
+        self.finalSettingsView(self.leftView)
+        self.finalSettingsMiddleViewForLeft(self.buttonView)
+    }
+    
+    
+    func setRightView() {
+        self.finalSettingsView(self.rightView)
+        self.finalSettingsMiddleViewForRight(self.buttonView)
+    }
+    
     
     private func startSettingsLeftView(view: UIView) {
         view.alpha = 0
@@ -139,15 +155,14 @@ class DilemmaView: UIView {
         view.transform = CGAffineTransformMakeTranslation(0, 0)
     }
     
-    // Final settings middle view
     private func finalSettingsMiddleViewForLeft(view: UIView) {
         view.alpha = 0
-        view.transform = CGAffineTransformMakeTranslation(view.bounds.size.width*2, 0)
+        view.transform = CGAffineTransformMakeTranslation(view.bounds.size.width * 2, 0)
     }
     
     private func finalSettingsMiddleViewForRight(view: UIView) {
         view.alpha = 0
-        view.transform = CGAffineTransformMakeTranslation(-view.bounds.size.width*2, 0)
+        view.transform = CGAffineTransformMakeTranslation(-view.bounds.size.width * 2, 0)
     }
     
     

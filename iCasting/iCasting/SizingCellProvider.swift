@@ -74,10 +74,11 @@ class SizingCellProvider {
 // To add a specific calculator:, 
 // 1. Add the implementation  which conforms to CellHeightCalculator
 // 2. Put an identifier in the enumeration which represents the type.
-// 3. Add it to the CellHeightCalculatorFactory
+// 3. Add it to the CellHeightCalculatorFactory, you will get an compiler error message as a reminder
 
 
 enum CellHeightCalculatorType {
+    
     case Default, AutoLayout
 }
 
@@ -99,6 +100,7 @@ class CellHeightCalculatorFactory {
 }
 
 protocol CellHeightCalculator {
+    
     func calculateHeight(cell: UITableViewCell) -> CGFloat
 }
 

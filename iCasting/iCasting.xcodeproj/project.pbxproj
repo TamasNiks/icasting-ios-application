@@ -56,8 +56,10 @@
 		221B57F31AF3E686004ABE43 /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 221B57F21AF3E686004ABE43 /* Match.swift */; };
 		221B57F41AF3E686004ABE43 /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 221B57F21AF3E686004ABE43 /* Match.swift */; };
 		222014E71AEFA394004500FA /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222014E61AEFA394004500FA /* JSON.swift */; };
-		222495DA1B1753F100F021D2 /* MessageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222495D91B1753F100F021D2 /* MessageManager.swift */; };
-		222495DB1B1753F100F021D2 /* MessageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222495D91B1753F100F021D2 /* MessageManager.swift */; };
+		22223E271B208780001711C4 /* MessageBalloon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22223E261B208780001711C4 /* MessageBalloon.swift */; };
+		22223E281B208780001711C4 /* MessageBalloon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22223E261B208780001711C4 /* MessageBalloon.swift */; };
+		222495DA1B1753F100F021D2 /* MessageListExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222495D91B1753F100F021D2 /* MessageListExtractor.swift */; };
+		222495DB1B1753F100F021D2 /* MessageListExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222495D91B1753F100F021D2 /* MessageListExtractor.swift */; };
 		222CBB641B0663D100D91137 /* MatchCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222CBB631B0663D100D91137 /* MatchCard.swift */; };
 		222CBB671B06642B00D91137 /* TalentMatchCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222CBB661B06642B00D91137 /* TalentMatchCard.swift */; };
 		222CBB6A1B0693FD00D91137 /* MatchFields.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222CBB691B0693FD00D91137 /* MatchFields.swift */; };
@@ -74,6 +76,12 @@
 		224A5A771ADE8BDB00E22DE1 /* ICError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224A5A751ADE8BDB00E22DE1 /* ICError.swift */; };
 		224A5A791ADE8F3C00E22DE1 /* ICValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224A5A781ADE8F3C00E22DE1 /* ICValidator.swift */; };
 		224A5A7A1ADE8F3C00E22DE1 /* ICValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224A5A781ADE8F3C00E22DE1 /* ICValidator.swift */; };
+		224DE16E1B27308200A0752E /* SocketCommunicationHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224DE16D1B27308200A0752E /* SocketCommunicationHandler.swift */; };
+		224DE1701B27362500A0752E /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224DE16F1B27362500A0752E /* Message.swift */; };
+		224DE1711B27364C00A0752E /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224DE16F1B27362500A0752E /* Message.swift */; };
+		224DE1721B27365000A0752E /* SocketCommunicationHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224DE16D1B27308200A0752E /* SocketCommunicationHandler.swift */; };
+		224DE1741B273E2C00A0752E /* MessageFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224DE1731B273E2C00A0752E /* MessageFactory.swift */; };
+		224DE1751B273E2C00A0752E /* MessageFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224DE1731B273E2C00A0752E /* MessageFactory.swift */; };
 		224F77F61AF0F6BE00D88F99 /* ICImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224F77F51AF0F6BE00D88F99 /* ICImage.swift */; };
 		224F77F71AF1330500D88F99 /* ICExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BFA6C91AE6FCAD007E76C7 /* ICExtensions.swift */; };
 		224F77F81AF133AB00D88F99 /* MatchTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22103B2A1AE549DF00C34C89 /* MatchTableViewController.swift */; };
@@ -164,12 +172,11 @@
 		22C908651AD55FE50067A378 /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C908641AD55FE50067A378 /* URL.swift */; };
 		22E39EAB1AEFD3A500F01BA0 /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222014E61AEFA394004500FA /* JSON.swift */; };
 		22E39EAC1AEFD3BB00F01BA0 /* News.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2273B75F1AD6AAC000CC3EFB /* News.swift */; };
-		22FB747F1B14BF89000C6373 /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22FB747E1B14BF89000C6373 /* MessageView.swift */; };
-		22FB74801B14BF89000C6373 /* MessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22FB747E1B14BF89000C6373 /* MessageView.swift */; };
 		22FB74CC1B16F70A000C6373 /* MatchSummaryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22FB74CB1B16F70A000C6373 /* MatchSummaryCell.swift */; };
 		22FB74CD1B16F70A000C6373 /* MatchSummaryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22FB74CB1B16F70A000C6373 /* MatchSummaryCell.swift */; };
 		22FB8A191B0F62D900BE13F6 /* NotificationsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22FB8A181B0F62D900BE13F6 /* NotificationsTableViewController.swift */; };
 		22FB8A1A1B0F62D900BE13F6 /* NotificationsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22FB8A181B0F62D900BE13F6 /* NotificationsTableViewController.swift */; };
+		22FF4CAA1B21A7CC00098996 /* iCastingNegotiationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22FF4CA91B21A7CC00098996 /* iCastingNegotiationTest.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -217,7 +224,8 @@
 		221B57F21AF3E686004ABE43 /* Match.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Match.swift; sourceTree = "<group>"; };
 		222014E51AEF92D7004500FA /* JSONParsePlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = JSONParsePlayground.playground; sourceTree = "<group>"; };
 		222014E61AEFA394004500FA /* JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSON.swift; sourceTree = "<group>"; };
-		222495D91B1753F100F021D2 /* MessageManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageManager.swift; sourceTree = "<group>"; };
+		22223E261B208780001711C4 /* MessageBalloon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageBalloon.swift; sourceTree = "<group>"; };
+		222495D91B1753F100F021D2 /* MessageListExtractor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageListExtractor.swift; sourceTree = "<group>"; };
 		222CBB631B0663D100D91137 /* MatchCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchCard.swift; sourceTree = "<group>"; };
 		222CBB661B06642B00D91137 /* TalentMatchCard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TalentMatchCard.swift; sourceTree = "<group>"; };
 		222CBB691B0693FD00D91137 /* MatchFields.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchFields.swift; sourceTree = "<group>"; };
@@ -231,6 +239,9 @@
 		224A5A781ADE8F3C00E22DE1 /* ICValidator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ICValidator.swift; sourceTree = "<group>"; };
 		224CF7FB1AE10B720035DABF /* DataPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = DataPlayground.playground; sourceTree = "<group>"; };
 		224CF7FC1AE11B830035DABF /* SwiftSoda-HexToBinToHex.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "SwiftSoda-HexToBinToHex.playground"; sourceTree = "<group>"; };
+		224DE16D1B27308200A0752E /* SocketCommunicationHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketCommunicationHandler.swift; sourceTree = "<group>"; };
+		224DE16F1B27362500A0752E /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		224DE1731B273E2C00A0752E /* MessageFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageFactory.swift; sourceTree = "<group>"; };
 		224F77F51AF0F6BE00D88F99 /* ICImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ICImage.swift; sourceTree = "<group>"; };
 		224FF3031B08A989007D9CA7 /* iCastingMatchCardTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = iCastingMatchCardTest.swift; sourceTree = "<group>"; };
 		22501EA01AD5C6EC00BD13E4 /* StructPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = StructPlayground.playground; sourceTree = "<group>"; };
@@ -303,9 +314,9 @@
 		22BFA6C91AE6FCAD007E76C7 /* ICExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ICExtensions.swift; sourceTree = "<group>"; };
 		22C9085F1AD5542E0067A378 /* EndpointsPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = EndpointsPlayground.playground; sourceTree = "<group>"; };
 		22C908641AD55FE50067A378 /* URL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URL.swift; sourceTree = "<group>"; };
-		22FB747E1B14BF89000C6373 /* MessageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
 		22FB74CB1B16F70A000C6373 /* MatchSummaryCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchSummaryCell.swift; sourceTree = "<group>"; };
 		22FB8A181B0F62D900BE13F6 /* NotificationsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationsTableViewController.swift; sourceTree = "<group>"; };
+		22FF4CA91B21A7CC00098996 /* iCastingNegotiationTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = iCastingNegotiationTest.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -389,7 +400,10 @@
 			isa = PBXGroup;
 			children = (
 				22082C8D1AF9F89500AF5EDB /* Conversation.swift */,
-				222495D91B1753F100F021D2 /* MessageManager.swift */,
+				224DE16F1B27362500A0752E /* Message.swift */,
+				222495D91B1753F100F021D2 /* MessageListExtractor.swift */,
+				224DE16D1B27308200A0752E /* SocketCommunicationHandler.swift */,
+				224DE1731B273E2C00A0752E /* MessageFactory.swift */,
 			);
 			name = Negotiation;
 			sourceTree = "<group>";
@@ -538,6 +552,7 @@
 				2268C54D1ACE905D00E58BF4 /* iCastingTests.swift */,
 				224FF3031B08A989007D9CA7 /* iCastingMatchCardTest.swift */,
 				22647DB71B0E089F00F18C71 /* iCastingNotificationTest.swift */,
+				22FF4CA91B21A7CC00098996 /* iCastingNegotiationTest.swift */,
 				2268C54B1ACE905D00E58BF4 /* Supporting Files */,
 			);
 			path = iCastingTests;
@@ -615,6 +630,7 @@
 				22FB747D1B14BF6B000C6373 /* Messages */,
 				2268C5401ACE905D00E58BF4 /* LaunchScreen.xib */,
 				2268C53B1ACE905D00E58BF4 /* Main.storyboard */,
+				22B06AF71B1C53FC002A7805 /* DilemmaView.xib */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -626,8 +642,6 @@
 				22060E8C1B1EEE30000A3F2C /* CellReuseFactory.swift */,
 				22060E8D1B1EEE30000A3F2C /* CellConfigurators.swift */,
 				22082C901AFA243000AF5EDB /* MessageCells.swift */,
-				22B06AF31B1C4EF8002A7805 /* DilemmaView.swift */,
-				22B06AF71B1C53FC002A7805 /* DilemmaView.xib */,
 			);
 			name = Cells;
 			sourceTree = "<group>";
@@ -646,7 +660,8 @@
 			isa = PBXGroup;
 			children = (
 				22B06AF61B1C53DB002A7805 /* Cells */,
-				22FB747E1B14BF89000C6373 /* MessageView.swift */,
+				22B06AF31B1C4EF8002A7805 /* DilemmaView.swift */,
+				22223E261B208780001711C4 /* MessageBalloon.swift */,
 			);
 			name = Messages;
 			sourceTree = "<group>";
@@ -770,6 +785,7 @@
 			files = (
 				2256CE1E1AF2CD17005D40EB /* TableViewCell.swift in Sources */,
 				224A5A761ADE8BDB00E22DE1 /* ICError.swift in Sources */,
+				22223E271B208780001711C4 /* MessageBalloon.swift in Sources */,
 				226B2E961B07A33E001DA2BD /* ICAlertControllers.swift in Sources */,
 				22082C951AFA2C2A00AF5EDB /* NegotiationDetailTableViewController.swift in Sources */,
 				220587F51AD565590010DA92 /* RequestFactory.swift in Sources */,
@@ -787,11 +803,11 @@
 				227C7BDC1AEA5FB600624E12 /* JSONSearch.swift in Sources */,
 				22082C911AFA243000AF5EDB /* MessageCells.swift in Sources */,
 				22FB74CC1B16F70A000C6373 /* MatchSummaryCell.swift in Sources */,
-				22FB747F1B14BF89000C6373 /* MessageView.swift in Sources */,
 				2249D5B81B05FA6600473A20 /* DashboardTableViewController.swift in Sources */,
 				2256CE0B1AF2C7BF005D40EB /* DrawerBarButtonItem.swift in Sources */,
 				22647DB51B0DE60B00F18C71 /* Notifications.swift in Sources */,
 				2273B7601AD6AAC000CC3EFB /* News.swift in Sources */,
+				224DE1741B273E2C00A0752E /* MessageFactory.swift in Sources */,
 				22AD0DAF1AD6CDB900F0496A /* NewsTableViewController.swift in Sources */,
 				2256CE1D1AF2CD17005D40EB /* SideDrawerTableViewCell.swift in Sources */,
 				22103B231AE527B300C34C89 /* ICDummyData.swift in Sources */,
@@ -821,6 +837,7 @@
 				225C11511AE50197008654A7 /* NewsDetailViewController.swift in Sources */,
 				223A7DD21AFD16B8002FB978 /* SwiftSpinner.swift in Sources */,
 				224A5A791ADE8F3C00E22DE1 /* ICValidator.swift in Sources */,
+				224DE1701B27362500A0752E /* Message.swift in Sources */,
 				22082CD51AFB927A00AF5EDB /* SocketAckManager.swift in Sources */,
 				226C27C51AD5321300A6A2EE /* Endpoints.swift in Sources */,
 				22528FE61AF3A7B700F550F8 /* SwiftyJSON.swift in Sources */,
@@ -830,6 +847,7 @@
 				226B2EA41B0814B7001DA2BD /* MatchProfileTableViewController.swift in Sources */,
 				22FB8A191B0F62D900BE13F6 /* NotificationsTableViewController.swift in Sources */,
 				22103B291AE542D400C34C89 /* MatchDetailTableViewController.swift in Sources */,
+				224DE16E1B27308200A0752E /* SocketCommunicationHandler.swift in Sources */,
 				221B57F31AF3E686004ABE43 /* Match.swift in Sources */,
 				2256CE231AF2CD17005D40EB /* ExampleViewController.swift in Sources */,
 				22103B2B1AE549DF00C34C89 /* MatchTableViewController.swift in Sources */,
@@ -849,7 +867,7 @@
 				2289C0051B03968600A7307C /* FamilyTableViewController.swift in Sources */,
 				222CBB6A1B0693FD00D91137 /* MatchFields.swift in Sources */,
 				22082CE11AFB927A00AF5EDB /* SocketIOClient.swift in Sources */,
-				222495DA1B1753F100F021D2 /* MessageManager.swift in Sources */,
+				222495DA1B1753F100F021D2 /* MessageListExtractor.swift in Sources */,
 				22103B2D1AE5597800C34C89 /* FontAwesome.swift in Sources */,
 				2268C5381ACE905D00E58BF4 /* LoginViewController.swift in Sources */,
 			);
@@ -862,6 +880,7 @@
 				224F77F71AF1330500D88F99 /* ICExtensions.swift in Sources */,
 				222CBB6B1B06940800D91137 /* TalentMatchCard.swift in Sources */,
 				22082C8F1AF9F89500AF5EDB /* Conversation.swift in Sources */,
+				22223E281B208780001711C4 /* MessageBalloon.swift in Sources */,
 				22082CEC1AFB927A00AF5EDB /* SwiftRegex.swift in Sources */,
 				22647DB81B0E089F00F18C71 /* iCastingNotificationTest.swift in Sources */,
 				22082CEA1AFB927A00AF5EDB /* SocketTypes.swift in Sources */,
@@ -873,13 +892,14 @@
 				22060E8F1B1EEE30000A3F2C /* SizingCellProvider.swift in Sources */,
 				228E35171ADC4655006D0BEA /* RequestFactory.swift in Sources */,
 				224FF3041B08A989007D9CA7 /* iCastingMatchCardTest.swift in Sources */,
-				22FB74801B14BF89000C6373 /* MessageView.swift in Sources */,
 				22392D291AD811720086BE5F /* ICType.swift in Sources */,
 				22082C961AFA2C2A00AF5EDB /* NegotiationDetailTableViewController.swift in Sources */,
 				224A5A7A1ADE8F3C00E22DE1 /* ICValidator.swift in Sources */,
+				224DE1751B273E2C00A0752E /* MessageFactory.swift in Sources */,
 				224F77FB1AF1342200D88F99 /* MatchDetailTableViewController.swift in Sources */,
 				2289C0031B0393BE00A7307C /* MainViewController.swift in Sources */,
 				22060E931B1EEE30000A3F2C /* CellConfigurators.swift in Sources */,
+				224DE1711B27364C00A0752E /* Message.swift in Sources */,
 				22740F831AD7BE1300755146 /* JSONParser.swift in Sources */,
 				22082CE81AFB927A00AF5EDB /* SocketParser.swift in Sources */,
 				2268C54E1ACE905D00E58BF4 /* iCastingTests.swift in Sources */,
@@ -898,11 +918,12 @@
 				2256CE271AF2D443005D40EB /* AnimatedMenuButton.swift in Sources */,
 				226B2E931B079494001DA2BD /* ArrayDataSource.swift in Sources */,
 				22082CDC1AFB927A00AF5EDB /* SocketEngineClient.swift in Sources */,
+				224DE1721B27365000A0752E /* SocketCommunicationHandler.swift in Sources */,
 				22082CD61AFB927A00AF5EDB /* SocketAckManager.swift in Sources */,
 				227C7BDD1AEA5FB600624E12 /* JSONSearch.swift in Sources */,
 				22C224D21ADD18D300202BF9 /* SessionManager.swift in Sources */,
 				226B2E9B1B07BE86001DA2BD /* MatchHeaderCell.swift in Sources */,
-				222495DB1B1753F100F021D2 /* MessageManager.swift in Sources */,
+				222495DB1B1753F100F021D2 /* MessageListExtractor.swift in Sources */,
 				225029581B09DBDF00228582 /* ICFunctions.swift in Sources */,
 				22082CE01AFB927A00AF5EDB /* SocketFixUTF8.swift in Sources */,
 				22FB74CD1B16F70A000C6373 /* MatchSummaryCell.swift in Sources */,
@@ -923,6 +944,7 @@
 				22E39EAC1AEFD3BB00F01BA0 /* News.swift in Sources */,
 				2256CE291AF2D4D3005D40EB /* DrawerVisualState.swift in Sources */,
 				22E39EAB1AEFD3A500F01BA0 /* JSON.swift in Sources */,
+				22FF4CAA1B21A7CC00098996 /* iCastingNegotiationTest.swift in Sources */,
 				2289C0001B0373DF00A7307C /* CastingObject.swift in Sources */,
 				2289C0061B03968600A7307C /* FamilyTableViewController.swift in Sources */,
 				22528FE71AF3A7B700F550F8 /* SwiftyJSON.swift in Sources */,

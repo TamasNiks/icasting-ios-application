@@ -14,6 +14,7 @@ typealias ArrayStringStringBool = [[String: [String:Bool]]]
 // STATIC VALUE EXTRACTOR AND DYNAMIC VALUE EXTRACTOR
 // Access to singular values as well as group values
 
+
 enum MatchValue: Any {
     case Date(String?)
     case Time(String?)
@@ -29,7 +30,7 @@ enum MatchValue: Any {
         switch self {
         case .Date(let val):
             
-            if let val = val { str = val.ICdateToString(ICDateFormat.Matches) }
+            if let val = val { str = val.ICdateToString(ICDateFormat.General) }
             
         case .Time(let val):
             

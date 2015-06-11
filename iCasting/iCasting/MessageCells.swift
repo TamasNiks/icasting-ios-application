@@ -36,41 +36,57 @@ class MessageCell: UITableViewCell {
 
     @IBOutlet weak var leftMessageLabel: UILabel!
     @IBOutlet weak var rightMessageLabel: UILabel!
+    @IBOutlet weak var leftMessageView: UIView!
+    @IBOutlet weak var rightMessageView: UIView!
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-        
-        leftMessageLabel.backgroundColor = UIColor.greenColor()
-        rightMessageLabel.backgroundColor = UIColor.redColor()
+//    override func awakeFromNib() {
+//        super.awakeFromNib()
+//        // Initialization code
+//        leftMessageLabel.backgroundColor = UIColor.greenColor()
+//        rightMessageLabel.backgroundColor = UIColor.redColor()
+//    }
+    
+    // Because a cell will be reused, it is important to update the custom drawing of the subviews as well, because a different already drawn view could be used instead, this could lead to drawings which are stretched.
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        leftMessageView.setNeedsDisplay()
+        rightMessageView.setNeedsDisplay()
     }
 
+    func showOutgoingMessageView() {
+        self.rightMessageView.hidden = false
+        self.leftMessageView.hidden = true
+    }
+    
+    func showIncommingMessageView() {
+        self.leftMessageView.hidden = false
+        self.rightMessageView.hidden = true
+    }
+    
+    
 }
+
+
+
 
 
 class MessageSystemCell: UITableViewCell {
     
     @IBOutlet weak var systemMessageLabel: UILabel!
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
-
 }
+
+
+
 
 
 class MessageUnacceptedCell: UITableViewCell {
     
     @IBOutlet weak var systemMessageLabel: UILabel!
     @IBOutlet weak var unacceptedPointsLabel: UILabel!
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
-
 }
+
+
+
 
 
 class MessageOfferCell: UITableViewCell {
@@ -94,13 +110,12 @@ class MessageOfferCell: UITableViewCell {
             if let nv = newValue {
                 
                 if nv == true {
-                    dilemmaView.startAcceptAnimation()
+                    dilemmaView.setLeftView()
                 } else {
-                    dilemmaView.startRejectAnimation()
+                    dilemmaView.setRightView()
                 }
             } else {
                 dilemmaView.reinitialize()
-                //dilemmaView.layoutIfNeeded()
             }
         }
     }
@@ -116,7 +131,7 @@ class MessageOfferCell: UITableViewCell {
         
         if let ip = indexPath {
             delegate?.offerCell(self, didPressButtonWithOfferStatus: OfferStatus.Accept, forIndexPath: ip, startAnimation: { () -> () in
-                self.accepted = true
+                self.dilemmaView.startLeftAnimation()
             })
         }
     }
@@ -125,7 +140,7 @@ class MessageOfferCell: UITableViewCell {
         
         if let ip = indexPath {
             delegate?.offerCell(self, didPressButtonWithOfferStatus: OfferStatus.Reject, forIndexPath: ip, startAnimation: { () -> () in
-                self.accepted = false
+                self.dilemmaView.startRightAnimation()
             })
         }
     }

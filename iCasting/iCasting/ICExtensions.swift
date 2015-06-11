@@ -57,7 +57,7 @@ extension String {
 
     enum ICDateFormat: String {
         case
-        Matches = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'+'ss':'ss",
+        General = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'+'ss':'ss",
         News = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'000'Z'" //2015-01-31T23:00:00.000Z
     }
     

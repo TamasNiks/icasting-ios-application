@@ -9,6 +9,8 @@
 
 import Foundation
 
+// TODO: JSON data is updated on the server, do something with it.
+
 class TalentMatchCard: MatchCard {
     
     func accept(callBack:RequestClosure) {

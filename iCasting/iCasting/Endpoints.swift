@@ -11,7 +11,6 @@ import Foundation
 internal struct Host {
     static let API : String = "api-demo.icasting.net"
     static let Media : String = "media-demo.icasting.net"
-    static let Socket: String = "ws-demo.icasting.net"
     static let APIVersion : String = "1"
 }
 

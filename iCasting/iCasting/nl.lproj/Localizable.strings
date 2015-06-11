@@ -57,6 +57,19 @@
 
 /* Negotiations */
 "NoNegotiations" = "Er zijn geen onderhandelingen.";
+"negotiations.offer.name.hasTravelExpenses" = "Reiskostenvergoeding";
+"negotiations.offer.name.times1000" = "Vergoeding";
+"negotiations.offer.name.type" = "Meerdere dagen";
+"negotiations.offer.name.dateStart" = "Startdatum";
+"negotiations.offer.name.timeStart" = "Starttijd";
+"negotiations.offer.name.timeEnd" = "Eindtijd";
+"negotiations.offer.name.hasBuyOff" = "Afkoop";
+"negotiations.offer.name.completeBuyOff" = "Volledige afkoop";
+"negotiations.offer.value.single" = "Nee";
+"negotiations.offer.value.true" = "Ja";
+"negotiations.offer.value.false" = "Nee";
+"negotiations.agreement" = "overeenkomst";
+
 
 /* Notifications */
 "notification.desc.achievement-complete" = "Je hebt \"%@\" voltooid en %@ XP verdient";

@@ -11,6 +11,13 @@ import UIKit
 
 // Bind the TextType of the cells with the CellIdentifiers
 
+var boolTestContext: Int = 0
+var newMessagesListContext: Int = 0
+
+struct Observable {
+    static var messageList: String = "messageList.list"
+}
+
 enum CellIdentifier: String {
     case
     MessageCell = "messageCell",
@@ -33,95 +40,95 @@ enum CellIdentifier: String {
 }
 
 
+
+
+
 class NegotiationDetailTableViewController: UITableViewController, UIScrollViewDelegate, UITextFieldDelegate, MessageOfferCellDelegate {
     
     
     var matchID: String?
     var conversation: Conversation?
-    var messages: [Message] = [Message]()
+    
+    var messages: [Message] {
+        return conversation?.messages ?? [Message]()
+    }
     
     var sizingCellProvider: SizingCellProvider?
     var cellReuser: NegotiationDetailCellConfigurationFactory?
     
-    
-    func initializeFooterView() {
-        
-//        let inputField: UITextField = UITextField(frame: CGRectMake(0, 0, 0, 50))
-//        inputField.backgroundColor = UIColor.redColor()
-//        
-//        self.tableView.tableFooterView = inputField
-//        self.tableView.tableFooterView?.hidden = true
-    }
-    
-    
-    override func scrollViewDidScroll(scrollView: UIScrollView) {
-//        var x: CGFloat = 0
-//        var y = (self.tableView?.contentOffset.y)! + 40
-//        self.tableView.tableFooterView?.transform = CGAffineTransformMakeTranslation(x, y)
-    }
-    
+
+
+    // MARK: - Viewcontroller Life cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        self.initializeFooterView()
-        self.sizingCellProvider = SizingCellProvider(tableView: tableView)
-        self.cellReuser = NegotiationDetailCellConfigurationFactory(tableView: tableView)
-    
+        self.prepareViewController()
     }
 
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        
-        if let ID = matchID {
-            conversation = Conversation(matchID: ID)
-        }
-        
-        // Get all the current messages available from the server
-        conversation?.get() { failure in
-            
-            self.messages = self.conversation!.messages
-            
-            println("ConversationTableViewController: request finnished")
-            self.tableView.reloadData()
-            
-            let index: Int = self.conversation!.messages.endIndex - 1
-            self.tableView.scrollToRowAtIndexPath(
-                NSIndexPath(forRow: index, inSection: 0),
-                atScrollPosition: UITableViewScrollPosition.Bottom,
-                animated: true)
-            //self.tableView.tableFooterView?.hidden = false
-        }
+        self.initializeModel()
     }
-    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
 
+    deinit {
+        removeObservers()
+    }
+    
+    
+    
+    // MARK: - startup functions
+    
+    private func prepareViewController() {
+        
+        self.sizingCellProvider = SizingCellProvider(tableView: tableView)
+        self.cellReuser = NegotiationDetailCellConfigurationFactory(tableView: tableView)
+    }
+    
+    private func initializeModel() {
+        
+        if let ID = matchID {
+            conversation = Conversation(matchID: ID)
+        }
+        
+        // Get all the current messages available from the server
+        
+        conversation?.get() { failure in
+            
+            //self.messages = self.conversation!.messages
+            
+            if self.messages.isEmpty == false {
+                
+                println("ConversationTableViewController: request finnished")
+                self.tableView.reloadData()
+                
+                self.scrollToBottom()
+                //self.tableView.tableFooterView?.hidden = false
+                self.addObservers()
+            }
+        }
+    }
+    
+
     
     // MARK: - Table view data source
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        
         return 1
     }
 
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let c = self.conversation?.messages.count {
-            return c
-        }
-        return 0
+        
+        return self.messages.count
     }
 
-    
-    func getModelForIndexPath(indexPath: NSIndexPath) -> Message {
-        
-        return messages[indexPath.row]
-    }
-    
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
@@ -147,10 +154,19 @@ class NegotiationDetailTableViewController: UITableViewController, UIScrollViewD
     }
     
     
+    
+    // MARK: - Data source helper methods
+    
+    func getModelForIndexPath(indexPath: NSIndexPath) -> Message {
+        
+        return messages[indexPath.row]
+    }
+    
+    
     func getAndConfigCell(indexPath: NSIndexPath) -> UITableViewCell? {
         
         let message: Message = getModelForIndexPath(indexPath)
-        
+
         if let identifier = CellIdentifier.fromTextType(message.type) {
             
             var cell = cellReuser!.reuseCell(identifier, indexPath: indexPath)
@@ -162,7 +178,7 @@ class NegotiationDetailTableViewController: UITableViewController, UIScrollViewD
             }
             
             if identifier == CellIdentifier.MessageCell {
-                
+
                 configurator?.configureCell(data: [.Model:message as Any])
             }
             
@@ -190,9 +206,27 @@ class NegotiationDetailTableViewController: UITableViewController, UIScrollViewD
     
     func getHeightForCell(indexPath: NSIndexPath) -> CGFloat {
         
-        let message: Message = messages[indexPath.row]
+        let message: Message = getModelForIndexPath(indexPath) //messages[indexPath.row]
         let identifier = CellIdentifier.fromTextType(message.type)
-        var height: CGFloat
+        var height: CGFloat = 60
+        
+        if identifier == CellIdentifier.MessageCell {
+            
+            height = sizingCellProvider!.heightForCustomCell(fromIdentifier: CellIdentifier.MessageCell, calculatorType:.AutoLayout) { (cell) -> () in
+                
+                MessageCellConfigurator(cell: cell).configureCellText(data: [.Model:message as Any])
+            }
+            
+        }
+        
+        if identifier == CellIdentifier.UnacceptedCell {
+            
+            height = sizingCellProvider!.heightForCustomCell(fromIdentifier: CellIdentifier.UnacceptedCell, calculatorType:.AutoLayout) { (cell) -> () in
+                
+                UnacceptedListMessageCellConfigurator(cell: cell).configureCellText(data: [.Model:message as Any])
+            }
+            
+        }
         
         if identifier == CellIdentifier.OfferMessageCell {
             
@@ -201,28 +235,13 @@ class NegotiationDetailTableViewController: UITableViewController, UIScrollViewD
                 OfferMessageCellConfigurator(cell: cell).configureCellText(data: [.Model:message as Any])
             }
         }
-        else if identifier == CellIdentifier.UnacceptedCell {
-            
-            height = sizingCellProvider!.heightForCustomCell(fromIdentifier: CellIdentifier.UnacceptedCell, calculatorType:.AutoLayout) { (cell) -> () in
-                
-                UnacceptedListMessageCellConfigurator(cell: cell).configureCellText(data: [.Model:message as Any])
-            }
-            
-            println("height for unaccepted: \(height) ")
-            //height = 150
-            
-            
-        }
-        else {
-            
-            height = 60
-        }
         
         return height
     }
     
     
-    // Offer cell delegate
+    
+    // MARK: - Offer cell delegate
     
     func offerCell(
         cell: MessageOfferCell,
@@ -230,18 +249,104 @@ class NegotiationDetailTableViewController: UITableViewController, UIScrollViewD
         forIndexPath indexPath: NSIndexPath,
         startAnimation: () -> ()) {
         
-        if offerStatus == OfferStatus.Accept {
-            
-            cell.accepted = true
-        }
-        
-        if offerStatus == OfferStatus.Reject {
-            
-            cell.accepted = false
-        }
-        
         // if everything is complete, do the animation:
-        //startAnimation()
+        startAnimation()
+    }
+    
+    
+    
+    // MARK: - Table view controller functions
+    
+    func insertAtBottom(forRole role: Role) {
+
+        var rowAnimation: UITableViewRowAnimation
+        
+        switch role {
+        case .Incomming:
+            rowAnimation = UITableViewRowAnimation.Left
+        case .Outgoing:
+            rowAnimation = UITableViewRowAnimation.Right
+        default:
+            rowAnimation = UITableViewRowAnimation.Automatic
+        }
+        
+        var ip = NSIndexPath(forRow: messages.endIndex - 1, inSection: 0)
+        self.tableView.insertRowsAtIndexPaths([ip], withRowAnimation: rowAnimation)
+    }
+    
+    
+    func scrollToBottom(animate: Bool = false) {
+
+        let index: Int = self.conversation!.messages.endIndex - 1
+        self.tableView.scrollToRowAtIndexPath(
+            NSIndexPath(forRow: index, inSection: 0),
+            atScrollPosition: UITableViewScrollPosition.Bottom,
+            animated: animate)
+        
     }
 
+    
+
+    // MARK: - Model observer
+    
+    func removeObservers() {
+        conversation?.removeObserver(self, forKeyPath: Observable.messageList, context: &newMessagesListContext)
+    }
+    
+    func addObservers() {
+        
+        println("addObservers")
+        
+        conversation?.addObserver(self,
+            forKeyPath: Observable.messageList,
+            options: nil,
+            context: &newMessagesListContext)
+    }
+    
+    override func observeValueForKeyPath(keyPath: String, ofObject object: AnyObject, change: [NSObject : AnyObject], context: UnsafeMutablePointer<Void>) {
+        
+        println("will observe")
+        
+        if context == &newMessagesListContext {
+            
+            println("******** will observe with context **********")
+            
+            // If the array is empty, it returns nil
+            if let lastMessage = self.conversation?.messages.last {
+                
+                let m: Message = lastMessage
+                self.insertAtBottom(forRole: m.role)
+                self.scrollToBottom(animate: true)
+                
+            }
+        }
+    }
+    
+    
+    
+    
+    // TEST
+    
+    @IBAction func onTestItemPressed(sender: AnyObject) {
+        
+        var messageFactory = MessageFactory()
+        var incommingMessage: Message = messageFactory.createIncommingMessage(body: "Incomming message", userID: "12131312", messageID: "4363663")
+        conversation?.messageList.list.append(incommingMessage)
+        
+        
+        var time: dispatch_time_t = dispatch_time(DISPATCH_TIME_NOW, Int64(1 * Double(NSEC_PER_SEC) ) )
+        
+        dispatch_after(time, dispatch_get_main_queue()) { () -> Void in
+            
+            var outgoingMessage: Message = messageFactory.createOutgoingMessage(body: "Outgoing message", userID: "12131312")
+            self.conversation?.messageList.list.append(outgoingMessage)
+            
+        }
+        
+        
+        println("TEST")
+        
+    }
+    
+    
 }

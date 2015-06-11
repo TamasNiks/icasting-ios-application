@@ -57,6 +57,24 @@
 
 /* Negotiations */
 "NoNegotiations" = "There are no negotiations.";
+"negotiations.offer.name.hasTravelExpenses" = "Travel expenses";
+"negotiations.offer.name.times1000" = "Budget";
+"negotiations.offer.name.type" = "Job period range";
+"negotiations.offer.name.dateStart" = "Start date";
+"negotiations.offer.name.timeStart" = "Start time";
+"negotiations.offer.name.timeEnd" = "End time";
+"negotiations.offer.name.hasBuyOff" = "Buy-off";
+"negotiations.offer.name.completeBuyOff" = "Complete buy-off";
+"negotiations.offer.value.single" = "No";
+"negotiations.offer.value.true" = "Yes";
+"negotiations.offer.value.false" = "No";
+"negotiations.agreement" = "agreement";
+
+"negotiations.offer.title.dateTime" = "Time";
+"negotiations.offer.title.buyOff" = "Buy-off";
+"negotiations.offer.title.budget" = "Fee";
+"negotiations.offer.title.travelExpenses" = "Travel";
+
 
 /* Notifications */
 "notification.desc.achievement-complete" = "You have completed \"%@\" and earned %@ XP.";

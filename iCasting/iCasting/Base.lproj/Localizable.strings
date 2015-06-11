@@ -55,8 +55,22 @@
 "CastingObjectsHeader" = "Use iCasting as:";
 "NoFamilyMembers" = "There are no family members for this family account. Please create a family member first.";
 
+
 /* Negotiations */
 "NoNegotiations" = "There are no negotiations.";
+"negotiations.offer.name.hasTravelExpenses" = "Travel expenses";
+"negotiations.offer.name.times1000" = "Budget";
+"negotiations.offer.name.type" = "Job period range";
+"negotiations.offer.name.dateStart" = "Start date";
+"negotiations.offer.name.timeStart" = "Start time";
+"negotiations.offer.name.timeEnd" = "End time";
+"negotiations.offer.name.hasBuyOff" = "Buy-off";
+"negotiations.offer.name.completeBuyOff" = "Complete buy-off";
+"negotiations.offer.value.single" = "No";
+"negotiations.offer.value.true" = "Yes";
+"negotiations.offer.value.false" = "No";
+"negotiations.agreement" = "agreement";
+
 
 /* Notifications */
 "notification.desc.achievement-complete" = "You have completed \"%@\" and earned %@ XP.";
