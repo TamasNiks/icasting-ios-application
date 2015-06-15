@@ -25,7 +25,6 @@ protocol CellConfigProtocol {
     func configureCell(#data: CellDataType)
 }
 
-
 // ABSTRACT
 
 class CellConfigurator : CellConfigProtocol {
@@ -40,6 +39,7 @@ class CellConfigurator : CellConfigProtocol {
     func configureCellText(#data: CellDataType) { /* Abstract ...  */ }
     
 }
+
 
 
 //protocol TestProtocol {

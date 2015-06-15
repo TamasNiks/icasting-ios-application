@@ -1,58 +1,112 @@
 //
-//  MessageFactory.swift
+//  MessageFactory2.swift
 //  iCasting
 //
-//  Created by Tim van Steenoven on 09/06/15.
+//  Created by Tim van Steenoven on 12/06/15.
 //  Copyright (c) 2015 T. van Steenoven. All rights reserved.
 //
 
 import Foundation
 
-// Hold all necessary json data in a simple structure from where it can passed to more specific objects
 
-struct MessageBuilder : Printable {
+
+
+protocol MessageFactoryProtocol {
     
-    let id: String
-    let owner: String
-    let role: Role
-    let type: TextType
+    typealias DataType
     
-    let body: String
-    let read: Bool
-    let contract: [MessageContract.NegotiationPoint]?   //The contract is optional, only the json list always gives contract values
-    let offer: MessageOffer.Offer?                      // The offer is optional, because there is not always an offer key
+    func createNormalMessage(data: DataType) -> Message
+    func createOfferMessage(data: DataType) -> Message
+    func createContractMessage(data: DataType) -> Message
     
-    var description: String {
-        return "id: \(id) body: \(body) role: \(role) read: \(read) type: \(type) owner: \(owner)"
-    }
 }
 
 
-// The MessageFactory class is responsible for creating messages from a message builder object. Now the creation of specific objects is seperated from client objects
+enum MessageFactoryType {
+    case Socket
+}
 
-class MessageFactory {
-    
-    
-    func createMessage(#messageBuilder: MessageBuilder) -> Message {
-        
-        let message: Message = Message(
-            id: messageBuilder.id,
-            owner: messageBuilder.owner,
-            role: messageBuilder.role,
-            type: messageBuilder.type
-        )
-        
-        message.body        = messageBuilder.body
-        message.read        = messageBuilder.read
-        message.contract    = messageBuilder.contract
-        message.offer       = messageBuilder.offer
+//class AbstractMessageFactory {
+//
+//    static func messageFactoryType(type: MessageFactoryType) -> MessageFactoryProtocol {
+//
+//        switch type {
+//        case .Socket:
+//            return SocketMessageFactory2()
+//        }
+//    }
+//}
 
-        return message
+
+
+class SocketMessageFactory2: MessageFactoryProtocol  {
+    
+    typealias DataType = NSArray
+    
+    func createNormalMessage(data: DataType) -> Message {
+     
+        let body        : String = data[0] as! String
+        let userID      : String = data[1] as! String
+        let messageID   : String = data[1] as! String
+        
+        let role: Role = Role.getRole(userID) // Incomming, outgoing or system
+        
+        var message: Message
+        if role == Role.Incomming {
+            message = MessageMethodFactory.createIncommingNormalMessage(body: body, userID: userID, messageID: messageID)
+        } else {
+            message = MessageMethodFactory.createOutgoingNormalMessage(body: body, userID: userID, messageID: messageID)
+        }
+
+        return Message(id: "", owner: "", role: Role.Incomming, type: TextType.Text)
     }
     
     
-    func createIncommingMessage(#body: String, userID: String, messageID: String) -> Message {
+    func createOfferMessage(data: DataType) -> Message {
+        
+        let userID    = data[3] as! String
+        let messageID = data[4] as! String
+        
+        let message: Message = Message(id: messageID, owner: userID, role: Role.Incomming, type: TextType.Offer)
+        let offer: Offer? = OfferSocketDataExtractor(offer: data).value
+        message.offer = offer
+        
+        return message
+    }
+    
+    func createContractMessage(data: DataType) -> Message {
+        
+        return Message(id: "", owner: "", role: Role.Incomming, type: TextType.Text)
+    }
+    
+}
 
+
+//class HTTPMessageFactory: MessageFactoryProtocol {
+//    
+//    typealias DataType = JSON
+//    
+//    static func createNormalMessage(data: DataType) -> Message {
+//        
+//    }
+//    
+//    static func createOfferMessage(data: DataType) -> Message {
+//        
+//    }
+//    
+//    static func createContractMessage(data: DataType) -> Message {
+//        
+//    }
+//    
+//}
+
+
+// The MessageFactory class makes creating Messags easier
+
+class MessageMethodFactory {
+    
+    static func createIncommingNormalMessage(#body: String, userID: String, messageID: String) -> Message {
+        
         let message: Message = Message(
             id: messageID,
             owner: userID,
@@ -69,10 +123,10 @@ class MessageFactory {
     }
     
     
-    func createOutgoingMessage(#body: String, userID: String) -> Message {
+    static func createOutgoingNormalMessage(#body: String, userID: String, messageID: String? = nil) -> Message {
         
         let message: Message = Message(
-            id:     "",
+            id:     messageID ?? String(),
             owner:  userID,
             role:   Role.Outgoing,
             type:   TextType.Text
@@ -87,9 +141,10 @@ class MessageFactory {
     }
     
     
-
+    
+    
 }
 
 
 
-    
+//

@@ -23,7 +23,7 @@ class SizingCellProvider {
     typealias CellDataProviderType = (cell: UITableViewCell)->()
     
     
-    func heightForCustomCell(fromIdentifier identifier: CellIdentifier, calculatorType: CellHeightCalculatorType, dataProvider: CellDataProviderType) -> CGFloat {
+    func heightForCustomCell(fromIdentifier identifier: CellIdentifier, calculatorType: CellHeightStrategyType, dataProvider: CellDataProviderType) -> CGFloat {
         
         
         // Intialize tokens for the dispatch_once function and grap the cell for one time only in the lifetime of the app
@@ -43,7 +43,7 @@ class SizingCellProvider {
 
         // Then grab a calculator based on the specified cell height calculator type. Typically this will be a standard cell or a custom cell with constraints. Either way, the cell needs to be prepared before using a calculator. To use the AutoLayout calculator, add constraints to the contentView of the cell.
        
-        var calc: CellHeightCalculator = CellHeightCalculatorFactory.getCalculator(type: calculatorType)
+        var calc: CellHeightStrategy = CellHeightStrategyFactory.getCalculator(type: calculatorType)
         
         let height = calc.calculateHeight(cell)
 
@@ -77,35 +77,35 @@ class SizingCellProvider {
 // 3. Add it to the CellHeightCalculatorFactory, you will get an compiler error message as a reminder
 
 
-enum CellHeightCalculatorType {
+enum CellHeightStrategyType {
     
     case Default, AutoLayout
 }
 
 
-class CellHeightCalculatorFactory {
+class CellHeightStrategyFactory {
     
-    static func getCalculator(#type: CellHeightCalculatorType) -> CellHeightCalculator {
+    static func getCalculator(#type: CellHeightStrategyType) -> CellHeightStrategy {
         
         switch type {
             
         case .AutoLayout:
-            return AutoLayoutCellHeightCalculator()
+            return AutoLayoutCellHeightStrategy()
         case .Default:
-            return DefaultCellHeightCalculator()
+            return DefaultCellHeightStrategy()
             
         }
     }
     
 }
 
-protocol CellHeightCalculator {
+protocol CellHeightStrategy {
     
     func calculateHeight(cell: UITableViewCell) -> CGFloat
 }
 
 
-class AutoLayoutCellHeightCalculator: CellHeightCalculator {
+class AutoLayoutCellHeightStrategy: CellHeightStrategy {
     
     func calculateHeight(cell: UITableViewCell) -> CGFloat {
         
@@ -116,7 +116,7 @@ class AutoLayoutCellHeightCalculator: CellHeightCalculator {
 }
 
 
-class DefaultCellHeightCalculator: CellHeightCalculator {
+class DefaultCellHeightStrategy: CellHeightStrategy {
     
     func calculateHeight(cell: UITableViewCell) -> CGFloat {
         

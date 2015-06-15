@@ -29,10 +29,21 @@ struct MessageCellIdentifier {
 }
 
 
+
+// TEST
+
+protocol CellVisitorAcceptProtocol {
+
+    func accept(configurator: MessageCellCongifuratorVisitors)
+    
+}
+
+
+
 //**********************************************************
 
 
-class MessageCell: UITableViewCell {
+class MessageCell: UITableViewCell, CellVisitorAcceptProtocol {
 
     @IBOutlet weak var leftMessageLabel: UILabel!
     @IBOutlet weak var rightMessageLabel: UILabel!
@@ -62,7 +73,10 @@ class MessageCell: UITableViewCell {
         self.leftMessageView.hidden = false
         self.rightMessageView.hidden = true
     }
-    
+ 
+    func accept(configurator: MessageCellCongifuratorVisitors) {
+        configurator.visit(self)
+    }
     
 }
 
@@ -70,26 +84,34 @@ class MessageCell: UITableViewCell {
 
 
 
-class MessageSystemCell: UITableViewCell {
+class MessageSystemCell: UITableViewCell, CellVisitorAcceptProtocol {
     
     @IBOutlet weak var systemMessageLabel: UILabel!
+    
+    func accept(configurator: MessageCellCongifuratorVisitors) {
+        configurator.visit(self)
+    }
 }
 
 
 
 
 
-class MessageUnacceptedCell: UITableViewCell {
+class MessageUnacceptedCell: UITableViewCell, CellVisitorAcceptProtocol {
     
     @IBOutlet weak var systemMessageLabel: UILabel!
     @IBOutlet weak var unacceptedPointsLabel: UILabel!
+    
+    func accept(configurator: MessageCellCongifuratorVisitors) {
+        configurator.visit(self)
+    }
 }
 
 
 
 
 
-class MessageOfferCell: UITableViewCell {
+class MessageOfferCell: UITableViewCell, CellVisitorAcceptProtocol {
     
     @IBOutlet weak var messageTitle: UILabel!
     @IBOutlet weak var title: UILabel!
@@ -143,5 +165,9 @@ class MessageOfferCell: UITableViewCell {
                 self.dilemmaView.startRightAnimation()
             })
         }
+    }
+    
+    func accept(configurator: MessageCellCongifuratorVisitors) {
+        configurator.visit(self)
     }
 }

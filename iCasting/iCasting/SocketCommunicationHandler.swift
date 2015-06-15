@@ -25,9 +25,12 @@ struct SocketHandlers {
     
     typealias SocketHandlerType = (data: NSArray?)->()
     
-    var recievedMessage     : SocketHandlerType = { data in }
     var authenticated       : SocketHandlerType = { data in }
     var connected           : SocketHandlerType = { data in }
+    var receivedMessage     : SocketHandlerType = { data in }
+    var receivedOffer       : SocketHandlerType = { data in }
+    var offerAccepted       : SocketHandlerType = { data in }
+    var offerRejected       : SocketHandlerType = { data in }
     var userjoined          : SocketHandlerType = { data in }
     var userleft            : SocketHandlerType = { data in }
 }
@@ -40,11 +43,12 @@ enum Emit: String {
     case OfferReject    = "reject offer"
 }
 
+
 protocol SocketCommunicationHandlerDelegate {
     
     func handlersForSocketListeners() -> SocketHandlers
-    
 }
+
 
 
 
@@ -69,11 +73,6 @@ class SocketCommunicationHandler {
     }
     
     
-    func removeListeners() {
-        
-        self.socket.off("connect")
-        
-    }
     
     func addListeners() {
         
@@ -97,11 +96,18 @@ class SocketCommunicationHandler {
         
         self.socket.on("message") { data, ack in
 
-            handlers.recievedMessage(data: data)
+            handlers.receivedMessage(data: data)
+        }
+
+        self.socket.on("offer") { data, ack in
+            
+            handlers.receivedOffer(data: data)
         }
         
         
         self.socket.on("user join") { data, ack in
+            
+            handlers.userjoined(data: data)
             
             if let user_id = data?[0] as? String {
                 println(user_id)
@@ -113,43 +119,45 @@ class SocketCommunicationHandler {
         
         self.socket.on("user left") { data, ack in
             
-
+            handlers.userleft(data: data)
         }
         
         
         self.socket.on("accept offer") { data, ack in
             
-
+            handlers.offerAccepted(data: data)
         }
         
         self.socket.on("reject offer") { data, ack in
             
-
+            handlers.offerRejected(data: data)
         }
 
-        println("Will initialize socket")
+        //socket.onAny {println("Got event: \($0.event), with items: \($0)")}
         
-        socket.on("connect") {data, ack in
-            println("socket connected")
-            
-        }
-        
-        socket.onAny {println("Got event: \($0.event), with items: \($0)")}
+    }
+    
+    
+    func removeListeners() {
+        self.socket.off("connect")
         
     }
     
     
     func start() {
-        
         self.socket.connect()
     }
     
+    
+    func stop() {
+        self.socket.close(fast: true)
+    }
 
-    func sendMessage(message: String, acknowledged: () -> ()) {
+    func sendMessage(message: String, acknowledged: (data: NSArray?) -> ()) {
         
         self.socket.emitWithAck(Emit.Message.rawValue, message)(timeout: 0, callback: { (data) -> Void in
             
-            
+            acknowledged(data: data)
             
         })
         
@@ -176,9 +184,5 @@ class SocketCommunicationHandler {
             println(data)
             
         }
-        
     }
-    
-    
-    
 }

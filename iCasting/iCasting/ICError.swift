@@ -19,7 +19,7 @@ protocol ICErrorInfo : Printable {
 }
 
 enum ICErrorType : Int {
-    case NetworkErrorInfo, APIErrorInfo
+    case NetworkErrorInfo, APIErrorInfo, SocketErrorInfo
 }
 
 
@@ -30,6 +30,39 @@ private struct ICAPIErrorText {
     static let GenericError: String = "Error"
     static let NoErrorDescription: String = "NoErrorDescription"
 }
+
+
+struct ICSocketErrorInfo: ICErrorInfo {
+    
+    let errors: [String]
+    let name: String
+    
+    
+    var description: String {
+        return "errors: \(errors)"
+    }
+    
+    var type: ICErrorType {
+        return ICErrorType.SocketErrorInfo
+    }
+    
+    
+    var localizedFailureReason: String {
+        for value in ICAPIErrorText.Names {
+            if value == name {
+                return NSLocalizedString(value, comment: "The different API errors will be translated properly")
+            }
+        }
+        return NSLocalizedString(errors[0], comment: "If an API error key does not exist, the original text will show up to give the user some information")
+        //        if name == ICAPIErrorText.GenericError {
+        //            return NSLocalizedString(errors[0], comment: "The different API errors will be translated properly")
+        //        }
+        
+        //        return NSLocalizedString(ICAPIErrorText.NoErrorDescription, comment: "If an API error does not exist, this text will show up")
+    }
+    
+}
+
 
 struct ICNetworkErrorInfo : ICErrorInfo {
     

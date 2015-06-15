@@ -29,12 +29,16 @@ struct ConversationToken : Printable {
 }
 
 
+
 class Conversation: NSObject {
     
     let matchID: String
     let messageList: MessageListExtractor = MessageListExtractor()
-    let messageFactory: MessageFactory = MessageFactory()
     var socketCommunicationHandler: SocketCommunicationHandler?
+
+    
+    dynamic var incommingUser: Bool = false // Indicates whether the chat partner of the client is available
+    dynamic var authenticated: Bool = false // Indicates whether the client user has been authenticated by the socket server
     
     var messages: [Message] {
         return messageList.list
@@ -52,10 +56,9 @@ class Conversation: NSObject {
 
 
 // The extension adds responsibilities for communicating with a socket library, the list below specifies what the extension does:
-// it creates the socket with the conversation token
-// It creates handlers for the socket to receive feedback if specific things are happening
-// It handles the feedback
-// It creates messages
+// it creates the socket with the conversation token and sets the delegate
+// It creates handlers for the socket to receive feedback if specific things are happening, it is similar to the command pattern
+// It handles actions according to feedback
 
 extension Conversation : SocketCommunicationHandlerDelegate {
     
@@ -66,54 +69,86 @@ extension Conversation : SocketCommunicationHandlerDelegate {
         self.socketCommunicationHandler?.delegate = self
     }
     
-    
+
     // MARK: Socket communication handler delegate
     
     func handlersForSocketListeners() -> SocketHandlers {
         
-        var handlers: SocketHandlers = SocketHandlers()
         
-        handlers.connected = { data in
-            
-            println("--- Conversation: CONNECTED")
-            
-        }
+        
+        var handlers: SocketHandlers = SocketHandlers()
         
         handlers.authenticated = { data in
             
             println("--- Conversation: AUTHENTICATED")
+            
+            // This should be the moment that the user can start typing and receiving messages
+            self.authenticated = true
         }
         
-        handlers.recievedMessage = { data in
-            
-            println("--- Conversation: RECIEVED MESSAGE")
+        handlers.userjoined = { data in
             
             if let d = data {
-                
-                let body: String = d[0] as! String
-                let userID: String = d[1] as! String
-                let messageID: String = d[1] as! String
-                
-                // TODO: Check first if the owner is client
-                var message: Message = self.messageFactory.createIncommingMessage(body: body, userID: userID, messageID: messageID)
-                self.messageList.addMessage(message)
+                self.decideUserPresent(d, present: true)
             }
         }
-        // user join
-        // user left
+        
+        handlers.userleft = { data in
+            
+            if let d = data {
+                self.decideUserPresent(d, present: false)
+            }
+        }
+        
+        handlers.receivedMessage = { data in
+            
+            println("--- Conversation: RECIEVED MESSAGE")
+            if let d = data {
+                self.messageList.addNormalMessage(fromArray: d)
+            }
+        }
+        
+        handlers.receivedOffer = { data in
+         
+            println("--- Conversation: RECIEVED OFFER")
+            if let d = data {
+            
+                self.messageList.addOffer(fromArray: d)
+                
+            }
+            
+        }
+
         return handlers
     }
     
     
+    private func decideUserPresent(data: NSArray, present: Bool) {
+        let userID = data[0] as! String
+        let role = Role.getRole(userID)
+        if role == Role.Incomming {
+            self.incommingUser = present
+        }
+    }
+    
+}
+
+
+
+
+
+extension Conversation {
+    
     func sendMessage(message: String, callBack: SocketMessageCommunicationCallBack) {
         
-        self.socketCommunicationHandler?.sendMessage(message, acknowledged: { () -> () in
+        self.socketCommunicationHandler?.sendMessage(message, acknowledged: { (data) -> () in
+            
 
             //return //String error	String message_id
             
         })
-        
     }
+    
     
     func acceptOffer(message: Message, callBack: SocketMessageCommunicationCallBack) {
         
@@ -131,8 +166,13 @@ extension Conversation : SocketCommunicationHandlerDelegate {
             //return String error, String accepted, Object by who (wel of niet)
             
         })
+    }
+    
+    func leaveRoom() {
+        
         
     }
+    
     
 }
 

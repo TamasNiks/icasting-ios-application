@@ -11,13 +11,6 @@ import UIKit
 
 // Bind the TextType of the cells with the CellIdentifiers
 
-var boolTestContext: Int = 0
-var newMessagesListContext: Int = 0
-
-struct Observable {
-    static var messageList: String = "messageList.list"
-}
-
 enum CellIdentifier: String {
     case
     MessageCell = "messageCell",
@@ -56,8 +49,18 @@ class NegotiationDetailTableViewController: UITableViewController, UIScrollViewD
     var sizingCellProvider: SizingCellProvider?
     var cellReuser: NegotiationDetailCellConfigurationFactory?
     
+    var newMessagesListContext: Int = 0
+    var userJoinedOrLeft: Int = 0
+    var userAuthenticate: Int = 0
+    
+    struct ObservableConversation {
+        static var messageList: String = "messageList.list"
+        static var incommingUser: String = "incommingUser"
+        static var authenticated: String = "authenticated"
+    }
 
 
+    
     // MARK: - Viewcontroller Life cycle
     
     override func viewDidLoad() {
@@ -134,6 +137,7 @@ class NegotiationDetailTableViewController: UITableViewController, UIScrollViewD
         
 
         if let cell = getAndConfigCell(indexPath) {
+        //if let cell = getAndConfigCellWithVisitor(indexPath) {
             
             return cell
             
@@ -160,6 +164,51 @@ class NegotiationDetailTableViewController: UITableViewController, UIScrollViewD
     func getModelForIndexPath(indexPath: NSIndexPath) -> Message {
         
         return messages[indexPath.row]
+    }
+    
+    
+    
+    func getAndConfigCellWithVisitor(indexPath: NSIndexPath) -> UITableViewCell? {
+     
+        let message: Message = getModelForIndexPath(indexPath)
+        
+        if let identifier = CellIdentifier.fromTextType(message.type) {
+            
+            var cell = cellReuser!.reuseCell(identifier, indexPath: indexPath)
+            
+            if identifier == CellIdentifier.GeneralSystemMessageCell {
+               
+                var visitor = ConcreteMessageCellCongifuratorVisitors(data: [.Description:message.body])
+                (cell as! MessageSystemCell).accept(visitor)
+            }
+            
+            if identifier == CellIdentifier.MessageCell {
+                
+                var visitor = ConcreteMessageCellCongifuratorVisitors(data: [.Model:message as Any])
+                (cell as! MessageCell).accept(visitor)
+            }
+            
+            if identifier == CellIdentifier.UnacceptedCell {
+                
+                var visitor = ConcreteMessageCellCongifuratorVisitors(data: [.Model:message as Any])
+                (cell as! MessageUnacceptedCell).accept(visitor)
+                
+            }
+            
+            if identifier == CellIdentifier.OfferMessageCell {
+                
+                var data = [
+                    CellKey.Model       :   message as Any,
+                    CellKey.IndexPath   :   indexPath,
+                    CellKey.Delegate    :   self]
+                
+                var visitor = ConcreteMessageCellCongifuratorVisitors(data: data)
+                (cell as! MessageOfferCell).accept(visitor)
+            }
+            
+            return cell
+        }
+        return nil
     }
     
     
@@ -290,17 +339,18 @@ class NegotiationDetailTableViewController: UITableViewController, UIScrollViewD
     // MARK: - Model observer
     
     func removeObservers() {
-        conversation?.removeObserver(self, forKeyPath: Observable.messageList, context: &newMessagesListContext)
+        conversation?.removeObserver(self, forKeyPath: ObservableConversation.messageList, context: &newMessagesListContext)
+        conversation?.removeObserver(self, forKeyPath: ObservableConversation.incommingUser, context: &userJoinedOrLeft)
+        conversation?.removeObserver(self, forKeyPath: ObservableConversation.authenticated, context: &userAuthenticate)
     }
     
     func addObservers() {
         
         println("addObservers")
         
-        conversation?.addObserver(self,
-            forKeyPath: Observable.messageList,
-            options: nil,
-            context: &newMessagesListContext)
+        conversation?.addObserver(self, forKeyPath: ObservableConversation.messageList, options: nil, context: &newMessagesListContext)
+        conversation?.addObserver(self, forKeyPath: ObservableConversation.incommingUser, options: NSKeyValueObservingOptions.New, context: &userJoinedOrLeft)
+        conversation?.addObserver(self, forKeyPath: ObservableConversation.authenticated, options: NSKeyValueObservingOptions.New, context: &userAuthenticate)
     }
     
     override func observeValueForKeyPath(keyPath: String, ofObject object: AnyObject, change: [NSObject : AnyObject], context: UnsafeMutablePointer<Void>) {
@@ -320,6 +370,39 @@ class NegotiationDetailTableViewController: UITableViewController, UIScrollViewD
                 
             }
         }
+        
+        if context == &userJoinedOrLeft {
+            
+            var ac = UIAlertController(title: "User left or joined", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
+            ac.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default, handler: { (alertAction) -> Void in
+                ac.removeFromParentViewController()
+            }))
+            
+            if (change[NSKeyValueChangeNewKey] as! Bool) == true {
+                
+                ac.message = "USER JOINED"
+                println("******** USER JOINED **********")
+            } else {
+                ac.message = "USER LEFT"
+                println("******** USER LEFT **********")
+            }
+            
+            self.presentViewController(ac, animated: true, completion: nil)
+            
+        }
+        
+        if context == &userAuthenticate {
+            
+            
+            var ac = UIAlertController(title: "Authentication", message: "User is authenticated", preferredStyle: UIAlertControllerStyle.Alert)
+            ac.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default, handler: { (alertAction) -> Void in
+                ac.removeFromParentViewController()
+            }))
+            
+            self.presentViewController(ac, animated: true, completion: nil)
+            
+        }
+        
     }
     
     
@@ -329,8 +412,8 @@ class NegotiationDetailTableViewController: UITableViewController, UIScrollViewD
     
     @IBAction func onTestItemPressed(sender: AnyObject) {
         
-        var messageFactory = MessageFactory()
-        var incommingMessage: Message = messageFactory.createIncommingMessage(body: "Incomming message", userID: "12131312", messageID: "4363663")
+        let incommingMessage: Message = Message(id: "123445", owner: "54321", role: Role.Incomming, type: TextType.Text)
+        incommingMessage.body = "This is an incomming message"
         conversation?.messageList.list.append(incommingMessage)
         
         
@@ -338,7 +421,8 @@ class NegotiationDetailTableViewController: UITableViewController, UIScrollViewD
         
         dispatch_after(time, dispatch_get_main_queue()) { () -> Void in
             
-            var outgoingMessage: Message = messageFactory.createOutgoingMessage(body: "Outgoing message", userID: "12131312")
+            let outgoingMessage: Message = Message(id: "8327932874", owner: "23423897", role: Role.Outgoing, type: TextType.Text)
+            outgoingMessage.body = "This is an outgoing message"
             self.conversation?.messageList.list.append(outgoingMessage)
             
         }
