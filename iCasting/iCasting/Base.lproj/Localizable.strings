@@ -55,22 +55,42 @@
 "CastingObjectsHeader" = "Use iCasting as:";
 "NoFamilyMembers" = "There are no family members for this family account. Please create a family member first.";
 
-
 /* Negotiations */
 "NoNegotiations" = "There are no negotiations.";
+"negotiations.agreement" = "agreement";
+
 "negotiations.offer.name.hasTravelExpenses" = "Travel expenses";
 "negotiations.offer.name.times1000" = "Budget";
-"negotiations.offer.name.type" = "Job period range";
+"negotiations.offer.name.type" = "Multiple days";
 "negotiations.offer.name.dateStart" = "Start date";
+"negotiations.offer.name.dateEnd" = "End date";
 "negotiations.offer.name.timeStart" = "Start time";
 "negotiations.offer.name.timeEnd" = "End time";
 "negotiations.offer.name.hasBuyOff" = "Buy-off";
 "negotiations.offer.name.completeBuyOff" = "Complete buy-off";
+"negotiations.offer.name.medium" = "Buy-off medium";
+"negotiations.offer.name.period" = "Buy-off period";
+"negotiations.offer.name.address" = "Address";
+
+"negotiations.offer.name.streetNumber" = "Street number";
+"negotiations.offer.name.street" = "Street";
+"negotiations.offer.name.zipCode" = "Zipcode";
+"negotiations.offer.name.city" = "City";
+"negotiations.offer.name.country" = "Country";
+
 "negotiations.offer.value.single" = "No";
 "negotiations.offer.value.true" = "Yes";
 "negotiations.offer.value.false" = "No";
-"negotiations.agreement" = "agreement";
+"negotiations.offer.value.months" = "months";
+"negotiations.offer.value.multiple" = "Yes";
 
+"negotiations.offer.title.dateTime" = "Time";
+"negotiations.offer.title.buyOff" = "Buy-off";
+"negotiations.offer.title.budget" = "Fee";
+"negotiations.offer.title.travelExpenses" = "Travel";
+"negotiations.offer.title.location" = "Location";
+"negotiations.offer.title.paymentMethod" = "Payment method";
+"negotiations.offer.title.auditionType" = "Audition type";
 
 /* Notifications */
 "notification.desc.achievement-complete" = "You have completed \"%@\" and earned %@ XP.";
@@ -104,7 +124,7 @@
 /* iCasting System text */
 
 "icasting.chat.system.text.welcome" = "Welcome to the conversation";
-"icasting.chat.system.contract.fields.unaccepted" = "Negotiation points";
+"icasting.chat.system.contract.fields.unaccepted" = "There are a few points that have to be negotiated. As soon as these have been negotiated and accepted, the client can send a mutual agreement to confirm the job.";
 
 /* API Errors */
 

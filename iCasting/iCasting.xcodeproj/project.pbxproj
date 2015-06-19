@@ -21,8 +21,8 @@
 		22082C8F1AF9F89500AF5EDB /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22082C8D1AF9F89500AF5EDB /* Conversation.swift */; };
 		22082C911AFA243000AF5EDB /* MessageCells.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22082C901AFA243000AF5EDB /* MessageCells.swift */; };
 		22082C921AFA243000AF5EDB /* MessageCells.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22082C901AFA243000AF5EDB /* MessageCells.swift */; };
-		22082C951AFA2C2A00AF5EDB /* NegotiationDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22082C931AFA2C2A00AF5EDB /* NegotiationDetailTableViewController.swift */; };
-		22082C961AFA2C2A00AF5EDB /* NegotiationDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22082C931AFA2C2A00AF5EDB /* NegotiationDetailTableViewController.swift */; };
+		22082C951AFA2C2A00AF5EDB /* NegotiationDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22082C931AFA2C2A00AF5EDB /* NegotiationDetailViewController.swift */; };
+		22082C961AFA2C2A00AF5EDB /* NegotiationDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22082C931AFA2C2A00AF5EDB /* NegotiationDetailViewController.swift */; };
 		22082CD51AFB927A00AF5EDB /* SocketAckManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22082CC81AFB927A00AF5EDB /* SocketAckManager.swift */; };
 		22082CD61AFB927A00AF5EDB /* SocketAckManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22082CC81AFB927A00AF5EDB /* SocketAckManager.swift */; };
 		22082CD71AFB927A00AF5EDB /* SocketAnyEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22082CC91AFB927A00AF5EDB /* SocketAnyEvent.swift */; };
@@ -166,6 +166,14 @@
 		228E35171ADC4655006D0BEA /* RequestFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220587F41AD565590010DA92 /* RequestFactory.swift */; };
 		228EAA821B2EF677009C4EAE /* MessageCellCongifuratorVisitors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 228EAA811B2EF677009C4EAE /* MessageCellCongifuratorVisitors.swift */; };
 		228EAA831B2EF677009C4EAE /* MessageCellCongifuratorVisitors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 228EAA811B2EF677009C4EAE /* MessageCellCongifuratorVisitors.swift */; };
+		229A3C8D1B301BE600D175F4 /* TextInputViewControllerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229A3C8C1B301BE600D175F4 /* TextInputViewControllerTest.swift */; };
+		229A3C8E1B301BE600D175F4 /* TextInputViewControllerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229A3C8C1B301BE600D175F4 /* TextInputViewControllerTest.swift */; };
+		229A3C901B30270300D175F4 /* ChatTextInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229A3C8F1B30270300D175F4 /* ChatTextInputViewController.swift */; };
+		229A3C911B30270300D175F4 /* ChatTextInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229A3C8F1B30270300D175F4 /* ChatTextInputViewController.swift */; };
+		229A3C931B316C3C00D175F4 /* KeyboardController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229A3C921B316C3C00D175F4 /* KeyboardController.swift */; };
+		229A3C941B316C3C00D175F4 /* KeyboardController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229A3C921B316C3C00D175F4 /* KeyboardController.swift */; };
+		229A3C961B32C2FA00D175F4 /* MessageVisitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229A3C951B32C2FA00D175F4 /* MessageVisitor.swift */; };
+		229A3C971B32C2FA00D175F4 /* MessageVisitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229A3C951B32C2FA00D175F4 /* MessageVisitor.swift */; };
 		22A464C21AE93955000100C9 /* ICProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A464C11AE93955000100C9 /* ICProtocols.swift */; };
 		22AD0DAD1AD6C3DE00F0496A /* JSONParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22AD0DAC1AD6C3DE00F0496A /* JSONParser.swift */; };
 		22AD0DAF1AD6CDB900F0496A /* NewsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22AD0DAE1AD6CDB900F0496A /* NewsTableViewController.swift */; };
@@ -175,6 +183,30 @@
 		22BFA6CA1AE6FCAD007E76C7 /* ICExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BFA6C91AE6FCAD007E76C7 /* ICExtensions.swift */; };
 		22C224D11ADD175C00202BF9 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 226C27C21AD5310F00A6A2EE /* User.swift */; };
 		22C224D21ADD18D300202BF9 /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220587F61AD568660010DA92 /* SessionManager.swift */; };
+		22C598CA1B2F12500008CFCD /* JSQMessagesAssets.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 22C598C21B2F12500008CFCD /* JSQMessagesAssets.bundle */; };
+		22C598CB1B2F12500008CFCD /* JSQMessagesAssets.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 22C598C21B2F12500008CFCD /* JSQMessagesAssets.bundle */; };
+		22C598CC1B2F12500008CFCD /* JSQMessagesInputToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 22C598C41B2F12500008CFCD /* JSQMessagesInputToolbar.m */; };
+		22C598CD1B2F12500008CFCD /* JSQMessagesInputToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 22C598C41B2F12500008CFCD /* JSQMessagesInputToolbar.m */; };
+		22C598CE1B2F12500008CFCD /* JSQMessagesToolbarContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 22C598C61B2F12500008CFCD /* JSQMessagesToolbarContentView.m */; };
+		22C598CF1B2F12500008CFCD /* JSQMessagesToolbarContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 22C598C61B2F12500008CFCD /* JSQMessagesToolbarContentView.m */; };
+		22C598D01B2F12500008CFCD /* JSQMessagesComposerTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 22C598C81B2F12500008CFCD /* JSQMessagesComposerTextView.m */; };
+		22C598D11B2F12500008CFCD /* JSQMessagesComposerTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 22C598C81B2F12500008CFCD /* JSQMessagesComposerTextView.m */; };
+		22C598D21B2F12500008CFCD /* JSQMessagesToolbarContentView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 22C598C91B2F12500008CFCD /* JSQMessagesToolbarContentView.xib */; };
+		22C598D31B2F12500008CFCD /* JSQMessagesToolbarContentView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 22C598C91B2F12500008CFCD /* JSQMessagesToolbarContentView.xib */; };
+		22C598DE1B2F169E0008CFCD /* UIView+JSQMessages.m in Sources */ = {isa = PBXBuildFile; fileRef = 22C598D51B2F169E0008CFCD /* UIView+JSQMessages.m */; };
+		22C598DF1B2F169E0008CFCD /* UIView+JSQMessages.m in Sources */ = {isa = PBXBuildFile; fileRef = 22C598D51B2F169E0008CFCD /* UIView+JSQMessages.m */; };
+		22C598E01B2F169E0008CFCD /* NSString+JSQMessages.m in Sources */ = {isa = PBXBuildFile; fileRef = 22C598D71B2F169E0008CFCD /* NSString+JSQMessages.m */; };
+		22C598E11B2F169E0008CFCD /* NSString+JSQMessages.m in Sources */ = {isa = PBXBuildFile; fileRef = 22C598D71B2F169E0008CFCD /* NSString+JSQMessages.m */; };
+		22C598E21B2F169E0008CFCD /* UIColor+JSQMessages.m in Sources */ = {isa = PBXBuildFile; fileRef = 22C598D91B2F169E0008CFCD /* UIColor+JSQMessages.m */; };
+		22C598E31B2F169E0008CFCD /* UIColor+JSQMessages.m in Sources */ = {isa = PBXBuildFile; fileRef = 22C598D91B2F169E0008CFCD /* UIColor+JSQMessages.m */; };
+		22C598E41B2F169E0008CFCD /* UIImage+JSQMessages.m in Sources */ = {isa = PBXBuildFile; fileRef = 22C598DB1B2F169E0008CFCD /* UIImage+JSQMessages.m */; };
+		22C598E51B2F169E0008CFCD /* UIImage+JSQMessages.m in Sources */ = {isa = PBXBuildFile; fileRef = 22C598DB1B2F169E0008CFCD /* UIImage+JSQMessages.m */; };
+		22C598E61B2F169E0008CFCD /* NSBundle+JSQMessages.m in Sources */ = {isa = PBXBuildFile; fileRef = 22C598DD1B2F169E0008CFCD /* NSBundle+JSQMessages.m */; };
+		22C598E71B2F169E0008CFCD /* NSBundle+JSQMessages.m in Sources */ = {isa = PBXBuildFile; fileRef = 22C598DD1B2F169E0008CFCD /* NSBundle+JSQMessages.m */; };
+		22C598EA1B2F16B60008CFCD /* JSQMessagesToolbarButtonFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 22C598E91B2F16B60008CFCD /* JSQMessagesToolbarButtonFactory.m */; };
+		22C598EB1B2F16B60008CFCD /* JSQMessagesToolbarButtonFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 22C598E91B2F16B60008CFCD /* JSQMessagesToolbarButtonFactory.m */; };
+		22C598ED1B2F366C0008CFCD /* AuthExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C598EC1B2F366C0008CFCD /* AuthExtension.swift */; };
+		22C598EE1B2F366C0008CFCD /* AuthExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C598EC1B2F366C0008CFCD /* AuthExtension.swift */; };
 		22C908651AD55FE50067A378 /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C908641AD55FE50067A378 /* URL.swift */; };
 		22E39EAB1AEFD3A500F01BA0 /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222014E61AEFA394004500FA /* JSON.swift */; };
 		22E39EAC1AEFD3BB00F01BA0 /* News.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2273B75F1AD6AAC000CC3EFB /* News.swift */; };
@@ -207,7 +239,7 @@
 		22082C871AF7C24A00AF5EDB /* NegotiationsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NegotiationsTableViewController.swift; sourceTree = "<group>"; };
 		22082C8D1AF9F89500AF5EDB /* Conversation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
 		22082C901AFA243000AF5EDB /* MessageCells.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageCells.swift; sourceTree = "<group>"; };
-		22082C931AFA2C2A00AF5EDB /* NegotiationDetailTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NegotiationDetailTableViewController.swift; sourceTree = "<group>"; };
+		22082C931AFA2C2A00AF5EDB /* NegotiationDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NegotiationDetailViewController.swift; sourceTree = "<group>"; };
 		22082CC81AFB927A00AF5EDB /* SocketAckManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketAckManager.swift; sourceTree = "<group>"; };
 		22082CC91AFB927A00AF5EDB /* SocketAnyEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketAnyEvent.swift; sourceTree = "<group>"; };
 		22082CCA1AFB927A00AF5EDB /* SocketEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SocketEngine.swift; sourceTree = "<group>"; };
@@ -313,6 +345,10 @@
 		2289C0011B0393BE00A7307C /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		2289C0041B03968600A7307C /* FamilyTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FamilyTableViewController.swift; sourceTree = "<group>"; };
 		228EAA811B2EF677009C4EAE /* MessageCellCongifuratorVisitors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageCellCongifuratorVisitors.swift; sourceTree = "<group>"; };
+		229A3C8C1B301BE600D175F4 /* TextInputViewControllerTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextInputViewControllerTest.swift; sourceTree = "<group>"; };
+		229A3C8F1B30270300D175F4 /* ChatTextInputViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatTextInputViewController.swift; sourceTree = "<group>"; };
+		229A3C921B316C3C00D175F4 /* KeyboardController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyboardController.swift; sourceTree = "<group>"; };
+		229A3C951B32C2FA00D175F4 /* MessageVisitor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageVisitor.swift; sourceTree = "<group>"; };
 		22A464BD1AE92D7F000100C9 /* DictionaryPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = DictionaryPlayground.playground; sourceTree = "<group>"; };
 		22A464C11AE93955000100C9 /* ICProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ICProtocols.swift; sourceTree = "<group>"; };
 		22AD0DAB1AD6C0E100F0496A /* JSONPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = JSONPlayground.playground; sourceTree = "<group>"; };
@@ -322,6 +358,29 @@
 		22B06AF71B1C53FC002A7805 /* DilemmaView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DilemmaView.xib; sourceTree = "<group>"; };
 		22BB6D2C1ADEB43500C5C6C1 /* ValidatorPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = ValidatorPlayground.playground; sourceTree = "<group>"; };
 		22BFA6C91AE6FCAD007E76C7 /* ICExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ICExtensions.swift; sourceTree = "<group>"; };
+		22C598C01B2F124F0008CFCD /* iCasting-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "iCasting-Bridging-Header.h"; sourceTree = "<group>"; };
+		22C598C11B2F124F0008CFCD /* iCastingTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "iCastingTests-Bridging-Header.h"; sourceTree = "<group>"; };
+		22C598C21B2F12500008CFCD /* JSQMessagesAssets.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = JSQMessagesAssets.bundle; sourceTree = "<group>"; };
+		22C598C31B2F12500008CFCD /* JSQMessagesInputToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSQMessagesInputToolbar.h; sourceTree = "<group>"; };
+		22C598C41B2F12500008CFCD /* JSQMessagesInputToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSQMessagesInputToolbar.m; sourceTree = "<group>"; };
+		22C598C51B2F12500008CFCD /* JSQMessagesToolbarContentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSQMessagesToolbarContentView.h; sourceTree = "<group>"; };
+		22C598C61B2F12500008CFCD /* JSQMessagesToolbarContentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSQMessagesToolbarContentView.m; sourceTree = "<group>"; };
+		22C598C71B2F12500008CFCD /* JSQMessagesComposerTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSQMessagesComposerTextView.h; sourceTree = "<group>"; };
+		22C598C81B2F12500008CFCD /* JSQMessagesComposerTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSQMessagesComposerTextView.m; sourceTree = "<group>"; };
+		22C598C91B2F12500008CFCD /* JSQMessagesToolbarContentView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JSQMessagesToolbarContentView.xib; sourceTree = "<group>"; };
+		22C598D41B2F169E0008CFCD /* UIView+JSQMessages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+JSQMessages.h"; sourceTree = "<group>"; };
+		22C598D51B2F169E0008CFCD /* UIView+JSQMessages.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+JSQMessages.m"; sourceTree = "<group>"; };
+		22C598D61B2F169E0008CFCD /* NSString+JSQMessages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+JSQMessages.h"; sourceTree = "<group>"; };
+		22C598D71B2F169E0008CFCD /* NSString+JSQMessages.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+JSQMessages.m"; sourceTree = "<group>"; };
+		22C598D81B2F169E0008CFCD /* UIColor+JSQMessages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+JSQMessages.h"; sourceTree = "<group>"; };
+		22C598D91B2F169E0008CFCD /* UIColor+JSQMessages.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+JSQMessages.m"; sourceTree = "<group>"; };
+		22C598DA1B2F169E0008CFCD /* UIImage+JSQMessages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+JSQMessages.h"; sourceTree = "<group>"; };
+		22C598DB1B2F169E0008CFCD /* UIImage+JSQMessages.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+JSQMessages.m"; sourceTree = "<group>"; };
+		22C598DC1B2F169E0008CFCD /* NSBundle+JSQMessages.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBundle+JSQMessages.h"; sourceTree = "<group>"; };
+		22C598DD1B2F169E0008CFCD /* NSBundle+JSQMessages.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBundle+JSQMessages.m"; sourceTree = "<group>"; };
+		22C598E81B2F16B60008CFCD /* JSQMessagesToolbarButtonFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSQMessagesToolbarButtonFactory.h; sourceTree = "<group>"; };
+		22C598E91B2F16B60008CFCD /* JSQMessagesToolbarButtonFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSQMessagesToolbarButtonFactory.m; sourceTree = "<group>"; };
+		22C598EC1B2F366C0008CFCD /* AuthExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthExtension.swift; sourceTree = "<group>"; };
 		22C9085F1AD5542E0067A378 /* EndpointsPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = EndpointsPlayground.playground; sourceTree = "<group>"; };
 		22C908641AD55FE50067A378 /* URL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URL.swift; sourceTree = "<group>"; };
 		22FB74CB1B16F70A000C6373 /* MatchSummaryCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchSummaryCell.swift; sourceTree = "<group>"; };
@@ -396,6 +455,7 @@
 		22103B2F1AE559E300C34C89 /* Vendor */ = {
 			isa = PBXGroup;
 			children = (
+				22C598BF1B2F12380008CFCD /* JSQToolbar */,
 				223A7DD11AFD16B8002FB978 /* SwiftSpinner.swift */,
 				22528FE51AF3A7B700F550F8 /* SwiftyJSON.swift */,
 				22103B2C1AE5597800C34C89 /* FontAwesome.swift */,
@@ -435,6 +495,7 @@
 				2256CDD31AF254FD005D40EB /* Auth.swift */,
 				2289BFFE1B0373DF00A7307C /* CastingObject.swift */,
 				226C27C21AD5310F00A6A2EE /* User.swift */,
+				22C598EC1B2F366C0008CFCD /* AuthExtension.swift */,
 			);
 			name = User;
 			sourceTree = "<group>";
@@ -457,6 +518,7 @@
 				224DE16F1B27362500A0752E /* Message.swift */,
 				22538B4B1B2AD96A00F80E77 /* Offer.swift */,
 				224BF02F1B2F04D300163949 /* Contract.swift */,
+				229A3C951B32C2FA00D175F4 /* MessageVisitor.swift */,
 			);
 			name = Message;
 			sourceTree = "<group>";
@@ -597,11 +659,14 @@
 				22103B281AE542D400C34C89 /* MatchDetailTableViewController.swift */,
 				226B2EA31B0814B7001DA2BD /* MatchProfileTableViewController.swift */,
 				22082C871AF7C24A00AF5EDB /* NegotiationsTableViewController.swift */,
-				22082C931AFA2C2A00AF5EDB /* NegotiationDetailTableViewController.swift */,
+				22082C931AFA2C2A00AF5EDB /* NegotiationDetailViewController.swift */,
+				229A3C8C1B301BE600D175F4 /* TextInputViewControllerTest.swift */,
 				22AD0DAE1AD6CDB900F0496A /* NewsTableViewController.swift */,
 				225C11501AE50197008654A7 /* NewsDetailViewController.swift */,
 				223E49C11B02389B00BB6BB3 /* SettingTableViewController.swift */,
 				22FB8A181B0F62D900BE13F6 /* NotificationsTableViewController.swift */,
+				229A3C8F1B30270300D175F4 /* ChatTextInputViewController.swift */,
+				229A3C921B316C3C00D175F4 /* KeyboardController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -666,6 +731,35 @@
 				228EAA811B2EF677009C4EAE /* MessageCellCongifuratorVisitors.swift */,
 			);
 			name = Cells;
+			sourceTree = "<group>";
+		};
+		22C598BF1B2F12380008CFCD /* JSQToolbar */ = {
+			isa = PBXGroup;
+			children = (
+				22C598C01B2F124F0008CFCD /* iCasting-Bridging-Header.h */,
+				22C598C11B2F124F0008CFCD /* iCastingTests-Bridging-Header.h */,
+				22C598C21B2F12500008CFCD /* JSQMessagesAssets.bundle */,
+				22C598C31B2F12500008CFCD /* JSQMessagesInputToolbar.h */,
+				22C598C41B2F12500008CFCD /* JSQMessagesInputToolbar.m */,
+				22C598C51B2F12500008CFCD /* JSQMessagesToolbarContentView.h */,
+				22C598C61B2F12500008CFCD /* JSQMessagesToolbarContentView.m */,
+				22C598C71B2F12500008CFCD /* JSQMessagesComposerTextView.h */,
+				22C598C81B2F12500008CFCD /* JSQMessagesComposerTextView.m */,
+				22C598C91B2F12500008CFCD /* JSQMessagesToolbarContentView.xib */,
+				22C598D41B2F169E0008CFCD /* UIView+JSQMessages.h */,
+				22C598D51B2F169E0008CFCD /* UIView+JSQMessages.m */,
+				22C598D61B2F169E0008CFCD /* NSString+JSQMessages.h */,
+				22C598D71B2F169E0008CFCD /* NSString+JSQMessages.m */,
+				22C598D81B2F169E0008CFCD /* UIColor+JSQMessages.h */,
+				22C598D91B2F169E0008CFCD /* UIColor+JSQMessages.m */,
+				22C598DA1B2F169E0008CFCD /* UIImage+JSQMessages.h */,
+				22C598DB1B2F169E0008CFCD /* UIImage+JSQMessages.m */,
+				22C598DC1B2F169E0008CFCD /* NSBundle+JSQMessages.h */,
+				22C598DD1B2F169E0008CFCD /* NSBundle+JSQMessages.m */,
+				22C598E81B2F16B60008CFCD /* JSQMessagesToolbarButtonFactory.h */,
+				22C598E91B2F16B60008CFCD /* JSQMessagesToolbarButtonFactory.m */,
+			);
+			name = JSQToolbar;
 			sourceTree = "<group>";
 		};
 		22E39EAA1AEFBD1E00F01BA0 /* JSON */ = {
@@ -783,7 +877,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				2268C53D1ACE905D00E58BF4 /* Main.storyboard in Resources */,
+				22C598CA1B2F12500008CFCD /* JSQMessagesAssets.bundle in Resources */,
 				226A9E861AEECAB300AB9EFF /* Localizable.strings in Resources */,
+				22C598D21B2F12500008CFCD /* JSQMessagesToolbarContentView.xib in Resources */,
 				22429E161AE6CB5900D0340B /* FontAwesome.otf in Resources */,
 				2268C5421ACE905D00E58BF4 /* LaunchScreen.xib in Resources */,
 				2268C53F1ACE905D00E58BF4 /* Images.xcassets in Resources */,
@@ -795,6 +891,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				22C598CB1B2F12500008CFCD /* JSQMessagesAssets.bundle in Resources */,
+				22C598D31B2F12500008CFCD /* JSQMessagesToolbarContentView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -809,10 +907,13 @@
 				224A5A761ADE8BDB00E22DE1 /* ICError.swift in Sources */,
 				22223E271B208780001711C4 /* MessageBalloon.swift in Sources */,
 				226B2E961B07A33E001DA2BD /* ICAlertControllers.swift in Sources */,
-				22082C951AFA2C2A00AF5EDB /* NegotiationDetailTableViewController.swift in Sources */,
+				22082C951AFA2C2A00AF5EDB /* NegotiationDetailViewController.swift in Sources */,
+				22C598CE1B2F12500008CFCD /* JSQMessagesToolbarContentView.m in Sources */,
 				220587F51AD565590010DA92 /* RequestFactory.swift in Sources */,
 				226B2E921B079494001DA2BD /* ArrayDataSource.swift in Sources */,
 				226B2E9D1B07C2E9001DA2BD /* MatchAcceptCell.swift in Sources */,
+				22C598ED1B2F366C0008CFCD /* AuthExtension.swift in Sources */,
+				22C598E41B2F169E0008CFCD /* UIImage+JSQMessages.m in Sources */,
 				22AD0DAD1AD6C3DE00F0496A /* JSONParser.swift in Sources */,
 				22C908651AD55FE50067A378 /* URL.swift in Sources */,
 				223E49C21B02389B00BB6BB3 /* SettingTableViewController.swift in Sources */,
@@ -823,9 +924,12 @@
 				22082CE91AFB927A00AF5EDB /* SocketTypes.swift in Sources */,
 				2256CE0A1AF2C7BF005D40EB /* AnimatedMenuButton.swift in Sources */,
 				22082CE71AFB927A00AF5EDB /* SocketParser.swift in Sources */,
+				229A3C931B316C3C00D175F4 /* KeyboardController.swift in Sources */,
 				227C7BDC1AEA5FB600624E12 /* JSONSearch.swift in Sources */,
+				22C598EA1B2F16B60008CFCD /* JSQMessagesToolbarButtonFactory.m in Sources */,
 				22082C911AFA243000AF5EDB /* MessageCells.swift in Sources */,
 				22FB74CC1B16F70A000C6373 /* MatchSummaryCell.swift in Sources */,
+				22C598CC1B2F12500008CFCD /* JSQMessagesInputToolbar.m in Sources */,
 				2249D5B81B05FA6600473A20 /* DashboardTableViewController.swift in Sources */,
 				2256CE0B1AF2C7BF005D40EB /* DrawerBarButtonItem.swift in Sources */,
 				22647DB51B0DE60B00F18C71 /* Notifications.swift in Sources */,
@@ -851,20 +955,24 @@
 				22B06AF41B1C4EF8002A7805 /* DilemmaView.swift in Sources */,
 				222CBB671B06642B00D91137 /* TalentMatchCard.swift in Sources */,
 				22082CEB1AFB927A00AF5EDB /* SwiftRegex.swift in Sources */,
+				22C598D01B2F12500008CFCD /* JSQMessagesComposerTextView.m in Sources */,
 				224F77F61AF0F6BE00D88F99 /* ICImage.swift in Sources */,
 				22082CDD1AFB927A00AF5EDB /* SocketEventHandler.swift in Sources */,
 				2256CE211AF2CD17005D40EB /* ExampleRightSideDrawerViewController.swift in Sources */,
 				22082CED1AFB927A00AF5EDB /* WebSocket.swift in Sources */,
+				229A3C901B30270300D175F4 /* ChatTextInputViewController.swift in Sources */,
 				2256CE1C1AF2CD17005D40EB /* SideDrawerSectionHeaderView.swift in Sources */,
 				22060E921B1EEE30000A3F2C /* CellConfigurators.swift in Sources */,
 				220587F71AD568660010DA92 /* SessionManager.swift in Sources */,
 				225C11511AE50197008654A7 /* NewsDetailViewController.swift in Sources */,
 				223A7DD21AFD16B8002FB978 /* SwiftSpinner.swift in Sources */,
+				229A3C8D1B301BE600D175F4 /* TextInputViewControllerTest.swift in Sources */,
 				224A5A791ADE8F3C00E22DE1 /* ICValidator.swift in Sources */,
 				224DE1701B27362500A0752E /* Message.swift in Sources */,
 				22082CD51AFB927A00AF5EDB /* SocketAckManager.swift in Sources */,
 				226C27C51AD5321300A6A2EE /* Endpoints.swift in Sources */,
 				22528FE61AF3A7B700F550F8 /* SwiftyJSON.swift in Sources */,
+				22C598E01B2F169E0008CFCD /* NSString+JSQMessages.m in Sources */,
 				2289C0021B0393BE00A7307C /* MainViewController.swift in Sources */,
 				226C27C31AD5310F00A6A2EE /* User.swift in Sources */,
 				22538B4F1B2B006200F80E77 /* MessageFactory.swift in Sources */,
@@ -879,8 +987,10 @@
 				22BFA6CA1AE6FCAD007E76C7 /* ICExtensions.swift in Sources */,
 				22082CD71AFB927A00AF5EDB /* SocketAnyEvent.swift in Sources */,
 				22082CE31AFB927A00AF5EDB /* SocketLogger.swift in Sources */,
+				229A3C961B32C2FA00D175F4 /* MessageVisitor.swift in Sources */,
 				22082C881AF7C24A00AF5EDB /* NegotiationsTableViewController.swift in Sources */,
 				2256CE221AF2CD17005D40EB /* ExampleSideDrawerViewController.swift in Sources */,
+				22C598DE1B2F169E0008CFCD /* UIView+JSQMessages.m in Sources */,
 				2256CE241AF2CD17005D40EB /* ExampleDrawerVisualStateManager.swift in Sources */,
 				2256CE0D1AF2C7BF005D40EB /* DrawerVisualState.swift in Sources */,
 				2256CE1B1AF2CD17005D40EB /* CenterTableViewCell.swift in Sources */,
@@ -894,7 +1004,9 @@
 				22082CE11AFB927A00AF5EDB /* SocketIOClient.swift in Sources */,
 				222495DA1B1753F100F021D2 /* MessageListExtractor.swift in Sources */,
 				22103B2D1AE5597800C34C89 /* FontAwesome.swift in Sources */,
+				22C598E21B2F169E0008CFCD /* UIColor+JSQMessages.m in Sources */,
 				2268C5381ACE905D00E58BF4 /* LoginViewController.swift in Sources */,
+				22C598E61B2F169E0008CFCD /* NSBundle+JSQMessages.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -908,6 +1020,7 @@
 				22223E281B208780001711C4 /* MessageBalloon.swift in Sources */,
 				22082CEC1AFB927A00AF5EDB /* SwiftRegex.swift in Sources */,
 				22647DB81B0E089F00F18C71 /* iCastingNotificationTest.swift in Sources */,
+				22C598D11B2F12500008CFCD /* JSQMessagesComposerTextView.m in Sources */,
 				22082CEA1AFB927A00AF5EDB /* SocketTypes.swift in Sources */,
 				226B2E941B079C06001DA2BD /* MatchCell.swift in Sources */,
 				226B2E9E1B07C2E9001DA2BD /* MatchAcceptCell.swift in Sources */,
@@ -918,16 +1031,19 @@
 				228E35171ADC4655006D0BEA /* RequestFactory.swift in Sources */,
 				224FF3041B08A989007D9CA7 /* iCastingMatchCardTest.swift in Sources */,
 				22392D291AD811720086BE5F /* ICType.swift in Sources */,
-				22082C961AFA2C2A00AF5EDB /* NegotiationDetailTableViewController.swift in Sources */,
+				22082C961AFA2C2A00AF5EDB /* NegotiationDetailViewController.swift in Sources */,
 				224A5A7A1ADE8F3C00E22DE1 /* ICValidator.swift in Sources */,
 				224F77FB1AF1342200D88F99 /* MatchDetailTableViewController.swift in Sources */,
 				2289C0031B0393BE00A7307C /* MainViewController.swift in Sources */,
+				229A3C8E1B301BE600D175F4 /* TextInputViewControllerTest.swift in Sources */,
+				229A3C941B316C3C00D175F4 /* KeyboardController.swift in Sources */,
 				22060E931B1EEE30000A3F2C /* CellConfigurators.swift in Sources */,
 				224DE1711B27364C00A0752E /* Message.swift in Sources */,
 				22740F831AD7BE1300755146 /* JSONParser.swift in Sources */,
 				22082CE81AFB927A00AF5EDB /* SocketParser.swift in Sources */,
 				2268C54E1ACE905D00E58BF4 /* iCastingTests.swift in Sources */,
 				22082CEE1AFB927A00AF5EDB /* WebSocket.swift in Sources */,
+				22C598EB1B2F16B60008CFCD /* JSQMessagesToolbarButtonFactory.m in Sources */,
 				222CBB6D1B06940F00D91137 /* MatchCard.swift in Sources */,
 				22082CE61AFB927A00AF5EDB /* SocketPacket.swift in Sources */,
 				22082CD81AFB927A00AF5EDB /* SocketAnyEvent.swift in Sources */,
@@ -950,10 +1066,13 @@
 				226B2E9B1B07BE86001DA2BD /* MatchHeaderCell.swift in Sources */,
 				222495DB1B1753F100F021D2 /* MessageListExtractor.swift in Sources */,
 				225029581B09DBDF00228582 /* ICFunctions.swift in Sources */,
+				22C598E71B2F169E0008CFCD /* NSBundle+JSQMessages.m in Sources */,
+				22C598EE1B2F366C0008CFCD /* AuthExtension.swift in Sources */,
 				22082CE01AFB927A00AF5EDB /* SocketFixUTF8.swift in Sources */,
 				22FB74CD1B16F70A000C6373 /* MatchSummaryCell.swift in Sources */,
 				227C7BD91AEA48D700624E12 /* ICProtocols.swift in Sources */,
 				224F77F81AF133AB00D88F99 /* MatchTableViewController.swift in Sources */,
+				229A3C911B30270300D175F4 /* ChatTextInputViewController.swift in Sources */,
 				224A5A771ADE8BDB00E22DE1 /* ICError.swift in Sources */,
 				2256CE251AF2D3BD005D40EB /* DrawerController.swift in Sources */,
 				22082CDA1AFB927A00AF5EDB /* SocketEngine.swift in Sources */,
@@ -963,6 +1082,8 @@
 				221B57F41AF3E686004ABE43 /* Match.swift in Sources */,
 				226B2E971B07A33E001DA2BD /* ICAlertControllers.swift in Sources */,
 				22C224D11ADD175C00202BF9 /* User.swift in Sources */,
+				22C598E31B2F169E0008CFCD /* UIColor+JSQMessages.m in Sources */,
+				22C598DF1B2F169E0008CFCD /* UIView+JSQMessages.m in Sources */,
 				224BF0311B2F04D300163949 /* Contract.swift in Sources */,
 				224F77FC1AF1343900D88F99 /* FontAwesome.swift in Sources */,
 				22647DB61B0DE60B00F18C71 /* Notifications.swift in Sources */,
@@ -975,8 +1096,13 @@
 				2289C0061B03968600A7307C /* FamilyTableViewController.swift in Sources */,
 				22528FE71AF3A7B700F550F8 /* SwiftyJSON.swift in Sources */,
 				228EAA831B2EF677009C4EAE /* MessageCellCongifuratorVisitors.swift in Sources */,
+				22C598CD1B2F12500008CFCD /* JSQMessagesInputToolbar.m in Sources */,
+				22C598E11B2F169E0008CFCD /* NSString+JSQMessages.m in Sources */,
+				229A3C971B32C2FA00D175F4 /* MessageVisitor.swift in Sources */,
+				22C598E51B2F169E0008CFCD /* UIImage+JSQMessages.m in Sources */,
 				224F77F91AF133D200D88F99 /* ICImage.swift in Sources */,
 				2256CDD51AF254FD005D40EB /* Auth.swift in Sources */,
+				22C598CF1B2F12500008CFCD /* JSQMessagesToolbarContentView.m in Sources */,
 				22FB8A1A1B0F62D900BE13F6 /* NotificationsTableViewController.swift in Sources */,
 				22538B501B2B006200F80E77 /* MessageFactory.swift in Sources */,
 			);
@@ -1106,6 +1232,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1116,7 +1243,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "iCasting/iCasting-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
@@ -1125,6 +1253,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1135,7 +1264,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "iCasting/iCasting-Bridging-Header.h";
 			};
 			name = Release;
 		};
@@ -1143,6 +1272,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -1154,6 +1284,8 @@
 				INFOPLIST_FILE = iCastingTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "iCasting/iCasting-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/iCasting.app/iCasting";
 			};
 			name = Debug;
@@ -1162,6 +1294,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -1169,6 +1302,7 @@
 				INFOPLIST_FILE = iCastingTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "iCasting/iCasting-Bridging-Header.h";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/iCasting.app/iCasting";
 			};
 			name = Release;

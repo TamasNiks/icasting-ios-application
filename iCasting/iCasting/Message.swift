@@ -11,7 +11,7 @@ import Foundation
 
 struct KeyVal {
     var key: String
-    var val: String
+    var val: Any
 }
 
 
@@ -39,7 +39,7 @@ enum TextType: String {
 
 // A class to hold message data and which is compatible to work with observer patterns like key-value and notifications, because an object is constructed from a class, it can be bridged to obj-c, in contrast to structs
 
-class Message {
+class Message: MessageAcceptVisitorProtocol {
 
     let id: String
     let owner: String
@@ -58,6 +58,10 @@ class Message {
         self.owner  = owner
         self.role   = role
         self.type   = type
+    }
+    
+    func accept(visitor: MessageVisitor) {
+        visitor.visits(self)
     }
 }
 

@@ -10,7 +10,6 @@ import Foundation
 
 
 
-
 protocol MessageFactoryProtocol {
     
     typealias DataType
@@ -22,24 +21,8 @@ protocol MessageFactoryProtocol {
 }
 
 
-enum MessageFactoryType {
-    case Socket
-}
 
-//class AbstractMessageFactory {
-//
-//    static func messageFactoryType(type: MessageFactoryType) -> MessageFactoryProtocol {
-//
-//        switch type {
-//        case .Socket:
-//            return SocketMessageFactory2()
-//        }
-//    }
-//}
-
-
-
-class SocketMessageFactory2: MessageFactoryProtocol  {
+class SocketMessageFactory: MessageFactoryProtocol  {
     
     typealias DataType = NSArray
     
@@ -47,18 +30,18 @@ class SocketMessageFactory2: MessageFactoryProtocol  {
      
         let body        : String = data[0] as! String
         let userID      : String = data[1] as! String
-        let messageID   : String = data[1] as! String
+        let messageID   : String = data[2] as! String
         
         let role: Role = Role.getRole(userID) // Incomming, outgoing or system
         
         var message: Message
         if role == Role.Incomming {
-            message = MessageMethodFactory.createIncommingNormalMessage(body: body, userID: userID, messageID: messageID)
+            message = AbstractMessageMethodFactory.createIncommingNormalMessage(body: body, userID: userID, messageID: messageID)
         } else {
-            message = MessageMethodFactory.createOutgoingNormalMessage(body: body, userID: userID, messageID: messageID)
+            message = AbstractMessageMethodFactory.createOutgoingNormalMessage(body: body, userID: userID, messageID: messageID)
         }
 
-        return Message(id: "", owner: "", role: Role.Incomming, type: TextType.Text)
+        return message//Message(id: "", owner: "", role: Role.Incomming, type: TextType.Text)
     }
     
     
@@ -101,9 +84,36 @@ class SocketMessageFactory2: MessageFactoryProtocol  {
 //}
 
 
+
+// If the messages gets complexer, the message factory needs be improved
+
+class AbstractMessageFactory {
+    
+    static func createMessage(fromJSON json: JSON) -> Message? {
+        
+        let type: String = json["type"].stringValue
+        
+        if let textType = TextType(rawValue: type) {
+            
+            let id: String      =   json["_id"].stringValue     // Message id
+            let owner: String   =   json["owner"].stringValue   // The id of the owner of the message
+            let role: Role = Role.getRole(owner)                     // Incomming, outgoing or system
+            
+            let message = Message(id: id, owner: owner, role: role, type: textType)
+            
+            let visitor = MessageVisitor(json: json)
+            message.accept(visitor)
+            return message
+        }
+        return nil
+    }
+}
+
+
+
 // The MessageFactory class makes creating Messags easier
 
-class MessageMethodFactory {
+class AbstractMessageMethodFactory {
     
     static func createIncommingNormalMessage(#body: String, userID: String, messageID: String) -> Message {
         
@@ -140,11 +150,6 @@ class MessageMethodFactory {
         return message
     }
     
-    
-    
-    
 }
 
 
-
-//

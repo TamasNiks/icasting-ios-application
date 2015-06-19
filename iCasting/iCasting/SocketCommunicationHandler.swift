@@ -153,36 +153,30 @@ class SocketCommunicationHandler {
         self.socket.close(fast: true)
     }
 
+    
     func sendMessage(message: String, acknowledged: (data: NSArray?) -> ()) {
         
         self.socket.emitWithAck(Emit.Message.rawValue, message)(timeout: 0, callback: { (data) -> Void in
             
             acknowledged(data: data)
-            
         })
-        
-        //self.socket.emit(Emit.Message.rawValue, message)
     }
     
     
-    func acceptOffer(messageID:String, acknowledged: () -> ()) {
+    func acceptOffer(messageID:String, acknowledged: (data: NSArray?) -> ()) {
      
         self.socket.emitWithAck(Emit.OfferAccept.rawValue, messageID)(timeout: 0) { data in
             
-            println("*** ack ***")
-            println(data)
-            
+            acknowledged(data: data)
         }
     }
     
     
-    func rejectOffer(messageID: String, acknowledged: () -> ()) {
+    func rejectOffer(messageID: String, acknowledged: (data: NSArray?) -> ()) {
         
         self.socket.emitWithAck(Emit.OfferReject.rawValue, messageID)(timeout: 0) { data in
             
-            println("*** ack ***")
-            println(data)
-            
+            acknowledged(data: data)
         }
     }
 }

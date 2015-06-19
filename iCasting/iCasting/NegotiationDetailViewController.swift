@@ -29,15 +29,19 @@ enum CellIdentifier: String {
         
         return ids[type]
     }
-    
 }
 
 
-
-
-
-class NegotiationDetailTableViewController: UITableViewController, UIScrollViewDelegate, UITextFieldDelegate, MessageOfferCellDelegate {
+class NegotiationDetailViewController:
+ChatTextInputViewController,
+UITableViewDataSource,
+UITableViewDelegate,
+UIScrollViewDelegate,
+MessageOfferCellDelegate
+ {
     
+    @IBOutlet weak var tableView: UITableView!
+
     
     var matchID: String?
     var conversation: Conversation?
@@ -48,6 +52,9 @@ class NegotiationDetailTableViewController: UITableViewController, UIScrollViewD
     
     var sizingCellProvider: SizingCellProvider?
     var cellReuser: NegotiationDetailCellConfigurationFactory?
+    var keyboardController: KeyboardController?
+    
+    var observing: Bool = false
     
     var newMessagesListContext: Int = 0
     var userJoinedOrLeft: Int = 0
@@ -59,7 +66,6 @@ class NegotiationDetailTableViewController: UITableViewController, UIScrollViewD
         static var authenticated: String = "authenticated"
     }
 
-
     
     // MARK: - Viewcontroller Life cycle
     
@@ -68,10 +74,10 @@ class NegotiationDetailTableViewController: UITableViewController, UIScrollViewD
         self.prepareViewController()
     }
 
-    
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         self.initializeModel()
+        super.addObserverForTextinput()
     }
     
     override func didReceiveMemoryWarning() {
@@ -80,9 +86,10 @@ class NegotiationDetailTableViewController: UITableViewController, UIScrollViewD
     }
 
     deinit {
-        removeObservers()
+        super.removeObserverForTextinput()
+        self.keyboardController?.removeObserver()
+        self.removeObservers()
     }
-    
     
     
     // MARK: - startup functions
@@ -91,6 +98,12 @@ class NegotiationDetailTableViewController: UITableViewController, UIScrollViewD
         
         self.sizingCellProvider = SizingCellProvider(tableView: tableView)
         self.cellReuser = NegotiationDetailCellConfigurationFactory(tableView: tableView)
+
+        // Create a keyboard controller with views to handle keyboard events
+        self.keyboardController = KeyboardController(views: [self.tableView, self.inputToolbar])
+        self.keyboardController?.setObserver()
+        
+        self.addGestureRecognizer()
     }
     
     private func initializeModel() {
@@ -100,6 +113,7 @@ class NegotiationDetailTableViewController: UITableViewController, UIScrollViewD
         }
         
         // Get all the current messages available from the server
+        // TODO: For best results, you should get the latest 20 messages and load another
         
         conversation?.get() { failure in
             
@@ -110,7 +124,7 @@ class NegotiationDetailTableViewController: UITableViewController, UIScrollViewD
                 println("ConversationTableViewController: request finnished")
                 self.tableView.reloadData()
                 
-                self.scrollToBottom()
+                //self.scrollToBottom()
                 //self.tableView.tableFooterView?.hidden = false
                 self.addObservers()
             }
@@ -118,26 +132,32 @@ class NegotiationDetailTableViewController: UITableViewController, UIScrollViewD
     }
     
 
+    private func addGestureRecognizer() {
+        
+        let tgr: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "handleTapGestureRecognizer:")
+        self.tableView.addGestureRecognizer(tgr)
+    }
+    
+    
     
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         
         return 1
     }
 
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         return self.messages.count
     }
 
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
 
         if let cell = getAndConfigCell(indexPath) {
-        //if let cell = getAndConfigCellWithVisitor(indexPath) {
             
             return cell
             
@@ -152,7 +172,7 @@ class NegotiationDetailTableViewController: UITableViewController, UIScrollViewD
     }
 
     
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         
         return getHeightForCell(indexPath)
     }
@@ -178,7 +198,7 @@ class NegotiationDetailTableViewController: UITableViewController, UIScrollViewD
             
             if identifier == CellIdentifier.GeneralSystemMessageCell {
                
-                var visitor = ConcreteMessageCellCongifuratorVisitors(data: [.Description:message.body])
+                var visitor = ConcreteMessageCellCongifuratorVisitors(data: [.Model:message as Any])
                 (cell as! MessageSystemCell).accept(visitor)
             }
             
@@ -223,7 +243,7 @@ class NegotiationDetailTableViewController: UITableViewController, UIScrollViewD
             
             if identifier == CellIdentifier.GeneralSystemMessageCell {
                 
-                configurator?.configureCell(data: [.Description:message.body])
+                configurator?.configureCell(data: [.Model:message as Any])
             }
             
             if identifier == CellIdentifier.MessageCell {
@@ -274,7 +294,7 @@ class NegotiationDetailTableViewController: UITableViewController, UIScrollViewD
                 
                 UnacceptedListMessageCellConfigurator(cell: cell).configureCellText(data: [.Model:message as Any])
             }
-            
+            //height = 100
         }
         
         if identifier == CellIdentifier.OfferMessageCell {
@@ -298,12 +318,29 @@ class NegotiationDetailTableViewController: UITableViewController, UIScrollViewD
         forIndexPath indexPath: NSIndexPath,
         startAnimation: () -> ()) {
         
-        // if everything is complete, do the animation:
-        startAnimation()
+            //println("OFFER CELL")
+            
+            let message = self.getModelForIndexPath(indexPath)
+            
+            switch offerStatus {
+                
+            case OfferStatus.Accept:
+                
+                conversation?.acceptOffer(message, callBack: { (error) -> () in
+                    
+                    startAnimation()
+                })
+                
+            case OfferStatus.Reject:
+                
+                conversation?.rejectOffer(message, callBack: { (error) -> () in
+                    
+                    startAnimation()
+                })
+            }
     }
     
-    
-    
+
     // MARK: - Table view controller functions
     
     func insertAtBottom(forRole role: Role) {
@@ -313,8 +350,10 @@ class NegotiationDetailTableViewController: UITableViewController, UIScrollViewD
         switch role {
         case .Incomming:
             rowAnimation = UITableViewRowAnimation.Left
+            println("left")
         case .Outgoing:
             rowAnimation = UITableViewRowAnimation.Right
+            println("right")
         default:
             rowAnimation = UITableViewRowAnimation.Automatic
         }
@@ -339,19 +378,25 @@ class NegotiationDetailTableViewController: UITableViewController, UIScrollViewD
     // MARK: - Model observer
     
     func removeObservers() {
-        conversation?.removeObserver(self, forKeyPath: ObservableConversation.messageList, context: &newMessagesListContext)
-        conversation?.removeObserver(self, forKeyPath: ObservableConversation.incommingUser, context: &userJoinedOrLeft)
-        conversation?.removeObserver(self, forKeyPath: ObservableConversation.authenticated, context: &userAuthenticate)
+        if observing {
+            conversation?.removeObserver(self, forKeyPath: ObservableConversation.messageList, context: &newMessagesListContext)
+            conversation?.removeObserver(self, forKeyPath: ObservableConversation.incommingUser, context: &userJoinedOrLeft)
+            conversation?.removeObserver(self, forKeyPath: ObservableConversation.authenticated, context: &userAuthenticate)
+            NSNotificationCenter.defaultCenter().removeObserver(self)
+            observing = false
+        }
+
     }
     
     func addObservers() {
-        
-        println("addObservers")
-        
         conversation?.addObserver(self, forKeyPath: ObservableConversation.messageList, options: nil, context: &newMessagesListContext)
         conversation?.addObserver(self, forKeyPath: ObservableConversation.incommingUser, options: NSKeyValueObservingOptions.New, context: &userJoinedOrLeft)
         conversation?.addObserver(self, forKeyPath: ObservableConversation.authenticated, options: NSKeyValueObservingOptions.New, context: &userAuthenticate)
+        observing = true
     }
+    
+    
+
     
     override func observeValueForKeyPath(keyPath: String, ofObject object: AnyObject, change: [NSObject : AnyObject], context: UnsafeMutablePointer<Void>) {
         
@@ -365,6 +410,7 @@ class NegotiationDetailTableViewController: UITableViewController, UIScrollViewD
             if let lastMessage = self.conversation?.messages.last {
                 
                 let m: Message = lastMessage
+                
                 self.insertAtBottom(forRole: m.role)
                 self.scrollToBottom(animate: true)
                 
@@ -393,7 +439,6 @@ class NegotiationDetailTableViewController: UITableViewController, UIScrollViewD
         
         if context == &userAuthenticate {
             
-            
             var ac = UIAlertController(title: "Authentication", message: "User is authenticated", preferredStyle: UIAlertControllerStyle.Alert)
             ac.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default, handler: { (alertAction) -> Void in
                 ac.removeFromParentViewController()
@@ -402,35 +447,63 @@ class NegotiationDetailTableViewController: UITableViewController, UIScrollViewD
             self.presentViewController(ac, animated: true, completion: nil)
             
         }
-        
     }
-    
-    
     
     
     // TEST
     
     @IBAction func onTestItemPressed(sender: AnyObject) {
-        
         let incommingMessage: Message = Message(id: "123445", owner: "54321", role: Role.Incomming, type: TextType.Text)
         incommingMessage.body = "This is an incomming message"
         conversation?.messageList.list.append(incommingMessage)
-        
-        
         var time: dispatch_time_t = dispatch_time(DISPATCH_TIME_NOW, Int64(1 * Double(NSEC_PER_SEC) ) )
-        
         dispatch_after(time, dispatch_get_main_queue()) { () -> Void in
-            
             let outgoingMessage: Message = Message(id: "8327932874", owner: "23423897", role: Role.Outgoing, type: TextType.Text)
             outgoingMessage.body = "This is an outgoing message"
             self.conversation?.messageList.list.append(outgoingMessage)
-            
         }
-        
-        
         println("TEST")
+    }
+}
+
+
+
+
+
+// MARK: This extension adds compatibility for the text input field.: JSQ Messages Input Toolbar Delegate
+
+extension NegotiationDetailViewController {
+    
+    
+    override func messagesInputToolbar(toolbar: JSQMessagesInputToolbar!, didPressRightBarButton sender: UIButton!) {
         
+        if toolbar.sendButtonOnRight {
+            
+            let message = currentlyComposedMessageText()
+            self.didPressSendButton(sender, withMessageText: message, date: NSDate())
+        } else {
+            println("AccessoryButton")
+        }
+    }
+    
+
+    func didPressSendButton(button: UIButton, withMessageText messageText: String, date: NSDate) {
+        
+        self.conversation?.sendMessage(messageText, callBack: { (error) -> () in
+            println(error)
+        })
+        println("didPressedSendButton")
     }
     
     
+    // When tapped on the tableview, the keyboard will hide
+    func handleTapGestureRecognizer(reconizer: UIGestureRecognizer) {
+        
+        println("handleTapGestureRecognizer")
+        self.inputToolbar.contentView.textView.resignFirstResponder()
+    }
+
 }
+
+
+

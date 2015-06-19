@@ -129,7 +129,8 @@ class NegotiationsTableViewController: UITableViewController {
         // Get the new view controller using [segue destinationViewController].
         // Pass the selected object to the new view controller.
         
-        var vc = segue.destinationViewController as! NegotiationDetailTableViewController
+        var vc = segue.destinationViewController as! NegotiationDetailViewController
+        vc.hidesBottomBarWhenPushed = true
         vc.matchID = self.match.selectedMatch!.getID(FieldID.MatchCardID)
         
     }

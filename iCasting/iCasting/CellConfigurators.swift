@@ -25,6 +25,10 @@ protocol CellConfigProtocol {
     func configureCell(#data: CellDataType)
 }
 
+
+
+
+
 // ABSTRACT
 
 class CellConfigurator : CellConfigProtocol {
@@ -35,29 +39,15 @@ class CellConfigurator : CellConfigProtocol {
         self.cell = cell
     }
     
-    func configureCell(#data: CellDataType) { /* Abstract ...  */ }
+    func configureCell(#data: CellDataType) {
+        configureCellText(data: data)
+        
+        /* Abstract ...  */
+    }
+    
     func configureCellText(#data: CellDataType) { /* Abstract ...  */ }
     
 }
-
-
-
-//protocol TestProtocol {
-//    
-//    func testFunc<U>(model:U)
-//}
-//
-//class BladieBla: TestProtocol {
-//    func testFunc<Message>(model: Message) {
-//        
-//    }
-//}
-//
-//
-//class BladieBla2: TestProtocol {
-//    func testFunc<CellDataType>(model: CellDataType) {
-//    }
-//}
 
 
 
@@ -66,11 +56,6 @@ class CellConfigurator : CellConfigProtocol {
 // CONCRETE, downcast the cells to a specialized cell, the ABSTRACT exists in CellFactroy
 
 class MessageCellConfigurator : CellConfigurator {
-    
-    override func configureCell(#data: CellDataType) {
-        
-        configureCellText(data: data)
-    }
     
     override func configureCellText(#data: CellDataType) {
         
@@ -99,10 +84,6 @@ class MessageCellConfigurator : CellConfigurator {
 
 class UnacceptedListMessageCellConfigurator : CellConfigurator {
     
-    override func configureCell(#data: CellDataType) {
-        configureCellText(data: data)
-    }
-    
     override func configureCellText(#data: CellDataType) {
         
         let c = cell as! MessageUnacceptedCell
@@ -112,7 +93,7 @@ class UnacceptedListMessageCellConfigurator : CellConfigurator {
         let contract = message.contract!
         let names: [String] = contract.map { $0.name }
         let points: String = "- "+String("\n- ").join(names)
-        
+        println(points)
         c.systemMessageLabel.text = message.body
         c.unacceptedPointsLabel.text = points
     }
@@ -124,13 +105,11 @@ class UnacceptedListMessageCellConfigurator : CellConfigurator {
 
 class SystemMessageCellConfigurator : CellConfigurator {
     
-    override func configureCell(#data: CellDataType) {
-        configureCellText(data: data)
-    }
-    
     override func configureCellText(#data: CellDataType) {
+
         var c = cell as! MessageSystemCell
-        c.systemMessageLabel.text = data[.Description] as? String
+        let message: Message = data[.Model] as! Message
+        c.systemMessageLabel.text = message.body
     }
 }
 
@@ -162,8 +141,11 @@ class OfferMessageCellConfigurator : CellConfigurator {
         
         if let offer = message.offer {
         
-            let points = extractOfferValues(offer.values)
-
+            
+            var points: NSAttributedString = getOfferString(offer.values)
+            let range: NSRange = NSRange(location: 0, length: points.length-1)
+            points = points.attributedSubstringFromRange(range)
+            
             c.messageTitle.text = getLocalizationForMessageTitle("Offer")
             c.title.text = getLocalizationForTitle(offer.name)
             c.desc.attributedText = points
@@ -171,26 +153,36 @@ class OfferMessageCellConfigurator : CellConfigurator {
         
     }
     
-    private func extractOfferValues(offerValues: [KeyVal]) -> NSAttributedString {
+    private func getOfferString(offerValues: [KeyVal]) -> NSMutableAttributedString {
         
-        var points: NSMutableAttributedString = NSMutableAttributedString()//String()
-        var font = UIFont.boldSystemFontOfSize(14)
-        var keyattr = [NSForegroundColorAttributeName : UIColor(white: 1/2, alpha: 1), NSFontAttributeName : font]
-        var valattr = [NSForegroundColorAttributeName : UIColor.darkGrayColor(), NSFontAttributeName : font]
+        let keyfont = UIFont.boldSystemFontOfSize(12)
+        let valfont = UIFont.boldSystemFontOfSize(12)
+        
+        let keyattr = [NSForegroundColorAttributeName : UIColor(white: 1/2, alpha: 1), NSFontAttributeName : keyfont]
+        let valattr = [NSForegroundColorAttributeName : UIColor.darkGrayColor(), NSFontAttributeName : valfont]
+        
+        var points: NSMutableAttributedString = NSMutableAttributedString()
         
         for keyVal: KeyVal in offerValues {
             
-            var name = getLocalizationForName(keyVal.key) + "\n"
-            
-            var key = NSMutableAttributedString(string: name, attributes: keyattr)
+            let name = getLocalizationForName(keyVal.key) + "\n"
+            let key = NSMutableAttributedString(string: name, attributes: keyattr)
             points.appendAttributedString(key)
             
-            var val = NSMutableAttributedString(string: ("\(keyVal.val)" + "\n"), attributes: valattr)
-            points.appendAttributedString(val)
+            let val = keyVal.val
+            var valStr: NSMutableAttributedString = NSMutableAttributedString()
+            
+            if val is [KeyVal] {
+                valStr = getOfferString(val as! [KeyVal])
+            } else {
+                valStr = NSMutableAttributedString(string: ("\(keyVal.val)" + "\n"), attributes: valattr)
+            }
+            points.appendAttributedString(valStr)
         }
         
         return points
     }
+    
     
     private func getLocalizationForMessageTitle(title: String) -> String {
         
@@ -212,7 +204,7 @@ class OfferMessageCellConfigurator : CellConfigurator {
         var formatted = String(format: format, title)
         var localizedTitle = NSLocalizedString(formatted, comment: "")
         var localizedPostfix = NSLocalizedString("negotiations.agreement", comment: "The title of the current offer.")
-        var fullTitle = localizedTitle + localizedPostfix
+        var fullTitle = localizedTitle + " " + localizedPostfix
         return fullTitle
     }
 }
@@ -223,15 +215,10 @@ class OfferMessageCellConfigurator : CellConfigurator {
 
 class DefaultCellConfigurator: CellConfigurator {
     
-    override func configureCell(#data: CellDataType) {
-        configureCellText(data: data)
-    }
-    
     override func configureCellText(#data: CellDataType) {
         cell.textLabel?.text = data[CellKey.Title] as? String
         cell.detailTextLabel?.text = data[CellKey.Description] as? String
     }
     
 }
-
 

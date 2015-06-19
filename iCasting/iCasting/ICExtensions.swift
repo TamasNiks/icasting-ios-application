@@ -53,21 +53,43 @@ extension UIColor {
 }
 
 
+extension Int {
+    
+    func toBool() -> Bool? {
+        switch self {
+        case 0:
+            return false
+        case 1:
+            return true
+        default:
+            return nil
+        }
+    }
+}
+
+
 extension String {
 
     enum ICDateFormat: String {
         case
-        General = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'+'ss':'ss",
-        News = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'000'Z'" //2015-01-31T23:00:00.000Z
+        Match = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'+'ss':'ss",
+        News = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'000'Z'", //2015-01-31T23:00:00.000Z
+        General = "yyyy'-'MM'-'dd"
     }
+    
+    
     
     func ICdateToString(format: ICDateFormat) -> String? {
         
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = format.rawValue
         
-        if let date: NSDate = dateFormatter.dateFromString(self) {
+        if format == ICDateFormat.General {
             
+        }
+        
+        
+        if let date: NSDate = dateFormatter.dateFromString(self) {
             let visibleFormatter = NSDateFormatter()
             visibleFormatter.timeStyle = NSDateFormatterStyle.NoStyle
             visibleFormatter.dateStyle = NSDateFormatterStyle.LongStyle
@@ -76,6 +98,8 @@ extension String {
         
         return nil
     }
+    
+    
     
     func ICTime() -> String? {
         

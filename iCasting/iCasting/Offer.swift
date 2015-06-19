@@ -12,7 +12,7 @@ import Foundation
 struct Offer {
     let name: String
     let values: [KeyVal]
-    let accepted: Bool?
+    var accepted: Bool?
 }
 
 
@@ -29,18 +29,32 @@ class OfferDataExtractor {
         
         var values: [KeyVal] = keys.map( { (key: String) -> KeyVal in
             
-            var val: String
+            var val: Any
             if let extractor = ValueExtractor(rawValue: key) {
                 val = extractor.modify(dict[key])
             } else {
-                val = "\(dict[key])"
+                if let subdictionary = dict[key]!.dictionary {
+                    val = self.getValues(subdictionary)
+                } else {
+                    val = self.getUnwrappedStringValue(dict[key]!)
+                }
             }
             
-            // Return a String, String key-pair
+            // Return a String, Any key-pair
             return KeyVal(key: key, val: val)
         })
         
         return values
+    }
+    
+    private func getUnwrappedStringValue(value: JSON) -> String {
+        var val: String
+        if let stringValue = value.string {
+            val = stringValue
+        } else {
+            val = "\(value)"
+        }
+        return val
     }
     
 }
@@ -95,18 +109,22 @@ class OfferSocketDataExtractor: OfferDataExtractor, OfferProtocol {
 
 }
 
+// Modify a specific value from the API with a string connected to a key/value pair
 
 enum ValueExtractor: String {
     
     // Keys to extract the corresponding values
     case Type = "type"
     case DateStart = "dateStart"
+    case DateEnd = "dateEnd"
     case TimeStart = "timeStart"
     case TimeEnd = "timeEnd"
     case HasBuyOff = "hasBuyOff"
     case CompleteBuyOff = "completeBuyOff"
     case HasTravelExpenses = "hasTravelExpenses"
     case Budget = "times1000"
+    case BuyOffPeriod = "period"
+    case BuyOffMedium = "medium"
     
     func modify(value: Any?) -> String {
         
@@ -116,15 +134,16 @@ enum ValueExtractor: String {
             case
             .Type:
                 
-                var str = (v as! JSON).stringValue
+                let str = (v as! JSON).stringValue
                 return getLocalizationForValue(str)
                 
             case
-            .DateStart:
+            .DateStart,
+            .DateEnd:
                 
-                var str = (v as! JSON).stringValue
-                var formatted: String = str.ICdateToString(ICDateFormat.General) ?? str
-                return formatted
+                let str = (v as! JSON).stringValue
+                let components: [String] = str.componentsSeparatedByString("T")
+                return components[0].ICdateToString(ICDateFormat.General) ?? str
                 
             case
             .TimeStart,
@@ -137,24 +156,36 @@ enum ValueExtractor: String {
             .CompleteBuyOff,
             .HasTravelExpenses:
                 
-                var boolString = "\((v as! JSON).boolValue)"
+                let boolString = "\((v as! JSON).boolValue)"
                 return getLocalizationForValue(boolString)
                 
             case
             .Budget:
                 
-                var int = (v as! JSON).intValue
-                var result = int / 1000
+                let int = (v as! JSON).intValue
+                let result = int / 1000
                 return "€ \(result)"
+            case
+            .BuyOffPeriod:
+                
+                let double = (v as! JSON).doubleValue
+                let numOfMonths = Int(double * 12)
+                let months: String = getLocalizationForValue("months")
+                return "\(numOfMonths) " + months
+            case
+            .BuyOffMedium:
+                
+                return String(", ").join((v as! JSON).arrayValue.map { $0.stringValue } )
+                
             }
         }
-        return ""
+        return "Could not get value"
     }
     
     private func getLocalizationForValue(value: String) -> String {
         
-        var prefix = "negotiations.offer.value.%@"
-        var formatted = String(format: prefix, value)
+        let prefix = "negotiations.offer.value.%@"
+        let formatted = String(format: prefix, value)
         return NSLocalizedString(formatted, comment: "")
     }
 }

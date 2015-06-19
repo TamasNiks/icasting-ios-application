@@ -9,14 +9,29 @@
 import Foundation
 
 typealias JSONResponeType = (request: NSURLRequest, response: NSURLResponse?, json:AnyObject?, error:NSError?)->()
-typealias SocketMessageCommunicationCallBack = (error: ICError?)->()
+typealias MessageCommunicationCallBack = (error: ICErrorInfo?)->()
 
-protocol SocketMessageCommunicationProtocol {
-    
-    func sendMessage(message: String, callBack: SocketMessageCommunicationCallBack)
-    func acceptOffer(callBack: SocketMessageCommunicationCallBack)
-    func rejectOffer(callBack: SocketMessageCommunicationCallBack)
+
+
+protocol ContractState {
+    func hasBothAccepted() -> Bool
 }
+
+class ContractAcceptedState: ContractState {
+   
+    func hasBothAccepted() -> Bool {
+        return true
+    }
+}
+
+class ContractUnacceptedState: ContractState {
+
+    func hasBothAccepted() -> Bool {
+        return false
+    }
+}
+
+
 
 struct ConversationToken : Printable {
     
@@ -30,7 +45,15 @@ struct ConversationToken : Printable {
 
 
 
+
+
 class Conversation: NSObject {
+    
+    private var contractState: ContractState?
+    
+//    var contractBothAccepted: Bool? {
+//        return contractState.hasBothAccepted()
+//    }
     
     let matchID: String
     let messageList: MessageListExtractor = MessageListExtractor()
@@ -50,6 +73,7 @@ class Conversation: NSObject {
         self.matchID = matchID
     }
 }
+
 
 
 
@@ -104,8 +128,14 @@ extension Conversation : SocketCommunicationHandlerDelegate {
             
             println("--- Conversation: RECIEVED MESSAGE")
             if let d = data {
-                self.messageList.addNormalMessage(fromArray: d)
+                
+                let factory = SocketMessageFactory()
+                let message = factory.createNormalMessage(d)
+                self.messageList.addItem(message)
+                
             }
+            
+            // TODO: Handle error message, for when message == nil
         }
         
         handlers.receivedOffer = { data in
@@ -137,12 +167,31 @@ extension Conversation : SocketCommunicationHandlerDelegate {
 
 
 
-extension Conversation {
+protocol MessageCommunicationProtocol {
     
-    func sendMessage(message: String, callBack: SocketMessageCommunicationCallBack) {
-        
-        self.socketCommunicationHandler?.sendMessage(message, acknowledged: { (data) -> () in
-            
+    func sendMessage(text: String, callBack: MessageCommunicationCallBack)
+    func acceptOffer(message: Message, callBack: MessageCommunicationCallBack)
+    func rejectOffer(message: Message, callBack: MessageCommunicationCallBack)
+}
+
+
+
+
+
+extension Conversation: MessageCommunicationProtocol {
+    
+
+    func sendMessage(text: String, callBack: MessageCommunicationCallBack) {
+     
+        let m: Message = Message(id: "", owner: Auth.auth.user_id!, role: Role.Outgoing, type: TextType.Text)
+        m.body = text
+
+
+        self.socketCommunicationHandler?.sendMessage(m.body!, acknowledged: { (data) -> () in
+
+            println(data)
+
+            self.messageList.addItem(m)
 
             //return //String error	String message_id
             
@@ -150,31 +199,44 @@ extension Conversation {
     }
     
     
-    func acceptOffer(message: Message, callBack: SocketMessageCommunicationCallBack) {
-        
-        self.socketCommunicationHandler?.acceptOffer(message.id, acknowledged: { () -> () in
+    func acceptOffer(message: Message, callBack: MessageCommunicationCallBack) {
+
+        self.socketCommunicationHandler?.acceptOffer(message.id, acknowledged: { (data) -> () in
             
-            //return String error, String accepted, Object by who (wel of niet)
-            
+            if let d = data {
+                let error: ICErrorInfo? = self.decideOfferAcceptRejection(d, withMessageToUpdate: message)
+                callBack(error: error)
+            }
         })
     }
     
-    func rejectOffer(message: Message, callBack: SocketMessageCommunicationCallBack) {
+    
+    func rejectOffer(message: Message, callBack: MessageCommunicationCallBack) {
         
-        self.socketCommunicationHandler?.rejectOffer(message.id, acknowledged: { () -> () in
+        self.socketCommunicationHandler?.rejectOffer(message.id, acknowledged: { (data) -> () in
             
-            //return String error, String accepted, Object by who (wel of niet)
-            
+            if let d = data {
+                let error: ICErrorInfo? = self.decideOfferAcceptRejection(d, withMessageToUpdate: message)
+                callBack(error: error)
+            }
         })
     }
     
-    func leaveRoom() {
-        
-        
+    
+    private func decideOfferAcceptRejection(data: NSArray, withMessageToUpdate message: Message) -> ICErrorInfo? {
+    
+        let error: ICErrorInfo? = ICError(string: data[0] as? String).getErrors()
+        if error == nil {
+            var accepted: Bool? = (data[1] as! Int).toBool()
+            var byWho: [String:Int] = (data[2] as! [String:Int])
+            var hasAcceptTalent = (byWho["acceptTalent"] ?? 0).toBool()
+            message.offer!.accepted = hasAcceptTalent
+        }
+        return error
     }
-    
-    
 }
+
+
 
 
 
@@ -240,7 +302,6 @@ extension Conversation : ModelRequest {
                     return
                 }
                 
-                
                 // There are no errors, get everything to work
                 self.setToken(tokenJSON)
                 self.messageList.buildList(fromJSON: messagesJSON)
@@ -283,10 +344,6 @@ extension Conversation : ModelRequest {
             json["client"].stringValue,
             json["url"].stringValue]
         conversationToken = ConversationToken(token: values[0], client: values[1], url: values[2])
-        
     }
-    
-    
-
 }
 

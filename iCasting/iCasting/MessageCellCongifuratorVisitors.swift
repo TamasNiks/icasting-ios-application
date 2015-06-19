@@ -32,7 +32,6 @@ class ConcreteMessageCellCongifuratorVisitors: MessageCellCongifuratorVisitors {
         
         var oc: CellConfigurator = MessageCellConfigurator(cell: cell)
         oc.configureCell(data: data)
-        
     }
     
     
@@ -40,7 +39,6 @@ class ConcreteMessageCellCongifuratorVisitors: MessageCellCongifuratorVisitors {
         
         var oc: CellConfigurator = SystemMessageCellConfigurator(cell: cell)
         oc.configureCell(data: data)
-        
     }
     
     

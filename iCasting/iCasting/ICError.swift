@@ -117,6 +117,7 @@ class ICError {
     
     var errorJson: JSON?
     var error: NSError?
+    var socketError: String?
     
     init(json: JSON?) {
         self.errorJson = json
@@ -124,6 +125,10 @@ class ICError {
     
     init(error: NSError?) {
         self.error = error
+    }
+    
+    init(string: String?) {
+        self.socketError = string
     }
     
     func getErrors() -> ICErrorInfo? {
@@ -140,6 +145,11 @@ class ICError {
         
         if let error: NSError = self.error {
             return ICNetworkErrorInfo(errors: [error])
+        }
+        
+        
+        if let error: String = self.socketError {
+            return ICSocketErrorInfo(errors: [error], name: "Communication error")
         }
         
         return nil

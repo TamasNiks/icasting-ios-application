@@ -86,21 +86,16 @@ enum CellHeightStrategyType {
 class CellHeightStrategyFactory {
     
     static func getCalculator(#type: CellHeightStrategyType) -> CellHeightStrategy {
-        
         switch type {
-            
         case .AutoLayout:
             return AutoLayoutCellHeightStrategy()
         case .Default:
             return DefaultCellHeightStrategy()
-            
         }
     }
-    
 }
 
 protocol CellHeightStrategy {
-    
     func calculateHeight(cell: UITableViewCell) -> CGFloat
 }
 
@@ -109,7 +104,7 @@ class AutoLayoutCellHeightStrategy: CellHeightStrategy {
     
     func calculateHeight(cell: UITableViewCell) -> CGFloat {
         
-        var size: CGSize = cell.contentView.systemLayoutSizeFittingSize(UILayoutFittingExpandedSize)
+        let size: CGSize = cell.contentView.systemLayoutSizeFittingSize(UILayoutFittingExpandedSize)
         return size.height
     }
     

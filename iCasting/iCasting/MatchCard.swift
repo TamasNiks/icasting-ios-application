@@ -30,7 +30,7 @@ enum MatchValue: Any {
         switch self {
         case .Date(let val):
             
-            if let val = val { str = val.ICdateToString(ICDateFormat.General) }
+            if let val = val { str = val.ICdateToString(ICDateFormat.Match) }
             
         case .Time(let val):
             
