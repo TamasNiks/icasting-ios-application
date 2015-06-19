@@ -61,7 +61,8 @@
 
 "negotiations.offer.name.hasTravelExpenses" = "Reiskostenvergoeding";
 "negotiations.offer.name.times1000" = "Vergoeding";
-"negotiations.offer.name.type" = "Meerdere dagen";
+"negotiations.offer.name.type" = "Type";
+"negotiations.offer.name.type.dateTime" = "Meerdere dagen";
 "negotiations.offer.name.dateStart" = "Startdatum";
 "negotiations.offer.name.dateEnd" = "Einddatum";
 "negotiations.offer.name.timeStart" = "Starttijd";
@@ -77,12 +78,18 @@
 "negotiations.offer.name.zipCode" = "Postcode";
 "negotiations.offer.name.city" = "Stad";
 "negotiations.offer.name.country" = "Land";
+"negotiations.offer.name.area" = "Provincie";
+"negotiations.offer.name.desc" = "Omschrijving";
 
 "negotiations.offer.value.single" = "Nee";
 "negotiations.offer.value.true" = "Ja";
 "negotiations.offer.value.false" = "Nee";
+"negotiations.offer.value.month" = "maand";
 "negotiations.offer.value.months" = "maanden";
+"negotiations.offer.value.year" = "jaar";
+"negotiations.offer.value.years" = "jaar";
 "negotiations.offer.value.multiple" = "Ja";
+"negotiations.offer.value.forever" = "Voor altijd";
 
 "negotiations.offer.title.dateTime" = "Tijd";
 "negotiations.offer.title.buyOff" = "Afkoop";
@@ -91,6 +98,7 @@
 "negotiations.offer.title.location" = "Locatie";
 "negotiations.offer.title.paymentMethod" = "Betaalmethode";
 "negotiations.offer.title.auditionType" = "Type auditie";
+"negotiations.offer.title.requests" = "Aanvullende verzoeken";
 
 /* Notifications */
 "notification.desc.achievement-complete" = "Je hebt \"%@\" voltooid en %@ XP verdient";

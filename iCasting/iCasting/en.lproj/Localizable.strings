@@ -61,7 +61,8 @@
 
 "negotiations.offer.name.hasTravelExpenses" = "Travel expenses";
 "negotiations.offer.name.times1000" = "Budget";
-"negotiations.offer.name.type" = "Multiple days";
+"negotiations.offer.name.type" = "Type";
+"negotiations.offer.name.type.dateTime" = "Multiple days";
 "negotiations.offer.name.dateStart" = "Start date";
 "negotiations.offer.name.dateEnd" = "End date";
 "negotiations.offer.name.timeStart" = "Start time";
@@ -77,12 +78,18 @@
 "negotiations.offer.name.zipCode" = "Zipcode";
 "negotiations.offer.name.city" = "City";
 "negotiations.offer.name.country" = "Country";
+"negotiations.offer.name.area" = "Province";
+"negotiations.offer.name.desc" = "Description";
 
 "negotiations.offer.value.single" = "No";
 "negotiations.offer.value.true" = "Yes";
 "negotiations.offer.value.false" = "No";
+"negotiations.offer.value.month" = "month";
 "negotiations.offer.value.months" = "months";
+"negotiations.offer.value.year" = "year";
+"negotiations.offer.value.years" = "years";
 "negotiations.offer.value.multiple" = "Yes";
+"negotiations.offer.value.forever" = "Forever";
 
 "negotiations.offer.title.dateTime" = "Time";
 "negotiations.offer.title.buyOff" = "Buy-off";
@@ -91,6 +98,7 @@
 "negotiations.offer.title.location" = "Location";
 "negotiations.offer.title.paymentMethod" = "Payment method";
 "negotiations.offer.title.auditionType" = "Audition type";
+"negotiations.offer.title.requests" = "Additional requests";
 
 /* Notifications */
 "notification.desc.achievement-complete" = "You have completed \"%@\" and earned %@ XP.";

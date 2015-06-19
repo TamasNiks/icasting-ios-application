@@ -166,6 +166,7 @@
 		228E35171ADC4655006D0BEA /* RequestFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220587F41AD565590010DA92 /* RequestFactory.swift */; };
 		228EAA821B2EF677009C4EAE /* MessageCellCongifuratorVisitors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 228EAA811B2EF677009C4EAE /* MessageCellCongifuratorVisitors.swift */; };
 		228EAA831B2EF677009C4EAE /* MessageCellCongifuratorVisitors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 228EAA811B2EF677009C4EAE /* MessageCellCongifuratorVisitors.swift */; };
+		2299733E1B34ACCB00BC5DEE /* iCastingOfferTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2299733D1B34ACCB00BC5DEE /* iCastingOfferTest.swift */; };
 		229A3C8D1B301BE600D175F4 /* TextInputViewControllerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229A3C8C1B301BE600D175F4 /* TextInputViewControllerTest.swift */; };
 		229A3C8E1B301BE600D175F4 /* TextInputViewControllerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229A3C8C1B301BE600D175F4 /* TextInputViewControllerTest.swift */; };
 		229A3C901B30270300D175F4 /* ChatTextInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229A3C8F1B30270300D175F4 /* ChatTextInputViewController.swift */; };
@@ -345,6 +346,7 @@
 		2289C0011B0393BE00A7307C /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		2289C0041B03968600A7307C /* FamilyTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FamilyTableViewController.swift; sourceTree = "<group>"; };
 		228EAA811B2EF677009C4EAE /* MessageCellCongifuratorVisitors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageCellCongifuratorVisitors.swift; sourceTree = "<group>"; };
+		2299733D1B34ACCB00BC5DEE /* iCastingOfferTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = iCastingOfferTest.swift; sourceTree = "<group>"; };
 		229A3C8C1B301BE600D175F4 /* TextInputViewControllerTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextInputViewControllerTest.swift; sourceTree = "<group>"; };
 		229A3C8F1B30270300D175F4 /* ChatTextInputViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatTextInputViewController.swift; sourceTree = "<group>"; };
 		229A3C921B316C3C00D175F4 /* KeyboardController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyboardController.swift; sourceTree = "<group>"; };
@@ -635,6 +637,7 @@
 				224FF3031B08A989007D9CA7 /* iCastingMatchCardTest.swift */,
 				22647DB71B0E089F00F18C71 /* iCastingNotificationTest.swift */,
 				22FF4CA91B21A7CC00098996 /* iCastingNegotiationTest.swift */,
+				2299733D1B34ACCB00BC5DEE /* iCastingOfferTest.swift */,
 				2268C54B1ACE905D00E58BF4 /* Supporting Files */,
 			);
 			path = iCastingTests;
@@ -1060,6 +1063,7 @@
 				226B2E931B079494001DA2BD /* ArrayDataSource.swift in Sources */,
 				22082CDC1AFB927A00AF5EDB /* SocketEngineClient.swift in Sources */,
 				224DE1721B27365000A0752E /* SocketCommunicationHandler.swift in Sources */,
+				2299733E1B34ACCB00BC5DEE /* iCastingOfferTest.swift in Sources */,
 				22082CD61AFB927A00AF5EDB /* SocketAckManager.swift in Sources */,
 				227C7BDD1AEA5FB600624E12 /* JSONSearch.swift in Sources */,
 				22C224D21ADD18D300202BF9 /* SessionManager.swift in Sources */,
