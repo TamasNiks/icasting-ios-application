@@ -646,12 +646,12 @@
                                             <outlet property="systemMessageLabel" destination="O72-Xs-lgF" id="rzd-2f-kCK"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="unacceptedMessageCell" rowHeight="85" id="h4I-uY-qiv" customClass="MessageUnacceptedCell" customModule="iCasting" customModuleProvider="target">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="unacceptedMessageCell" rowHeight="77" id="h4I-uY-qiv" customClass="MessageUnacceptedCell" customModule="iCasting" customModuleProvider="target">
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="h4I-uY-qiv" id="uhK-Cb-ith">
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Kgs-Vk-mNT" userLabel="Light gray background">
+                                                <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Kgs-Vk-mNT" userLabel="Light gray background">
                                                     <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                                     <color key="backgroundColor" red="0.94901960780000005" green="0.94901960780000005" blue="0.94901960780000005" alpha="1" colorSpace="calibratedRGB"/>
                                                     <userDefinedRuntimeAttributes>
@@ -659,7 +659,7 @@
                                                             <color key="value" red="0.90588235289999997" green="0.90588235289999997" blue="0.90588235289999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         </userDefinedRuntimeAttribute>
                                                         <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                                            <real key="value" value="2"/>
+                                                            <real key="value" value="1"/>
                                                         </userDefinedRuntimeAttribute>
                                                     </userDefinedRuntimeAttributes>
                                                 </view>
@@ -689,9 +689,9 @@
                                                 <constraint firstItem="Kgs-Vk-mNT" firstAttribute="leading" secondItem="uhK-Cb-ith" secondAttribute="leading" constant="-2" id="MFH-C1-GEA">
                                                     <variation key="heightClass=regular-widthClass=compact" constant="-2"/>
                                                 </constraint>
+                                                <constraint firstAttribute="bottom" secondItem="Kgs-Vk-mNT" secondAttribute="bottom" id="Ru3-pu-FHy"/>
                                                 <constraint firstItem="Alr-so-0UA" firstAttribute="leading" secondItem="uhK-Cb-ith" secondAttribute="leadingMargin" id="T4X-K1-dzd"/>
                                                 <constraint firstItem="Alr-so-0UA" firstAttribute="top" secondItem="uhK-Cb-ith" secondAttribute="topMargin" constant="7" id="Yjj-R7-bnu"/>
-                                                <constraint firstItem="Kgs-Vk-mNT" firstAttribute="bottom" secondItem="uhK-Cb-ith" secondAttribute="bottomMargin" id="aSH-65-kQo"/>
                                                 <constraint firstAttribute="trailing" secondItem="Kgs-Vk-mNT" secondAttribute="trailing" constant="-2" id="i7g-lh-nC0">
                                                     <variation key="heightClass=regular-widthClass=compact" constant="-2"/>
                                                 </constraint>
@@ -706,7 +706,7 @@
                                                 <mask key="constraints">
                                                     <include reference="Kwf-4f-tn3"/>
                                                     <include reference="MFH-C1-GEA"/>
-                                                    <include reference="aSH-65-kQo"/>
+                                                    <include reference="Ru3-pu-FHy"/>
                                                     <include reference="i7g-lh-nC0"/>
                                                     <include reference="FsS-3u-SnK"/>
                                                     <include reference="T4X-K1-dzd"/>
@@ -723,7 +723,7 @@
                                             <outlet property="unacceptedPointsLabel" destination="U6r-ni-uHz" id="JDJ-IR-Xd0"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="offerMessageCell" rowHeight="141" id="hWB-Tj-wWg" customClass="MessageOfferCell" customModule="iCasting" customModuleProvider="target">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="offerMessageCell" rowHeight="132" id="hWB-Tj-wWg" customClass="MessageOfferCell" customModule="iCasting" customModuleProvider="target">
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="hWB-Tj-wWg" id="S97-M0-UM4">
                                             <autoresizingMask key="autoresizingMask"/>
@@ -815,8 +815,8 @@
                                                 <constraint firstItem="avI-bQ-Utr" firstAttribute="leading" secondItem="S97-M0-UM4" secondAttribute="leading" constant="-2" id="C7Y-ug-1YN">
                                                     <variation key="heightClass=regular-widthClass=compact" constant="-2"/>
                                                 </constraint>
-                                                <constraint firstItem="ygw-2G-yAm" firstAttribute="top" secondItem="dBG-2k-fTI" secondAttribute="bottom" id="FFg-F3-jvY">
-                                                    <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
+                                                <constraint firstItem="ygw-2G-yAm" firstAttribute="top" secondItem="dBG-2k-fTI" secondAttribute="bottom" constant="-2" id="FFg-F3-jvY">
+                                                    <variation key="heightClass=regular-widthClass=compact" constant="-2"/>
                                                 </constraint>
                                                 <constraint firstItem="avI-bQ-Utr" firstAttribute="top" secondItem="S97-M0-UM4" secondAttribute="top" constant="21" id="FmZ-ia-Lcu">
                                                     <variation key="heightClass=regular-widthClass=compact" constant="21"/>
@@ -828,14 +828,14 @@
                                                 <constraint firstAttribute="bottom" secondItem="avI-bQ-Utr" secondAttribute="bottom" constant="1" id="fOs-0X-Cbs">
                                                     <variation key="heightClass=regular-widthClass=compact" constant="1"/>
                                                 </constraint>
-                                                <constraint firstItem="dBG-2k-fTI" firstAttribute="top" secondItem="sji-zA-B5E" secondAttribute="bottom" id="mfL-cl-yiP">
-                                                    <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
+                                                <constraint firstItem="dBG-2k-fTI" firstAttribute="top" secondItem="sji-zA-B5E" secondAttribute="bottom" constant="-6" id="mfL-cl-yiP">
+                                                    <variation key="heightClass=regular-widthClass=compact" constant="-6"/>
                                                 </constraint>
                                                 <constraint firstItem="eEo-Cd-kuw" firstAttribute="top" secondItem="S97-M0-UM4" secondAttribute="topMargin" constant="2" id="reT-nE-6g4">
                                                     <variation key="heightClass=regular-widthClass=compact" constant="2"/>
                                                 </constraint>
-                                                <constraint firstAttribute="bottomMargin" secondItem="ygw-2G-yAm" secondAttribute="bottom" constant="4" id="tHx-i9-iff">
-                                                    <variation key="heightClass=regular-widthClass=compact" constant="4"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="ygw-2G-yAm" secondAttribute="bottom" constant="3" id="tHx-i9-iff">
+                                                    <variation key="heightClass=regular-widthClass=compact" constant="3"/>
                                                 </constraint>
                                                 <constraint firstItem="dBG-2k-fTI" firstAttribute="leading" secondItem="ygw-2G-yAm" secondAttribute="leading" id="xjK-BG-dTi"/>
                                             </constraints>

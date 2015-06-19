@@ -129,15 +129,13 @@ class MessageOfferCell: UITableViewCell, CellVisitorAcceptProtocol {
     var accepted: Bool? {
         
         willSet {
+            dilemmaView.reinitialize()
             if let nv = newValue {
-                
                 if nv == true {
                     dilemmaView.setLeftView()
                 } else {
                     dilemmaView.setRightView()
                 }
-            } else {
-                dilemmaView.reinitialize()
             }
         }
     }

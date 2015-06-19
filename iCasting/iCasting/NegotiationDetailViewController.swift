@@ -124,7 +124,7 @@ MessageOfferCellDelegate
                 println("ConversationTableViewController: request finnished")
                 self.tableView.reloadData()
                 
-                //self.scrollToBottom()
+                self.scrollToBottom()
                 //self.tableView.tableFooterView?.hidden = false
                 self.addObservers()
             }
@@ -177,58 +177,12 @@ MessageOfferCellDelegate
         return getHeightForCell(indexPath)
     }
     
-    
-    
+
     // MARK: - Data source helper methods
     
     func getModelForIndexPath(indexPath: NSIndexPath) -> Message {
         
         return messages[indexPath.row]
-    }
-    
-    
-    
-    func getAndConfigCellWithVisitor(indexPath: NSIndexPath) -> UITableViewCell? {
-     
-        let message: Message = getModelForIndexPath(indexPath)
-        
-        if let identifier = CellIdentifier.fromTextType(message.type) {
-            
-            var cell = cellReuser!.reuseCell(identifier, indexPath: indexPath)
-            
-            if identifier == CellIdentifier.GeneralSystemMessageCell {
-               
-                var visitor = ConcreteMessageCellCongifuratorVisitors(data: [.Model:message as Any])
-                (cell as! MessageSystemCell).accept(visitor)
-            }
-            
-            if identifier == CellIdentifier.MessageCell {
-                
-                var visitor = ConcreteMessageCellCongifuratorVisitors(data: [.Model:message as Any])
-                (cell as! MessageCell).accept(visitor)
-            }
-            
-            if identifier == CellIdentifier.UnacceptedCell {
-                
-                var visitor = ConcreteMessageCellCongifuratorVisitors(data: [.Model:message as Any])
-                (cell as! MessageUnacceptedCell).accept(visitor)
-                
-            }
-            
-            if identifier == CellIdentifier.OfferMessageCell {
-                
-                var data = [
-                    CellKey.Model       :   message as Any,
-                    CellKey.IndexPath   :   indexPath,
-                    CellKey.Delegate    :   self]
-                
-                var visitor = ConcreteMessageCellCongifuratorVisitors(data: data)
-                (cell as! MessageOfferCell).accept(visitor)
-            }
-            
-            return cell
-        }
-        return nil
     }
     
     
@@ -241,30 +195,15 @@ MessageOfferCellDelegate
             var cell = cellReuser!.reuseCell(identifier, indexPath: indexPath)
             var configurator = cellReuser!.getConfigurator()
             
-            if identifier == CellIdentifier.GeneralSystemMessageCell {
-                
-                configurator?.configureCell(data: [.Model:message as Any])
-            }
-            
-            if identifier == CellIdentifier.MessageCell {
-
-                configurator?.configureCell(data: [.Model:message as Any])
-            }
-            
-            if identifier == CellIdentifier.UnacceptedCell {
-                
-                configurator?.configureCell(data: [.Model:message as Any])
-            }
-            
+            // Construct the right data for the cell
+            var data: [CellKey:Any]
             if identifier == CellIdentifier.OfferMessageCell {
-                
-                var data = [
-                    CellKey.Model       :   message as Any,
-                    CellKey.IndexPath   :   indexPath,
-                    CellKey.Delegate    :   self]
-                
-                configurator?.configureCell(data: data)
+                data = [CellKey.Model:message as Any, CellKey.IndexPath:indexPath, CellKey.Delegate:self]
+            } else {
+                data = [CellKey.Model:message as Any]
             }
+            
+            configurator?.configureCell(data: data)
             
             return cell
         }
@@ -272,6 +211,53 @@ MessageOfferCellDelegate
         return nil
     }
 
+
+    // Pattern Experiment
+    
+//    func getAndConfigCellWithVisitor(indexPath: NSIndexPath) -> UITableViewCell? {
+//        
+//        let message: Message = getModelForIndexPath(indexPath)
+//        
+//        if let identifier = CellIdentifier.fromTextType(message.type) {
+//            
+//            var cell = cellReuser!.reuseCell(identifier, indexPath: indexPath)
+//            
+//            if identifier == CellIdentifier.GeneralSystemMessageCell {
+//                
+//                var visitor = ConcreteMessageCellCongifuratorVisitors(data: [.Model:message as Any])
+//                (cell as! MessageSystemCell).accept(visitor)
+//            }
+//            
+//            if identifier == CellIdentifier.MessageCell {
+//                
+//                var visitor = ConcreteMessageCellCongifuratorVisitors(data: [.Model:message as Any])
+//                (cell as! MessageCell).accept(visitor)
+//            }
+//            
+//            if identifier == CellIdentifier.UnacceptedCell {
+//                
+//                var visitor = ConcreteMessageCellCongifuratorVisitors(data: [.Model:message as Any])
+//                (cell as! MessageUnacceptedCell).accept(visitor)
+//                
+//            }
+//            
+//            if identifier == CellIdentifier.OfferMessageCell {
+//                
+//                var data = [
+//                    CellKey.Model       :   message as Any,
+//                    CellKey.IndexPath   :   indexPath,
+//                    CellKey.Delegate    :   self]
+//                
+//                var visitor = ConcreteMessageCellCongifuratorVisitors(data: data)
+//                (cell as! MessageOfferCell).accept(visitor)
+//            }
+//            
+//            return cell
+//        }
+//        return nil
+//    }
+    
+    
     
     func getHeightForCell(indexPath: NSIndexPath) -> CGFloat {
         
