@@ -285,7 +285,6 @@ MessageOfferCellDelegate
                 
                 MessageCellConfigurator(cell: cell).configureCellText(data: [.Model:message as Any])
             }
-            
         }
         
         if identifier == CellIdentifier.UnacceptedCell {
@@ -294,7 +293,6 @@ MessageOfferCellDelegate
                 
                 UnacceptedListMessageCellConfigurator(cell: cell).configureCellText(data: [.Model:message as Any])
             }
-            //height = 100
         }
         
         if identifier == CellIdentifier.OfferMessageCell {
