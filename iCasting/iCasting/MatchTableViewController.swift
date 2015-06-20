@@ -37,10 +37,6 @@ class MatchTableViewController: UITableViewController, MatchCardDelegate {
         handleRequest()
     }
     
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-    }
-    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }

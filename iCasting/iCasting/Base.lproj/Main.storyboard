@@ -894,6 +894,11 @@
                                 <items>
                                     <barButtonItem title="Item" id="Lae-FD-I9y"/>
                                 </items>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="XgA-Lu-Gi8"/>
+                                    </mask>
+                                </variation>
                                 <variation key="heightClass=regular-widthClass=compact">
                                     <mask key="constraints">
                                         <include reference="XgA-Lu-Gi8"/>
@@ -915,6 +920,15 @@
                             <mask key="subviews">
                                 <exclude reference="fQl-jb-Cgd"/>
                                 <exclude reference="XIj-Dp-c8r"/>
+                            </mask>
+                            <mask key="constraints">
+                                <exclude reference="gJ4-Yi-mab"/>
+                                <exclude reference="dVd-E1-afL"/>
+                                <exclude reference="i4Q-Dj-Iut"/>
+                                <exclude reference="mGM-tt-rTv"/>
+                                <exclude reference="l6r-8h-Ebu"/>
+                                <exclude reference="oGQ-gr-rQB"/>
+                                <exclude reference="pxJ-Uk-rcI"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular-widthClass=compact">
@@ -1029,7 +1043,7 @@
         <!--Details-->
         <scene sceneID="e44-GO-p51">
             <objects>
-                <tableViewController id="N73-Xm-znu" customClass="MatchDetailTableViewController" customModule="iCasting" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController hidesBottomBarWhenPushed="YES" id="N73-Xm-znu" customClass="MatchDetailTableViewController" customModule="iCasting" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="HXn-o3-RjM">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="536"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1651,7 +1665,7 @@
         <!--Notifications-->
         <scene sceneID="bMt-Yz-FMv">
             <objects>
-                <tableViewController id="4Aw-SL-Sdl" customClass="NotificationsTableViewController" customModule="iCasting" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController hidesBottomBarWhenPushed="YES" id="4Aw-SL-Sdl" customClass="NotificationsTableViewController" customModule="iCasting" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="b0Y-7C-UMk">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="536"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

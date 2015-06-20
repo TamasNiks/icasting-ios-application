@@ -15,7 +15,7 @@ class MatchCell: UITableViewCell {
     @IBOutlet weak var customImageView: UIImageView!
     @IBOutlet weak var customDate: UILabel!
     @IBOutlet weak var customNegotiationIcon: UIImageView!
-    
+    //static var token: dispatch_once_t = 0
 }
 
 
@@ -29,7 +29,11 @@ extension MatchCell {
         self.customTitle.text = data.title
         self.customSubtitle.text = String(format: "Talent: %@", data.talent) //data[.JobDescription]
         self.customDate.text = String(format: "Start: %@", data.dateStart)
-        self.customImageView.alpha = 0
+
+//        dispatch_once(&MatchCell.token, { () -> Void in
+//            self.customImageView.alpha = 0
+//        })
+        
         var base64: String = data.avatar
         if let image: UIImage = ICImages.ImageWithString(base64).image {
             self.customImageView.image = image
@@ -37,9 +41,9 @@ extension MatchCell {
             self.customImageView.image = ICImages.PlaceHolderClientAvatar.image
         }
         
-        UIView.animateWithDuration(0.25, animations: { () -> Void in
-            self.customImageView.alpha = 1
-        })
+//        UIView.animateWithDuration(0.25, animations: { () -> Void in
+//            self.customImageView.alpha = 1
+//        })
         
         // Configure the cell conform the status of the match (ex: talent accepted, negotiation, pending, closed, finnished)
         setStatus(data.getStatus())

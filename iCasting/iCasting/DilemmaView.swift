@@ -157,6 +157,7 @@ class DilemmaView: UIView {
     
     private func finalSettingsView(view: UIView) {
         view.alpha = 0.60
+        view.backgroundColor = UIColor(white: 0.65, alpha: 1)
         view.transform = CGAffineTransformMakeTranslation(0, 0)
     }
     
