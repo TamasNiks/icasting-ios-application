@@ -37,8 +37,8 @@ class iCastingOfferTest: XCTestCase {
             for keyval: KeyVal in value.values {
 
                 if keyval.key == "type.dateTime" {
-                    println(keyval.key)
-                    println(keyval.val)
+//                    println(keyval.key)
+//                    println(keyval.val)
                     bool = true
                 }
             }

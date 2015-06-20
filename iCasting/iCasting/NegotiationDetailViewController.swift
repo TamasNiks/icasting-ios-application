@@ -51,7 +51,7 @@ MessageOfferCellDelegate
     }
     
     var sizingCellProvider: SizingCellProvider?
-    var cellReuser: NegotiationDetailCellConfigurationFactory?
+    var cellReuser: CellReuser?
     var keyboardController: KeyboardController?
     
     var observing: Bool = false
@@ -92,12 +92,12 @@ MessageOfferCellDelegate
     }
     
     
-    // MARK: - startup functions
+    // MARK: Init functions
     
     private func prepareViewController() {
         
         self.sizingCellProvider = SizingCellProvider(tableView: tableView)
-        self.cellReuser = NegotiationDetailCellConfigurationFactory(tableView: tableView)
+        self.cellReuser = CellReuser(tableView: tableView)
 
         // Create a keyboard controller with views to handle keyboard events
         self.keyboardController = KeyboardController(views: [self.tableView, self.inputToolbar])
@@ -105,6 +105,7 @@ MessageOfferCellDelegate
         
         self.addGestureRecognizer()
     }
+    
     
     private func initializeModel() {
         
@@ -138,9 +139,17 @@ MessageOfferCellDelegate
         self.tableView.addGestureRecognizer(tgr)
     }
     
-    
-    
-    // MARK: - Table view data source
+}
+
+
+
+
+
+// MARK: - DATA SOURCE
+
+extension NegotiationDetailViewController {
+
+    // MARK: Table view data source methods
 
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         
@@ -156,18 +165,13 @@ MessageOfferCellDelegate
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-
         if let cell = getAndConfigCell(indexPath) {
             
             return cell
             
         } else {
             
-            var cell: UITableViewCell = tableView.dequeueReusableCellWithIdentifier(
-                CellIdentifier.MessageCell.rawValue,
-                forIndexPath: indexPath) as! UITableViewCell
-            
-            return cell
+            return getDefaultCell(forIndexPath: indexPath)
         }
     }
 
@@ -178,24 +182,36 @@ MessageOfferCellDelegate
     }
     
 
-    // MARK: - Data source helper methods
+    // MARK: Data source helper methods
     
-    func getModelForIndexPath(indexPath: NSIndexPath) -> Message {
+    func getModel(forIndexPath indexPath: NSIndexPath) -> Message {
         
         return messages[indexPath.row]
     }
     
     
+    
+    func getDefaultCell(forIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        return tableView.dequeueReusableCellWithIdentifier(
+            CellIdentifier.GeneralSystemMessageCell.rawValue,
+            forIndexPath: indexPath) as! UITableViewCell
+    }
+    
+
+    
     func getAndConfigCell(indexPath: NSIndexPath) -> UITableViewCell? {
         
-        let message: Message = getModelForIndexPath(indexPath)
+        let message: Message = getModel(forIndexPath: indexPath)
 
-        if let identifier = CellIdentifier.fromTextType(message.type) {
+        if let
+            identifier = CellIdentifier.fromTextType(message.type),
+            cellReuser = self.cellReuser {
             
-            var cell = cellReuser!.reuseCell(identifier, indexPath: indexPath)
-            var configurator = cellReuser!.getConfigurator()
+                
+            let cell: UITableViewCell? = cellReuser.reuseCell(identifier, indexPath: indexPath)
+            let configurator = cellReuser.getConfigurator()
             
-            // Construct the right data for the cell
+            // Pass the right data for the cell depending on the identifier
             var data: [CellKey:Any]
             if identifier == CellIdentifier.OfferMessageCell {
                 data = [CellKey.Model:message as Any, CellKey.IndexPath:indexPath, CellKey.Delegate:self]
@@ -212,89 +228,40 @@ MessageOfferCellDelegate
     }
 
 
-    // Pattern Experiment
-    
-//    func getAndConfigCellWithVisitor(indexPath: NSIndexPath) -> UITableViewCell? {
-//        
-//        let message: Message = getModelForIndexPath(indexPath)
-//        
-//        if let identifier = CellIdentifier.fromTextType(message.type) {
-//            
-//            var cell = cellReuser!.reuseCell(identifier, indexPath: indexPath)
-//            
-//            if identifier == CellIdentifier.GeneralSystemMessageCell {
-//                
-//                var visitor = ConcreteMessageCellCongifuratorVisitors(data: [.Model:message as Any])
-//                (cell as! MessageSystemCell).accept(visitor)
-//            }
-//            
-//            if identifier == CellIdentifier.MessageCell {
-//                
-//                var visitor = ConcreteMessageCellCongifuratorVisitors(data: [.Model:message as Any])
-//                (cell as! MessageCell).accept(visitor)
-//            }
-//            
-//            if identifier == CellIdentifier.UnacceptedCell {
-//                
-//                var visitor = ConcreteMessageCellCongifuratorVisitors(data: [.Model:message as Any])
-//                (cell as! MessageUnacceptedCell).accept(visitor)
-//                
-//            }
-//            
-//            if identifier == CellIdentifier.OfferMessageCell {
-//                
-//                var data = [
-//                    CellKey.Model       :   message as Any,
-//                    CellKey.IndexPath   :   indexPath,
-//                    CellKey.Delegate    :   self]
-//                
-//                var visitor = ConcreteMessageCellCongifuratorVisitors(data: data)
-//                (cell as! MessageOfferCell).accept(visitor)
-//            }
-//            
-//            return cell
-//        }
-//        return nil
-//    }
-    
-    
-    
+
     func getHeightForCell(indexPath: NSIndexPath) -> CGFloat {
         
-        let message: Message = getModelForIndexPath(indexPath) //messages[indexPath.row]
+        let message: Message = getModel(forIndexPath: indexPath) //messages[indexPath.row]
         let identifier = CellIdentifier.fromTextType(message.type)
         var height: CGFloat = 60
         
-        if identifier == CellIdentifier.MessageCell {
+
+        // Check if a specific text type is bound with a cell identifier, extra safe check
+        if let _identifier = identifier {
             
-            height = sizingCellProvider!.heightForCustomCell(fromIdentifier: CellIdentifier.MessageCell, calculatorType:.AutoLayout) { (cell) -> () in
+            // Exclude the cell, that should not get measured
+            if _identifier != CellIdentifier.GeneralSystemMessageCell {
                 
-                MessageCellConfigurator(cell: cell).configureCellText(data: [.Model:message as Any])
+                // The sizing cell provider gets the right cell once depending on the identifier. It asks to configure the cell, so it can measure the height based on the content through an calculator strategy
+                height = sizingCellProvider!.heightForCustomCell(fromIdentifier: _identifier, calculatorType:.AutoLayout) { (cellConfigurator) -> () in
+                    
+                    cellConfigurator?.configureCellText(data: [.Model:message as Any])
+                }
             }
         }
-        
-        if identifier == CellIdentifier.UnacceptedCell {
-            
-            height = sizingCellProvider!.heightForCustomCell(fromIdentifier: CellIdentifier.UnacceptedCell, calculatorType:.AutoLayout) { (cell) -> () in
-                
-                UnacceptedListMessageCellConfigurator(cell: cell).configureCellText(data: [.Model:message as Any])
-            }
-        }
-        
-        if identifier == CellIdentifier.OfferMessageCell {
-            
-            height = sizingCellProvider!.heightForCustomCell(fromIdentifier: CellIdentifier.OfferMessageCell, calculatorType:.AutoLayout) { (cell) -> () in
-                
-                OfferMessageCellConfigurator(cell: cell).configureCellText(data: [.Model:message as Any])
-            }
-        }
-        
+
         return height
     }
-    
-    
-    
-    // MARK: - Offer cell delegate
+}
+
+
+
+
+// MARK: - DELEGATE AND HELPERS
+
+extension NegotiationDetailViewController {
+
+    // MARK: Offer cell delegate
     
     func offerCell(
         cell: MessageOfferCell,
@@ -304,7 +271,7 @@ MessageOfferCellDelegate
         
             //println("OFFER CELL")
             
-            let message = self.getModelForIndexPath(indexPath)
+            let message = self.getModel(forIndexPath: indexPath)
             
             switch offerStatus {
                 
@@ -325,7 +292,7 @@ MessageOfferCellDelegate
     }
     
 
-    // MARK: - Table view controller functions
+    // MARK: Table view controller functions
     
     func insertAtBottom(forRole role: Role) {
 
@@ -334,10 +301,8 @@ MessageOfferCellDelegate
         switch role {
         case .Incomming:
             rowAnimation = UITableViewRowAnimation.Left
-            println("left")
         case .Outgoing:
             rowAnimation = UITableViewRowAnimation.Right
-            println("right")
         default:
             rowAnimation = UITableViewRowAnimation.Automatic
         }
@@ -356,10 +321,29 @@ MessageOfferCellDelegate
             animated: animate)
         
     }
-
     
+    // TEST
+    
+    @IBAction func onTestItemPressed(sender: AnyObject) {
+        let incommingMessage: Message = Message(id: "123445", owner: "54321", role: Role.Incomming, type: TextType.Text)
+        incommingMessage.body = "This is an incomming message"
+        conversation?.messageList.list.append(incommingMessage)
+        var time: dispatch_time_t = dispatch_time(DISPATCH_TIME_NOW, Int64(1 * Double(NSEC_PER_SEC) ) )
+        dispatch_after(time, dispatch_get_main_queue()) { () -> Void in
+            let outgoingMessage: Message = Message(id: "8327932874", owner: "23423897", role: Role.Outgoing, type: TextType.Text)
+            outgoingMessage.body = "This is an outgoing message"
+            self.conversation?.messageList.list.append(outgoingMessage)
+        }
+        println("TEST")
+    }
+}
 
-    // MARK: - Model observer
+
+
+
+// MARK: - OBSERVING
+
+extension NegotiationDetailViewController {
     
     func removeObservers() {
         if observing {
@@ -381,7 +365,6 @@ MessageOfferCellDelegate
     
     
 
-    
     override func observeValueForKeyPath(keyPath: String, ofObject object: AnyObject, change: [NSObject : AnyObject], context: UnsafeMutablePointer<Void>) {
         
         println("will observe")
@@ -433,31 +416,17 @@ MessageOfferCellDelegate
         }
     }
     
-    
-    // TEST
-    
-    @IBAction func onTestItemPressed(sender: AnyObject) {
-        let incommingMessage: Message = Message(id: "123445", owner: "54321", role: Role.Incomming, type: TextType.Text)
-        incommingMessage.body = "This is an incomming message"
-        conversation?.messageList.list.append(incommingMessage)
-        var time: dispatch_time_t = dispatch_time(DISPATCH_TIME_NOW, Int64(1 * Double(NSEC_PER_SEC) ) )
-        dispatch_after(time, dispatch_get_main_queue()) { () -> Void in
-            let outgoingMessage: Message = Message(id: "8327932874", owner: "23423897", role: Role.Outgoing, type: TextType.Text)
-            outgoingMessage.body = "This is an outgoing message"
-            self.conversation?.messageList.list.append(outgoingMessage)
-        }
-        println("TEST")
-    }
 }
 
 
 
 
 
-// MARK: This extension adds compatibility for the text input field.: JSQ Messages Input Toolbar Delegate
+// MARK: TEXT INPUT TOOLBAR
 
 extension NegotiationDetailViewController {
-    
+
+    // MARK: Add compatibility for text input field: JSQ Messages Input Toolbar Delegate
     
     override func messagesInputToolbar(toolbar: JSQMessagesInputToolbar!, didPressRightBarButton sender: UIButton!) {
         

@@ -21,21 +21,74 @@ enum CellKey {
 
 typealias CellDataType = [CellKey : Any]
 
+
+
+// ABSTRACT FACTORY
+
+class NegotiationDetailCellConfiguratorFactory {
+    
+    var cell: UITableViewCell?
+    var cellIdentifier: CellIdentifier?
+    
+    init(cellIdentifier: CellIdentifier?, cell: UITableViewCell?) {
+        
+        self.cellIdentifier = cellIdentifier
+        self.cell = cell
+    }
+    
+    func getConfigurator() -> CellConfigurator? {
+        
+        if let identifier = self.cellIdentifier, cell = self.cell {
+            
+            switch identifier {
+                
+            case CellIdentifier.MessageCell:
+                
+                return MessageCellConfigurator(cell: cell)
+                
+            case CellIdentifier.UnacceptedCell:
+                
+                return UnacceptedListMessageCellConfigurator(cell: cell)
+                
+            case CellIdentifier.GeneralSystemMessageCell:
+                
+                return SystemMessageCellConfigurator(cell: cell)
+                
+            case CellIdentifier.OfferMessageCell:
+                
+                return OfferMessageCellConfigurator(cell: cell)
+                
+            default:
+                
+                return DefaultCellConfigurator(cell: cell)
+            }
+        }
+        
+        return nil
+    }
+}
+
+
+
+// INTERFACE FOR CELL CONFIGURATION
+
 protocol CellConfigProtocol {
     func configureCell(#data: CellDataType)
 }
 
 
 
-
-
-// ABSTRACT
+// ABSTRACT BASE CLASS
 
 class CellConfigurator : CellConfigProtocol {
     
-    var cell: UITableViewCell
+    let cell: UITableViewCell
     
     init(cell: UITableViewCell) {
+        self.cell = cell
+    }
+    
+    init(cell: MessageCell) {
         self.cell = cell
     }
     
@@ -59,7 +112,7 @@ class MessageCellConfigurator : CellConfigurator {
     
     override func configureCellText(#data: CellDataType) {
         
-        var c = cell as! MessageCell
+        let c = cell as! MessageCell
 
         c.leftMessageLabel.text = ""
         c.rightMessageLabel.text = ""
@@ -80,8 +133,6 @@ class MessageCellConfigurator : CellConfigurator {
 
 
 
-
-
 class UnacceptedListMessageCellConfigurator : CellConfigurator {
     
     override func configureCellText(#data: CellDataType) {
@@ -93,7 +144,7 @@ class UnacceptedListMessageCellConfigurator : CellConfigurator {
         let contract = message.contract!
         let names: [String] = contract.map { $0.name }
         let points: String = "- "+String("\n- ").join(names)
-        println(points)
+        //println(points)
         c.systemMessageLabel.text = message.body
         c.unacceptedPointsLabel.text = points
     }
@@ -101,13 +152,11 @@ class UnacceptedListMessageCellConfigurator : CellConfigurator {
 
 
 
-
-
 class SystemMessageCellConfigurator : CellConfigurator {
     
     override func configureCellText(#data: CellDataType) {
 
-        var c = cell as! MessageSystemCell
+        let c = cell as! MessageSystemCell
         let message: Message = data[.Model] as! Message
         c.systemMessageLabel.text = message.body
     }
@@ -115,13 +164,14 @@ class SystemMessageCellConfigurator : CellConfigurator {
 
 
 
-
-
 class OfferMessageCellConfigurator : CellConfigurator {
+    
+    let keyfont = UIFont.systemFontOfSize(12)
+    let valfont = UIFont.systemFontOfSize(12)
     
     override func configureCell(#data: CellDataType) {
         
-        var c = cell as! MessageOfferCell
+        let c = cell as! MessageOfferCell
         let message: Message = data[.Model] as! Message
         
         if let offer = message.offer {
@@ -136,7 +186,7 @@ class OfferMessageCellConfigurator : CellConfigurator {
     
     override func configureCellText(#data: CellDataType) {
         
-        var c = cell as! MessageOfferCell
+        let c = cell as! MessageOfferCell
         let message: Message = data[.Model] as! Message
         
         if let offer = message.offer {
@@ -155,10 +205,7 @@ class OfferMessageCellConfigurator : CellConfigurator {
     
     private func getOfferString(offerValues: [KeyVal]) -> NSMutableAttributedString {
         
-        let keyfont = UIFont.boldSystemFontOfSize(12)
-        let valfont = UIFont.boldSystemFontOfSize(12)
-        
-        let keyattr = [NSForegroundColorAttributeName : UIColor(white: 1/2, alpha: 1), NSFontAttributeName : keyfont]
+        let keyattr = [NSForegroundColorAttributeName : UIColor(white: 1/1.65, alpha: 1), NSFontAttributeName : keyfont]
         let valattr = [NSForegroundColorAttributeName : UIColor.darkGrayColor(), NSFontAttributeName : valfont]
         
         var points: NSMutableAttributedString = NSMutableAttributedString()
@@ -186,30 +233,28 @@ class OfferMessageCellConfigurator : CellConfigurator {
     
     private func getLocalizationForMessageTitle(title: String) -> String {
         
-        var localizedTitle = NSLocalizedString(title, comment: "The title on top of an offer message")
+        let localizedTitle = NSLocalizedString(title, comment: "The title on top of an offer message")
         return localizedTitle
     }
     
     private func getLocalizationForName(name: String) -> String {
         
-        var prefix = "negotiations.offer.name.%@"
-        var formatted = String(format: prefix, name)
-        var localizedName = NSLocalizedString(formatted, comment: "The name of an offer negotiation point.")
+        let format = "negotiations.offer.name.%@"
+        let formatted = String(format: format, name)
+        let localizedName = NSLocalizedString(formatted, comment: "The name of an offer negotiation point.")
         return localizedName
     }
     
     private func getLocalizationForTitle(title: String) -> String {
         
-        var format = "negotiations.offer.title.%@"
-        var formatted = String(format: format, title)
-        var localizedTitle = NSLocalizedString(formatted, comment: "")
-        var localizedPostfix = NSLocalizedString("negotiations.agreement", comment: "The title of the current offer.")
-        var fullTitle = localizedTitle + " " + localizedPostfix
+        let format = "negotiations.offer.title.%@"
+        let formatted = String(format: format, title)
+        let localizedTitle = NSLocalizedString(formatted, comment: "")
+        let localizedPostfix = NSLocalizedString("negotiations.agreement", comment: "The title of the current offer.")
+        let fullTitle = localizedTitle + " " + localizedPostfix
         return fullTitle
     }
 }
-
-
 
 
 

@@ -16,12 +16,15 @@ class NotificationsTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
         model.get { (failure) -> () in
             self.tableView.reloadData()
         }
         
     }
+    
+//    override func viewWillDisappear(animated: Bool) {
+//        self.setTabBarVisible(true, animated: true)
+//    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

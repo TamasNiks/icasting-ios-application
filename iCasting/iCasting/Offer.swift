@@ -79,10 +79,10 @@ class OfferDataExtractor: OfferProtocol {
     }
     
     // Sometimes, the server can return a null value as a string, replace this value for an empty string
-    private func replaceNullString(string: String) -> String {
-        
-        return string == "<null>" ? String() : string
-    }
+//    private func replaceNullString(string: String) -> String {
+//        
+//        return string == "<null>" ? String() : string
+//    }
     
     private func getUnwrappedStringValue(value: JSON) -> String {
         

@@ -191,11 +191,106 @@ extension UITableViewCell {
     
 }
 
+
+extension UIView {
+    
+    @IBInspectable var borderColor: UIColor? {
+        
+        get {
+            return UIColor(CGColor: layer.borderColor)
+        }
+        
+        set {
+            layer.borderColor = newValue?.CGColor
+        }
+        
+    }
+    
+    
+    @IBInspectable var borderWidth: CGFloat {
+        
+        get {
+            return layer.borderWidth
+        }
+        
+        set {
+            layer.borderWidth = newValue
+        }
+        
+    }
+    
+    @IBInspectable var cornerRadius: CGFloat {
+        
+        get {
+            return layer.cornerRadius
+        }
+        
+        set {
+            layer.cornerRadius = newValue
+            layer.masksToBounds = newValue > 0
+        }
+        
+    }
+    
+}
+
+
+extension UIViewController {
+    
+    func setTabBarVisible(visible:Bool, animated:Bool) {
+        
+        //* This cannot be called before viewDidLayoutSubviews(), because the frame is not set before this time
+        
+        // bail if the current state matches the desired state
+        //if (tabBarIsVisible() == visible) { return }
+        
+        // get a frame calculation ready
+        let frame = self.tabBarController?.tabBar.frame
+        let height = frame?.size.height
+        var offsetY = (visible ? -height! : height)
+        println ("offsetY = \(offsetY)")
+        
+        // zero duration means no animation
+        let duration:NSTimeInterval = (animated ? 0.3 : 0.0)
+        
+        //  animate the tabBar
+//        if frame != nil {
+//            UIView.animateWithDuration(duration) {
+//                self.tabBarController?.tabBar.frame = CGRectOffset(frame!, 0, offsetY!)
+//                return
+//            }
+//        }
+        
+        // animate tabBar
+        if frame != nil {
+            UIView.animateWithDuration(duration) {
+                self.tabBarController?.tabBar.frame = CGRectOffset(frame!, 0, offsetY!)
+                self.view.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.height + offsetY!)
+                self.view.setNeedsDisplay()
+                self.view.layoutIfNeeded()
+                return
+            }
+        }
+    }
+    
+    func tabBarIsVisible() ->Bool {
+        return self.tabBarController?.tabBar.frame.origin.y < CGRectGetMaxY(self.view.frame)
+    }
+    
+    // Call the function from tap gesture recognizer added to your view (or button)
+//    
+//    @IBAction func tapped(sender: AnyObject) {
+//        setTabBarVisible(!tabBarIsVisible(), animated: true)
+//    }
+}
+
+
 // We create an extension of NSIndexPath to "inject" the cell identifiers to the specific indexPath which will be used by the tableview, don't forget to define a default cell type and value in your view controller: For every tableview, which needs specific reuse identifier, you can create an enum implementation with all the reuse identifiers which conforms to the Cells protocol and add it to the AbstractCellType enum.
 
 protocol CellsProtocol {
     var properties: CellProperties {get}
 }
+
 
 enum AbstractCellsType: Int {
     case matchCells = 0 //, other cell types
@@ -230,50 +325,6 @@ extension NSIndexPath {
         }
     }
 }
-
-
-extension UIView {
-    
-    @IBInspectable var borderColor: UIColor? {
-        
-        get {
-            return UIColor(CGColor: layer.borderColor)
-        }
-        
-        set {
-            layer.borderColor = newValue?.CGColor
-        }
-        
-    }
-    
-    
-    @IBInspectable var borderWidth: CGFloat {
-        
-        get {
-            return layer.borderWidth
-        }
-        
-        set {
-            layer.borderWidth = newValue
-        }
-        
-    }
-    
-    @IBInspectable var cornerRadius: CGFloat {
-    
-        get {
-            return layer.cornerRadius
-        }
-        
-        set {
-            layer.cornerRadius = newValue
-            layer.masksToBounds = newValue > 0
-        }
-    
-    }
-    
-}
-
 
 
 // A struct that will hold all the cell properties, extend it to add functionality

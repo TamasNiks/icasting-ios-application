@@ -11,8 +11,8 @@
 		220587F71AD568660010DA92 /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220587F61AD568660010DA92 /* SessionManager.swift */; };
 		22060E8E1B1EEE30000A3F2C /* SizingCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22060E8B1B1EEE30000A3F2C /* SizingCellProvider.swift */; };
 		22060E8F1B1EEE30000A3F2C /* SizingCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22060E8B1B1EEE30000A3F2C /* SizingCellProvider.swift */; };
-		22060E901B1EEE30000A3F2C /* CellReuseFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22060E8C1B1EEE30000A3F2C /* CellReuseFactory.swift */; };
-		22060E911B1EEE30000A3F2C /* CellReuseFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22060E8C1B1EEE30000A3F2C /* CellReuseFactory.swift */; };
+		22060E901B1EEE30000A3F2C /* CellReuser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22060E8C1B1EEE30000A3F2C /* CellReuser.swift */; };
+		22060E911B1EEE30000A3F2C /* CellReuser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22060E8C1B1EEE30000A3F2C /* CellReuser.swift */; };
 		22060E921B1EEE30000A3F2C /* CellConfigurators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22060E8D1B1EEE30000A3F2C /* CellConfigurators.swift */; };
 		22060E931B1EEE30000A3F2C /* CellConfigurators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22060E8D1B1EEE30000A3F2C /* CellConfigurators.swift */; };
 		22082C881AF7C24A00AF5EDB /* NegotiationsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22082C871AF7C24A00AF5EDB /* NegotiationsTableViewController.swift */; };
@@ -234,7 +234,7 @@
 		220587FA1AD576B40010DA92 /* URLPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = URLPlayground.playground; sourceTree = "<group>"; };
 		220587FB1AD57EC30010DA92 /* HttpPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = HttpPlayground.playground; sourceTree = "<group>"; };
 		22060E8B1B1EEE30000A3F2C /* SizingCellProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SizingCellProvider.swift; sourceTree = "<group>"; };
-		22060E8C1B1EEE30000A3F2C /* CellReuseFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellReuseFactory.swift; sourceTree = "<group>"; };
+		22060E8C1B1EEE30000A3F2C /* CellReuser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellReuser.swift; sourceTree = "<group>"; };
 		22060E8D1B1EEE30000A3F2C /* CellConfigurators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellConfigurators.swift; sourceTree = "<group>"; };
 		2206936B1ADD63160082126F /* StringEncodePlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = StringEncodePlayground.playground; sourceTree = "<group>"; };
 		22082C871AF7C24A00AF5EDB /* NegotiationsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NegotiationsTableViewController.swift; sourceTree = "<group>"; };
@@ -728,7 +728,7 @@
 			isa = PBXGroup;
 			children = (
 				22060E8B1B1EEE30000A3F2C /* SizingCellProvider.swift */,
-				22060E8C1B1EEE30000A3F2C /* CellReuseFactory.swift */,
+				22060E8C1B1EEE30000A3F2C /* CellReuser.swift */,
 				22060E8D1B1EEE30000A3F2C /* CellConfigurators.swift */,
 				22082C901AFA243000AF5EDB /* MessageCells.swift */,
 				228EAA811B2EF677009C4EAE /* MessageCellCongifuratorVisitors.swift */,
@@ -948,7 +948,7 @@
 				224BF0301B2F04D300163949 /* Contract.swift in Sources */,
 				2256CE201AF2CD17005D40EB /* ExampleLeftSideDrawerViewController.swift in Sources */,
 				2273B7631AD6B54600CC3EFB /* ICType.swift in Sources */,
-				22060E901B1EEE30000A3F2C /* CellReuseFactory.swift in Sources */,
+				22060E901B1EEE30000A3F2C /* CellReuser.swift in Sources */,
 				222014E71AEFA394004500FA /* JSON.swift in Sources */,
 				226B2E9A1B07BE86001DA2BD /* MatchHeaderCell.swift in Sources */,
 				2289BFFF1B0373DF00A7307C /* CastingObject.swift in Sources */,
@@ -1027,7 +1027,7 @@
 				22082CEA1AFB927A00AF5EDB /* SocketTypes.swift in Sources */,
 				226B2E941B079C06001DA2BD /* MatchCell.swift in Sources */,
 				226B2E9E1B07C2E9001DA2BD /* MatchAcceptCell.swift in Sources */,
-				22060E911B1EEE30000A3F2C /* CellReuseFactory.swift in Sources */,
+				22060E911B1EEE30000A3F2C /* CellReuser.swift in Sources */,
 				2256CE261AF2D3D2005D40EB /* DrawerBarButtonItem.swift in Sources */,
 				222CBB6C1B06940B00D91137 /* MatchFields.swift in Sources */,
 				22060E8F1B1EEE30000A3F2C /* SizingCellProvider.swift in Sources */,

@@ -15,11 +15,11 @@ class MessageBalloon: UIView {
     }
     
     let RECT_INSET: CGFloat = 10 // Lower is more room between border and text
-    let LINE_WIDTH: CGFloat = 2
+    let LINE_WIDTH: CGFloat = 1
     let LINE_COLOR: UIColor = UIColor(white: 0.8, alpha: 1)
-    let CORNER_RADIUS: CGFloat = 10
-    let HORIZONTAL_HOOK_POS: CGFloat = 45 // Less is more to the right
-    let HOOK_WIDTH: CGFloat = 20
+    let CORNER_RADIUS: CGFloat = 8
+    let HORIZONTAL_HOOK_POS: CGFloat = 40 // Less is more to the right
+    let HOOK_WIDTH: CGFloat = 16
     
     
     var _position: Position = Position.Left
@@ -30,7 +30,7 @@ class MessageBalloon: UIView {
             return self._position.rawValue
         }
         set {
-            println(newValue)
+            //println("position: \(newValue)")
             if let pos = Position(rawValue: newValue) {
                 self._position = pos
             }
@@ -38,12 +38,11 @@ class MessageBalloon: UIView {
     }
     
     init(frame: CGRect, position: Position) {
-        
+
         self._position = position
         
         super.init(frame: frame)
         self.opaque = false
-        
     }
     
     required init(coder aDecoder: NSCoder) {
@@ -67,7 +66,7 @@ class MessageBalloon: UIView {
         }
         
         CGPathMoveToPoint(path,     nil, x                  , rect.height-RECT_INSET-1)
-        CGPathAddLineToPoint(path,  nil, x-HOOK_WIDTH/2     , rect.height)
+        CGPathAddLineToPoint(path,  nil, x-HOOK_WIDTH/2     , rect.height-3)
         CGPathAddLineToPoint(path,  nil, x-HOOK_WIDTH       , rect.height-RECT_INSET-1)
         
         return path

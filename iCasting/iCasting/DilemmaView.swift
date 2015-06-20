@@ -96,7 +96,7 @@ class DilemmaView: UIView {
     }
     
     func reinitialize() {
-        println("Will reinitialize")
+        //println("Will reinitialize")
         startSettingsMiddleView(buttonView)
         startSettingsLeftView(leftView)
         startSettingsRightView(rightView)
@@ -156,7 +156,7 @@ class DilemmaView: UIView {
     }
     
     private func finalSettingsView(view: UIView) {
-        view.alpha = 0.65
+        view.alpha = 0.60
         view.transform = CGAffineTransformMakeTranslation(0, 0)
     }
     

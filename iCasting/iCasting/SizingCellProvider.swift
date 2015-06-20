@@ -11,16 +11,17 @@ import UIKit
 
 class SizingCellProvider {
     
-    private var tableView: UITableView?
+    typealias CellDataProviderType = (cellConfigurator: CellConfigurator?)->()
+    
+    private var tableView: UITableView
     static var sizingTokens: [String : dispatch_once_t] = [String : dispatch_once_t]()
     static var sizingCells: [String : UITableViewCell] = [String : UITableViewCell]()
+    
     
     init(tableView: UITableView) {
         
         self.tableView = tableView
     }
-    
-    typealias CellDataProviderType = (cell: UITableViewCell)->()
     
     
     func heightForCustomCell(fromIdentifier identifier: CellIdentifier, calculatorType: CellHeightStrategyType, dataProvider: CellDataProviderType) -> CGFloat {
@@ -31,7 +32,7 @@ class SizingCellProvider {
         initToken(identifier.rawValue)
         
         dispatch_once(&SizingCellProvider.sizingTokens[identifier.rawValue]!) {
-            let cell = self.tableView!.dequeueReusableCellWithIdentifier(identifier.rawValue) as? UITableViewCell
+            let cell = self.tableView.dequeueReusableCellWithIdentifier(identifier.rawValue) as? UITableViewCell
             SizingCellProvider.sizingCells[identifier.rawValue] = cell
         }
         
@@ -50,21 +51,26 @@ class SizingCellProvider {
         return height
     }
     
-    
-    private func provideCellWithDataForSizing(identifier: String, dataProvider: CellDataProviderType) -> UITableViewCell {
-        
-        var cell: UITableViewCell = SizingCellProvider.sizingCells[identifier]!
-        dataProvider(cell: cell)
-        return cell
-    }
-    
-    
+
     private func initToken(identifier: String) {
         
         if SizingCellProvider.sizingTokens[identifier] == nil {
             SizingCellProvider.sizingTokens[identifier] = 0
         }
         
+    }
+    
+    
+    private func provideCellWithDataForSizing(identifier: String, dataProvider: CellDataProviderType) -> UITableViewCell {
+    
+        let cell: UITableViewCell? = SizingCellProvider.sizingCells[identifier]
+        let identifier: CellIdentifier? = CellIdentifier(rawValue: identifier)
+        
+        let configuratorFactory = NegotiationDetailCellConfiguratorFactory(cellIdentifier: identifier, cell: cell)
+        let configurator: CellConfigurator? = configuratorFactory.getConfigurator()
+        
+        dataProvider(cellConfigurator: configurator)
+        return cell!
     }
 }
 
@@ -74,7 +80,7 @@ class SizingCellProvider {
 // To add a specific calculator:, 
 // 1. Add the implementation  which conforms to CellHeightCalculator
 // 2. Put an identifier in the enumeration which represents the type.
-// 3. Add it to the CellHeightCalculatorFactory, you will get an compiler error message as a reminder
+// 3. Add it to the CellHeightStrategyFactory, you will get an compiler error message as a reminder
 
 
 enum CellHeightStrategyType {
