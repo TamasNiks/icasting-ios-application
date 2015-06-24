@@ -17,7 +17,7 @@ class CellReuser: NegotiationDetailCellConfiguratorFactory {
         super.init(cellIdentifier: nil, cell: nil)
     }
     
-    func reuseCell(cellIdentifier: CellIdentifier, indexPath: NSIndexPath) -> UITableViewCell? {
+    func reuseCell(cellIdentifier: CellIdentifier.Message, indexPath: NSIndexPath) -> UITableViewCell? {
         
         //println(cellIdentifier.rawValue)
         super.cellIdentifier = cellIdentifier

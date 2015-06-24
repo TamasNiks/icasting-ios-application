@@ -24,7 +24,7 @@ class AbstractMessageVisitor: MessageVisitorProtocol {
     
     internal func getLocalizationForTextType(textType: TextType, body: String) -> String {
         
-        if textType == TextType.SystemText || textType == TextType.SystemContractUnaccepted {
+        if textType == TextType.SystemText || textType == TextType.SystemContractUnaccepted || textType == TextType.ContractOffer {
             return NSLocalizedString(body, comment: "System text to translate")
         }
         return body
@@ -49,13 +49,26 @@ class MessageVisitor: AbstractMessageVisitor {
         if let textType: TextType = TextType(rawValue: type) {
 
             var offer: Offer?
-            let read: Bool      =   json["read"].boolValue      // Has the message been read
-            var body: String    =   json["body"].stringValue    // If it is an text message, the body of the message
-            let contract        =   MessageContract(contract: json["contract"].dictionaryValue).value   // Contract key value pairs
+            let read: Bool      =   json["read"].boolValue      // Has the message been read or not
+            var body: String    =   json["body"].stringValue    // If it is an text message, the body of the message will exist
+            let contract        =   MessageContract(contract: json["contract"].dictionaryValue).value   // Contract key value pairs if they exist
  
-            // Check if it is really an offer, before setting the internal offer, because sometimes the offer path exist even if it is a text based message
+
             if textType == TextType.Offer {
-                offer = OfferHTTPDataExtractor(offer: json["offer"].dictionary).value
+                
+                offer = OfferHTTPDataExtractor(offer: json["offer"].dictionaryValue).value
+            }
+
+            if textType == TextType.ContractOffer {
+
+                offer = OfferContractHTTPDataExtractor(offer: json["offer"].dictionaryValue).value
+                body = "icasting.chat.system.text.contractoffer"
+            }
+            
+            if textType == TextType.RenegotationRequest {
+                
+                offer = OfferContractHTTPDataExtractor(offer: json["offer"].dictionaryValue).value
+                body = "icasting.chat.system.text.renegotiationrequest"
             }
             
             body = super.getLocalizationForTextType(textType, body: body)
@@ -66,4 +79,5 @@ class MessageVisitor: AbstractMessageVisitor {
             message.read = read
         }
     }
+    
 }

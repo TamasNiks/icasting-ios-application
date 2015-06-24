@@ -25,7 +25,8 @@ enum FilterStatusFields: String {
         "pending"           :   Pending,        // Unanswered by the talent
         "talent accepted"   :   TalentAccepted, // Accepted by the talent
         "closed"            :   Closed,         // Rejected by the talent
-        "completed"         :   Completed       // Match finnished
+        "completed"         :   Completed,      // Match finnished
+        "contract accepted" :   Negotiations    //
     ]
 }
 

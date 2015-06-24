@@ -5,6 +5,75 @@ import Foundation
 let Naam = "Hello playground"
 
 
+enum Sub1: Int {
+    case A
+    case B
+    case C
+}
+
+enum Sub2: Int {
+    case D
+    case E
+    case F
+}
+
+enum Sub3: Int {
+    case G
+    case H
+    case I
+}
+
+
+//enum WrapperCellIdentifier {
+//    
+//    case Message(Sub1)
+//    case Notification(Sub2)
+//
+//    func getCellIdentifer() ->  {
+//    
+//        switch self {
+//            
+//        case .Message(let id):
+//    
+//            
+//        case .Notification(let id):
+//            
+//            
+//            
+//        }
+//        
+//        
+//        
+//    }
+//}
+
+//class AbstractClass {
+//    
+//    func getEnum() {
+//    
+//    }
+//    
+//}
+//
+//class WrapperTest {
+//
+//    enum CellIdentifer: Int {
+//        case A
+//        case B
+//        case C
+//    }
+//    
+//    static func setCell(wrapper: WrapperCellIdentifier) {
+//
+//        
+//    }
+//}
+//
+//let m = WrapperCellIdentifier.Message(Sub1.A)
+//WrapperTest.setCell(m)
+
+
+
 //enum Result<A> {
 //    case Error(NSError)
 //    case Result(A)

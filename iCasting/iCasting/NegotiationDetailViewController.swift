@@ -8,36 +8,12 @@
 
 import UIKit
 
-
-// Bind the TextType of the cells with the CellIdentifiers
-
-enum CellIdentifier: String {
-    case
-    MessageCell = "messageCell",
-    UnacceptedCell = "unacceptedMessageCell",
-    GeneralSystemMessageCell = "generalSystemMessageCell",
-    OfferMessageCell = "offerMessageCell"
-    
-    static func fromTextType(type: TextType) -> CellIdentifier? {
-        
-        let ids = [
-            TextType.Text                       :   CellIdentifier.MessageCell,
-            TextType.SystemText                 :   CellIdentifier.GeneralSystemMessageCell,
-            TextType.SystemContractUnaccepted   :   CellIdentifier.UnacceptedCell,
-            TextType.Offer                      :   CellIdentifier.OfferMessageCell
-        ]
-        
-        return ids[type]
-    }
-}
-
-
 class NegotiationDetailViewController:
 ChatTextInputViewController,
 UITableViewDataSource,
 UITableViewDelegate,
 UIScrollViewDelegate,
-MessageOfferCellDelegate
+DilemmaCellDelegate
  {
     
     @IBOutlet weak var tableView: UITableView!
@@ -50,9 +26,9 @@ MessageOfferCellDelegate
         return conversation?.messages ?? [Message]()
     }
     
-    var sizingCellProvider: SizingCellProvider?
-    var cellReuser: CellReuser?
-    var keyboardController: KeyboardController?
+    var sizingCellProvider  : SizingCellProvider?
+    var cellReuser          : CellReuser?
+    var keyboardController  : KeyboardController?
     
     var observing: Bool = false
     
@@ -89,6 +65,7 @@ MessageOfferCellDelegate
         super.removeObserverForTextinput()
         self.keyboardController?.removeObserver()
         self.removeObservers()
+        self.conversation?.leaveConversation()
     }
     
     
@@ -193,7 +170,7 @@ extension NegotiationDetailViewController {
     
     func getDefaultCell(forIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         return tableView.dequeueReusableCellWithIdentifier(
-            CellIdentifier.GeneralSystemMessageCell.rawValue,
+            CellIdentifier.Message.SystemMessageCell.rawValue,
             forIndexPath: indexPath) as! UITableViewCell
     }
     
@@ -204,21 +181,13 @@ extension NegotiationDetailViewController {
         let message: Message = getModel(forIndexPath: indexPath)
 
         if let
-            identifier = CellIdentifier.fromTextType(message.type),
+            identifier = CellIdentifier.Message.fromTextType(message.type),
             cellReuser = self.cellReuser {
             
-                
             let cell: UITableViewCell? = cellReuser.reuseCell(identifier, indexPath: indexPath)
             let configurator = cellReuser.getConfigurator()
             
-            // Pass the right data for the cell depending on the identifier
-            var data: [CellKey:Any]
-            if identifier == CellIdentifier.OfferMessageCell {
-                data = [CellKey.Model:message as Any, CellKey.IndexPath:indexPath, CellKey.Delegate:self]
-            } else {
-                data = [CellKey.Model:message as Any]
-            }
-            
+            var data: [CellKey:Any] = [CellKey.Model:message as Any, CellKey.IndexPath:indexPath, CellKey.Delegate:self]
             configurator?.configureCell(data: data)
             
             return cell
@@ -232,7 +201,7 @@ extension NegotiationDetailViewController {
     func getHeightForCell(indexPath: NSIndexPath) -> CGFloat {
         
         let message: Message = getModel(forIndexPath: indexPath) //messages[indexPath.row]
-        let identifier = CellIdentifier.fromTextType(message.type)
+        let identifier = CellIdentifier.Message.fromTextType(message.type)
         var height: CGFloat = 60
         
 
@@ -240,7 +209,7 @@ extension NegotiationDetailViewController {
         if let _identifier = identifier {
             
             // Exclude the cell, that should not get measured
-            if _identifier != CellIdentifier.GeneralSystemMessageCell {
+            if _identifier != CellIdentifier.Message.SystemMessageCell {
                 
                 // The sizing cell provider gets the right cell once depending on the identifier. It asks to configure the cell, so it can measure the height based on the content through an calculator strategy
                 height = sizingCellProvider!.heightForCustomCell(fromIdentifier: _identifier, calculatorType:.AutoLayout) { (cellConfigurator) -> () in
@@ -264,12 +233,11 @@ extension NegotiationDetailViewController {
     // MARK: Offer cell delegate
     
     func offerCell(
-        cell: MessageOfferCell,
+        cell: UITableViewCell,
         didPressButtonWithOfferStatus offerStatus: OfferStatus,
         forIndexPath indexPath: NSIndexPath,
         startAnimation: () -> ()) {
         
-            //println("OFFER CELL")
             
             let message = self.getModel(forIndexPath: indexPath)
             
@@ -277,17 +245,37 @@ extension NegotiationDetailViewController {
                 
             case OfferStatus.Accept:
                 
-                conversation?.acceptOffer(message, callBack: { (error) -> () in
+                if message.type == TextType.Offer {
                     
                     startAnimation()
-                })
+                }
+                
+                if message.type == TextType.ContractOffer {
+                    
+                    startAnimation()
+                }
+                
+                if message.type == TextType.RenegotationRequest {
+                    
+                    startAnimation()
+                }
                 
             case OfferStatus.Reject:
                 
-                conversation?.rejectOffer(message, callBack: { (error) -> () in
+                if message.type == TextType.Offer {
                     
                     startAnimation()
-                })
+                }
+                
+                if message.type == TextType.ContractOffer {
+                    
+                    startAnimation()
+                }
+                
+                if message.type == TextType.RenegotationRequest {
+                    
+                    startAnimation()
+                }
             }
     }
     

@@ -9,14 +9,10 @@
 import UIKit
 
 
-// When adding a new cell, add a configurator which will act as a mediator. Use as much as possible the existing values of CellKeys.
+// When adding a new cell, add a configurator.
 
 enum CellKey {
-    case Model
-    case Title, Description
-    case Delegate, IndexPath
-    case LeftMessage, RightMessage
-    case MessageTitle
+    case Model, Delegate, IndexPath
 }
 
 typealias CellDataType = [CellKey : Any]
@@ -28,9 +24,9 @@ typealias CellDataType = [CellKey : Any]
 class NegotiationDetailCellConfiguratorFactory {
     
     var cell: UITableViewCell?
-    var cellIdentifier: CellIdentifier?
+    var cellIdentifier: CellIdentifier.Message?
     
-    init(cellIdentifier: CellIdentifier?, cell: UITableViewCell?) {
+    init(cellIdentifier: CellIdentifier.Message?, cell: UITableViewCell?) {
         
         self.cellIdentifier = cellIdentifier
         self.cell = cell
@@ -42,25 +38,33 @@ class NegotiationDetailCellConfiguratorFactory {
             
             switch identifier {
                 
-            case CellIdentifier.MessageCell:
+            case CellIdentifier.Message.MessageCell:
                 
                 return MessageCellConfigurator(cell: cell)
                 
-            case CellIdentifier.UnacceptedCell:
+            case CellIdentifier.Message.UnacceptedCell:
                 
                 return UnacceptedListMessageCellConfigurator(cell: cell)
                 
-            case CellIdentifier.GeneralSystemMessageCell:
+            case CellIdentifier.Message.SystemMessageCell:
                 
                 return SystemMessageCellConfigurator(cell: cell)
                 
-            case CellIdentifier.OfferMessageCell:
+            case CellIdentifier.Message.OfferMessageCell:
                 
                 return OfferMessageCellConfigurator(cell: cell)
                 
+            case CellIdentifier.Message.ContractOfferMessageCell:
+                
+                return ContractOfferMessageCellConfigurator(cell: cell)
+                
+            case CellIdentifier.Message.RenegotiationRequestMessageCell:
+                
+                return RenegotiationRequestMessageCellConfigurator(cell: cell)
+                
             default:
                 
-                return DefaultCellConfigurator(cell: cell)
+                return nil
             }
         }
         
@@ -88,10 +92,6 @@ class CellConfigurator : CellConfigProtocol {
         self.cell = cell
     }
     
-    init(cell: MessageCell) {
-        self.cell = cell
-    }
-    
     func configureCell(#data: CellDataType) {
         configureCellText(data: data)
         
@@ -101,7 +101,6 @@ class CellConfigurator : CellConfigProtocol {
     func configureCellText(#data: CellDataType) { /* Abstract ...  */ }
     
 }
-
 
 
 
@@ -133,6 +132,7 @@ class MessageCellConfigurator : CellConfigurator {
 
 
 
+
 class UnacceptedListMessageCellConfigurator : CellConfigurator {
     
     override func configureCellText(#data: CellDataType) {
@@ -152,6 +152,7 @@ class UnacceptedListMessageCellConfigurator : CellConfigurator {
 
 
 
+
 class SystemMessageCellConfigurator : CellConfigurator {
     
     override func configureCellText(#data: CellDataType) {
@@ -161,6 +162,7 @@ class SystemMessageCellConfigurator : CellConfigurator {
         c.systemMessageLabel.text = message.body
     }
 }
+
 
 
 
@@ -176,9 +178,9 @@ class OfferMessageCellConfigurator : CellConfigurator {
         
         if let offer = message.offer {
             
-            c.accepted = offer.accepted
+            c.accepted = offer.acceptTalent
             c.indexPath = data[.IndexPath] as? NSIndexPath
-            c.delegate = data[.Delegate] as? MessageOfferCellDelegate
+            c.delegate = data[.Delegate] as? DilemmaCellDelegate
         }
         
         configureCellText(data: data)
@@ -191,16 +193,14 @@ class OfferMessageCellConfigurator : CellConfigurator {
         
         if let offer = message.offer {
         
-            
-            var points: NSAttributedString = getOfferString(offer.values)
+            var points: NSAttributedString = getOfferString(offer.values!)
             let range: NSRange = NSRange(location: 0, length: points.length-1)
             points = points.attributedSubstringFromRange(range)
             
             c.messageTitle.text = getLocalizationForMessageTitle("Offer")
-            c.title.text = getLocalizationForTitle(offer.name)
+            c.title.text = getLocalizationForTitle(offer.name!)
             c.desc.attributedText = points
         }
-        
     }
     
     private func getOfferString(offerValues: [KeyVal]) -> NSMutableAttributedString {
@@ -258,12 +258,121 @@ class OfferMessageCellConfigurator : CellConfigurator {
 
 
 
-class DefaultCellConfigurator: CellConfigurator {
+
+class ContractOfferMessageCellConfigurator : CellConfigurator {
     
-    override func configureCellText(#data: CellDataType) {
-        cell.textLabel?.text = data[CellKey.Title] as? String
-        cell.detailTextLabel?.text = data[CellKey.Description] as? String
+    override func configureCell(#data: CellDataType) {
+        
+        let c = cell as! MessageContractOfferCell
+        let message: Message = data[.Model] as! Message
+
+        if let offer = message.offer {
+
+            c.indexPath = data[.IndexPath] as? NSIndexPath
+            c.delegate = data[.Delegate] as? DilemmaCellDelegate
+        }
+    
+        configureCellText(data: data)
     }
     
+    override func configureCellText(#data: CellDataType) {
+
+        let c = cell as! MessageContractOfferCell
+        let message: Message = data[.Model] as! Message
+        
+        if let offer = message.offer {
+            
+            if let contractState = offer.contractState {
+
+                println("Has contractState")
+                
+                var statusText: String = String()
+                c.activityIndicator.startAnimating()
+                
+                switch contractState {
+                    
+                case ContractState.BothAccepted:
+                    
+                    c.accepted = true
+                    statusText = "Both accepted contract"
+                    c.activityIndicator.stopAnimating()
+                    
+                case ContractState.NeitherDecided:
+                    
+                    c.enabled = true
+                    statusText = "Client has not accepted yet"
+                    // If talent, set to "Client has not accepted yet" otherwise "Talent has not accepted yet"
+                    
+                case ContractState.ClientAccepted:
+                    
+                    c.accepted = true
+                    statusText = "Talent has not accepted yet"
+                    // If talent, set to "Client has accepted" otherwise if client: "Talent has not accepted yet"
+                    
+                case ContractState.ClientRejected:
+                    
+                    c.enabled = false
+                    statusText = "Client rejected"
+                    c.activityIndicator.stopAnimating()
+                    // Finished: If talent, set to "Client rejected" if client, set button to " You rejected"
+                    
+                case ContractState.TalentAccepted:
+                    
+                    c.accepted = true
+                    statusText = "Client has not accepted yet"
+                    // If talent, set to "Client has not accepted yet" otherwise if client: "Talent has accepted"
+                    
+                case ContractState.TalentRejected:
+                    
+                    c.accepted = false
+                    statusText = "You rejected"
+                    c.activityIndicator.stopAnimating()
+                    // Finished: If talent, set to "You rejected" if client, set to "Talent rejected"
+                }
+                
+                println("statusText")
+                
+                c.desc.text = "Do you want to accept the contract?"
+                c.subdescription.text = statusText
+            }
+        }
+    }
 }
+
+
+
+
+class RenegotiationRequestMessageCellConfigurator: CellConfigurator {
+    
+    override func configureCell(#data: CellDataType) {
+        
+        let c = cell as! MessageRenegotiationRequestCell
+        let message: Message = data[.Model] as! Message
+        
+        if let offer = message.offer {
+            
+            c.indexPath = data[.IndexPath] as? NSIndexPath
+            c.delegate = data[.Delegate] as? DilemmaCellDelegate
+        }
+        configureCellText(data: data)
+    }
+    
+    override func configureCellText(#data: CellDataType) {
+        
+        let c = cell as! MessageRenegotiationRequestCell
+        let message: Message = data[.Model] as! Message
+        
+        if let offer = message.offer {
+         
+            if offer.contractState == ContractState.BothAccepted {
+                c.accepted = true
+            } else {
+                c.accepted = false
+            }
+        }
+        
+        c.title.text = NSLocalizedString("negotiations.renegotiation.title", comment: "")
+    }
+}
+
 

@@ -13,6 +13,9 @@ class DilemmaView: UIView {
     let nibName: String = "DilemmaView"
     
     let ANIMATION_DURATION: NSTimeInterval = 0.7
+
+    var leftButtonColor: UIColor?
+    var rightButtonColor: UIColor?
     
     var leftView: UIView!
     var rightView: UIView!
@@ -139,6 +142,41 @@ class DilemmaView: UIView {
         self.finalSettingsMiddleViewForRight(self.buttonView)
     }
     
+    func disableButtons() {
+        self.leftButton.enabled = false
+        self.rightButton.enabled = false
+        self.grayOutButtonsForInactiveState()
+    }
+
+    func enableButtons() {
+        self.leftButton.enabled = true
+        self.rightButton.enabled = true
+        self.colorButtonsForActiveState()
+    }
+    
+    private func grayOutButtonsForInactiveState() {
+
+        let grayColor: UIColor = UIColor(white: 0.65, alpha: 1)
+        let alpha: CGFloat = 0.60
+        
+        self.leftButton.alpha = alpha
+        self.rightButton.alpha = alpha
+            
+        self.leftButton.backgroundColor = grayColor
+        self.rightButton.backgroundColor = grayColor
+    }
+    
+    private func colorButtonsForActiveState() {
+        
+        self.leftButtonColor = self.leftButton.backgroundColor
+        self.rightButtonColor = self.rightButton.backgroundColor
+        
+        self.leftButton.alpha = 1
+        self.rightButton.alpha = 1
+        
+        self.leftButton.backgroundColor = self.leftButtonColor
+        self.rightButton.backgroundColor = self.rightButtonColor
+    }
     
     private func startSettingsLeftView(view: UIView) {
         view.alpha = 0

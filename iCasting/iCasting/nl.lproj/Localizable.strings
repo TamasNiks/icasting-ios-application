@@ -100,6 +100,14 @@
 "negotiations.offer.title.auditionType" = "Type auditie";
 "negotiations.offer.title.requests" = "Aanvullende verzoeken";
 
+"negotiations.renegotiation.title" = "Heronderhandel verzoek";
+
+// iCasting System text
+
+"icasting.chat.system.text.contractoffer" = "Wilt u het contract accepteren?";
+"icasting.chat.system.text.welcome" = "Welkom in het chat gesprek tussen talent en opdrachtgever! De opdrachtgever kan hier vragen stellen en verzoeken uitsturen die het talent kan accepteren. Als alles verzoeken akkoord zijn bevonden kan de opdrachtgever het gezamenlijke contract uitsturen ter bevestiging van de opdracht.";
+"icasting.chat.system.contract.fields.unaccepted" = "De volgende punten moeten nog onderhandeld worden om tot een gezamenlijk akkoord te komen:";
+
 /* Notifications */
 "notification.desc.achievement-complete" = "Je hebt \"%@\" voltooid en %@ XP verdient";
 "notification.desc.match-matched" = "Je bent gematcht met \"%@\"";

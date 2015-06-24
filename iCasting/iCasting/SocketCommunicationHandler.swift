@@ -25,22 +25,50 @@ struct SocketHandlers {
     
     typealias SocketHandlerType = (data: NSArray?)->()
     
-    var authenticated       : SocketHandlerType = { data in }
-    var connected           : SocketHandlerType = { data in }
-    var receivedMessage     : SocketHandlerType = { data in }
-    var receivedOffer       : SocketHandlerType = { data in }
-    var offerAccepted       : SocketHandlerType = { data in }
-    var offerRejected       : SocketHandlerType = { data in }
-    var userjoined          : SocketHandlerType = { data in }
-    var userleft            : SocketHandlerType = { data in }
+    var authenticated               : SocketHandlerType = { data in }
+    var connected                   : SocketHandlerType = { data in }
+    var receivedMessage             : SocketHandlerType = { data in }
+    var receivedOffer               : SocketHandlerType = { data in }
+    var offerAccepted               : SocketHandlerType = { data in }
+    var offerRejected               : SocketHandlerType = { data in }
+    var userjoined                  : SocketHandlerType = { data in }
+    var userleft                    : SocketHandlerType = { data in }
+    var receivedContractOffer       : SocketHandlerType = { data in }
+    var contractOfferAccepted       : SocketHandlerType = { data in }
+    var contractOfferRejected       : SocketHandlerType = { data in }
+    var receivedRenegotiationRequest: SocketHandlerType = { data in }
+    var acceptRenegotiationRequest  : SocketHandlerType = { data in }
+    var rejectRenegotiationRequest  : SocketHandlerType = { data in }
 }
 
 
 enum Emit: String {
-    case Authenticate   = "authenticate"
-    case Message        = "message"
-    case OfferAccept    = "accept offer"
-    case OfferReject    = "reject offer"
+    case Authenticate           = "authenticate"
+    case Message                = "message"
+    case OfferAccept            = "accept offer"
+    case OfferReject            = "reject offer"
+    case ContractAccept         = "accept contract offer"
+    case ContractReject         = "reject contract offer"
+    case RenegotiationAccept    = "accept renegotiation request"
+    case RenegotationReject     = "reject renegotiation request"
+}
+
+enum On: String {
+    case Authenticated          = "authenticated"
+    case Message                = "message"
+    case Offer                  = "offer"
+    case UserJoin               = "user join"
+    case UserLeft               = "user left"
+    case AcceptOffer            = "accept offer"
+    case RejectOffer            = "reject offer"
+    
+    case ContractOffer          = "contract offer"
+    case AccceptContractOffer   = "accept contract offer"
+    case RejectContractOffer    = "reject contract offer"
+    
+    case RenegotiationRequest         = "renegotiation request"
+    case AcceptRenegotiationRequest   = "accept renegotiation request"
+    case RejectRenegotiationRequest   = "reject renegotiation request"
 }
 
 
@@ -88,53 +116,82 @@ class SocketCommunicationHandler {
             }
         }
         
-        self.socket.on("authenticated") { data, ack in
+        self.socket.on(On.Authenticated.rawValue) { data, ack in
             
             handlers.authenticated(data: data)
             
         }
         
-        self.socket.on("message") { data, ack in
+        self.socket.on(On.Message.rawValue) { data, ack in
 
             handlers.receivedMessage(data: data)
         }
 
-        self.socket.on("offer") { data, ack in
+        self.socket.on(On.Offer.rawValue) { data, ack in
             
             handlers.receivedOffer(data: data)
         }
         
         
-        self.socket.on("user join") { data, ack in
+        self.socket.on(On.UserJoin.rawValue) { data, ack in
             
             handlers.userjoined(data: data)
             
             if let user_id = data?[0] as? String {
                 println(user_id)
             }
-            
             ack?("User has been joined", "test")
         }
         
-        
-        self.socket.on("user left") { data, ack in
+        self.socket.on(On.UserLeft.rawValue) { data, ack in
             
             handlers.userleft(data: data)
         }
         
-        
-        self.socket.on("accept offer") { data, ack in
+        self.socket.on(On.AcceptOffer.rawValue) { data, ack in
             
             handlers.offerAccepted(data: data)
         }
         
-        self.socket.on("reject offer") { data, ack in
+        self.socket.on(On.RejectOffer.rawValue) { data, ack in
             
             handlers.offerRejected(data: data)
         }
-
-        //socket.onAny {println("Got event: \($0.event), with items: \($0)")}
         
+        self.socket.on(On.ContractOffer.rawValue) { data, ack in
+            
+            handlers.receivedContractOffer(data: data)
+        }
+
+        self.socket.on(On.AccceptContractOffer.rawValue) { data, ack in
+         
+            handlers.contractOfferAccepted(data: data)
+        }
+        
+        self.socket.on(On.RejectContractOffer.rawValue) { data, ack in
+         
+            handlers.contractOfferRejected(data: data)
+        }
+        
+        self.socket.on(On.RenegotiationRequest.rawValue) { data, ack in
+            
+            //String message	Object user_id	String message_id
+            handlers.receivedRenegotiationRequest(data: data)
+        }
+        
+        self.socket.on(On.AcceptRenegotiationRequest.rawValue) { data, ack in
+            
+            handlers.acceptRenegotiationRequest(data: data)
+        }
+        
+        self.socket.on(On.RejectRenegotiationRequest.rawValue) { data, ack in
+            
+            handlers.rejectRenegotiationRequest(data: data)
+        }
+        
+        
+        
+        //socket.onAny {println("Got event: \($0.event), with items: \($0)")}
     }
     
     
@@ -143,16 +200,21 @@ class SocketCommunicationHandler {
         
     }
     
-    
     func start() {
         self.socket.connect()
     }
-    
     
     func stop() {
         self.socket.close(fast: true)
     }
 
+}
+
+
+
+// Extension for sending emit messages
+
+extension SocketCommunicationHandler {
     
     func sendMessage(message: String, acknowledged: (data: NSArray?) -> ()) {
         
@@ -179,4 +241,42 @@ class SocketCommunicationHandler {
             acknowledged(data: data)
         }
     }
+    
+    
+    func acceptContract(messageID:String, acknowledged: (data: NSArray?) -> ()) {
+        
+        self.socket.emitWithAck(Emit.ContractAccept.rawValue, messageID)(timeout: 0) { data in
+            //String error	String new status	Object by who
+            acknowledged(data: data)
+        }
+    }
+    
+    
+    func rejectContract(messageID: String, acknowledged: (data: NSArray?) -> ()) {
+        
+        self.socket.emitWithAck(Emit.ContractReject.rawValue, messageID)(timeout: 0) { data in
+            //String error	String new status	Object by who
+            acknowledged(data: data)
+        }
+    }
+    
+    
+    func acceptRenegotiation(messageID: String, acknowledged: (data: NSArray?) -> ()) {
+        
+        self.socket.emitWithAck(Emit.RenegotiationAccept.rawValue, messageID)(timeout: 0) { data in
+            //String error	String new status	Object by who
+            acknowledged(data: data)
+        }
+    }
+    
+    
+    func rejectRenegotiation(messageID: String, acknowledged: (data: NSArray?) -> ()) {
+        
+        self.socket.emitWithAck(Emit.RenegotationReject.rawValue, messageID)(timeout: 0) { data in
+            //String error	String new status	Object by who
+            acknowledged(data: data)
+        }
+    }
 }
+
+

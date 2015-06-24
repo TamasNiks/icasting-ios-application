@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		22014EFE1B381320001AD8A5 /* CellIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22014EFD1B381320001AD8A5 /* CellIdentifier.swift */; };
+		22014EFF1B381320001AD8A5 /* CellIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22014EFD1B381320001AD8A5 /* CellIdentifier.swift */; };
 		220587F51AD565590010DA92 /* RequestFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220587F41AD565590010DA92 /* RequestFactory.swift */; };
 		220587F71AD568660010DA92 /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220587F61AD568660010DA92 /* SessionManager.swift */; };
 		22060E8E1B1EEE30000A3F2C /* SizingCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22060E8B1B1EEE30000A3F2C /* SizingCellProvider.swift */; };
@@ -229,6 +231,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		22014EFD1B381320001AD8A5 /* CellIdentifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellIdentifier.swift; sourceTree = "<group>"; };
 		220587F41AD565590010DA92 /* RequestFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestFactory.swift; sourceTree = "<group>"; };
 		220587F61AD568660010DA92 /* SessionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionManager.swift; sourceTree = "<group>"; };
 		220587FA1AD576B40010DA92 /* URLPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = URLPlayground.playground; sourceTree = "<group>"; };
@@ -411,6 +414,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		22014EFC1B3812F9001AD8A5 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				226B2E951B07A33E001DA2BD /* ICAlertControllers.swift */,
+				22014EFD1B381320001AD8A5 /* CellIdentifier.swift */,
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
 		220587F81AD572520010DA92 /* HTTP */ = {
 			isa = PBXGroup;
 			children = (
@@ -517,10 +529,10 @@
 		224BF0321B2F04E100163949 /* Message */ = {
 			isa = PBXGroup;
 			children = (
-				224DE16F1B27362500A0752E /* Message.swift */,
-				22538B4B1B2AD96A00F80E77 /* Offer.swift */,
 				224BF02F1B2F04D300163949 /* Contract.swift */,
+				224DE16F1B27362500A0752E /* Message.swift */,
 				229A3C951B32C2FA00D175F4 /* MessageVisitor.swift */,
+				22538B4B1B2AD96A00F80E77 /* Offer.swift */,
 			);
 			name = Message;
 			sourceTree = "<group>";
@@ -654,22 +666,22 @@
 		226B2E981B07B351001DA2BD /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				2268C5371ACE905D00E58BF4 /* LoginViewController.swift */,
-				2289C0041B03968600A7307C /* FamilyTableViewController.swift */,
+				229A3C8F1B30270300D175F4 /* ChatTextInputViewController.swift */,
 				2249D5B71B05FA6600473A20 /* DashboardTableViewController.swift */,
+				2289C0041B03968600A7307C /* FamilyTableViewController.swift */,
+				229A3C921B316C3C00D175F4 /* KeyboardController.swift */,
+				2268C5371ACE905D00E58BF4 /* LoginViewController.swift */,
 				2289C0011B0393BE00A7307C /* MainViewController.swift */,
-				22103B2A1AE549DF00C34C89 /* MatchTableViewController.swift */,
 				22103B281AE542D400C34C89 /* MatchDetailTableViewController.swift */,
 				226B2EA31B0814B7001DA2BD /* MatchProfileTableViewController.swift */,
-				22082C871AF7C24A00AF5EDB /* NegotiationsTableViewController.swift */,
+				22103B2A1AE549DF00C34C89 /* MatchTableViewController.swift */,
 				22082C931AFA2C2A00AF5EDB /* NegotiationDetailViewController.swift */,
-				229A3C8C1B301BE600D175F4 /* TextInputViewControllerTest.swift */,
-				22AD0DAE1AD6CDB900F0496A /* NewsTableViewController.swift */,
+				22082C871AF7C24A00AF5EDB /* NegotiationsTableViewController.swift */,
 				225C11501AE50197008654A7 /* NewsDetailViewController.swift */,
-				223E49C11B02389B00BB6BB3 /* SettingTableViewController.swift */,
+				22AD0DAE1AD6CDB900F0496A /* NewsTableViewController.swift */,
 				22FB8A181B0F62D900BE13F6 /* NotificationsTableViewController.swift */,
-				229A3C8F1B30270300D175F4 /* ChatTextInputViewController.swift */,
-				229A3C921B316C3C00D175F4 /* KeyboardController.swift */,
+				223E49C11B02389B00BB6BB3 /* SettingTableViewController.swift */,
+				229A3C8C1B301BE600D175F4 /* TextInputViewControllerTest.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -705,8 +717,8 @@
 		2273B75C1AD69E4F00CC3EFB /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				22014EFC1B3812F9001AD8A5 /* Classes */,
 				226B2E911B079494001DA2BD /* ArrayDataSource.swift */,
-				226B2E951B07A33E001DA2BD /* ICAlertControllers.swift */,
 				226B2E981B07B351001DA2BD /* ViewControllers */,
 			);
 			name = Controllers;
@@ -719,7 +731,6 @@
 				22FB747D1B14BF6B000C6373 /* Messages */,
 				2268C5401ACE905D00E58BF4 /* LaunchScreen.xib */,
 				2268C53B1ACE905D00E58BF4 /* Main.storyboard */,
-				22B06AF71B1C53FC002A7805 /* DilemmaView.xib */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -780,6 +791,7 @@
 			children = (
 				22B06AF61B1C53DB002A7805 /* Cells */,
 				22B06AF31B1C4EF8002A7805 /* DilemmaView.swift */,
+				22B06AF71B1C53FC002A7805 /* DilemmaView.xib */,
 				22223E261B208780001711C4 /* MessageBalloon.swift */,
 			);
 			name = Messages;
@@ -960,6 +972,7 @@
 				22082CEB1AFB927A00AF5EDB /* SwiftRegex.swift in Sources */,
 				22C598D01B2F12500008CFCD /* JSQMessagesComposerTextView.m in Sources */,
 				224F77F61AF0F6BE00D88F99 /* ICImage.swift in Sources */,
+				22014EFE1B381320001AD8A5 /* CellIdentifier.swift in Sources */,
 				22082CDD1AFB927A00AF5EDB /* SocketEventHandler.swift in Sources */,
 				2256CE211AF2CD17005D40EB /* ExampleRightSideDrawerViewController.swift in Sources */,
 				22082CED1AFB927A00AF5EDB /* WebSocket.swift in Sources */,
@@ -1056,6 +1069,7 @@
 				226A9E8D1AEED71400AB9EFF /* Alamofire.swift in Sources */,
 				226B2EA11B07C667001DA2BD /* MatchDefaultCell.swift in Sources */,
 				22B06AF51B1C538A002A7805 /* DilemmaView.swift in Sources */,
+				22014EFF1B381320001AD8A5 /* CellIdentifier.swift in Sources */,
 				22082CE21AFB927A00AF5EDB /* SocketIOClient.swift in Sources */,
 				22740F851AD80EC700755146 /* URL.swift in Sources */,
 				2256CE271AF2D443005D40EB /* AnimatedMenuButton.swift in Sources */,

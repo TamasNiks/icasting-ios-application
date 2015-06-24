@@ -14,19 +14,27 @@ enum OfferStatus {
 }
 
 
-protocol MessageOfferCellDelegate {
+protocol DilemmaCellDelegate {
     func offerCell(
-        cell: MessageOfferCell,
+        cell: UITableViewCell,
         didPressButtonWithOfferStatus offerStatus: OfferStatus,
         forIndexPath indexPath: NSIndexPath,
         startAnimation: ()->())
 }
 
+//protocol MessageOfferCellDelegate {
+//    func offerCell(
+//        cell: MessageOfferCell,
+//        didPressButtonWithOfferStatus offerStatus: OfferStatus,
+//        forIndexPath indexPath: NSIndexPath,
+//        startAnimation: ()->())
+//}
 
-struct MessageCellIdentifier {
-    static let MessageCell: String = "messageCell"
-    static let SystemMessageCell: String = "systemMessageCell"
-}
+
+//struct MessageCellIdentifier {
+//    static let MessageCell: String = "messageCell"
+//    static let SystemMessageCell: String = "systemMessageCell"
+//}
 
 
 
@@ -35,7 +43,6 @@ struct MessageCellIdentifier {
 protocol CellVisitorAcceptProtocol {
 
     func accept(configurator: MessageCellCongifuratorVisitors)
-    
 }
 
 
@@ -109,18 +116,15 @@ class MessageUnacceptedCell: UITableViewCell, CellVisitorAcceptProtocol {
 
 
 
+// BASE CELL
 
+class DilemmaCell: UITableViewCell {
 
-class MessageOfferCell: UITableViewCell, CellVisitorAcceptProtocol {
-    
-    @IBOutlet weak var messageTitle: UILabel!
-    @IBOutlet weak var title: UILabel!
-    @IBOutlet weak var desc: UILabel!
     @IBOutlet weak var dilemmaView: DilemmaView!
     
     var indexPath: NSIndexPath?
     
-    var delegate: MessageOfferCellDelegate? {
+    var delegate: DilemmaCellDelegate? {
         didSet {
             setup()
         }
@@ -138,6 +142,29 @@ class MessageOfferCell: UITableViewCell, CellVisitorAcceptProtocol {
                 }
             }
         }
+    }
+    
+    var enabled: Bool = true {
+        
+        willSet {
+            let nv: Bool = newValue ?? true
+            if nv == true {
+                dilemmaView.enableButtons()
+            } else {
+                dilemmaView.disableButtons()
+            }
+            
+        }
+    }
+    
+    var rejectedTitle: String? {
+        set { dilemmaView.rightViewLabel.text = newValue }
+        get { return dilemmaView.rightViewLabel.text }
+    }
+    
+    var acceptedTitle: String? {
+        set { dilemmaView.leftViewLabel.text = newValue }
+        get { return dilemmaView.leftViewLabel.text }
     }
     
     private func setup() {
@@ -164,8 +191,30 @@ class MessageOfferCell: UITableViewCell, CellVisitorAcceptProtocol {
             })
         }
     }
-    
-    func accept(configurator: MessageCellCongifuratorVisitors) {
-        configurator.visit(self)
-    }
 }
+
+
+class MessageOfferCell: DilemmaCell {
+
+    @IBOutlet weak var messageTitle: UILabel!
+    @IBOutlet weak var title: UILabel!
+    @IBOutlet weak var desc: UILabel!
+}
+
+
+
+class MessageContractOfferCell: DilemmaCell {
+    
+    @IBOutlet weak var desc: UILabel!
+    @IBOutlet weak var subdescription: UILabel!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    
+}
+
+class MessageRenegotiationRequestCell: DilemmaCell {
+    
+    @IBOutlet weak var title: UILabel!
+}
+
+
+

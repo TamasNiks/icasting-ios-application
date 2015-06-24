@@ -24,7 +24,7 @@ class SizingCellProvider {
     }
     
     
-    func heightForCustomCell(fromIdentifier identifier: CellIdentifier, calculatorType: CellHeightStrategyType, dataProvider: CellDataProviderType) -> CGFloat {
+    func heightForCustomCell(fromIdentifier identifier: CellIdentifier.Message, calculatorType: CellHeightStrategyType, dataProvider: CellDataProviderType) -> CGFloat {
         
         
         // Intialize tokens for the dispatch_once function and grap the cell for one time only in the lifetime of the app
@@ -64,7 +64,7 @@ class SizingCellProvider {
     private func provideCellWithDataForSizing(identifier: String, dataProvider: CellDataProviderType) -> UITableViewCell {
     
         let cell: UITableViewCell? = SizingCellProvider.sizingCells[identifier]
-        let identifier: CellIdentifier? = CellIdentifier(rawValue: identifier)
+        let identifier: CellIdentifier.Message? = CellIdentifier.Message(rawValue: identifier)
         
         let configuratorFactory = NegotiationDetailCellConfiguratorFactory(cellIdentifier: identifier, cell: cell)
         let configurator: CellConfigurator? = configuratorFactory.getConfigurator()

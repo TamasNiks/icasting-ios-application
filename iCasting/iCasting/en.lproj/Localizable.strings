@@ -100,6 +100,14 @@
 "negotiations.offer.title.auditionType" = "Audition type";
 "negotiations.offer.title.requests" = "Additional requests";
 
+"negotiations.renegotiation.title" = "Renegotiation request";
+
+// iCasting System text
+
+"icasting.chat.system.text.contractoffer" = "Do you want to accept the contract?";
+"icasting.chat.system.text.welcome" = "Welcome to the conversation";
+"icasting.chat.system.contract.fields.unaccepted" = "There are a few points that have to be negotiated. As soon as these have been negotiated and accepted, the client can send a mutual agreement to confirm the job.";
+
 /* Notifications */
 "notification.desc.achievement-complete" = "You have completed \"%@\" and earned %@ XP.";
 "notification.desc.match-matched" = "You have a match with \"%@\"";
@@ -129,11 +137,6 @@
 "matches.details.gender.any" = "No preference";
 "matches.details.gender.male" = "I'm searching for a male.";
 "matches.details.gender.female" = "I'm searching for a female.";
-
-/* iCasting System text */
-
-"icasting.chat.system.text.welcome" = "Welcome to the conversation";
-"icasting.chat.system.contract.fields.unaccepted" = "There are a few points that have to be negotiated. As soon as these have been negotiated and accepted, the client can send a mutual agreement to confirm the job.";
 
 /* API Errors */
 

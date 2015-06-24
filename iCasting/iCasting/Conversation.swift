@@ -13,23 +13,23 @@ typealias MessageCommunicationCallBack = (error: ICErrorInfo?)->()
 
 
 
-protocol ContractState {
-    func hasBothAccepted() -> Bool
-}
-
-class ContractAcceptedState: ContractState {
-   
-    func hasBothAccepted() -> Bool {
-        return true
-    }
-}
-
-class ContractUnacceptedState: ContractState {
-
-    func hasBothAccepted() -> Bool {
-        return false
-    }
-}
+//protocol ContractState {
+//    func hasBothAccepted() -> Bool
+//}
+//
+//class ContractAcceptedState: ContractState {
+//   
+//    func hasBothAccepted() -> Bool {
+//        return true
+//    }
+//}
+//
+//class ContractUnacceptedState: ContractState {
+//
+//    func hasBothAccepted() -> Bool {
+//        return false
+//    }
+//}
 
 
 
@@ -49,7 +49,7 @@ struct ConversationToken : Printable {
 
 class Conversation: NSObject {
     
-    private var contractState: ContractState?
+   // private var contractState: ContractState?
     
 //    var contractBothAccepted: Bool? {
 //        return contractState.hasBothAccepted()
@@ -72,6 +72,11 @@ class Conversation: NSObject {
     init(matchID:String) {
         self.matchID = matchID
     }
+    
+    func leaveConversation() {
+        self.socketCommunicationHandler?.stop()
+    }
+    
 }
 
 
@@ -130,7 +135,7 @@ extension Conversation : SocketCommunicationHandlerDelegate {
             if let d = data {
                 
                 let factory = SocketMessageFactory()
-                let message = factory.createNormalMessage(d)
+                let message: Message = factory.createNormalMessage(d)
                 self.messageList.addItem(message)
                 
             }
@@ -142,13 +147,56 @@ extension Conversation : SocketCommunicationHandlerDelegate {
          
             println("--- Conversation: RECIEVED OFFER")
             if let d = data {
-            
-                self.messageList.addOffer(fromArray: d)
-                
+                let factory = SocketMessageFactory()
+                let message: Message = factory.createOfferMessage(d)
+                self.messageList.addItem(message)
             }
-            
         }
 
+        handlers.receivedContractOffer = { data in
+         
+            //"accept contract offer"	String new status	Object by who	String user_id	ObjectId van message
+            //Event name	Optionele nieuwe status	Wie wel/ niet?	ObjectId van user
+
+            if let d = data {
+                let factory = SocketMessageFactory()
+                let message: Message = factory.createOfferContractMessage(d)
+                self.messageList.addItem(message)
+            }
+        }
+        
+        handlers.contractOfferAccepted = { data in
+            //String new status	Object by who	String user_id	ObjectId van message
+            
+            //let messageID: String
+            
+        }
+        
+        handlers.contractOfferRejected = { data in
+         
+            
+        }
+        
+        handlers.receivedRenegotiationRequest = { data in
+         
+            if let d = data {
+                let factory = SocketMessageFactory()
+                let message: Message = factory.createRenegotiationRequestMessage(d)
+                self.messageList.addItem(message)
+            }
+        }
+        
+        handlers.acceptRenegotiationRequest = { data in
+         
+            
+        }
+        
+        handlers.rejectRenegotiationRequest = { data in
+            
+            
+        }
+        
+        
         return handlers
     }
     
@@ -223,6 +271,19 @@ extension Conversation: MessageCommunicationProtocol {
     }
     
     
+    func acceptContract(message: Message, callBack: MessageCommunicationCallBack) {
+        
+        
+        
+    }
+
+    
+    func rejectContract(message: Message, callBack: MessageCommunicationCallBack) {
+        
+        
+    }
+    
+    
     private func decideOfferAcceptRejection(data: NSArray, withMessageToUpdate message: Message) -> ICErrorInfo? {
     
         let error: ICErrorInfo? = ICError(string: data[0] as? String).getErrors()
@@ -230,7 +291,7 @@ extension Conversation: MessageCommunicationProtocol {
             var accepted: Bool? = (data[1] as! Int).toBool()
             var byWho: [String:Int] = (data[2] as! [String:Int])
             var hasAcceptTalent = (byWho["acceptTalent"] ?? 0).toBool()
-            message.offer!.accepted = hasAcceptTalent
+            message.offer!.acceptTalent = hasAcceptTalent
         }
         return error
     }

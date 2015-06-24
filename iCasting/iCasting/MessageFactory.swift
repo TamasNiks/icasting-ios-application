@@ -16,8 +16,8 @@ protocol MessageFactoryProtocol {
     
     func createNormalMessage(data: DataType) -> Message
     func createOfferMessage(data: DataType) -> Message
-    func createContractMessage(data: DataType) -> Message
-    
+    func createOfferContractMessage(data: DataType) -> Message
+    func createRenegotiationRequestMessage(data: DataType) -> Message
 }
 
 
@@ -50,17 +50,51 @@ class SocketMessageFactory: MessageFactoryProtocol  {
         let userID    = data[3] as! String
         let messageID = data[4] as! String
         
-        let message: Message = Message(id: messageID, owner: userID, role: Role.Incomming, type: TextType.Offer)
+        let role: Role = Role.getRole(userID)
+        
+        let message: Message = Message(id: messageID, owner: userID, role: role, type: TextType.Offer)
         let offer: Offer? = OfferSocketDataExtractor(offer: data).value
         message.offer = offer
         
         return message
     }
     
-    func createContractMessage(data: DataType) -> Message {
+    func createOfferContractMessage(data: DataType) -> Message {
+     
+        let _message             = data[0] as? String
+        let userID               = data[1] as! String
+        let messageID            = data[2] as! String
+
+        let role: Role = Role.getRole(userID)
         
-        return Message(id: "", owner: "", role: Role.Incomming, type: TextType.Text)
+        let message: Message = Message(id: messageID, owner: userID, role: role, type: TextType.ContractOffer)
+
+        // When getting an offer contract from a sockets, it always starts with NULL values
+        let offer: Offer? = Offer(stateComponents: StateComponents(acceptClient: nil, acceptTalent: nil, accepted: nil))
+        message.offer = offer
+        message.body = _message
+        
+        return message
     }
+
+    func createRenegotiationRequestMessage(data: DataType) -> Message {
+        
+        let _message    = data[0] as? String
+        let userID      = data[1] as! String
+        let messageID   = data[2] as! String
+        
+        let role: Role = Role.getRole(userID)
+        
+        let message: Message = Message(id: messageID, owner: userID, role: role, type: TextType.RenegotationRequest)
+        
+        // When getting an renegotiation request from a sockets, it always starts with an accept client to true, because only a client can send an renegotation request
+        let offer: Offer? = Offer(stateComponents: StateComponents(acceptClient: true, acceptTalent: nil, accepted: nil))
+        message.offer = offer
+        message.body = _message
+        
+        return message
+    }
+    
     
 }
 
@@ -85,33 +119,40 @@ class SocketMessageFactory: MessageFactoryProtocol  {
 
 
 
-// If the messages gets complexer, the message factory needs be improved
+
+
+// If the messages gets complexer, the message factory needs to be improved
 
 class AbstractMessageFactory {
     
     static func createMessage(fromJSON json: JSON) -> Message? {
         
+        // Get the type of the message, this type is used to decide which kind of messages should be constructed.
         let type: String = json["type"].stringValue
         
+        // If the text type does not exist, do something else
         if let textType = TextType(rawValue: type) {
             
             let id: String      =   json["_id"].stringValue     // Message id
             let owner: String   =   json["owner"].stringValue   // The id of the owner of the message
-            let role: Role = Role.getRole(owner)                     // Incomming, outgoing or system
+            let role: Role = Role.getRole(owner)                // Incomming, outgoing or system
             
             let message = Message(id: id, owner: owner, role: role, type: textType)
             
             let visitor = MessageVisitor(json: json)
             message.accept(visitor)
+            
             return message
         }
+        
         return nil
     }
+    
 }
 
 
 
-// The MessageFactory class makes creating Messags easier
+// The MessageFactory class makes creating messages easier
 
 class AbstractMessageMethodFactory {
     

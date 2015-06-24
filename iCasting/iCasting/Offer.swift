@@ -15,17 +15,105 @@ protocol OfferProtocol {
 
 
 
+enum ContractState {
+    
+    case
+    NeitherDecided, // Show buttons both
+    ClientAccepted, // Show buttons talent
+    ClientRejected, // Remove buttons both
+    TalentAccepted, // Show button client
+    TalentRejected, // Remove buttons both
+    BothAccepted    // Remove buttons both
+    
+    static func getState(#clientAccepted: Bool?, talentAccepted: Bool?, accepted: Bool?) -> ContractState {
+        
+        if let accepted = accepted {
+            
+            if accepted == true {
+                return ContractState.BothAccepted
+            }
+            
+            if let ca = clientAccepted, ta = talentAccepted {
+                
+                if ca == false {
+                    return ContractState.ClientRejected
+                }
+                if ta == false {
+                    return ContractState.TalentRejected
+                }
+            }
+        }
+        
+        if let ca = clientAccepted {
+        
+            if ca == true {
+                return ContractState.ClientAccepted
+            } else {
+                return ContractState.ClientRejected
+            }
+        
+        } else if let ta = talentAccepted {
 
-
-struct Offer {
-    let name: String
-    let values: [KeyVal]
-    var accepted: Bool?
+            if ta == true {
+                return ContractState.TalentAccepted
+            } else {
+                return ContractState.TalentRejected
+            }
+        }
+        return ContractState.NeitherDecided
+    }
 }
 
 
+struct StateComponents {
+    let acceptClient: Bool?
+    let acceptTalent: Bool?
+    let accepted: Bool?
+}
 
 
+// The offer class defines a final object. Be aware that the offerAccepted property is for normal offers and the contractState for the situation if all the normal offers are accepted
+
+class Offer {
+    let name: String?
+    let values: [KeyVal]?
+    var acceptTalent: Bool?
+    var contractState: ContractState?
+    
+    private var _stateComponents: StateComponents?
+    
+    var stateComponents: StateComponents? {
+        
+        set {
+            _stateComponents = newValue
+            if let val = newValue {
+                self.contractState = ContractState.getState(
+                    clientAccepted: val.acceptClient,
+                    talentAccepted: val.acceptTalent,
+                    accepted:       val.accepted)
+            }
+        }
+        
+        get {
+            return _stateComponents
+        }
+    }
+    
+    init(name: String?, values: [KeyVal]?, acceptTalent: Bool?) {
+        self.name = name
+        self.values = values
+        self.acceptTalent = acceptTalent
+    }
+    
+    init(stateComponents: StateComponents) {
+        self.name = nil
+        self.values = nil
+        self.stateComponents = stateComponents
+    }
+}
+
+
+// The OfferDataExtractor defines a base class for extracting values comming from a data source like the server
 
 class OfferDataExtractor: OfferProtocol {
 
@@ -121,8 +209,9 @@ class OfferDataExtractor: OfferProtocol {
 
 
 
+// Specialized classes for getting values from an HTTP call
 
-
+// OFFER
 class OfferHTTPDataExtractor: OfferDataExtractor {
  
     var offer: [String:JSON]?
@@ -135,7 +224,7 @@ class OfferHTTPDataExtractor: OfferDataExtractor {
             var dict: [String:JSON] = o["values"]!.dictionaryValue
             let values: [KeyVal] = super.getValues(dict)
             
-            return Offer(name: super.name, values: values, accepted: accepted)
+            return Offer(name: super.name, values: values, acceptTalent: accepted)
         }
         return nil
     }
@@ -146,9 +235,26 @@ class OfferHTTPDataExtractor: OfferDataExtractor {
     
 }
 
+// OFFER CONTRACT
+
+class OfferContractHTTPDataExtractor: OfferHTTPDataExtractor {
+    
+    override var value: Offer? {
+        
+        if let o: [String:JSON] = offer {
+            
+            let acceptClient: Bool? = o["acceptClient"]?.bool
+            let acceptTalent: Bool? = o["acceptTalent"]?.bool
+            let accepted: Bool?     = o["accepted"]?.bool
+            
+            return Offer(stateComponents: StateComponents(acceptClient: acceptClient, acceptTalent: acceptTalent, accepted: accepted))
+        }
+        return nil
+    }
+}
 
 
-
+// Specialized classes for getting values from a socket call
 
 class OfferSocketDataExtractor: OfferDataExtractor {
     
@@ -167,7 +273,7 @@ class OfferSocketDataExtractor: OfferDataExtractor {
             super.removeValuesForKeys(fromDictionary: &dict, keys: ignoreKeys)
             var values: [KeyVal] = super.getValues(dict)
             
-            return Offer(name: super.name, values: values, accepted: accepted)
+            return Offer(name: super.name, values: values, acceptTalent: accepted)
         }
         return nil
     }
@@ -176,6 +282,20 @@ class OfferSocketDataExtractor: OfferDataExtractor {
         self.offer = offer
     }
 }
+
+//class OfferContractSocketDataExtractor: OfferSocketDataExtractor {
+//    
+//    override var value: Offer? {
+//        
+//        if let o = offer {
+//            
+//
+//            //String message	Object user_id	String message_id
+//        }
+//        
+//        return nil
+//    }
+//}
 
 
 

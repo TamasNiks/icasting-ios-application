@@ -58,6 +58,7 @@ class ChatTextInputViewController: UIViewController, JSQMessagesInputToolbarDele
         }
     }
     
+    
     private func setupInputToolbar() {
         
         self.toolbarHeightConstraint.constant = self.inputToolbar.preferredDefaultHeight
@@ -67,6 +68,7 @@ class ChatTextInputViewController: UIViewController, JSQMessagesInputToolbarDele
         self.inputToolbar.contentView.leftBarButtonItem = nil
         self.inputToolbar.maximumHeight = 150
     }
+    
     
     func addObserverForTextinput() {
         
@@ -81,6 +83,7 @@ class ChatTextInputViewController: UIViewController, JSQMessagesInputToolbarDele
             context: &NegotiationDetailViewController.kJSQMessagesKeyValueObservingContext)
         self.isObserving = true
     }
+    
     
     func removeObserverForTextinput() {
         
@@ -111,10 +114,12 @@ class ChatTextInputViewController: UIViewController, JSQMessagesInputToolbarDele
         self.inputToolbar.toggleSendButtonEnabled()
     }
     
+    
     func inputToolbarHasReachedMaximumHeight() -> Bool {
         
         return CGRectGetMinY(self.inputToolbar.frame) == (self.topLayoutGuide.length + self.topContentAdditionalInset)
     }
+    
     
     func adjustInputToolbarForComposerTextViewContentSizeChange(dy: CGFloat) {
         

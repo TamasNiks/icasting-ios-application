@@ -21,6 +21,32 @@ class iCastingOfferTest: XCTestCase {
         super.tearDown()
     }
 
+    
+    func testContractOfferState() {
+    
+        var offer: Offer = Offer(stateComponents: StateComponents(acceptClient: true, acceptTalent: nil, accepted: nil))
+        XCTAssertTrue(offer.contractState != nil, "Should not be nil")
+    
+    }
+
+    
+    func testContractState() {
+        
+        XCTAssertEqual(ContractState.getState(clientAccepted: nil, talentAccepted: nil, accepted: nil), ContractState.NeitherDecided, "Equal offer type")
+        
+        XCTAssertEqual(ContractState.getState(clientAccepted: true, talentAccepted: nil, accepted: nil), ContractState.ClientAccepted, "Equal offer type")
+        XCTAssertEqual(ContractState.getState(clientAccepted: false, talentAccepted: nil, accepted: nil), ContractState.ClientRejected, "Equal offer type")
+        XCTAssertEqual(ContractState.getState(clientAccepted: nil, talentAccepted: true, accepted: nil), ContractState.TalentAccepted, "Equal offer type")
+        XCTAssertEqual(ContractState.getState(clientAccepted: nil, talentAccepted: false, accepted: nil), ContractState.TalentRejected, "Equal offer type")
+
+        // After both made a decision, there are three possible outcomes.
+        XCTAssertEqual(ContractState.getState(clientAccepted: true, talentAccepted: true, accepted: true), ContractState.BothAccepted, "Equal offer type")
+        XCTAssertEqual(ContractState.getState(clientAccepted: true, talentAccepted: false, accepted: false), ContractState.TalentRejected, "Equal offer type")
+        XCTAssertEqual(ContractState.getState(clientAccepted: false, talentAccepted: true, accepted: false), ContractState.ClientRejected, "Equal offer type")
+        
+    }
+    
+    
     func testConcatenateTypeKey() {
         // This will test if the type key can properlay concatenate with the offer name
         
@@ -34,12 +60,15 @@ class iCastingOfferTest: XCTestCase {
         
         var bool = false
         if let value: Offer = offerSocketDataExtractor.value {
-            for keyval: KeyVal in value.values {
-
-                if keyval.key == "type.dateTime" {
-//                    println(keyval.key)
-//                    println(keyval.val)
-                    bool = true
+            
+            if let values = value.values {
+                for keyval: KeyVal in values {
+                    
+                    if keyval.key == "type.dateTime" {
+                        //                    println(keyval.key)
+                        //                    println(keyval.val)
+                        bool = true
+                    }
                 }
             }
         }
