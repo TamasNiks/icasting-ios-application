@@ -281,10 +281,14 @@ class ContractOfferMessageCellConfigurator : CellConfigurator {
         let message: Message = data[.Model] as! Message
         
         if let offer = message.offer {
+        
+            var isIncomming: Bool {
+                return message.role == Role.Incomming ? true : false
+            }
             
             if let contractState = offer.contractState {
 
-                println("Has contractState")
+                //println("Has contractState")
                 
                 var statusText: String = String()
                 c.activityIndicator.startAnimating()
@@ -298,39 +302,44 @@ class ContractOfferMessageCellConfigurator : CellConfigurator {
                     c.activityIndicator.stopAnimating()
                     
                 case ContractState.NeitherDecided:
+                    print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
+                    println("ContractState.NeitherDecided")
                     
                     c.enabled = true
-                    statusText = "Client has not accepted yet"
+                    c.accepted = nil
+                    statusText = isIncomming ? "Client has not accepted yet" : "Talent has not accepted yet"
                     // If talent, set to "Client has not accepted yet" otherwise "Talent has not accepted yet"
                     
                 case ContractState.ClientAccepted:
                     
-                    c.accepted = true
-                    statusText = "Talent has not accepted yet"
+                    c.enabled = true // This can set to true for both, because the buttons would go away for the other chat user
+                    c.accepted = isIncomming ? nil : true
+                    statusText = isIncomming ? "!!! Client has accepted" : "Talent has not accepted yet"
                     // If talent, set to "Client has accepted" otherwise if client: "Talent has not accepted yet"
                     
                 case ContractState.ClientRejected:
                     
                     c.enabled = false
-                    statusText = "Client rejected"
+                    c.accepted = isIncomming ? nil : false
+                    statusText = isIncomming ? "Client declined contract" : "You declined the contract"
                     c.activityIndicator.stopAnimating()
                     // Finished: If talent, set to "Client rejected" if client, set button to " You rejected"
                     
                 case ContractState.TalentAccepted:
                     
-                    c.accepted = true
-                    statusText = "Client has not accepted yet"
+                    c.enabled = true // This can set to true for both, because the buttons would go away for the other chat user
+                    c.accepted = isIncomming ? true : nil
+                    statusText = isIncomming ? "Client has not accepted yet" : "!!! Talent has accepted"
                     // If talent, set to "Client has not accepted yet" otherwise if client: "Talent has accepted"
                     
                 case ContractState.TalentRejected:
                     
-                    c.accepted = false
-                    statusText = "You rejected"
+                    c.enabled = false
+                    c.accepted = isIncomming ? false : nil
+                    statusText = isIncomming ? "You declined the contract" : "Talent declined contract"
                     c.activityIndicator.stopAnimating()
                     // Finished: If talent, set to "You rejected" if client, set to "Talent rejected"
                 }
-                
-                println("statusText")
                 
                 c.desc.text = "Do you want to accept the contract?"
                 c.subdescription.text = statusText
@@ -363,11 +372,13 @@ class RenegotiationRequestMessageCellConfigurator: CellConfigurator {
         let message: Message = data[.Model] as! Message
         
         if let offer = message.offer {
-         
+            
             if offer.contractState == ContractState.BothAccepted {
                 c.accepted = true
-            } else {
+            } else if offer.contractState == ContractState.TalentRejected {
                 c.accepted = false
+            } else {
+                c.accepted = nil
             }
         }
         

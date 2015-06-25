@@ -311,6 +311,7 @@
 		2256CE171AF2CD17005D40EB /* ExampleSideDrawerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleSideDrawerViewController.swift; sourceTree = "<group>"; };
 		2256CE181AF2CD17005D40EB /* ExampleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleViewController.swift; sourceTree = "<group>"; };
 		2256CE1A1AF2CD17005D40EB /* ExampleDrawerVisualStateManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleDrawerVisualStateManager.swift; sourceTree = "<group>"; };
+		2257A2A81B3BE72C00F7962E /* ClosureObserver.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = ClosureObserver.playground; sourceTree = "<group>"; };
 		225C11501AE50197008654A7 /* NewsDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsDetailViewController.swift; sourceTree = "<group>"; };
 		225C11521AE51C05008654A7 /* MatchCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchCell.swift; sourceTree = "<group>"; };
 		22647DB41B0DE60B00F18C71 /* Notifications.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
@@ -710,6 +711,7 @@
 				22A464BD1AE92D7F000100C9 /* DictionaryPlayground.playground */,
 				2256CDD61AF28241005D40EB /* ClosuresCommandPlayground.playground */,
 				22538B511B2EBF4E00F80E77 /* DPVisitor.playground */,
+				2257A2A81B3BE72C00F7962E /* ClosureObserver.playground */,
 			);
 			name = Playgrounds;
 			sourceTree = "<group>";

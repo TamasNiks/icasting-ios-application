@@ -9,7 +9,7 @@
 import Foundation
 
 protocol MessageAcceptVisitorProtocol {
-    func accept(visitor: MessageVisitor)
+    func accept(visitor: MessageVisitorProtocol)
 }
 
 // If there are more type of messages, add the messages to the protocol
@@ -81,3 +81,23 @@ class MessageVisitor: AbstractMessageVisitor {
     }
     
 }
+
+
+class NotifyChangeMessageVisitor: MessageVisitorProtocol {
+    
+    var message: Message?
+    
+    func visits(element: Message) {
+        self.message = element
+    }
+    
+    func notifyOfferChange() {
+        if let m = self.message {
+            m.delegate?.offerDidChange(forMessage: m)
+        }
+    }
+    
+}
+
+
+

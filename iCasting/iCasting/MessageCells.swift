@@ -9,7 +9,7 @@
 import UIKit
 
 
-enum OfferStatus {
+enum DilemmaStatus {
     case Accept, Reject
 }
 
@@ -17,7 +17,7 @@ enum OfferStatus {
 protocol DilemmaCellDelegate {
     func offerCell(
         cell: UITableViewCell,
-        didPressButtonWithOfferStatus offerStatus: OfferStatus,
+        didPressButtonWithOfferStatus dilemmaStatus: DilemmaStatus,
         forIndexPath indexPath: NSIndexPath,
         startAnimation: ()->())
 }
@@ -147,13 +147,11 @@ class DilemmaCell: UITableViewCell {
     var enabled: Bool = true {
         
         willSet {
-            let nv: Bool = newValue ?? true
-            if nv == true {
+            if newValue == true {
                 dilemmaView.enableButtons()
             } else {
                 dilemmaView.disableButtons()
             }
-            
         }
     }
     
@@ -167,6 +165,12 @@ class DilemmaCell: UITableViewCell {
         get { return dilemmaView.leftViewLabel.text }
     }
     
+    // iOS 8
+//    override func prepareForReuse() {
+//        self.accepted = nil
+//        self.enabled = true
+//    }
+    
     private func setup() {
         
         dilemmaView.leftButton.addTarget(self, action: "onAcceptButtonPress:", forControlEvents: UIControlEvents.TouchUpInside)
@@ -177,7 +181,7 @@ class DilemmaCell: UITableViewCell {
     func onAcceptButtonPress(event: UIButton) {
         
         if let ip = indexPath {
-            delegate?.offerCell(self, didPressButtonWithOfferStatus: OfferStatus.Accept, forIndexPath: ip, startAnimation: { () -> () in
+            delegate?.offerCell(self, didPressButtonWithOfferStatus: DilemmaStatus.Accept, forIndexPath: ip, startAnimation: { () -> () in
                 self.dilemmaView.startLeftAnimation()
             })
         }
@@ -186,7 +190,7 @@ class DilemmaCell: UITableViewCell {
     func onRejectButtonPress(event: UIButton) {
         
         if let ip = indexPath {
-            delegate?.offerCell(self, didPressButtonWithOfferStatus: OfferStatus.Reject, forIndexPath: ip, startAnimation: { () -> () in
+            delegate?.offerCell(self, didPressButtonWithOfferStatus: DilemmaStatus.Reject, forIndexPath: ip, startAnimation: { () -> () in
                 self.dilemmaView.startRightAnimation()
             })
         }

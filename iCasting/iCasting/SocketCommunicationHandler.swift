@@ -261,7 +261,7 @@ extension SocketCommunicationHandler {
     }
     
     
-    func acceptRenegotiation(messageID: String, acknowledged: (data: NSArray?) -> ()) {
+    func acceptRenegotiationRequest(messageID: String, acknowledged: (data: NSArray?) -> ()) {
         
         self.socket.emitWithAck(Emit.RenegotiationAccept.rawValue, messageID)(timeout: 0) { data in
             //String error	String new status	Object by who
@@ -270,7 +270,7 @@ extension SocketCommunicationHandler {
     }
     
     
-    func rejectRenegotiation(messageID: String, acknowledged: (data: NSArray?) -> ()) {
+    func rejectRenegotiationRequest(messageID: String, acknowledged: (data: NSArray?) -> ()) {
         
         self.socket.emitWithAck(Emit.RenegotationReject.rawValue, messageID)(timeout: 0) { data in
             //String error	String new status	Object by who

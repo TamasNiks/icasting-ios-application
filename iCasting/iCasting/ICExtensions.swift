@@ -50,6 +50,17 @@ extension UIColor {
     class func ICTextLightGrayColor() -> UIColor {
         return UIColor(white: 138/255, alpha: 1.0) //UIColor(red: 138/255, green: 138/255, blue: 138/255, alpha: 1.0)
     }
+    
+    //Color for dilemma buttons
+    class func ICRedDilemmaColor() -> UIColor {
+        return UIColor(red: 223.rgb, green: 50.rgb, blue: 54.rgb, alpha: 1)
+    }
+
+    //Color for dilemma buttons
+    class func ICGreenDilemmaColor() -> UIColor {
+        return UIColor(red: 46.rgb, green: 204.rgb, blue: 113.rgb, alpha: 1)
+    }
+    
 }
 
 
@@ -65,7 +76,12 @@ extension Int {
             return nil
         }
     }
+    
+    var rgb: CGFloat {
+        return CGFloat(self) / 255
+    }
 }
+
 
 
 extension String {

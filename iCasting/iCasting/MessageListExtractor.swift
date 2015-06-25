@@ -52,6 +52,33 @@ class MessageListExtractor: NSObject, ListExtractorProtocol {
     func addItem(message: Message) {
         self.list.append(message)
     }
+    
+    func replaceItem(message: Message) {
+        
+        //self.list.r
+        
+    }
+    
+    func itemByID(id: String) -> Message? {
+       
+        let message: Message? = self.list.filter({ (element: Message) -> Bool in
+        
+            return element.id == id
+            
+        }).first
+        
+        return message
+    }
+    
+    func indexForItem(message: Message) -> Int? {
+        
+        for index in 0..<self.list.endIndex {
+            if self.list[index].id == message.id {
+                return index
+            }
+        }
+        return nil
+    }
 }
 
 

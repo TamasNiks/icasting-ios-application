@@ -183,13 +183,17 @@ extension NegotiationDetailViewController {
         if let
             identifier = CellIdentifier.Message.fromTextType(message.type),
             cellReuser = self.cellReuser {
-            
+                
             let cell: UITableViewCell? = cellReuser.reuseCell(identifier, indexPath: indexPath)
-            let configurator = cellReuser.getConfigurator()
+            let cellConfigurator = cellReuser.getConfigurator()
             
             var data: [CellKey:Any] = [CellKey.Model:message as Any, CellKey.IndexPath:indexPath, CellKey.Delegate:self]
-            configurator?.configureCell(data: data)
+            cellConfigurator?.configureCell(data: data)
             
+            // For changes inside a message, add a changeObserver
+            self.addChangeObserver(forMessage: message, withCellIdentifier: identifier)
+            //message.delegate = self
+                
             return cell
         }
         
@@ -221,6 +225,8 @@ extension NegotiationDetailViewController {
 
         return height
     }
+    
+
 }
 
 
@@ -234,47 +240,67 @@ extension NegotiationDetailViewController {
     
     func offerCell(
         cell: UITableViewCell,
-        didPressButtonWithOfferStatus offerStatus: OfferStatus,
+        didPressButtonWithOfferStatus dilemmaStatus: DilemmaStatus,
         forIndexPath indexPath: NSIndexPath,
         startAnimation: () -> ()) {
         
             
             let message = self.getModel(forIndexPath: indexPath)
             
-            switch offerStatus {
+            switch dilemmaStatus {
                 
-            case OfferStatus.Accept:
+            case DilemmaStatus.Accept:
                 
                 if message.type == TextType.Offer {
                     
-                    startAnimation()
+                    (self.conversation as! MessageCommunicationProtocol).acceptOffer(message) { error in
+                        
+                        startAnimation()
+                    }
                 }
                 
                 if message.type == TextType.ContractOffer {
-                    
-                    startAnimation()
+
+                    (self.conversation as! MessageCommunicationProtocol).acceptContract(message) { error in
+                        
+                        startAnimation()
+                    }
                 }
                 
                 if message.type == TextType.RenegotationRequest {
                     
-                    startAnimation()
+                    (self.conversation as! MessageCommunicationProtocol).acceptRenegotiationRequest(message) { error in
+                        
+                        startAnimation()
+                        
+                    }
                 }
                 
-            case OfferStatus.Reject:
+            case DilemmaStatus.Reject:
                 
                 if message.type == TextType.Offer {
                     
-                    startAnimation()
+                    (self.conversation as! MessageCommunicationProtocol).rejectOffer(message) { error in
+                        
+                        startAnimation()
+                    }
                 }
                 
                 if message.type == TextType.ContractOffer {
                     
-                    startAnimation()
+                    
+                    (self.conversation as! MessageCommunicationProtocol).rejectContract(message) { error in
+                        
+                        startAnimation()
+                    }
                 }
                 
                 if message.type == TextType.RenegotationRequest {
                     
-                    startAnimation()
+                    (self.conversation as! MessageCommunicationProtocol).rejectRenegotiationRequest(message) { error in
+                        
+                        startAnimation()
+                    }
                 }
             }
     }
@@ -333,16 +359,6 @@ extension NegotiationDetailViewController {
 
 extension NegotiationDetailViewController {
     
-    func removeObservers() {
-        if observing {
-            conversation?.removeObserver(self, forKeyPath: ObservableConversation.messageList, context: &newMessagesListContext)
-            conversation?.removeObserver(self, forKeyPath: ObservableConversation.incommingUser, context: &userJoinedOrLeft)
-            conversation?.removeObserver(self, forKeyPath: ObservableConversation.authenticated, context: &userAuthenticate)
-            NSNotificationCenter.defaultCenter().removeObserver(self)
-            observing = false
-        }
-
-    }
     
     func addObservers() {
         conversation?.addObserver(self, forKeyPath: ObservableConversation.messageList, options: nil, context: &newMessagesListContext)
@@ -352,7 +368,38 @@ extension NegotiationDetailViewController {
     }
     
     
+    func removeObservers() {
+        if observing {
+            conversation?.removeObserver(self, forKeyPath: ObservableConversation.messageList, context: &newMessagesListContext)
+            conversation?.removeObserver(self, forKeyPath: ObservableConversation.incommingUser, context: &userJoinedOrLeft)
+            conversation?.removeObserver(self, forKeyPath: ObservableConversation.authenticated, context: &userAuthenticate)
+            NSNotificationCenter.defaultCenter().removeObserver(self)
+            observing = false
+        }
+    }
+    
+    func addChangeObserver(forMessage message: Message, withCellIdentifier cellIdentifer: CellIdentifier.Message?) {
+        
+        
+        func changeWithConfigurator(cell: UITableViewCell) {
+            let factory = NegotiationDetailCellConfiguratorFactory(cellIdentifier: cellIdentifer, cell: cell)
+            if let configurator = factory.getConfigurator() {
+                println("WILL CONFIGURE")
+                configurator.configureCell(data: [CellKey.Model:message as Any])
+            }
+        }
 
+        message.notifyChange = { (message: Message, index: Int) in
+
+            let ip = NSIndexPath(forRow: index, inSection: 0)
+            if let cell = self.tableView.cellForRowAtIndexPath(ip) {
+                self.tableView.reloadRowsAtIndexPaths([ip], withRowAnimation: UITableViewRowAnimation.Middle)//cellForRowAtIndexPath(ip)
+                //changeWithConfigurator(cell)
+            }
+        }
+    }
+    
+    // Observe change on properties, like if there is a new message and wether a user joined or left
     override func observeValueForKeyPath(keyPath: String, ofObject object: AnyObject, change: [NSObject : AnyObject], context: UnsafeMutablePointer<Void>) {
         
         println("will observe")
@@ -403,6 +450,16 @@ extension NegotiationDetailViewController {
             
         }
     }
+    
+    // TODO: Improve this in the future
+//    func offerDidChange(forMessage message: Message) {
+//        
+//        if let foundedIndex = self.conversation?.messageList.indexForItem(message) {
+//            
+//            let ip = NSIndexPath(forRow: foundedIndex, inSection: 0)
+//            self.tableView.reloadRowsAtIndexPaths([ip], withRowAnimation: UITableViewRowAnimation.None)//cellForRowAtIndexPath(ip)
+//        }
+//    }
     
 }
 

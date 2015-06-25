@@ -96,6 +96,8 @@ class DilemmaView: UIView {
         startSettingsRightView(rightView)
         startSettingsLeftView(leftView)
 
+        self.leftButtonColor = self.leftButton.backgroundColor
+        self.rightButtonColor = self.rightButton.backgroundColor
     }
     
     func reinitialize() {
@@ -161,21 +163,18 @@ class DilemmaView: UIView {
         
         self.leftButton.alpha = alpha
         self.rightButton.alpha = alpha
-            
+        
         self.leftButton.backgroundColor = grayColor
         self.rightButton.backgroundColor = grayColor
     }
     
     private func colorButtonsForActiveState() {
         
-        self.leftButtonColor = self.leftButton.backgroundColor
-        self.rightButtonColor = self.rightButton.backgroundColor
-        
         self.leftButton.alpha = 1
         self.rightButton.alpha = 1
         
-        self.leftButton.backgroundColor = self.leftButtonColor
-        self.rightButton.backgroundColor = self.rightButtonColor
+        self.leftButton.backgroundColor = self.leftButtonColor //UIColor.ICGreenDilemmaColor()
+        self.rightButton.backgroundColor = self.rightButtonColor //UIColor.ICRedDilemmaColor()
     }
     
     private func startSettingsLeftView(view: UIView) {
@@ -214,6 +213,7 @@ class DilemmaView: UIView {
         view.frame = bounds
         view.autoresizingMask = UIViewAutoresizing.FlexibleWidth | UIViewAutoresizing.FlexibleHeight
     }
+    
     
     private func loadViewFromNib() -> UIView {
         

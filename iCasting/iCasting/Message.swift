@@ -41,8 +41,18 @@ enum TextType: String {
 
 // A class to hold message data and which is compatible to work with observer patterns like key-value and notifications, because an object is constructed from a class, it can be bridged to obj-c, in contrast to structs
 
+protocol MessageDelegate {
+    
+    func offerDidChange(forMessage message: Message)
+}
+
+
 class Message: MessageAcceptVisitorProtocol {
 
+    typealias MessageChangeObserverClosure = (message: Message, index: Int) -> ()
+    
+    var notifyChange: MessageChangeObserverClosure?
+    
     let id: String
     let owner: String
     let role: Role
@@ -54,6 +64,8 @@ class Message: MessageAcceptVisitorProtocol {
     var contract: [MessageContract.NegotiationPoint]?   //The contract is optional, only the json list always gives contract values
     var offer: Offer?                                   // The offer is optional, because there is not always an offer key
     
+    var delegate: MessageDelegate?
+    
     init(id: String, owner: String, role: Role, type: TextType) {
 
         self.id     = id
@@ -62,7 +74,7 @@ class Message: MessageAcceptVisitorProtocol {
         self.type   = type
     }
     
-    func accept(visitor: MessageVisitor) {
+    func accept(visitor: MessageVisitorProtocol) {
         visitor.visits(self)
     }
 }

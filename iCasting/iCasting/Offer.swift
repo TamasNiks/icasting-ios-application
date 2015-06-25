@@ -32,34 +32,42 @@ enum ContractState {
             if accepted == true {
                 return ContractState.BothAccepted
             }
-            
-            if let ca = clientAccepted, ta = talentAccepted {
-                
-                if ca == false {
+        }
+        
+        if let ca = clientAccepted {
+        
+            if talentAccepted == nil {
+
+                if ca == true {
+                    return ContractState.ClientAccepted
+                } else {
                     return ContractState.ClientRejected
                 }
-                if ta == false {
+            }
+        }
+        
+        if let ta = talentAccepted {
+
+            if clientAccepted == nil {
+                
+                if ta == true {
+                    return ContractState.TalentAccepted
+                } else {
                     return ContractState.TalentRejected
                 }
             }
         }
         
-        if let ca = clientAccepted {
-        
-            if ca == true {
-                return ContractState.ClientAccepted
-            } else {
+        if let ca = clientAccepted, ta = talentAccepted {
+            
+            if ca == false {
                 return ContractState.ClientRejected
             }
-        
-        } else if let ta = talentAccepted {
-
-            if ta == true {
-                return ContractState.TalentAccepted
-            } else {
+            if ta == false {
                 return ContractState.TalentRejected
             }
         }
+        
         return ContractState.NeitherDecided
     }
 }
@@ -246,6 +254,15 @@ class OfferContractHTTPDataExtractor: OfferHTTPDataExtractor {
             let acceptClient: Bool? = o["acceptClient"]?.bool
             let acceptTalent: Bool? = o["acceptTalent"]?.bool
             let accepted: Bool?     = o["accepted"]?.bool
+            
+            println("=========================")
+            println("acceptClient")
+            println(acceptClient)
+            println("acceptTalent")
+            println(acceptTalent)
+            println("accepted")
+            println(accepted)
+            println("=========================")
             
             return Offer(stateComponents: StateComponents(acceptClient: acceptClient, acceptTalent: acceptTalent, accepted: accepted))
         }
