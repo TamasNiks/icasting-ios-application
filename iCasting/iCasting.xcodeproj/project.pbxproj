@@ -122,6 +122,10 @@
 		2256CE261AF2D3D2005D40EB /* DrawerBarButtonItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2256CE071AF2C7BF005D40EB /* DrawerBarButtonItem.swift */; };
 		2256CE271AF2D443005D40EB /* AnimatedMenuButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2256CE061AF2C7BF005D40EB /* AnimatedMenuButton.swift */; };
 		2256CE291AF2D4D3005D40EB /* DrawerVisualState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2256CE091AF2C7BF005D40EB /* DrawerVisualState.swift */; };
+		2257A2DA1B3D594E00F7962E /* DodoDistrib.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2257A2D91B3D594E00F7962E /* DodoDistrib.swift */; };
+		2257A2DB1B3D5BFC00F7962E /* DodoDistrib.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2257A2D91B3D594E00F7962E /* DodoDistrib.swift */; };
+		2257A2DD1B3D5F6100F7962E /* SwiftOverlays.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2257A2DC1B3D5F6100F7962E /* SwiftOverlays.swift */; };
+		2257A2DE1B3D5F6100F7962E /* SwiftOverlays.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2257A2DC1B3D5F6100F7962E /* SwiftOverlays.swift */; };
 		225C11511AE50197008654A7 /* NewsDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225C11501AE50197008654A7 /* NewsDetailViewController.swift */; };
 		225C11531AE51C05008654A7 /* MatchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225C11521AE51C05008654A7 /* MatchCell.swift */; };
 		22647DB51B0DE60B00F18C71 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22647DB41B0DE60B00F18C71 /* Notifications.swift */; };
@@ -312,6 +316,8 @@
 		2256CE181AF2CD17005D40EB /* ExampleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleViewController.swift; sourceTree = "<group>"; };
 		2256CE1A1AF2CD17005D40EB /* ExampleDrawerVisualStateManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExampleDrawerVisualStateManager.swift; sourceTree = "<group>"; };
 		2257A2A81B3BE72C00F7962E /* ClosureObserver.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = ClosureObserver.playground; sourceTree = "<group>"; };
+		2257A2D91B3D594E00F7962E /* DodoDistrib.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DodoDistrib.swift; sourceTree = "<group>"; };
+		2257A2DC1B3D5F6100F7962E /* SwiftOverlays.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftOverlays.swift; sourceTree = "<group>"; };
 		225C11501AE50197008654A7 /* NewsDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsDetailViewController.swift; sourceTree = "<group>"; };
 		225C11521AE51C05008654A7 /* MatchCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchCell.swift; sourceTree = "<group>"; };
 		22647DB41B0DE60B00F18C71 /* Notifications.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
@@ -477,6 +483,8 @@
 				226A9E8B1AEED71400AB9EFF /* Alamofire.swift */,
 				22082CC71AFB927A00AF5EDB /* SocketIOClientSwift */,
 				2256CE051AF2C7BF005D40EB /* DrawerController */,
+				2257A2D91B3D594E00F7962E /* DodoDistrib.swift */,
+				2257A2DC1B3D5F6100F7962E /* SwiftOverlays.swift */,
 			);
 			name = Vendor;
 			sourceTree = "<group>";
@@ -930,6 +938,7 @@
 				226B2E921B079494001DA2BD /* ArrayDataSource.swift in Sources */,
 				226B2E9D1B07C2E9001DA2BD /* MatchAcceptCell.swift in Sources */,
 				22C598ED1B2F366C0008CFCD /* AuthExtension.swift in Sources */,
+				2257A2DD1B3D5F6100F7962E /* SwiftOverlays.swift in Sources */,
 				22C598E41B2F169E0008CFCD /* UIImage+JSQMessages.m in Sources */,
 				22AD0DAD1AD6C3DE00F0496A /* JSONParser.swift in Sources */,
 				22C908651AD55FE50067A378 /* URL.swift in Sources */,
@@ -1007,6 +1016,7 @@
 				22082CE31AFB927A00AF5EDB /* SocketLogger.swift in Sources */,
 				229A3C961B32C2FA00D175F4 /* MessageVisitor.swift in Sources */,
 				22082C881AF7C24A00AF5EDB /* NegotiationsTableViewController.swift in Sources */,
+				2257A2DA1B3D594E00F7962E /* DodoDistrib.swift in Sources */,
 				2256CE221AF2CD17005D40EB /* ExampleSideDrawerViewController.swift in Sources */,
 				22C598DE1B2F169E0008CFCD /* UIView+JSQMessages.m in Sources */,
 				2256CE241AF2CD17005D40EB /* ExampleDrawerVisualStateManager.swift in Sources */,
@@ -1063,9 +1073,11 @@
 				22082CEE1AFB927A00AF5EDB /* WebSocket.swift in Sources */,
 				22C598EB1B2F16B60008CFCD /* JSQMessagesToolbarButtonFactory.m in Sources */,
 				222CBB6D1B06940F00D91137 /* MatchCard.swift in Sources */,
+				2257A2DB1B3D5BFC00F7962E /* DodoDistrib.swift in Sources */,
 				22082CE61AFB927A00AF5EDB /* SocketPacket.swift in Sources */,
 				22082CD81AFB927A00AF5EDB /* SocketAnyEvent.swift in Sources */,
 				22392D281AD810B40086BE5F /* Endpoints.swift in Sources */,
+				2257A2DE1B3D5F6100F7962E /* SwiftOverlays.swift in Sources */,
 				22082C921AFA243000AF5EDB /* MessageCells.swift in Sources */,
 				226B2EA51B0814B7001DA2BD /* MatchProfileTableViewController.swift in Sources */,
 				226A9E8D1AEED71400AB9EFF /* Alamofire.swift in Sources */,

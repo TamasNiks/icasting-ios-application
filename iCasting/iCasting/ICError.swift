@@ -128,7 +128,7 @@ class ICError {
     }
     
     init(string: String?) {
-        self.socketError = string
+        self.socketError = string == "<null>" ? nil : string
     }
     
     func getErrors() -> ICErrorInfo? {

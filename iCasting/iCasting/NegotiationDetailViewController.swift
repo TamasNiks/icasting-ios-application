@@ -56,6 +56,10 @@ DilemmaCellDelegate
         super.addObserverForTextinput()
     }
     
+    override func viewWillDisappear(animated: Bool) {
+        self.conversation?.leaveConversation()
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -65,7 +69,6 @@ DilemmaCellDelegate
         super.removeObserverForTextinput()
         self.keyboardController?.removeObserver()
         self.removeObservers()
-        self.conversation?.leaveConversation()
     }
     
     
@@ -92,9 +95,9 @@ DilemmaCellDelegate
         
         // Get all the current messages available from the server
         // TODO: For best results, you should get the latest 20 messages and load another
-        
+        self.showWaitOverlay()
         conversation?.get() { failure in
-            
+            self.removeAllOverlays()
             //self.messages = self.conversation!.messages
             
             if self.messages.isEmpty == false {
@@ -167,14 +170,12 @@ extension NegotiationDetailViewController {
     }
     
     
-    
     func getDefaultCell(forIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         return tableView.dequeueReusableCellWithIdentifier(
             CellIdentifier.Message.SystemMessageCell.rawValue,
             forIndexPath: indexPath) as! UITableViewCell
     }
     
-
     
     func getAndConfigCell(indexPath: NSIndexPath) -> UITableViewCell? {
         
@@ -187,12 +188,11 @@ extension NegotiationDetailViewController {
             let cell: UITableViewCell? = cellReuser.reuseCell(identifier, indexPath: indexPath)
             let cellConfigurator = cellReuser.getConfigurator()
             
-            var data: [CellKey:Any] = [CellKey.Model:message as Any, CellKey.IndexPath:indexPath, CellKey.Delegate:self]
+            let data: [CellKey:Any] = [CellKey.Model:message as Any, CellKey.IndexPath:indexPath, CellKey.Delegate:self]
             cellConfigurator?.configureCell(data: data)
             
             // For changes inside a message, add a changeObserver
             self.addChangeObserver(forMessage: message, withCellIdentifier: identifier)
-            //message.delegate = self
                 
             return cell
         }
@@ -208,7 +208,6 @@ extension NegotiationDetailViewController {
         let identifier = CellIdentifier.Message.fromTextType(message.type)
         var height: CGFloat = 60
         
-
         // Check if a specific text type is bound with a cell identifier, extra safe check
         if let _identifier = identifier {
             
@@ -225,8 +224,6 @@ extension NegotiationDetailViewController {
 
         return height
     }
-    
-
 }
 
 
@@ -236,6 +233,16 @@ extension NegotiationDetailViewController {
 
 extension NegotiationDetailViewController {
 
+    
+    func configureCell(forMessage message: Message, andCell cell: UITableViewCell) {
+        
+        let cellIdentifier = CellIdentifier.Message.fromTextType(message.type)
+        let factory = NegotiationDetailCellConfiguratorFactory(cellIdentifier: cellIdentifier, cell: cell)
+        if let configurator = factory.getConfigurator() {
+            configurator.configureCell(data: [CellKey.Model:message as Any])
+        }
+    }
+    
     // MARK: Offer cell delegate
     
     func offerCell(
@@ -263,6 +270,7 @@ extension NegotiationDetailViewController {
 
                     (self.conversation as! MessageCommunicationProtocol).acceptContract(message) { error in
                         
+                        self.configureCell(forMessage: message, andCell: cell)
                         startAnimation()
                     }
                 }
@@ -288,9 +296,10 @@ extension NegotiationDetailViewController {
                 
                 if message.type == TextType.ContractOffer {
                     
-                    
                     (self.conversation as! MessageCommunicationProtocol).rejectContract(message) { error in
                         
+                        self.configureCell(forMessage: message, andCell: cell)
+                        // The animation will restart, because after the cell configuration, the state already has been set.
                         startAnimation()
                     }
                 }
@@ -393,8 +402,7 @@ extension NegotiationDetailViewController {
 
             let ip = NSIndexPath(forRow: index, inSection: 0)
             if let cell = self.tableView.cellForRowAtIndexPath(ip) {
-                self.tableView.reloadRowsAtIndexPaths([ip], withRowAnimation: UITableViewRowAnimation.Middle)//cellForRowAtIndexPath(ip)
-                //changeWithConfigurator(cell)
+                self.tableView.reloadRowsAtIndexPaths([ip], withRowAnimation: UITableViewRowAnimation.Middle) // or change with configurator, see func above
             }
         }
     }
@@ -412,55 +420,34 @@ extension NegotiationDetailViewController {
             if let lastMessage = self.conversation?.messages.last {
                 
                 let m: Message = lastMessage
-                
                 self.insertAtBottom(forRole: m.role)
                 self.scrollToBottom(animate: true)
-                
             }
         }
         
         if context == &userJoinedOrLeft {
             
-            var ac = UIAlertController(title: "User left or joined", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
-            ac.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default, handler: { (alertAction) -> Void in
-                ac.removeFromParentViewController()
-            }))
-            
             if (change[NSKeyValueChangeNewKey] as! Bool) == true {
-                
-                ac.message = "USER JOINED"
                 println("******** USER JOINED **********")
             } else {
-                ac.message = "USER LEFT"
                 println("******** USER LEFT **********")
             }
-            
-            self.presentViewController(ac, animated: true, completion: nil)
-            
         }
         
         if context == &userAuthenticate {
             
-            var ac = UIAlertController(title: "Authentication", message: "User is authenticated", preferredStyle: UIAlertControllerStyle.Alert)
-            ac.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.Default, handler: { (alertAction) -> Void in
-                ac.removeFromParentViewController()
-            }))
-            
-            self.presentViewController(ac, animated: true, completion: nil)
-            
+            // EXPERIMENT: Show a short message
+            DodoBarDefaultStyles.cornerRadius = 0
+            DodoPresets.Success.style.bar.backgroundColor = UIColor.ICGreenColor()
+            DodoLabelDefaultStyles.font = UIFont.preferredFontForTextStyle(UIFontTextStyleBody)
+            self.view.dodo.style.bar.animationShow = DodoAnimations.Fade.show
+            self.view.dodo.style.bar.animationHide = DodoAnimations.Fade.hide
+            self.view.dodo.style.leftButton.icon = .Close
+            self.view.dodo.style.bar.hideAfterDelaySeconds = 2
+            self.view.dodo.style.bar.hideOnTap = true
+            self.view.dodo.success("Conversation active")
         }
     }
-    
-    // TODO: Improve this in the future
-//    func offerDidChange(forMessage message: Message) {
-//        
-//        if let foundedIndex = self.conversation?.messageList.indexForItem(message) {
-//            
-//            let ip = NSIndexPath(forRow: foundedIndex, inSection: 0)
-//            self.tableView.reloadRowsAtIndexPaths([ip], withRowAnimation: UITableViewRowAnimation.None)//cellForRowAtIndexPath(ip)
-//        }
-//    }
-    
 }
 
 

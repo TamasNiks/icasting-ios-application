@@ -13,25 +13,6 @@ typealias MessageCommunicationCallBack = (error: ICErrorInfo?)->()
 
 
 
-//protocol ContractState {
-//    func hasBothAccepted() -> Bool
-//}
-//
-//class ContractAcceptedState: ContractState {
-//   
-//    func hasBothAccepted() -> Bool {
-//        return true
-//    }
-//}
-//
-//class ContractUnacceptedState: ContractState {
-//
-//    func hasBothAccepted() -> Bool {
-//        return false
-//    }
-//}
-
-
 
 struct ConversationToken : Printable {
     
@@ -46,14 +27,7 @@ struct ConversationToken : Printable {
 
 
 
-
 class Conversation: NSObject {
-    
-   // private var contractState: ContractState?
-    
-//    var contractBothAccepted: Bool? {
-//        return contractState.hasBothAccepted()
-//    }
     
     let matchID: String
     let messageList: MessageListExtractor = MessageListExtractor()
@@ -82,8 +56,6 @@ class Conversation: NSObject {
 
 
 
-
-
 // The extension adds responsibilities for communicating with a socket library, the list below specifies what the extension does:
 // it creates the socket with the conversation token and sets the delegate
 // It creates handlers for the socket to receive feedback if specific things are happening, it is similar to the command pattern
@@ -102,8 +74,6 @@ extension Conversation : SocketCommunicationHandlerDelegate {
     // MARK: Socket communication handler delegate
     
     func handlersForSocketListeners() -> SocketHandlers {
-        
-        
         
         var handlers: SocketHandlers = SocketHandlers()
         
@@ -131,21 +101,15 @@ extension Conversation : SocketCommunicationHandlerDelegate {
         
         handlers.receivedMessage = { data in
             
-            println("--- Conversation: RECIEVED MESSAGE")
             if let d = data {
-                
                 let factory = SocketMessageFactory()
                 let message: Message = factory.createNormalMessage(d)
                 self.messageList.addItem(message)
-                
             }
-            
-            // TODO: Handle error message, for when message == nil
         }
         
         handlers.receivedOffer = { data in
          
-            println("--- Conversation: RECIEVED OFFER")
             if let d = data {
                 let factory = SocketMessageFactory()
                 let message: Message = factory.createOfferMessage(d)
@@ -168,8 +132,7 @@ extension Conversation : SocketCommunicationHandlerDelegate {
         handlers.offerAccepted = { data in
 
             if let d = data {
-                
-                let messageID           = d[3] as? String
+                let messageID = d[3] as? String
                 if let message: Message = self.messageList.itemByID(messageID!) {
                     self.setOfferAcceptTalent(forMessage: message, to: true)
                 }
@@ -179,25 +142,21 @@ extension Conversation : SocketCommunicationHandlerDelegate {
         handlers.offerRejected = { data in
 
             if let d = data {
-                
-                let messageID           = d[3] as? String
+                let messageID = d[3] as? String
                 if let message: Message = self.messageList.itemByID(messageID!) {
                     self.setOfferAcceptTalent(forMessage: message, to: false)
                 }
             }
         }
         
-        
         handlers.contractOfferAccepted = { data in
             
             if let d = data {
                 //Data: status (Int), byWho ([String:AnyObject]), userID (String), messageID (String)
-                let byWho       = d[1] as! [String:AnyObject]
-                let messageID   = d[3] as? String
-//                println("ByWho: ")
-//                println(byWho)
+                let messageID = d[3] as? String
                 if let message: Message = self.messageList.itemByID(messageID!) {
-                    self.setContractOfferAcceptClientOrTalent(forMessage: message, byWho: byWho)
+                    let byWho = d[1] as! [String:AnyObject]
+                    self.setContractOfferAcceptClientOrTalent(forMessage: message, byWho: byWho, mustNotify: true)
                 }
             }
         }
@@ -206,12 +165,10 @@ extension Conversation : SocketCommunicationHandlerDelegate {
          
             if let d = data {
                 //Data: status (Int), byWho ([String:AnyObject]), userID (String), messageID (String)
-                let byWho       = d[1] as! [String:AnyObject]
-                let messageID   = d[3] as? String
-//                println("ByWho: ")
-//                println(byWho)
+                let messageID = d[3] as? String
                 if let message: Message = self.messageList.itemByID(messageID!) {
-                    self.setContractOfferAcceptClientOrTalent(forMessage: message, byWho: byWho)
+                    let byWho = d[1] as! [String:AnyObject]
+                    self.setContractOfferAcceptClientOrTalent(forMessage: message, byWho: byWho, mustNotify: true)
                 }
             }
         }
@@ -225,13 +182,24 @@ extension Conversation : SocketCommunicationHandlerDelegate {
             }
         }
         
-        handlers.acceptRenegotiationRequest = { data in
-         
-            
+        handlers.renegotiationRequestAccepted = { data in
+
+            if let d = data {
+                let messageID: String?   = d[3] as? String
+                if let message: Message = self.messageList.itemByID(messageID!) {
+                    self.setNegotiationRequestAcceptTalent(forMessage: message, to: true)
+                }
+            }
         }
         
-        handlers.rejectRenegotiationRequest = { data in
+        handlers.renegotiationRequestRejected = { data in
             
+            if let d = data {
+                let messageID: String?   = d[3] as? String
+                if let message: Message = self.messageList.itemByID(messageID!) {
+                    self.setNegotiationRequestAcceptTalent(forMessage: message, to: false)
+                }
+            }
             
         }
         
@@ -255,8 +223,7 @@ extension Conversation : SocketCommunicationHandlerDelegate {
         self.notifyObserver(forMessage: message)
     }
     
-    
-    private func setContractOfferAcceptClientOrTalent(forMessage message: Message, byWho: [String:AnyObject]) {
+    private func setContractOfferAcceptClientOrTalent(forMessage message: Message, byWho: [String:AnyObject], mustNotify notify: Bool) {
         
         // Because the value can be a string "<null>" and an int 0,1
         func unwrap(object: AnyObject?) -> Bool? {
@@ -282,11 +249,20 @@ extension Conversation : SocketCommunicationHandlerDelegate {
         println(accepted)
         
         message.offer?.stateComponents = StateComponents(acceptClient: acceptClient, acceptTalent: acceptTalent, accepted: accepted)
+        
+        if notify { self.notifyObserver(forMessage: message) }
+    }
+    
+    private func setNegotiationRequestAcceptTalent(forMessage message: Message, to bool: Bool ) {
+        
+        message.offer?.stateComponents = StateComponents(acceptClient: true, acceptTalent: bool, accepted: bool)
         self.notifyObserver(forMessage: message)
     }
     
     
+    // A wrapper function to encapsulate the notification
     private func notifyObserver(forMessage message: Message) {
+        
         // If the changeClosure has been set, call it
         if let changeClosure = message.notifyChange {
             
@@ -296,23 +272,7 @@ extension Conversation : SocketCommunicationHandlerDelegate {
             }
         }
     }
-    
-//    private func setOfferAcceptTalent(forMessage message: Message, to bool: Bool ) {
-//        
-//        message.offer?.acceptTalent = bool
-//        
-//        // If the changeClosure has been set, call it
-//        if let changeClosure = message.notifyChange {
-//            
-//            // But first check if the item exist in the list for it to call
-//            if let index = self.messageList.indexForItem(message) {
-//                changeClosure(message: message, index: index)
-//            }
-//        }
-//    }
-    
 }
-
 
 
 
@@ -327,7 +287,6 @@ protocol MessageCommunicationProtocol {
     func acceptRenegotiationRequest(message: Message, callBack: MessageCommunicationCallBack)
     func rejectRenegotiationRequest(message: Message, callBack: MessageCommunicationCallBack)
 }
-
 
 
 
@@ -348,10 +307,8 @@ extension Conversation: MessageCommunicationProtocol {
             self.messageList.addItem(m)
 
             //return //String error	String message_id
-            
         })
     }
-    
     
     func acceptOffer(message: Message, callBack: MessageCommunicationCallBack) {
 
@@ -364,7 +321,6 @@ extension Conversation: MessageCommunicationProtocol {
         })
     }
     
-    
     func rejectOffer(message: Message, callBack: MessageCommunicationCallBack) {
         
         self.socketCommunicationHandler?.rejectOffer(message.id, acknowledged: { (data) -> () in
@@ -375,7 +331,6 @@ extension Conversation: MessageCommunicationProtocol {
             }
         })
     }
-    
     
     func acceptContract(message: Message, callBack: MessageCommunicationCallBack) {
         
@@ -388,42 +343,49 @@ extension Conversation: MessageCommunicationProtocol {
         })
     }
 
-    
     func rejectContract(message: Message, callBack: MessageCommunicationCallBack) {
         
         self.socketCommunicationHandler?.rejectContract(message.id, acknowledged: { (data) -> () in
-        
-            
-            
+
+            if let d = data {
+                let error: ICErrorInfo? = self.decideContractAcceptRejection(d, withMessageToUpdate: message)
+                callBack(error: error)
+            }
         })
     }
-    
     
     func acceptRenegotiationRequest(message: Message, callBack: MessageCommunicationCallBack) {
         
         self.socketCommunicationHandler?.acceptRenegotiationRequest(message.id, acknowledged: { (data) -> () in
-          
             
+            if let d = data {
+                let accepted = true
+                message.offer?.stateComponents = StateComponents(acceptClient: true, acceptTalent: accepted, accepted: accepted)
+                callBack(error: nil)
+            }
         })
-        
     }
-    
     
     func rejectRenegotiationRequest(message: Message, callBack: MessageCommunicationCallBack) {
     
         self.socketCommunicationHandler?.rejectRenegotiationRequest(message.id, acknowledged: { (data) -> () in
-        
             
+            if let d = data {
+                let accepted = false
+                message.offer?.stateComponents = StateComponents(acceptClient: true, acceptTalent: accepted, accepted: accepted)
+                callBack(error: nil)
+            }
         })
     }
     
     
+    // Helper functions
     
     private func decideOfferAcceptRejection(data: NSArray, withMessageToUpdate message: Message) -> ICErrorInfo? {
     
         let error: ICErrorInfo? = ICError(string: data[0] as? String).getErrors()
         if error == nil {
-            var accepted: Bool? = (data[1] as! Int).toBool()
+            var accepted: Bool?     = (data[1] as! Int).toBool()
             var byWho: [String:Int] = (data[2] as! [String:Int])
             var hasAcceptTalent = (byWho["acceptTalent"] ?? 0).toBool()
             message.offer!.acceptTalent = hasAcceptTalent
@@ -435,18 +397,12 @@ extension Conversation: MessageCommunicationProtocol {
         
         let error: ICErrorInfo? = ICError(string: data[0] as? String).getErrors()
         if error == nil {
-            var newStatus: JSON = JSON(data[1])
-            var byWho: [String:Int] = (data[2] as! [String:Int])
-            var hasAcceptTalent = (byWho["acceptTalent"] ?? 0).toBool()
-            message.offer!.acceptTalent = hasAcceptTalent
+            let byWho = data[2] as! [String:AnyObject]
+            self.setContractOfferAcceptClientOrTalent(forMessage: message, byWho: byWho, mustNotify: false)
         }
         return error
     }
-    
 }
-
-
-
 
 
 

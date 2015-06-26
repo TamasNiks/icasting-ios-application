@@ -47,6 +47,9 @@
 
 "Announcement" = "Mededeling";
 
+"Talent" = "Talent";
+"Client" = "Opdrachtgever";
+
 /* Login */
 "login.alert.client.notsupported" = "Voor deze versie van de app wordt de client nog niet ondersteund. We laten het u weten als client ondersteuning wordt ondersteund in toekomstige versies";
 
@@ -101,6 +104,11 @@
 "negotiations.offer.title.requests" = "Aanvullende verzoeken";
 
 "negotiations.renegotiation.title" = "Heronderhandel verzoek";
+
+"negotiation.state.bothaccepted" = "Beide hebben het contract geacepteerd";
+"negotiation.state.neitherdecided" = "%@ heeft nog niet gereageerd";
+"negotiation.state.accepted" = "%@ heeft geacepteerd";
+"negotiation.state.rejected" = "%@ heeft het contract gewijgerd";
 
 // iCasting System text
 

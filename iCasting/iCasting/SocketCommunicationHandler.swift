@@ -37,8 +37,8 @@ struct SocketHandlers {
     var contractOfferAccepted       : SocketHandlerType = { data in }
     var contractOfferRejected       : SocketHandlerType = { data in }
     var receivedRenegotiationRequest: SocketHandlerType = { data in }
-    var acceptRenegotiationRequest  : SocketHandlerType = { data in }
-    var rejectRenegotiationRequest  : SocketHandlerType = { data in }
+    var renegotiationRequestAccepted: SocketHandlerType = { data in }
+    var renegotiationRequestRejected: SocketHandlerType = { data in }
 }
 
 
@@ -181,12 +181,12 @@ class SocketCommunicationHandler {
         
         self.socket.on(On.AcceptRenegotiationRequest.rawValue) { data, ack in
             
-            handlers.acceptRenegotiationRequest(data: data)
+            handlers.renegotiationRequestAccepted(data: data)
         }
         
         self.socket.on(On.RejectRenegotiationRequest.rawValue) { data, ack in
             
-            handlers.rejectRenegotiationRequest(data: data)
+            handlers.renegotiationRequestRejected(data: data)
         }
         
         
@@ -205,7 +205,7 @@ class SocketCommunicationHandler {
     }
     
     func stop() {
-        self.socket.close(fast: true)
+        self.socket.close(fast: false)
     }
 
 }

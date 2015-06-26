@@ -110,6 +110,7 @@ class DilemmaView: UIView {
     
     func startRightAnimation() {
         
+        startSettingsRightView(rightView)
         UIView.animateWithDuration(
             ANIMATION_DURATION,
             delay: 0,
@@ -122,6 +123,7 @@ class DilemmaView: UIView {
     
     func startLeftAnimation() {
         
+        startSettingsLeftView(leftView)
         UIView.animateWithDuration(
             ANIMATION_DURATION,
             delay: 0,

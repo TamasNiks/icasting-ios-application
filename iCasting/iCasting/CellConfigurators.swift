@@ -282,6 +282,14 @@ class ContractOfferMessageCellConfigurator : CellConfigurator {
         
         if let offer = message.offer {
         
+            // TODO: Improve localization in switch statement
+            enum User: String { case Client = "Client", Talent = "Talent" }
+            func getLocalization(format: String, clientOrTalent user: User) -> String {
+                let userString: String = NSLocalizedString(user.rawValue, comment: "")
+                let localizedFormat: String = NSLocalizedString(format, comment: "")
+                return String(format: localizedFormat, userString)
+            }
+            
             var isIncomming: Bool {
                 return message.role == Role.Incomming ? true : false
             }
@@ -298,16 +306,15 @@ class ContractOfferMessageCellConfigurator : CellConfigurator {
                 case ContractState.BothAccepted:
                     
                     c.accepted = true
-                    statusText = "Both accepted contract"
+                    statusText = NSLocalizedString("negotiation.state.bothaccepted", comment: "")
                     c.activityIndicator.stopAnimating()
                     
                 case ContractState.NeitherDecided:
-                    print("&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
-                    println("ContractState.NeitherDecided")
                     
                     c.enabled = true
                     c.accepted = nil
-                    statusText = isIncomming ? "Client has not accepted yet" : "Talent has not accepted yet"
+                    let who = isIncomming ? User.Client : User.Talent
+                    statusText = getLocalization("negotiation.state.neitherdecided", clientOrTalent: who)
                     // If talent, set to "Client has not accepted yet" otherwise "Talent has not accepted yet"
                     
                 case ContractState.ClientAccepted:
@@ -346,6 +353,8 @@ class ContractOfferMessageCellConfigurator : CellConfigurator {
             }
         }
     }
+    
+
 }
 
 

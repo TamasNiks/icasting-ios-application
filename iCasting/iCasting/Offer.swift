@@ -59,7 +59,10 @@ enum ContractState {
         }
         
         if let ca = clientAccepted, ta = talentAccepted {
-            
+         
+            if ca == true && ta == true {
+                return ContractState.BothAccepted
+            }
             if ca == false {
                 return ContractState.ClientRejected
             }

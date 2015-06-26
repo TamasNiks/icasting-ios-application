@@ -47,6 +47,9 @@
 
 "Announcement" = "Announcement";
 
+"Talent" = "Talent";
+"Client" = "Client";
+
 /* Login */
 "login.alert.client.notsupported" = "The client is not yet supported with this version of the app. We will let you know if client support is added in future versions.";
 
@@ -102,6 +105,11 @@
 
 "negotiations.renegotiation.title" = "Renegotiation request";
 
+"negotiation.state.bothaccepted" = "Both accepted contract";
+"negotiation.state.neitherdecided" = "%@ has not accepted yet";
+"negotiation.state.accepted" = "%@ has accepted";
+"negotiation.state.rejected" = "%@ declined the contract";
+
 // iCasting System text
 
 "icasting.chat.system.text.contractoffer" = "Do you want to accept the contract?";
@@ -118,6 +126,7 @@
 "notification.title.match-matched" = "You are matched!";
 "notification.title.match-client_accepted" = "You have been accepted by a client.";
 "notification.title.chat-message" = "You received a new message.";
+
 
 /* Matches */
 "matches.filter.actionsheet.title" = "Filter status";

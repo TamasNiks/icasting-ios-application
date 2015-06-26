@@ -79,25 +79,4 @@ class MessageVisitor: AbstractMessageVisitor {
             message.read = read
         }
     }
-    
 }
-
-
-class NotifyChangeMessageVisitor: MessageVisitorProtocol {
-    
-    var message: Message?
-    
-    func visits(element: Message) {
-        self.message = element
-    }
-    
-    func notifyOfferChange() {
-        if let m = self.message {
-            m.delegate?.offerDidChange(forMessage: m)
-        }
-    }
-    
-}
-
-
-

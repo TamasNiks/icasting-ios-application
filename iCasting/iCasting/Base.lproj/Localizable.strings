@@ -47,6 +47,9 @@
 
 "Announcement" = "Announcement";
 
+"Talent" = "Talent";
+"Client" = "Client";
+
 /* Login */
 "login.alert.client.notsupported" = "The client is not yet supported with this version of the app. We will let you know if client support is added in future versions.";
 
@@ -101,6 +104,11 @@
 "negotiations.offer.title.requests" = "Additional requests";
 
 "negotiations.renegotiation.title" = "Renegotiation request";
+
+"negotiation.state.bothaccepted" = "Both accepted contract";
+"negotiation.state.neitherdecided" = "%@ has not accepted yet";
+"negotiation.state.accepted" = "%@ has accepted";
+"negotiation.state.rejected" = "%@ declined the contract";
 
 // iCasting System text
 

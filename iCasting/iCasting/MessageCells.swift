@@ -175,7 +175,6 @@ class DilemmaCell: UITableViewCell {
         
         dilemmaView.leftButton.addTarget(self, action: "onAcceptButtonPress:", forControlEvents: UIControlEvents.TouchUpInside)
         dilemmaView.rightButton.addTarget(self, action: "onRejectButtonPress:", forControlEvents: UIControlEvents.TouchUpInside)
-        
     }
     
     func onAcceptButtonPress(event: UIButton) {

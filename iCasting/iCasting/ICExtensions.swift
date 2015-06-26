@@ -21,7 +21,7 @@ extension UIColor {
         return UIColor(red: 190/255, green: 28/255, blue: 47/255, alpha: 1.0)
     }
     
-    // Color to add details interface elements on default red
+    // Color to add details interface elements on default redD
     class func ICShadowRedColor() -> UIColor {
         return UIColor(red: 201/255, green: 27/255, blue: 48/255, alpha: 1.0)
     }
