@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MessageBalloon: UIView {
+class MessageBalloonView: UIView {
 
     enum Position: Int {
         case Left, Right
@@ -65,9 +65,9 @@ class MessageBalloon: UIView {
             x = horx
         }
         
-        CGPathMoveToPoint(path,     nil, x                  , rect.height-RECT_INSET-1)
+        CGPathMoveToPoint(path,     nil, x                  , rect.height-RECT_INSET-0.75)
         CGPathAddLineToPoint(path,  nil, x-HOOK_WIDTH/2     , rect.height-3)
-        CGPathAddLineToPoint(path,  nil, x-HOOK_WIDTH       , rect.height-RECT_INSET-1)
+        CGPathAddLineToPoint(path,  nil, x-HOOK_WIDTH       , rect.height-RECT_INSET-0.75)
         
         return path
     }

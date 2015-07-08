@@ -22,30 +22,6 @@ protocol DilemmaCellDelegate {
         startAnimation: ()->())
 }
 
-//protocol MessageOfferCellDelegate {
-//    func offerCell(
-//        cell: MessageOfferCell,
-//        didPressButtonWithOfferStatus offerStatus: OfferStatus,
-//        forIndexPath indexPath: NSIndexPath,
-//        startAnimation: ()->())
-//}
-
-
-//struct MessageCellIdentifier {
-//    static let MessageCell: String = "messageCell"
-//    static let SystemMessageCell: String = "systemMessageCell"
-//}
-
-
-
-// TEST
-
-protocol CellVisitorAcceptProtocol {
-
-    func accept(configurator: MessageCellCongifuratorVisitors)
-}
-
-
 
 //**********************************************************
 
@@ -116,7 +92,7 @@ class MessageUnacceptedCell: UITableViewCell, CellVisitorAcceptProtocol {
 
 
 
-// BASE CELL
+
 
 class DilemmaCell: UITableViewCell {
 
@@ -205,7 +181,6 @@ class MessageOfferCell: DilemmaCell {
 }
 
 
-
 class MessageContractOfferCell: DilemmaCell {
     
     @IBOutlet weak var desc: UILabel!
@@ -213,6 +188,7 @@ class MessageContractOfferCell: DilemmaCell {
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
 }
+
 
 class MessageRenegotiationRequestCell: DilemmaCell {
     

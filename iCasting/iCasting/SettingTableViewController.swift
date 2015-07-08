@@ -10,45 +10,26 @@ import UIKit
 
 
 class SettingTableViewController: UITableViewController {
-
-    enum ReuseIdentifiers: String {
-        case LogOut = "logoutCellID"
-        case ChangeCastingObject = "changeCastingObjectCellID"
-    }
     
-    @IBOutlet weak var logoutCell: UITableViewCell!
+//    @IBOutlet weak var switchFamilyMemberCell: UITableViewCell!
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Uncomment the following line to preserve selection between presentations
         self.clearsSelectionOnViewWillAppear = true
-        
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
-
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
 
-    // MARK: - Table view data source
-
-    /*
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        // #warning Potentially incomplete method implementation.
-        // Return the number of sections.
-        return 0
-    }
-
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete method implementation.
-        // Return the number of rows in the section.
-        return 0
-    }*/
-
+    
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
         if let cell: UITableViewCell = tableView.cellForRowAtIndexPath(indexPath) {
@@ -57,7 +38,7 @@ class SettingTableViewController: UITableViewController {
                 
                 switch reuseIdentifier {
                     
-                case ReuseIdentifiers.LogOut.rawValue:
+                case CellIdentifier.Settings.LogOut.rawValue:
                     
                     Auth().logout() { failure in
                         if failure == nil {
@@ -66,7 +47,7 @@ class SettingTableViewController: UITableViewController {
                         }
                     }
                     
-                case ReuseIdentifiers.ChangeCastingObject.rawValue:
+                case CellIdentifier.Settings.ChangeCastingObject.rawValue:
                     
                     self.performSegueWithIdentifier("unwindToChooseCastingObject", sender: self)
                     
@@ -80,26 +61,11 @@ class SettingTableViewController: UITableViewController {
     
     }
 
-    
-    
-    /*
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath) as! UITableViewCell
-
-        // Configure the cell...
-
-        return cell
-    }
-    */
-
-
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    //override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         // Get the new view controller using [segue destinationViewController].
         // Pass the selected object to the new view controller.
-    }
-
-
+    //}
 }

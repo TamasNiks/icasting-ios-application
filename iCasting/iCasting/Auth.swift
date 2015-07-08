@@ -56,7 +56,7 @@ struct Authentication {
     var access_token : String? {
 
         var value: String? = NSUserDefaults.standardUserDefaults().objectForKey(Authentication.TOKEN_KEY) as? String
-        println("Token from NSuserDefaults: " + (value ?? "No token set"))
+        println("Access token from NSuserDefaults: " + (value ?? "No access token set"))
         return value
     }
     
@@ -194,6 +194,7 @@ class LoginRequest: RequestCommand {
                 let json = JSON(json)
                 let errors: ICErrorInfo? = ICError(json: json).getErrors()
                 
+                // Errors,
                 if errors == nil {
 
                     let authentication: Authentication = Authentication(

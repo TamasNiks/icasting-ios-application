@@ -21,6 +21,13 @@ class iCastingOfferTest: XCTestCase {
         super.tearDown()
     }
 
+    func testOfferValueExtractor() {
+        
+        
+        
+        
+    }
+    
     
     func testContractOfferState() {
     
@@ -49,7 +56,6 @@ class iCastingOfferTest: XCTestCase {
     
     func testConcatenateTypeKey() {
         // This will test if the type key can properlay concatenate with the offer name
-        
         
         var offerData: [String:AnyObject] = [String:AnyObject]()
         offerData["dateStart"] = "2015-08-01T00:00:00.000Z"

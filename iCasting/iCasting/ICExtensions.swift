@@ -100,9 +100,9 @@ extension String {
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = format.rawValue
         
-        if format == ICDateFormat.General {
-            
-        }
+//        if format == ICDateFormat.General {
+//            
+//        }
         
         
         if let date: NSDate = dateFormatter.dateFromString(self) {
@@ -131,8 +131,21 @@ extension String {
         }
         
         return nil
-        
     }
+
+    var ICLocalizedOfferName: String {
+        
+        let formatted = String(format: "negotiations.offer.name.%@", self)
+        let localizedName = NSLocalizedString(formatted, comment: "The name of an offer negotiation point.")
+        return localizedName
+    }
+    
+    var ICLocalizedNegotiationSubject: String {
+        let formatted = String(format: "negotiations.subject.title.%@", self)
+        let localizedName = NSLocalizedString(formatted, comment: "The title for every main category in the job overview.")
+        return localizedName
+    }
+    
 }
 
 
@@ -194,6 +207,57 @@ extension UITableView {
         }
         self.layoutIfNeeded()
     }
+    
+    
+    func calculateHeight(fromTitle title: String, andDetail detail: String) -> CGFloat {
+        
+        let tableViewCellInset: CGFloat = 5
+        
+        let labelWidth: CGFloat = UIScreen.mainScreen().bounds.size.width - tableViewCellInset * 2
+        
+        let titleText = NSAttributedString(string: title, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(17)] )
+        let detailText = NSAttributedString(string: detail, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(13)] )
+        
+        let options: NSStringDrawingOptions = NSStringDrawingOptions.UsesLineFragmentOrigin | NSStringDrawingOptions.UsesFontLeading
+        
+        let boundingRectForTitleText: CGRect = titleText.boundingRectWithSize(
+            CGSizeMake(labelWidth, CGFloat.max),
+            options: options,
+            context: nil)
+        
+        let boundingRectForDetail: CGRect = detailText.boundingRectWithSize(
+            CGSizeMake(labelWidth, CGFloat.max),
+            options: options,
+            context: nil)
+        
+        return ceil(boundingRectForTitleText.size.height + boundingRectForDetail.size.height) + tableViewCellInset * 2
+        
+        
+    }
+    
+    func calculateHeight(fromString string: String, forFontSize size: CGFloat) -> CGFloat {
+        
+        let TableViewCellInset: CGFloat = 16
+        let labelWidth: CGFloat = self.bounds.size.width - TableViewCellInset * 2
+        let text = NSAttributedString(string: string, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(size)])
+
+        
+        func rect(str: NSAttributedString) -> CGRect {
+            
+            let options: NSStringDrawingOptions =   NSStringDrawingOptions.UsesLineFragmentOrigin |
+                NSStringDrawingOptions.UsesFontLeading |
+                NSStringDrawingOptions.TruncatesLastVisibleLine
+            
+            return str.boundingRectWithSize(
+                CGSizeMake(labelWidth, CGFloat.max),
+                options: options,
+                context: nil)
+        }
+        
+        let boundingRectForText: CGRect = rect(text)
+        return ceil(boundingRectForText.size.height) + TableViewCellInset * 2
+    }
+    
     
 }
 
@@ -354,7 +418,7 @@ struct CellProperties {
         self.reuse = reuse
         self.height = height
     }
-    init(_ reuse: String) {
+    init(reuse: String) {
         self.reuse = reuse
         self.height = 44
     }

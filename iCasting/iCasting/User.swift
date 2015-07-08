@@ -60,8 +60,8 @@ class User : Printable, ModelProtocol, ValueProvider {
     }
     
     func initializeModel(json: JSON) {
-        println("USER JSON")
-        println(json)
+        //println("USER JSON")
+        //println(json)
         User.sharedInstance.setValues(json)
     }
     

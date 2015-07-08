@@ -27,8 +27,6 @@ extension MatchSummaryCell {
     func configureCell(item: MatchDetailType) {
         
         self.textLabel?.text = item.general[.JobTitle]!
-        self.detailTextLabel?.text = item.general[.JobDescription]!
+        self.detailTextLabel?.text = item.general[.JobDescLong]!
     }
-    
-    
 }

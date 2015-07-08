@@ -75,7 +75,6 @@
 "negotiations.offer.name.medium" = "Buy-off medium";
 "negotiations.offer.name.period" = "Buy-off period";
 "negotiations.offer.name.address" = "Address";
-
 "negotiations.offer.name.streetNumber" = "Street number";
 "negotiations.offer.name.street" = "Street";
 "negotiations.offer.name.zipCode" = "Zipcode";
@@ -83,6 +82,10 @@
 "negotiations.offer.name.country" = "Country";
 "negotiations.offer.name.area" = "Province";
 "negotiations.offer.name.desc" = "Description";
+"negotiations.offer.name.range" = "Job period range";
+"negotiations.offer.name.budget" = "Budget";
+"negotiations.offer.name.travelExpenses" = "Travel expenses";
+"negotiations.offer.name.requests" = "Additional requests";
 
 "negotiations.offer.value.single" = "No";
 "negotiations.offer.value.true" = "Yes";
@@ -93,6 +96,7 @@
 "negotiations.offer.value.years" = "years";
 "negotiations.offer.value.multiple" = "Yes";
 "negotiations.offer.value.forever" = "Forever";
+"negotiations.offer.value.norequests" = "No additional requests";
 
 "negotiations.offer.title.dateTime" = "Time";
 "negotiations.offer.title.buyOff" = "Buy-off";
@@ -110,6 +114,11 @@
 "negotiation.state.accepted" = "%@ has accepted";
 "negotiation.state.rejected" = "%@ declined the contract";
 
+"negotiations.subject.title.finance" = "Finance";
+"negotiations.subject.title.buyoff" = "Buy off";
+"negotiations.subject.title.timeandlocation" = "Time & location";
+"negotiations.subject.title.additionalrequests" = "Additional requests";
+
 // iCasting System text
 
 "icasting.chat.system.text.contractoffer" = "Do you want to accept the contract?";
@@ -120,11 +129,13 @@
 "notification.desc.achievement-complete" = "You have completed \"%@\" and earned %@ XP.";
 "notification.desc.match-matched" = "You have a match with \"%@\"";
 "notification.desc.match-client_accepted" = "Your reaction for \"%@\" has been accepted";
+"notification.desc.match-client_rejected" = "Your reaction for \"%@\" has been rejected";
 "notification.desc.chat-message" = "You have received a message in a negotiation for \"%@\"";
 
 "notification.title.achievement-complete" = "You have completed an achievement!";
 "notification.title.match-matched" = "You are matched!";
 "notification.title.match-client_accepted" = "You have been accepted by a client.";
+"notification.title.match-client_rejected" = "You are not selected by a client.";
 "notification.title.chat-message" = "You received a new message.";
 
 /* Matches */

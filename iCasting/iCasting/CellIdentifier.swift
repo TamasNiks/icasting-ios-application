@@ -9,13 +9,16 @@
 import Foundation
 
 
+protocol CellIdentifierProtocol {
+    var rawValue: String { get }
+}
+
+
 // Bind the TextType of the cells with the CellIdentifiers, so the right cells will get reused.
 
 class CellIdentifier {
 
-    enum Message: String {
-        
-        // Cell identifiers
+    enum Message: String, CellIdentifierProtocol {
         case
         MessageCell                     = "messageCell",
         UnacceptedCell                  = "unacceptedMessageCell",
@@ -35,15 +38,37 @@ class CellIdentifier {
             ]
             return ids[type]
         }
-        
-//        static func textType() -> TextType {
-//            
-//            for (key, value) in ids {
-//                
-//            }
-//            
-//        }
     }
     
+    enum JobOverview: String, CellIdentifierProtocol {
+        case
+        Header = "headerCellIdentifier",
+        JobPoints = "jobPointsCellIdentifier"
+    }
+    
+    enum Match: String, CellIdentifierProtocol {
+        case
+        Detail = "matchDetailCellIdentifier"
+    }
+    
+    enum MatchDetail: String, CellIdentifierProtocol {
+        case
+        Header = "headerCell",
+        Dilemma = "acceptCell",
+        Summary = "summaryCell",
+        Profile = "profileCell",
+        Detail = "detailCell"
+    }
+    
+    enum MatchProfile: String, CellIdentifierProtocol {
+        case
+        Default = "reuseIdentifierCell"
+    }
+    
+    enum Settings: String, CellIdentifierProtocol {
+        case
+        LogOut = "logoutCellID",
+        ChangeCastingObject = "changeCastingObjectCellID"
+    }
 }
 

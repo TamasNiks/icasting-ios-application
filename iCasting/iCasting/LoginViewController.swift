@@ -17,44 +17,35 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var loginButton: UIButton!
     
+    @IBAction func prepareForUnwind(segue:UIStoryboardSegue) {}
+    
     dynamic var tryToLogin: Bool = false
+    
+    var keyboardController: KeyboardController?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-
-        NSNotificationCenter.defaultCenter()
-            .addObserver(self, selector: "handleKeyboardWillShow:", name: UIKeyboardWillShowNotification, object: nil)
-        
-        NSNotificationCenter.defaultCenter()
-            .addObserver(self, selector: "handleKeyboardDidShow:", name: UIKeyboardDidShowNotification, object: nil)
-        
-        NSNotificationCenter.defaultCenter()
-            .addObserver(self, selector: "handleKeyboardWillHide:", name: UIKeyboardWillHideNotification, object: nil)
-        
         self.addObserver(self, forKeyPath: "tryToLogin", options: nil, context: nil)
-        
-        
     }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(false)
 
-
-        // Family account
-//        self.emailTextField.text = "tim.van.steenoven+family@icasting.com"
-//        self.passwordTextField.text = "test"
+        // Create a keyboard controller with views to handle keyboard events
+        self.keyboardController = KeyboardController(views: [self.emailTextField, self.passwordTextField])
+        self.keyboardController?.setObserver()
+        self.keyboardController?.goingUpDivider = 8
         
-        self.emailTextField.text = "tim.van.steenoven@icasting.com"
-        self.passwordTextField.text = "test"
-        
-//        self.emailTextField.text = "boyd.rehorst+familie-account@icasting.com"
-//        self.passwordTextField.text = "abc"
-        
-//        self.emailTextField.text = "timvs.nl@gmail.com"
-//        self.passwordTextField.text = "test"
+        // TODO: Comment this line on App Review
+        setTestDataOnInputFields()
         
         tryLoginSequence()
+    }
+    
+    override func viewDidDisappear(animated: Bool) {
+        super.viewDidDisappear(animated)
+        self.keyboardController?.removeObserver()
     }
     
     override func didReceiveMemoryWarning() {
@@ -62,16 +53,15 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         // Dispose of any resources that can be recreated.
     }
 
-    deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
-    }
-    
-    @IBAction func prepareForUnwind(segue:UIStoryboardSegue) {}
     
     // MARK: Textfield Delegate Methods
 
     func textFieldShouldReturn(textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
+        if textField != self.passwordTextField {
+            self.passwordTextField.becomeFirstResponder()
+        } else {
+            textField.resignFirstResponder()
+        }
         return true
     }
     
@@ -131,27 +121,12 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         {
             startLoginSequence(Credentials())
         }
-        // If the user doesn't have an authentication stored, check if Facebook is still logged in, if it is, logout, because the try to login depends totally on the access_token and user_id of iCasting. If it isn't there, the user should login manually, thus logout on facebook
+        // If the user doesn't have an authentication stored, check if Facebook is still logged in, if it is, logout, because the try to login depends totally on the access_token and user_id of iCasting. If it isn't there, the user should login manually, hence logout on facebook
         else {
             if let fbsdkCurrentAccessToken = FBSDKAccessToken.currentAccessToken() {
                 FBSDKLoginManager().logOut()
             }
         }
-        
-        /*
-        // If the user has an
-        if let fbsdkCurrentAccessToken = FBSDKAccessToken.currentAccessToken() {
-            
-            println("User is already logged in, do work such as go to next view controller.")
-            println(fbsdkCurrentAccessToken.userID)
-            
-            let credentials = Credentials()
-            credentials.facebookCredentials = FacebookCredentials(userID: fbsdkCurrentAccessToken.userID)
-            startLoginSequence(credentials)
-        }
-        else {
-            // Do something else
-        }*/
     }
     
     
@@ -159,7 +134,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         
         self.tryToLogin = true
 
-        // TODO: When the access_token expires, (if it will expire), we need to find a way through error messages to clear the tokens
+        // TODO: When the access_token expires, (if it will expire), we need to find a way with error messages from the server to clear the tokens
         
         Auth().login(c) { errors in
         
@@ -168,7 +143,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             if let errors = errors {
                 
                 println(errors)
-                self.doErrorHandling(errors)
+                self.performErrorHandling(errors)
                 return
             }
             
@@ -187,7 +162,22 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                 return
             }
             
+            // Try to register the device
+            
+            Push().registerDevice() { failure in
+                
+                if let failure = failure {
+                    println("Registering failure")
+                }
+                
+                if let config = Push.config {
+                    println("DeviceID: \(config.deviceID)")
+                    return
+                }
+            }
+            
             // If the user is not a client or talent, it is a manager, it will have casting objects, show the overview
+            
             if User.sharedInstance.isManager {
                 
                 self.performSegueWithIdentifier("showCastingObjects", sender: self)
@@ -195,14 +185,14 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             }
             
             // If the user is talent, there's just one casting object, it has already been set in the model
-            //User.sharedInstance
+            
             self.performSegueWithIdentifier("showMain", sender: self)
 
         }
         
     }
     
-    func doErrorHandling(errors: ICErrorInfo) {
+    func performErrorHandling(errors: ICErrorInfo) {
         
         if errors is ICAPIErrorInfo {
             if (errors as! ICAPIErrorInfo).name == ICAPIErrorNames.PassportAuthenticationError.rawValue {
@@ -264,58 +254,29 @@ extension LoginViewController : FBSDKLoginButtonDelegate {
 
 
 
-
-// MARK: Keyboard notification handlers
-
-extension LoginViewController {
-    
-    func handleKeyboardWillShow(notification: NSNotification) {
-        
-        println("keyboard will show")
-        // Get the frame of the keyboard and place it in a CGRect
-        let keyboardRectAsObject = notification.userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue
-        var keyboardRect = CGRectZero
-        keyboardRectAsObject.getValue(&keyboardRect)
-        
-        let offset = -keyboardRect.height / 8
-        
-        UIView.animateWithDuration(1, animations: { () -> Void in
-            
-            self.emailTextField.transform = CGAffineTransformMakeTranslation(0, offset)
-            self.passwordTextField.transform = CGAffineTransformMakeTranslation(0, offset)
-            
-        })
-    }
-    
-    
-    func handleKeyboardWillHide(notification: NSNotification) {
-        
-        println("keyboard will hide")
-        // Get the frame of the keyboard and place it in a CGRect
-        let keyboardRectAsObject = notification.userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue
-        var keyboardRect = CGRectZero
-        keyboardRectAsObject.getValue(&keyboardRect)
-        
-        let offset = CGFloat(0)//keyboardRect.height / 2
-        
-        UIView.animateWithDuration(1, animations: { () -> Void in
-            
-            self.emailTextField.transform = CGAffineTransformMakeTranslation(0, offset)
-            self.passwordTextField.transform = CGAffineTransformMakeTranslation(0, offset)
-            
-        })
-        
-    }
-    
-    func handleKeyboardDidShow(notification: NSNotification) {
-        println("keyboard did show")
-    }
-    
-    
-}
-
+// TEST: logout
 
 extension LoginViewController {
+    
+    func setTestDataOnInputFields() {
+        
+        // Family account
+        //        self.emailTextField.text = "tim.van.steenoven+family@icasting.com"
+        //        self.passwordTextField.text = "test"
+        
+        //self.emailTextField.text = "tim.van.steenoven@icasting.com"
+        //self.passwordTextField.text = "test"
+        
+        //self.emailTextField.text = "boyd.rehorst+familie-account@icasting.com"
+        //self.passwordTextField.text = "abc"
+        
+        //        self.emailTextField.text = "timvs.nl@gmail.com"
+        //        self.passwordTextField.text = "test"
+        
+        //self.emailTextField.text = "tobias+103@iqmedia.nl"
+        //self.passwordTextField.text = "abc"
+        
+    }
     
     func testLogout() {
         Auth().logout({ (failure) -> () in println(failure) })

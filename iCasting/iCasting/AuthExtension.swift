@@ -9,6 +9,8 @@
 import Foundation
 
 
+// Client or Talent in state machine
+
 protocol AuthenticateProtocol {
     
     func isAuthorized(context: Auth) -> Bool

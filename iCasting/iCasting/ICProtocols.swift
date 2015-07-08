@@ -9,12 +9,7 @@
 import Foundation
 
 protocol ModelProtocol {
-
-    
     func initializeModel(json: JSON)
-    //func all (callBack: RequestClosure)
-    //func one (id: String, callBack: RequestClosure)
-    
 }
 
 protocol ModelRequest {

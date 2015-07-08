@@ -42,8 +42,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         println("Token = \(tokenAsString)")
-        
+        saveDeviceToken(tokenAsString as String)
     }
+    
+    
+    private func saveDeviceToken(token: String) {
+        DeviceToken.token = token
+    }
+    
     
     // When the following scenario occurs:
     // - The app is open and a push notification arrives
@@ -52,6 +58,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         println("--- App did received remote notification while app was open")
     }
+    
     
     // When the following scenario occurs:
     // - If the user selects an action if one is available
@@ -88,14 +95,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // If called for the first time, the system will pop up a dialog box asking if the user wants to grant permission to display notifications
         UIApplication.sharedApplication().registerForRemoteNotifications()
-
+        
     }
     
     
     func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject?) -> Bool {
         
         return FBSDKApplicationDelegate.sharedInstance().application(application, openURL: url, sourceApplication: sourceApplication, annotation: annotation)
-        
     }
     
     
@@ -120,32 +126,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         // SETUP NOTIFICATION
-        configureRemoteNotifications()
+        //configureRemoteNotifications()
 
-        
-        
-        // Configuration of the drawer controller
         var storyBoard = UIStoryboard(name: "Main", bundle: nil)
         
         let initialViewController = storyBoard.instantiateViewControllerWithIdentifier("login") as? UIViewController
-        //let initialViewController = storyBoard.instantiateViewControllerWithIdentifier("dashboard") as? UIViewController
-        //(initialViewController as? UITabBarController)?.selectedIndex = 3
-        //let leftSideDrawerViewController = ExampleLeftSideDrawerViewController()
-        
-        //let leftSideNavController = UINavigationController(rootViewController: leftSideDrawerViewController)
-        //leftSideNavController.restorationIdentifier = "ExampleLeftNavigationControllerRestorationKey"
-        //self.drawerController = DrawerController(centerViewController: centerViewController, leftDrawerViewController: leftSideDrawerViewController)
-        //self.setupDrawerController()
         
         self.window?.rootViewController = initialViewController
         self.window?.makeKeyAndVisible()
         
-        
-        // Change the global appearence190, 38, 52
+        // iOS 8.3
         UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName : UIColor.whiteColor()]
-        //UINavigationBar.appearance().barTintColor = UIColor(red: 213/255, green: 0, blue: 42/255, alpha: 1) //D5002A
-        //UINavigationBar.appearance().barTintColor = UIColor(red: 221/255, green: 33/255, blue: 49/255, alpha: 1) //D5002A //sRGB
-        //UINavigationBar.appearance().barTintColor = UIColor(red: 190/255, green: 38/255, blue: 52/255, alpha: 1) //D5002A //Adobe RGB
         UINavigationBar.appearance().barTintColor = UIColor.ICRedDefaultColor()
         UINavigationBar.appearance().tintColor = UIColor.whiteColor()
         

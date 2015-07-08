@@ -89,7 +89,7 @@ class MatchTableViewController: UITableViewController, MatchCardDelegate {
 //            .Status,
 //            .JobProfileTalent])
         
-        let cell = tableView.dequeueReusableCellWithIdentifier("matchDetailCellIdentifier", forIndexPath: indexPath) as! MatchCell
+        let cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifier.Match.Detail.rawValue, forIndexPath: indexPath) as! MatchCell
         cell.configureCell(matchCard)
         return cell
     }

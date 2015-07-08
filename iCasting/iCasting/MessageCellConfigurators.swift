@@ -19,95 +19,9 @@ typealias CellDataType = [CellKey : Any]
 
 
 
-// ABSTRACT FACTORY
-
-class NegotiationDetailCellConfiguratorFactory {
-    
-    var cell: UITableViewCell?
-    var cellIdentifier: CellIdentifier.Message?
-    
-    init(cellIdentifier: CellIdentifier.Message?, cell: UITableViewCell?) {
-        
-        self.cellIdentifier = cellIdentifier
-        self.cell = cell
-    }
-    
-    func getConfigurator() -> CellConfigurator? {
-        
-        if let identifier = self.cellIdentifier, cell = self.cell {
-            
-            switch identifier {
-                
-            case CellIdentifier.Message.MessageCell:
-                
-                return MessageCellConfigurator(cell: cell)
-                
-            case CellIdentifier.Message.UnacceptedCell:
-                
-                return UnacceptedListMessageCellConfigurator(cell: cell)
-                
-            case CellIdentifier.Message.SystemMessageCell:
-                
-                return SystemMessageCellConfigurator(cell: cell)
-                
-            case CellIdentifier.Message.OfferMessageCell:
-                
-                return OfferMessageCellConfigurator(cell: cell)
-                
-            case CellIdentifier.Message.ContractOfferMessageCell:
-                
-                return ContractOfferMessageCellConfigurator(cell: cell)
-                
-            case CellIdentifier.Message.RenegotiationRequestMessageCell:
-                
-                return RenegotiationRequestMessageCellConfigurator(cell: cell)
-                
-            default:
-                
-                return nil
-            }
-        }
-        
-        return nil
-    }
-}
-
-
-
-// INTERFACE FOR CELL CONFIGURATION
-
-protocol CellConfigProtocol {
-    func configureCell(#data: CellDataType)
-}
-
-
-
-// ABSTRACT BASE CLASS
-
-class CellConfigurator : CellConfigProtocol {
-    
-    let cell: UITableViewCell
-    
-    init(cell: UITableViewCell) {
-        self.cell = cell
-    }
-    
-    func configureCell(#data: CellDataType) {
-        configureCellText(data: data)
-        
-        /* Abstract ...  */
-    }
-    
-    func configureCellText(#data: CellDataType) { /* Abstract ...  */ }
-    
-}
-
-
-
-
 // CONCRETE, downcast the cells to a specialized cell, the ABSTRACT exists in CellFactroy
 
-class MessageCellConfigurator : CellConfigurator {
+class TextMessageCellConfigurator : AbstractCellConfigurator {
     
     override func configureCellText(#data: CellDataType) {
         
@@ -117,23 +31,39 @@ class MessageCellConfigurator : CellConfigurator {
         c.rightMessageLabel.text = ""
         
         let message: Message = data[.Model] as! Message
+        
+        let messageText = getSafeText(message.body)
+        
         if message.role == Role.Outgoing {
-         
-            c.rightMessageLabel.text = message.body
+            
+            c.rightMessageLabel.text = messageText
             c.showOutgoingMessageView()
             
         } else {
             
-            c.leftMessageLabel.text = message.body
+            c.leftMessageLabel.text = messageText
             c.showIncommingMessageView()
         }
     }
+    
+    func getSafeText(text: String?) -> String {
+        
+        let placeHolder = "Empty message"
+        if let t = text {
+            if t.isEmpty {
+                return placeHolder
+            }
+            return t
+        }
+        return placeHolder
+    }
+    
 }
 
 
 
 
-class UnacceptedListMessageCellConfigurator : CellConfigurator {
+class UnacceptedListMessageCellConfigurator : AbstractCellConfigurator {
     
     override func configureCellText(#data: CellDataType) {
         
@@ -153,7 +83,7 @@ class UnacceptedListMessageCellConfigurator : CellConfigurator {
 
 
 
-class SystemMessageCellConfigurator : CellConfigurator {
+class SystemMessageCellConfigurator : AbstractCellConfigurator {
     
     override func configureCellText(#data: CellDataType) {
 
@@ -166,7 +96,7 @@ class SystemMessageCellConfigurator : CellConfigurator {
 
 
 
-class OfferMessageCellConfigurator : CellConfigurator {
+class OfferMessageCellConfigurator : AbstractCellConfigurator {
     
     let keyfont = UIFont.systemFontOfSize(12)
     let valfont = UIFont.systemFontOfSize(12)
@@ -259,7 +189,7 @@ class OfferMessageCellConfigurator : CellConfigurator {
 
 
 
-class ContractOfferMessageCellConfigurator : CellConfigurator {
+class ContractOfferMessageCellConfigurator : AbstractCellConfigurator {
     
     override func configureCell(#data: CellDataType) {
         
@@ -360,7 +290,7 @@ class ContractOfferMessageCellConfigurator : CellConfigurator {
 
 
 
-class RenegotiationRequestMessageCellConfigurator: CellConfigurator {
+class RenegotiationRequestMessageCellConfigurator: AbstractCellConfigurator {
     
     override func configureCell(#data: CellDataType) {
         

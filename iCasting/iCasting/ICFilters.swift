@@ -40,6 +40,3 @@ func filterDictionaryInArrayForNil<Key,U>(arr: [[Key:U?]]) -> [[Key:U]] {
     }
     return notNilArray
 }
-
-
-//[Fields: [ [String:String?] ] ]

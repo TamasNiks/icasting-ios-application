@@ -8,6 +8,8 @@
 
 import Foundation
 
+let POPULATE_KEY: String = "populate[]"
+
 internal struct Host {
     static let API : String = "api-demo.icasting.net"
     static let Media : String = "media-demo.icasting.net"
@@ -116,6 +118,7 @@ enum APIMedia: EndpointProtocol {
 enum APIMatch: EndpointProtocol {
     
     case MatchCards,
+    Match(String),
     MatchesCastingObject(String),
     MatchesCastingObjectCards(String),
     MatchAcceptTalent(String),
@@ -125,6 +128,8 @@ enum APIMatch: EndpointProtocol {
     
     func endpoint() -> String {
         switch self {
+        case .Match(let id):
+            return "match/\(id)"
         case .MatchCards:
             return "matchCards"
         case .MatchesCastingObject(let id):
@@ -158,9 +163,27 @@ enum APINotifications: EndpointProtocol {
     }
     
     var value: String { return ICURL.createURL(self) }
-    
 }
 
+
+enum APIPush: EndpointProtocol {
+    
+    case Device, DeviceID(String)
+    
+    func endpoint() -> String {
+        
+        switch self {
+            
+        case .Device:
+            return "device"
+        case .DeviceID(let id):
+            return "device/\(id)"
+            
+        }
+    }
+    
+    var value: String { return ICURL.createURL(self) }
+}
 
 
 internal struct ApiURL {

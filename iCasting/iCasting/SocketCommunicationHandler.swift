@@ -119,7 +119,6 @@ class SocketCommunicationHandler {
         self.socket.on(On.Authenticated.rawValue) { data, ack in
             
             handlers.authenticated(data: data)
-            
         }
         
         self.socket.on(On.Message.rawValue) { data, ack in
@@ -189,15 +188,12 @@ class SocketCommunicationHandler {
             handlers.renegotiationRequestRejected(data: data)
         }
         
-        
-        
         //socket.onAny {println("Got event: \($0.event), with items: \($0)")}
     }
     
     
     func removeListeners() {
         self.socket.off("connect")
-        
     }
     
     func start() {

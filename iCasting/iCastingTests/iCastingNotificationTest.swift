@@ -33,18 +33,17 @@ class iCastingNotificationTest: XCTestCase {
             if let json: [AnyObject] = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(0), error: nil) as? [AnyObject] {
             
                 var parsedJSON = JSON(json)[0]
-                var type: NotificationTypes = NotificationTypes.getType(parsedJSON["type"].stringValue)!
-                var dict = parsedJSON["parameters"].dictionaryValue
-
-                let title = type.getTitle()
-                let desc = type.getDescription(dict)
-                println(title)
-                
+                //var type: NotificationTypes = NotificationTypes.getType(parsedJSON["type"].stringValue)!
+                if let type: NotificationTypes = NotificationTypes(rawValue: parsedJSON["type"].stringValue) {
+                    var dict = parsedJSON["parameters"].dictionaryValue
+                    
+                    let title = type.getTitle()
+                    let desc = type.getDescription(dict)
+                    println(title)
+                }
             }
-            
         }
         
-    
         XCTAssert(true, "Pass")
     }
 

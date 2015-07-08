@@ -128,6 +128,8 @@ class Offer {
 
 class OfferDataExtractor: OfferProtocol {
 
+    let formatErrorString: String = "Not formatted correctly"
+    
     // Override this for custom implementation
     var value: Offer? {
         get { return nil }
@@ -146,7 +148,7 @@ class OfferDataExtractor: OfferProtocol {
             
             // First check if the value can be modified by the OfferValueExtractor
             if let extractor = OfferValueExtractor(rawValue: key) {
-                val = extractor.modify(mutableDict[key])
+                val = extractor.modify(mutableDict[key]) ?? self.formatErrorString
             }
             // If the value cannot be modified, check if it's another dictionary, else just unwrap the value to a string
             else {
@@ -325,7 +327,6 @@ class OfferSocketDataExtractor: OfferDataExtractor {
 
 enum OfferValueExtractor: String {
     
-    // The right enum key g
     case TypeDateTime = "type.dateTime"
     case DateStart = "dateStart"
     case DateEnd = "dateEnd"
@@ -338,7 +339,7 @@ enum OfferValueExtractor: String {
     case BuyOffPeriod = "period"
     case BuyOffMedium = "medium"
     
-    func modify(value: Any?) -> String {
+    func modify(value: Any?) -> String? {
         
         if let v = value {
             
@@ -355,8 +356,7 @@ enum OfferValueExtractor: String {
                 
                 let str = (v as! JSON).stringValue
                 let components: [String] = str.componentsSeparatedByString("T")
-                let invalidString: String = "Invalid date"
-                return components.first?.ICdateToString(ICDateFormat.General) ?? (str.isEmpty ? invalidString : str)
+                return components.first?.ICdateToString(ICDateFormat.General) ?? (str.isEmpty ? nil : str)
                 
             case
             .TimeStart,
@@ -408,11 +408,11 @@ enum OfferValueExtractor: String {
             .BuyOffMedium:
                 
                 var result: String = String(", ").join((v as! JSON).arrayValue.map { $0.stringValue } )
-                //result = result.isEmpty ? "-" : result
-                return result
+                return result.isEmpty ? nil : result
             }
         }
-        return "Could not get value"
+        
+        return nil
     }
     
     private func getLocalizationForValue(value: String) -> String {

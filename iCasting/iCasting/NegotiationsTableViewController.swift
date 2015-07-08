@@ -53,15 +53,6 @@ class NegotiationsTableViewController: UITableViewController {
         refreshControl?.addTarget(self, action: ("handleRefresh:"), forControlEvents: UIControlEvents.ValueChanged)
         refreshControl?.beginRefreshing()
         handleRequest()
-        
-        let ac = UIAlertController(
-            title: NSLocalizedString("Announcement", comment: ""),
-            message: "This feature is in development yet, we will inform you of further versions",
-            preferredStyle: UIAlertControllerStyle.Alert)
-        ac.addAction(UIAlertAction(title: NSLocalizedString("Ok", comment: ""),
-            style: UIAlertActionStyle.Cancel, handler: { (action) -> Void in
-        }))
-        //self.presentViewController(ac, animated: true, completion: nil)
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -91,12 +82,12 @@ class NegotiationsTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCellWithIdentifier("conversationCellidentifier", forIndexPath: indexPath) as! ConversationCell
 
         let matchAtIndex: MatchCard = self.match.matches[indexPath.row]
-        var data: [Fields: String] = matchAtIndex.getData([.JobTitle, .JobDescription, .JobDateStart, .ClientAvatar])
+        var data: [Fields: String] = matchAtIndex.getData([.JobTitle, .JobDescShort, .JobDescLong, .JobDateStart, .ClientAvatar])
         
         
         //var info: [String:String] = self.match.getCellInfo(index: indexPath.row)
         cell.customTitle.text = data[.JobTitle]
-        cell.customSubtitle.text = data[.JobDescription]
+        cell.customSubtitle.text = data[.JobDescShort]
         //cell.customDate.text = String(format: "Start: %@", data[.JobDateStart]!)
         
         var base64: String = data[.ClientAvatar]!

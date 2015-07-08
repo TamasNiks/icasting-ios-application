@@ -16,12 +16,12 @@ enum ImageSize: String {
 }
 
 struct NewsKey {
-    static let Title: String = "title"
-    static let Summary: String = "summary"
-    static let Body: String = "body"
-    static let ImageID: String = "image"
-    static let ID: String = "id"
-    static let Published: String = "published"
+    static let Title        : String = "title"
+    static let Summary      : String = "summary"
+    static let Body         : String = "body"
+    static let ImageID      : String = "image"
+    static let ID           : String = "id"
+    static let Published    : String = "published"
 }
 
 // TODO: Make use of JSON class and add getter functionalities to data

@@ -11,7 +11,7 @@ import UIKit
 
 class SizingCellProvider {
     
-    typealias CellDataProviderType = (cellConfigurator: CellConfigurator?)->()
+    typealias CellDataProviderType = (cellConfigurator: AbstractCellConfigurator?)->()
     
     private var tableView: UITableView
     static var sizingTokens: [String : dispatch_once_t] = [String : dispatch_once_t]()
@@ -24,8 +24,7 @@ class SizingCellProvider {
     }
     
     
-    func heightForCustomCell(fromIdentifier identifier: CellIdentifier.Message, calculatorType: CellHeightStrategyType, dataProvider: CellDataProviderType) -> CGFloat {
-        
+    func heightForCustomCell(fromIdentifier identifier: CellIdentifierProtocol, calculatorType: CellHeightStrategyType, dataProvider: CellDataProviderType) -> CGFloat {
         
         // Intialize tokens for the dispatch_once function and grap the cell for one time only in the lifetime of the app
         
@@ -36,12 +35,10 @@ class SizingCellProvider {
             SizingCellProvider.sizingCells[identifier.rawValue] = cell
         }
         
-        
         // First fill the cell with necessary sizing data like strings.
         
-        let cell = provideCellWithDataForSizing(identifier.rawValue, dataProvider: dataProvider)
+        let cell = provideCellWithDataForSizing(identifier, dataProvider: dataProvider)
         
-
         // Then grab a calculator based on the specified cell height calculator type. Typically this will be a standard cell or a custom cell with constraints. Either way, the cell needs to be prepared before using a calculator. To use the AutoLayout calculator, add constraints to the contentView of the cell.
        
         var calc: CellHeightStrategy = CellHeightStrategyFactory.getCalculator(type: calculatorType)
@@ -60,18 +57,18 @@ class SizingCellProvider {
         
     }
     
-    
-    private func provideCellWithDataForSizing(identifier: String, dataProvider: CellDataProviderType) -> UITableViewCell {
-    
-        let cell: UITableViewCell? = SizingCellProvider.sizingCells[identifier]
-        let identifier: CellIdentifier.Message? = CellIdentifier.Message(rawValue: identifier)
+
+    private func provideCellWithDataForSizing(identifier: CellIdentifierProtocol, dataProvider: CellDataProviderType) -> UITableViewCell {
         
-        let configuratorFactory = NegotiationDetailCellConfiguratorFactory(cellIdentifier: identifier, cell: cell)
-        let configurator: CellConfigurator? = configuratorFactory.getConfigurator()
+        let cell: UITableViewCell? = SizingCellProvider.sizingCells[identifier.rawValue]
+        
+        let configuratorFactory = CellConfiguratorFactory(cellIdentifier: identifier, cell: cell)
+        let configurator: AbstractCellConfigurator? = configuratorFactory.getConfigurator()
         
         dataProvider(cellConfigurator: configurator)
         return cell!
     }
+    
 }
 
 
@@ -101,6 +98,7 @@ class CellHeightStrategyFactory {
     }
 }
 
+
 protocol CellHeightStrategy {
     func calculateHeight(cell: UITableViewCell) -> CGFloat
 }
@@ -113,7 +111,6 @@ class AutoLayoutCellHeightStrategy: CellHeightStrategy {
         let size: CGSize = cell.contentView.systemLayoutSizeFittingSize(UILayoutFittingExpandedSize)
         return size.height
     }
-    
 }
 
 
@@ -146,6 +143,31 @@ class DefaultCellHeightStrategy: CellHeightStrategy {
         return ceil(boundingRectForTitleText.size.height + boundingRectForDetail.size.height) + tableViewCellInset * 2
     }
 }
+
+//class OneTextLabelHeightStrategy: CellHeightStrategy {
+//    
+//    func calculateHeight(cell: UITableViewCell) -> CGFloat {
+//        
+//        var item = model[indexPath.section]![indexPath.row]
+//        let TableViewCellInset: CGFloat = 15
+//        let labelWidth: CGFloat = self.tableView.bounds.size.width - TableViewCellInset * 2
+//        
+//        let text = NSAttributedString(string: item.values.first!, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(16)])
+//        let options: NSStringDrawingOptions = NSStringDrawingOptions.UsesLineFragmentOrigin | NSStringDrawingOptions.UsesFontLeading | NSStringDrawingOptions.TruncatesLastVisibleLine
+//        
+//        func rect(str: NSAttributedString) -> CGRect {
+//            return str.boundingRectWithSize(
+//                CGSizeMake(labelWidth, CGFloat.max),
+//                options: options,
+//                context: nil)
+//        }
+//        
+//        let boundingRectForText: CGRect = rect(text)
+//        return ceil(boundingRectForText.size.height) + TableViewCellInset * 2
+//        
+//    }
+//    
+//}
 
 
 

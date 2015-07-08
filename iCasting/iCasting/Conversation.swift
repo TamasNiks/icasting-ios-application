@@ -51,6 +51,10 @@ class Conversation: NSObject {
         self.socketCommunicationHandler?.stop()
     }
     
+    func enterConversation() {
+        self.socketCommunicationHandler?.start()
+    }
+    
 }
 
 
@@ -299,14 +303,17 @@ extension Conversation: MessageCommunicationProtocol {
         let m: Message = Message(id: "", owner: Auth.auth.user_id!, role: Role.Outgoing, type: TextType.Text)
         m.body = text
 
-
         self.socketCommunicationHandler?.sendMessage(m.body!, acknowledged: { (data) -> () in
 
-            println(data)
-
-            self.messageList.addItem(m)
-
-            //return //String error	String message_id
+            if let d = data {
+                if let error: ICErrorInfo = ICError(string: d[0] as? String).getErrors() {
+                    callBack(error: error)
+                    return
+                }
+                self.messageList.addItem(m)
+                callBack(error: nil)
+            }
+            callBack(error: ICError(string: "Could not send message").getErrors())
         })
     }
     
@@ -392,7 +399,7 @@ extension Conversation: MessageCommunicationProtocol {
         }
         return error
     }
-    
+
     private func decideContractAcceptRejection(data: NSArray, withMessageToUpdate message: Message) -> ICErrorInfo? {
         
         let error: ICErrorInfo? = ICError(string: data[0] as? String).getErrors()

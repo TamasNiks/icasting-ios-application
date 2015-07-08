@@ -41,6 +41,10 @@ class DashboardTableViewController: UITableViewController {
     
     func configureCells() {
         
+        if User.sharedInstance.isManager == false {
+            self.navigationItem.rightBarButtonItem = nil //?.enabled = false
+        }
+        
         let user: User = User.sharedInstance
         if let general = user.getValues() {
             

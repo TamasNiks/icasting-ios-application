@@ -46,7 +46,7 @@ enum Fields: Int, FieldPathProtocol {
     
     case Status
     case ClientName, ClientCompany, ClientAvatar
-    case JobTitle, JobDescription
+    case JobTitle, JobDescShort, JobDescLong
     case JobDateTime, JobDateTimeType, JobDateStart, JobDateEnd, JobTimeStart, JobTimeEnd
     case JobContractLocation
     case JobProfile
@@ -65,8 +65,10 @@ enum Fields: Int, FieldPathProtocol {
             return ["client","avatar","thumb"]
         case .JobTitle:
             return ["job","title"]
-        case .JobDescription:
+        case .JobDescShort:
             return ["job","desc"]
+        case .JobDescLong:
+            return ["job", "formSource", "descLong"]
         case .JobDateTime:
             return ["job", "formSource", "contract", "dateTime"]
         case .JobDateStart:

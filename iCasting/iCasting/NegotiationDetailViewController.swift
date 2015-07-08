@@ -47,17 +47,24 @@ DilemmaCellDelegate
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.prepareViewController()
+        prepareViewController()
+        super.addKeyValueObserverForTextinput()
     }
 
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        self.initializeModel()
-        super.addObserverForTextinput()
+        
+        if conversation == nil {
+            self.initializeModel()
+        } else {
+            self.conversation?.enterConversation()
+        }
     }
     
     override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
         self.conversation?.leaveConversation()
+        self.keyboardController?.removeObserver()
     }
     
     override func didReceiveMemoryWarning() {
@@ -66,9 +73,18 @@ DilemmaCellDelegate
     }
 
     deinit {
-        super.removeObserverForTextinput()
-        self.keyboardController?.removeObserver()
-        self.removeObservers()
+        // Remove especially the key-value observers
+        super.removeKeyValueObserverForTextinput()
+        removeKeyValueObservers()
+    }
+    
+    
+    // MARK: - Navigation
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        
+        var vc = segue.destinationViewController as! JobOverviewTableViewController
+        vc.matchID = self.matchID
     }
     
     
@@ -95,19 +111,20 @@ DilemmaCellDelegate
         
         // Get all the current messages available from the server
         // TODO: For best results, you should get the latest 20 messages and load another
+        
         self.showWaitOverlay()
+        
         conversation?.get() { failure in
+            
             self.removeAllOverlays()
-            //self.messages = self.conversation!.messages
             
             if self.messages.isEmpty == false {
                 
                 println("ConversationTableViewController: request finnished")
-                self.tableView.reloadData()
                 
+                self.tableView.reloadData()
                 self.scrollToBottom()
-                //self.tableView.tableFooterView?.hidden = false
-                self.addObservers()
+                self.addKeyValueObservers()
             }
         }
     }
@@ -237,7 +254,7 @@ extension NegotiationDetailViewController {
     func configureCell(forMessage message: Message, andCell cell: UITableViewCell) {
         
         let cellIdentifier = CellIdentifier.Message.fromTextType(message.type)
-        let factory = NegotiationDetailCellConfiguratorFactory(cellIdentifier: cellIdentifier, cell: cell)
+        let factory = CellConfiguratorFactory(cellIdentifier: cellIdentifier, cell: cell)
         if let configurator = factory.getConfigurator() {
             configurator.configureCell(data: [CellKey.Model:message as Any])
         }
@@ -270,6 +287,7 @@ extension NegotiationDetailViewController {
 
                     (self.conversation as! MessageCommunicationProtocol).acceptContract(message) { error in
                         
+                        // The animation will restart, because after the cell configuration, the state already has been set.
                         self.configureCell(forMessage: message, andCell: cell)
                         startAnimation()
                     }
@@ -280,7 +298,6 @@ extension NegotiationDetailViewController {
                     (self.conversation as! MessageCommunicationProtocol).acceptRenegotiationRequest(message) { error in
                         
                         startAnimation()
-                        
                     }
                 }
                 
@@ -298,8 +315,8 @@ extension NegotiationDetailViewController {
                     
                     (self.conversation as! MessageCommunicationProtocol).rejectContract(message) { error in
                         
-                        self.configureCell(forMessage: message, andCell: cell)
                         // The animation will restart, because after the cell configuration, the state already has been set.
+                        self.configureCell(forMessage: message, andCell: cell)
                         startAnimation()
                     }
                 }
@@ -369,29 +386,26 @@ extension NegotiationDetailViewController {
 extension NegotiationDetailViewController {
     
     
-    func addObservers() {
+    func addKeyValueObservers() {
         conversation?.addObserver(self, forKeyPath: ObservableConversation.messageList, options: nil, context: &newMessagesListContext)
         conversation?.addObserver(self, forKeyPath: ObservableConversation.incommingUser, options: NSKeyValueObservingOptions.New, context: &userJoinedOrLeft)
         conversation?.addObserver(self, forKeyPath: ObservableConversation.authenticated, options: NSKeyValueObservingOptions.New, context: &userAuthenticate)
         observing = true
     }
     
-    
-    func removeObservers() {
+    func removeKeyValueObservers() {
         if observing {
             conversation?.removeObserver(self, forKeyPath: ObservableConversation.messageList, context: &newMessagesListContext)
             conversation?.removeObserver(self, forKeyPath: ObservableConversation.incommingUser, context: &userJoinedOrLeft)
             conversation?.removeObserver(self, forKeyPath: ObservableConversation.authenticated, context: &userAuthenticate)
-            NSNotificationCenter.defaultCenter().removeObserver(self)
             observing = false
         }
     }
     
     func addChangeObserver(forMessage message: Message, withCellIdentifier cellIdentifer: CellIdentifier.Message?) {
         
-        
         func changeWithConfigurator(cell: UITableViewCell) {
-            let factory = NegotiationDetailCellConfiguratorFactory(cellIdentifier: cellIdentifer, cell: cell)
+            let factory = CellConfiguratorFactory(cellIdentifier: cellIdentifer, cell: cell)
             if let configurator = factory.getConfigurator() {
                 println("WILL CONFIGURE")
                 configurator.configureCell(data: [CellKey.Model:message as Any])
@@ -447,9 +461,10 @@ extension NegotiationDetailViewController {
             self.view.dodo.style.bar.hideOnTap = true
             self.view.dodo.success("Conversation active")
         }
+        
+        super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
     }
 }
-
 
 
 
@@ -463,23 +478,32 @@ extension NegotiationDetailViewController {
     override func messagesInputToolbar(toolbar: JSQMessagesInputToolbar!, didPressRightBarButton sender: UIButton!) {
         
         if toolbar.sendButtonOnRight {
-            
             let message = currentlyComposedMessageText()
             self.didPressSendButton(sender, withMessageText: message, date: NSDate())
         } else {
-            println("AccessoryButton")
+            println("AccessoryButton pressed")
         }
     }
     
 
     func didPressSendButton(button: UIButton, withMessageText messageText: String, date: NSDate) {
         
-        self.conversation?.sendMessage(messageText, callBack: { (error) -> () in
-            println(error)
-        })
-        println("didPressedSendButton")
+        if let messageToSend = validateMessage(messageText) {
+            self.conversation?.sendMessage(messageToSend, callBack: { (error) -> () in
+                println("POSSIBLE ERROR")
+                println(error)
+                super.emptyInput()
+            })
+            println("didPressedSendButton")
+        }
     }
     
+    
+    func validateMessage(text: String) -> String? {
+        
+        let messageToSend = text.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+        return messageToSend.isEmpty ? nil : messageToSend
+    }
     
     // When tapped on the tableview, the keyboard will hide
     func handleTapGestureRecognizer(reconizer: UIGestureRecognizer) {
@@ -487,7 +511,6 @@ extension NegotiationDetailViewController {
         println("handleTapGestureRecognizer")
         self.inputToolbar.contentView.textView.resignFirstResponder()
     }
-
 }
 
 

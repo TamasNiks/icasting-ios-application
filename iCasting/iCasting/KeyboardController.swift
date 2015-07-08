@@ -12,11 +12,11 @@ import UIKit
 class KeyboardController: NSObject {
     
     var views: [UIView]
+    var goingUpDivider: UInt = 1
     
     init(views: [UIView]) {
         self.views = views
     }
-    
     
     func setObserver() {
     
@@ -44,7 +44,7 @@ class KeyboardController: NSObject {
         var keyboardRect = CGRectZero
         keyboardRectAsObject.getValue(&keyboardRect)
         
-        let offset = -keyboardRect.height
+        let offset = -keyboardRect.height / CGFloat(goingUpDivider)
         
         UIView.animateWithDuration(1, animations: { () -> Void in
     
@@ -64,7 +64,7 @@ class KeyboardController: NSObject {
         var keyboardRect = CGRectZero
         keyboardRectAsObject.getValue(&keyboardRect)
         
-        let offset = CGFloat(0)//keyboardRect.height / 2
+        let offset = CGFloat(0)
         
         UIView.animateWithDuration(1, animations: { () -> Void in
             

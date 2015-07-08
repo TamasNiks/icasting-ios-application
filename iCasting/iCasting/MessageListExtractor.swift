@@ -16,6 +16,8 @@ protocol ListExtractorProtocol {
     typealias I
     func buildList(fromJSON json: J)
     func addItem(item: I)
+    func indexForItem(message: Message) -> Int?
+    func itemByID(id: String) -> Message?
 }
 
 
@@ -33,7 +35,7 @@ class MessageListExtractor: NSObject, ListExtractorProtocol {
         
         for (index: String, subJson: JSON) in json {
             
-            if let message: Message = constructMessage(fromJSON: subJson) {
+            if let message: Message = HTTPMessageFactory().createMessage(subJson) {
                 m.append(message)
             }
         }
@@ -41,22 +43,9 @@ class MessageListExtractor: NSObject, ListExtractorProtocol {
         self.list = m
     }
     
-    
-    private func constructMessage(fromJSON json: JSON) -> Message? {
-        
-        let message: Message? = AbstractMessageFactory.createMessage(fromJSON: json)
-        return message
-    }
-    
-    
     func addItem(message: Message) {
+        
         self.list.append(message)
-    }
-    
-    func replaceItem(message: Message) {
-        
-        //self.list.r
-        
     }
     
     func itemByID(id: String) -> Message? {
@@ -79,6 +68,7 @@ class MessageListExtractor: NSObject, ListExtractorProtocol {
         }
         return nil
     }
+    
 }
 
 

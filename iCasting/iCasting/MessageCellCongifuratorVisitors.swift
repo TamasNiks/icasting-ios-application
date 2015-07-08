@@ -8,7 +8,11 @@
 
 import Foundation
 
+// EXPERIMENT
 
+protocol CellVisitorAcceptProtocol {
+    func accept(configurator: MessageCellCongifuratorVisitors)
+}
 
 protocol MessageCellCongifuratorVisitors {
     
@@ -30,28 +34,28 @@ class ConcreteMessageCellCongifuratorVisitors: MessageCellCongifuratorVisitors {
     
     func visit(cell: MessageCell) {
         
-        var oc: CellConfigurator = MessageCellConfigurator(cell: cell)
+        var oc: AbstractCellConfigurator = TextMessageCellConfigurator(cell: cell)
         oc.configureCell(data: data)
     }
     
     
     func visit(cell: MessageSystemCell) {
         
-        var oc: CellConfigurator = SystemMessageCellConfigurator(cell: cell)
+        var oc: AbstractCellConfigurator = SystemMessageCellConfigurator(cell: cell)
         oc.configureCell(data: data)
     }
     
     
     func visit(cell: MessageUnacceptedCell) {
         
-        var oc: CellConfigurator = UnacceptedListMessageCellConfigurator(cell: cell)
+        var oc: AbstractCellConfigurator = UnacceptedListMessageCellConfigurator(cell: cell)
         oc.configureCell(data: data)
     }
     
     
     func visit(cell: MessageOfferCell) {
         
-        var oc: CellConfigurator = OfferMessageCellConfigurator(cell: cell)
+        var oc: AbstractCellConfigurator = OfferMessageCellConfigurator(cell: cell)
         oc.configureCell(data: data)
     }
     

@@ -75,7 +75,6 @@
 "negotiations.offer.name.medium" = "Afkoop medium";
 "negotiations.offer.name.period" = "Afkoop periode";
 "negotiations.offer.name.address" = "Adres";
-
 "negotiations.offer.name.streetNumber" = "Huisnummer";
 "negotiations.offer.name.street" = "Straat";
 "negotiations.offer.name.zipCode" = "Postcode";
@@ -83,6 +82,10 @@
 "negotiations.offer.name.country" = "Land";
 "negotiations.offer.name.area" = "Provincie";
 "negotiations.offer.name.desc" = "Omschrijving";
+"negotiations.offer.name.range" = "Meerdere dagen";
+"negotiations.offer.name.budget" = "Vergoeding";
+"negotiations.offer.name.travelExpenses" = "Reiskostenvergoeding";
+"negotiations.offer.name.requests" = "Aanvullende verzoeken";
 
 "negotiations.offer.value.single" = "Nee";
 "negotiations.offer.value.true" = "Ja";
@@ -93,6 +96,7 @@
 "negotiations.offer.value.years" = "jaar";
 "negotiations.offer.value.multiple" = "Ja";
 "negotiations.offer.value.forever" = "Voor altijd";
+"negotiations.offer.value.norequests" = "Geen aanvullende verzoeken";
 
 "negotiations.offer.title.dateTime" = "Tijd";
 "negotiations.offer.title.buyOff" = "Afkoop";
@@ -110,6 +114,11 @@
 "negotiation.state.accepted" = "%@ heeft geacepteerd";
 "negotiation.state.rejected" = "%@ heeft het contract gewijgerd";
 
+"negotiations.subject.title.finance" = "Vergoedingen";
+"negotiations.subject.title.buyoff" = "Afkoop";
+"negotiations.subject.title.timeandlocation" = "Tijd & Locatie";
+"negotiations.subject.title.additionalrequests" = "Aanvullende verzoeken";
+
 // iCasting System text
 
 "icasting.chat.system.text.contractoffer" = "Wilt u het contract accepteren?";
@@ -119,12 +128,14 @@
 /* Notifications */
 "notification.desc.achievement-complete" = "Je hebt \"%@\" voltooid en %@ XP verdient";
 "notification.desc.match-matched" = "Je bent gematcht met \"%@\"";
-"notification.desc.match-client_accepted" = "Je reactie voor \"%@\" is geacepteerd";
+"notification.desc.match-client_accepted" = "Je reactie voor \"%@\" is geaccepteerd";
+"notification.desc.match-client_rejected" = "Je reactie voor \"%@\" is niet geaccepteerd";
 "notification.desc.chat-message" = "U heeft een bericht ontvangen in een onderhandeling voor \"%@\"";
 
 "notification.title.achievement-complete" = "Je hebt een prestatie voltooid!";
 "notification.title.match-matched" = "Je bent gematcht!";
 "notification.title.match-client_accepted" = "Je bent geaccepteerd door een opdrachtgever.";
+"notification.title.match-client_rejected" = "Je bent niet geselecteerd door de opdrachtgever.";
 "notification.title.chat-message" = "U heeft een nieuw bericht ontvangen.";
 
 /* Matches */

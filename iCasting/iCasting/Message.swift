@@ -15,7 +15,7 @@ struct KeyVal {
 }
 
 
-// The role will be used to decide where the message should be positioned inside the screen, the view is responsible for that. Another important issue is that when the client sends a message from the web while the negotiation screen is open, the message should be considered as outgoing.
+// The role will be used to decide where the message should be positioned inside a screen, the view is responsible for that. Another important issue is that when the client sends a message from the web while the negotiation screen is open, the message should be considered as outgoing.
 enum Role: Int {
     case Outgoing   // Message from the client user
     case Incomming  // Messages from the remote user
@@ -78,7 +78,7 @@ class Message: MessageAcceptVisitorProtocol {
 /*****************************************************************/
 
 // Experiment
-
+/*
 class BaseMessage {
     
     let id: String
@@ -138,6 +138,6 @@ class OfferContractMessage: BaseMessage {
     override init(id: String, owner: String, role: Role, type: TextType) {
         super.init(id: id, owner: owner, role: role, type: type)
     }
-}
+}*/
 
 /*****************************************************************/

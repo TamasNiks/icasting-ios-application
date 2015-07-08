@@ -5,24 +5,58 @@ import Foundation
 let Naam = "Hello playground"
 
 
-enum Sub1: Int {
-    case A
-    case B
-    case C
+protocol TestProtocol {
+    var rawValue: String { get }
 }
 
-enum Sub2: Int {
-    case D
-    case E
-    case F
+
+enum Sub1: String, TestProtocol {
+    case A = "A"
+    case B = "B"
+    case C = "C"
+    
+    var description: String {
+        return rawValue
+    }
 }
 
-enum Sub3: Int {
-    case G
-    case H
-    case I
+enum Sub2: String, TestProtocol {
+    case D = "D"
+    case E = "E"
+    case F = "F"
+    
+    var description: String {
+        return rawValue
+    }
 }
 
+enum Sub3: String, TestProtocol {
+    case G = "G"
+    case H = "H"
+    case I = "i"
+    
+    var description: String {
+        return rawValue
+    }
+}
+
+
+
+func doSomethingWithCell(cell: TestProtocol) {
+    
+    switch cell.rawValue {
+        
+    case Sub1.B.rawValue:
+        println("lala")
+        
+    }
+    
+    cell.rawValue
+    println("hello")
+    
+}
+
+doSomethingWithCell(Sub1.B)
 
 //enum WrapperCellIdentifier {
 //    

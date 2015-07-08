@@ -140,7 +140,6 @@ class DilemmaView: UIView {
         self.finalSettingsMiddleViewForLeft(self.buttonView)
     }
     
-    
     func setRightView() {
         self.finalSettingsView(self.rightView)
         self.finalSettingsMiddleViewForRight(self.buttonView)

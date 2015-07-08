@@ -27,15 +27,15 @@ enum MatchCells: Int, CellsProtocol {
 
         switch self {
         case .HeaderCell:
-            return CellProperties(reuse: "headerCell", height: 150)
+            return CellProperties(reuse: CellIdentifier.MatchDetail.Header.rawValue, height: 150)
         case .SummaryCell:
-            return CellProperties("summaryCell") //, height: 83) //83
+            return CellProperties(reuse: CellIdentifier.MatchDetail.Summary.rawValue)
         case .AcceptCell:
-            return CellProperties(reuse: "acceptCell", height: 70)
+            return CellProperties(reuse: CellIdentifier.MatchDetail.Dilemma.rawValue, height: 70)
         case .ProfileCell:
-            return CellProperties("profileCell")
+            return CellProperties(reuse: CellIdentifier.MatchDetail.Profile.rawValue)
         case .DetailCell:
-            return CellProperties("detailCell")
+            return CellProperties(reuse: CellIdentifier.MatchDetail.Detail.rawValue)
         }
     }
 }
@@ -171,33 +171,7 @@ extension MatchDetailTableViewController {
             println("no cell config")
             
         }
-        
-//        switch identifier {
-//        
-//        case .HeaderCell:
-//            
-//            (cell as! MatchHeaderCell).configureCell(matchDetails!)
-//            
-//        case .SummaryCell:
-//            
-//            (cell as! MatchSummaryCell).configureCell(matchDetails!)
-//            
-//        case .AcceptCell:
-//            
-//            (cell as! MatchAcceptCell).configureCell(matchCard!)
-//            
-//        case .DetailCell:
-//            
-//            configCell(&cell, indexPath: indexPath)
-//            
-//        default:
-//            
-//            println("no cell config")
-//        }
     }
-    
-    
-    
 }
 
 
@@ -218,7 +192,7 @@ extension MatchDetailTableViewController {
         if cellIdentifier == .SummaryCell {
             
             var title: String = matchDetails!.general[.JobTitle]!!
-            var desc: String = matchDetails!.general[.JobDescription]!!
+            var desc: String = matchDetails!.general[.JobDescLong]!!
 
             let labelWidth: CGFloat = self.tableView.bounds.size.width - TableViewCellInset * 2
             

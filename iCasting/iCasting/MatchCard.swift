@@ -233,7 +233,7 @@ extension MatchCard {
         header[.ClientCompany]  =   getValue(.ClientCompany) ?? "-"
         header[.ClientName]     =   getValue(.ClientName) ?? "-"
         header[.JobTitle]       =   getValue(.JobTitle) ?? "-"
-        header[.JobDescription] =   getValue(.JobDescription) ?? "-"
+        header[.JobDescLong]    =   getValue(.JobDescLong) ?? "-"
         return header
     }
     
@@ -304,7 +304,7 @@ extension MatchCard {
 
 
 
-// Experimenting for the best way of getting dynamic profile data
+// EXPERIMENT: Experimenting for the best way of getting dynamic profile data
 
 extension MatchCard {
     

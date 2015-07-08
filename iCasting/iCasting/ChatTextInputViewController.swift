@@ -34,8 +34,14 @@ class ChatTextInputViewController: UIViewController, JSQMessagesInputToolbarDele
     override func observeValueForKeyPath(keyPath: String, ofObject object: AnyObject, change: [NSObject : AnyObject], context: UnsafeMutablePointer<Void>) {
         if context == &ChatTextInputViewController.kJSQMessagesKeyValueObservingContext {
             
+            if (!self.isObserving) {
+                self.isObserving = true
+                return
+            }
+            
             if (object as! NSObject) == self.inputToolbar.contentView.textView && keyPath == NSStringFromSelector(Selector("contentSize")) {
-                println("observe")
+                println("Observing: kJSQMessagesKeyValueObservingContext")
+                
                 println(change[NSKeyValueChangeOldKey]!)
                 println(change[NSKeyValueChangeNewKey]!)
                 
@@ -43,6 +49,7 @@ class ChatTextInputViewController: UIViewController, JSQMessagesInputToolbarDele
                 let newContentSize: CGSize = (change[NSKeyValueChangeNewKey])!.CGSizeValue()
                 
                 var dy: CGFloat = newContentSize.height - oldContentSize.height
+                
                 println(newContentSize.height)
                 println(oldContentSize.height)
                 println(dy)
@@ -70,22 +77,17 @@ class ChatTextInputViewController: UIViewController, JSQMessagesInputToolbarDele
     }
     
     
-    func addObserverForTextinput() {
+    func addKeyValueObserverForTextinput() {
         
-        if (self.isObserving) {
-            return
-        }
-        
-        println("Will observe")
+        println("Will observe text input")
         self.inputToolbar.contentView.textView.addObserver(self,
             forKeyPath: NSStringFromSelector(Selector("contentSize")),
             options: NSKeyValueObservingOptions.Old | NSKeyValueObservingOptions.New,
             context: &NegotiationDetailViewController.kJSQMessagesKeyValueObservingContext)
-        self.isObserving = true
     }
     
     
-    func removeObserverForTextinput() {
+    func removeKeyValueObserverForTextinput() {
         
         self.inputToolbar.contentView.textView.removeObserver(self,
             forKeyPath: NSStringFromSelector(Selector("contentSize")),
@@ -100,6 +102,10 @@ class ChatTextInputViewController: UIViewController, JSQMessagesInputToolbarDele
         self.inputToolbar.contentView.textView.inputDelegate.selectionDidChange(self.inputToolbar.contentView.textView)
         
         return self.inputToolbar.contentView.textView.text //.jsq_stringByTrimingWhitespace
+    }
+    
+    func emptyInput() {
+        self.inputToolbar.contentView.textView.text = String()
     }
     
     
@@ -124,7 +130,7 @@ class ChatTextInputViewController: UIViewController, JSQMessagesInputToolbarDele
     func adjustInputToolbarForComposerTextViewContentSizeChange(dy: CGFloat) {
         
         var dy2 = dy
-        
+        println(dy2)
         let contentSizeIsIncreasing: Bool = (dy2 > 0)
         
         if inputToolbarHasReachedMaximumHeight() {
@@ -155,7 +161,6 @@ class ChatTextInputViewController: UIViewController, JSQMessagesInputToolbarDele
         if (dy2 < 0) {
             self.scrollComposerTextViewToBottomAnimated(false)
         }
-        
     }
     
     

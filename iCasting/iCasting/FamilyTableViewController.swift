@@ -19,7 +19,6 @@ class CastingObjectCell: UITableViewCell {
         let size: CGSize = CGSize(width: 50, height: 50) // default cell height is 43
         self.imageView?.makeRound(size.width / 2) //, borderWidth: 0)
         self.imageView?.bounds = CGRectMake(0, 0, size.width, size.height)
-
     }
 }
 

@@ -68,7 +68,7 @@ class MatchProfileTableViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifierCell", forIndexPath: indexPath) as! UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifier.MatchProfile.Default.rawValue, forIndexPath: indexPath) as! UITableViewCell
         var item = model[indexPath.section]![indexPath.row]
 
         cell.textLabel?.text = NSLocalizedString(item.keys.first!, comment: "The text labels from a row, gotten from the JSON keys")
@@ -103,8 +103,10 @@ class MatchProfileTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         
         var item = model[indexPath.section]![indexPath.row]
+
         let TableViewCellInset: CGFloat = 15
         let labelWidth: CGFloat = self.tableView.bounds.size.width - TableViewCellInset * 2
+        
         let text = NSAttributedString(string: item.values.first!, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(16)])
         let options: NSStringDrawingOptions = NSStringDrawingOptions.UsesLineFragmentOrigin | NSStringDrawingOptions.UsesFontLeading | NSStringDrawingOptions.TruncatesLastVisibleLine
         

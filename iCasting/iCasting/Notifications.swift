@@ -16,10 +16,9 @@ enum NotificationTypes: String {
     AchievementComplete = "achievement-complete",
     MatchMatched = "match-matched",
     MatchClientAccepted = "match-client_accepted",
+    MatchClientRejected = "match-client_rejected",
     ChatMessage = "chat-message",
     ChatOffer = "chat-offer"
-    
-    static let types: [NotificationTypes] = [AchievementComplete, MatchMatched, MatchClientAccepted, ChatMessage, ChatOffer]
     
     func getTitle() -> String {
         
@@ -46,6 +45,10 @@ enum NotificationTypes: String {
             var args: [CVarArgType] = [parameters["jobTitle"]!.stringValue]
             return String(format: format, arguments: args)
             
+        case .MatchClientRejected:
+            var args: [CVarArgType] = [parameters["jobTitle"]!.stringValue]
+            return String(format: format, arguments: args)
+            
         case .ChatMessage:
             var args: [CVarArgType] = [parameters["jobTitle"]!.stringValue]
             return String(format: format, arguments: args)
@@ -54,18 +57,6 @@ enum NotificationTypes: String {
             return "Description of chat offer."//String(format: format, arguments: args)
         }
     }
-    
-    static func getType(type: String) -> NotificationTypes? {
-        
-        for obj: NotificationTypes in NotificationTypes.types {
-            if obj.rawValue == type {
-                return obj
-            }
-        }
-        return nil
-    }
-
-    
 }
 
 
@@ -114,41 +105,25 @@ class Notifications : ModelProtocol {
             notifications = jsonArray.map( { (transform: JSON) -> NotificationBody in
                 
                 let type: String = transform["type"].stringValue
-                let notificationType = NotificationTypes.getType(type)!
                 
-                let parameters = transform["parameters"].dictionaryValue
-                let title = notificationType.getTitle()
-                let desc = notificationType.getDescription(parameters)
-                let created = transform["created"].stringValue.ICdateToString(ICDateFormat.News) ?? "no date"
+                if let notificationType = NotificationTypes(rawValue: type) {
+
+                    let parameters = transform["parameters"].dictionaryValue
+                    let title = notificationType.getTitle()
+                    let desc = notificationType.getDescription(parameters)
+                    let created = transform["created"].stringValue.ICdateToString(ICDateFormat.News) ?? "no date"
+                    return NotificationBody(title: title, desc: desc, date: created)
+                }
                 
-                return NotificationBody(title: title, desc: desc, date: created)
+                println("DEBUG: \(type)")
+                return NotificationBody(title: "Unknown notification", desc: "Please contact me @ tim.van.steenoven@icasting.com", date: "-")
             })
-            
         }
-        
     }
     
     subscript(index: Int) -> NotificationBody {
         return notifications[index]
     }
-    
-    //    func setNotifications(json: JSON) {
-    //        if let jsonArray: [JSON] = json.array {
-    //
-    //            notifications = jsonArray.map( { (transform: JSON) -> Notification in
-    //
-    //                return Notification(
-    //                    id: transform["id"].stringValue,
-    //                    user: transform["user"].stringValue,
-    //                    type: transform["type"].stringValue,
-    //                    parameters: transform["parameters"].dictionaryValue,
-    //                    pushState: transform["pushState"].dictionaryValue,
-    //                    read: transform["read"].boolValue,
-    //                    created: transform["created"].stringValue.ICdateToString(ICDateFormat.News) ?? "no date")
-    //            })
-    //        }
-    //    }
-
 }
 
 
