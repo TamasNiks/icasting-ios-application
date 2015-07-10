@@ -16,7 +16,7 @@ protocol CellIdentifierProtocol {
 
 // Bind the TextType of the cells with the CellIdentifiers, so the right cells will get reused.
 
-class CellIdentifier {
+enum CellIdentifier {
 
     enum Message: String, CellIdentifierProtocol {
         case
@@ -54,7 +54,7 @@ class CellIdentifier {
     enum MatchDetail: String, CellIdentifierProtocol {
         case
         Header = "headerCell",
-        Dilemma = "acceptCell",
+        Dilemma = "dilemmaCell",//"acceptCell",
         Summary = "summaryCell",
         Profile = "profileCell",
         Detail = "detailCell"

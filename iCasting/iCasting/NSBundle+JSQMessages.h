@@ -23,7 +23,7 @@
 /**
  *  @return The bundle for JSQMessagesViewController.
  */
-+ (NSBundle *)jsq_messagesBundle;
+//+ (NSBundle *)jsq_messagesBundle;
 
 /**
  *  @return The bundle for assets in JSQMessagesViewController.

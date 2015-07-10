@@ -264,8 +264,8 @@ extension LoginViewController {
         //        self.emailTextField.text = "tim.van.steenoven+family@icasting.com"
         //        self.passwordTextField.text = "test"
         
-        //self.emailTextField.text = "tim.van.steenoven@icasting.com"
-        //self.passwordTextField.text = "test"
+        self.emailTextField.text = "tim.van.steenoven@icasting.com"
+        self.passwordTextField.text = "test"
         
         //self.emailTextField.text = "boyd.rehorst+familie-account@icasting.com"
         //self.passwordTextField.text = "abc"

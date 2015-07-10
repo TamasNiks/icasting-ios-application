@@ -155,6 +155,8 @@ extension MatchDetailTableViewController {
         }
 
         else if cell is MatchAcceptCell {
+            (cell as! MatchAcceptCell).delegate = self
+            (cell as! MatchAcceptCell).indexPath = indexPath
             (cell as! MatchAcceptCell).configureCell(matchCard!)
         }
         
@@ -168,8 +170,8 @@ extension MatchDetailTableViewController {
         
         else {
             
-            println("no cell config")
-            
+            println("no cell config for id: ")
+            println(identifier.properties.reuse)
         }
     }
 }
@@ -268,9 +270,68 @@ extension MatchDetailTableViewController {
 
 // MARK: - IBActions
 
-extension MatchDetailTableViewController {
+extension MatchDetailTableViewController: DilemmaCellExtendedButtonDelegate {
 
-    @IBAction func onAccept(sender: AnyObject) {
+    
+    func dilemmaCell(
+        cell: UITableViewCell,
+        didPressButtonForState decisionState: DecisionState,
+        forIndexPath indexPath: NSIndexPath,
+        startAnimation: () -> ()) {
+        
+        println("dilemma cell delegate")
+        
+        var ac: UIAlertController
+        
+        switch decisionState {
+            
+        case DecisionState.Accept:
+            
+            ac = AcceptAlertController { () -> Void in
+                (self.matchCard! as! TalentMatchCard).accept() { possibleError in
+                    if let error = possibleError {
+                        self.showErrorAlertView(error)
+                    } else {
+                        startAnimation()
+                        self.delegate?.didAcceptMatch()
+                    }
+                }
+                }.configureAlertController()
+            
+            
+        case DecisionState.Reject:
+            
+            ac = RejectAlertController { () -> Void in
+                (self.matchCard! as! TalentMatchCard).reject() { possibleError in
+                    
+                    if let error = possibleError {
+                        self.showErrorAlertView(error)
+                    } else {
+                        startAnimation()
+                        self.navigationController?.popViewControllerAnimated(true)
+                        self.delegate?.didRejectMatch()
+                    }
+                }
+                }.configureAlertController()
+        }
+        
+        println("should present")
+        self.presentViewController(ac, animated: true, completion: nil)
+        
+    }
+    
+    
+    func dilemmaCell(cell: UITableViewCell, didPressDecidedButtonForState decidedState: DecisionState, forIndexPath indexPath: NSIndexPath) {
+        
+        self.performSegueWithIdentifier("showConversation", sender: nil)
+        
+        println("back to match view controller")
+        
+    }
+    
+    
+    
+   /* @IBAction func onAccept(sender: AnyObject) {
         println("I ACCEPT")
         
         let ac = AcceptAlertController { () -> Void in
@@ -302,7 +363,7 @@ extension MatchDetailTableViewController {
             }
         }.configureAlertController()
         self.presentViewController(ac, animated: true, completion: nil)
-    }
+    }*/
     
     
     func showErrorAlertView(error: ICErrorInfo) {
@@ -321,8 +382,14 @@ extension MatchDetailTableViewController {
     
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        var destination = segue.destinationViewController as! MatchProfileTableViewController
-        destination.matchCard = self.matchCard
+        if let destination = segue.destinationViewController as? MatchProfileTableViewController {
+            destination.matchCard = self.matchCard
+        }
+        
+        if let destination = segue.destinationViewController as? NegotiationDetailViewController {
+            destination.matchID = self.matchCard?.getID(FieldID.MatchCardID)
+        }
+        
     }
 }
 

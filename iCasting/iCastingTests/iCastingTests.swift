@@ -153,7 +153,7 @@ class iCastingTests: XCTestCase {
 //            "Media url created successful")
     }
     
-    func testExample() {
+    /*func testExample() {
         
         let sNews : String = "{\"_id\":\"54e6fbf172a116be7fe7f8ab\",\"body\":\"Dit is de body tekst\",\"subTitle\":\"Gastvrouw/gastheer zijn is een vak. Jij bent er om te zorgen dat een event of bijeenkomst zorgeloos verloopt.\",\"title\":\"De vijf do's en don’ts als host & hostess\",\"image\":\"551176590b41dda06c23951b\",\"thumbnail\":\"551176590b41dda06c23951b\",\"locales\":[],\"authors\":[\"541fda5b0f1d550000127858\"],\"highlighted\":false,\"published\":\"2015-02-20T00:00:00.000Z\",\"id\":\"54e6fbf172a116be7fe7f8ab\"}"
         
@@ -181,7 +181,7 @@ class iCastingTests: XCTestCase {
         XCTAssert(name == "John", "Passes test")
         println(id)
         XCTAssert(id == "54e6fbf172a116be7fe7f8ab", "Passes test")
-    }
+    }*/
     
     func testJSON() {
         

@@ -741,12 +741,6 @@
                                                             <variation key="heightClass=regular-widthClass=compact" constant="40"/>
                                                         </constraint>
                                                     </constraints>
-                                                    <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="string" keyPath="titleLeftButton" value="Accept"/>
-                                                        <userDefinedRuntimeAttribute type="string" keyPath="titleRightButton" value="Reject"/>
-                                                        <userDefinedRuntimeAttribute type="string" keyPath="titleLeftView" value="Accepted"/>
-                                                        <userDefinedRuntimeAttribute type="string" keyPath="titleRightView" value="Rejected"/>
-                                                    </userDefinedRuntimeAttributes>
                                                     <variation key="heightClass=regular-widthClass=compact">
                                                         <mask key="constraints">
                                                             <include reference="Q89-uS-b0w"/>
@@ -886,12 +880,6 @@
                                                             <variation key="heightClass=regular-widthClass=compact" constant="40"/>
                                                         </constraint>
                                                     </constraints>
-                                                    <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="string" keyPath="titleLeftButton" value="Accept"/>
-                                                        <userDefinedRuntimeAttribute type="string" keyPath="titleRightButton" value="Reject"/>
-                                                        <userDefinedRuntimeAttribute type="string" keyPath="titleLeftView" value="Accepted"/>
-                                                        <userDefinedRuntimeAttribute type="string" keyPath="titleRightView" value="Rejected"/>
-                                                    </userDefinedRuntimeAttributes>
                                                     <variation key="heightClass=regular-widthClass=compact">
                                                         <mask key="constraints">
                                                             <include reference="ftj-Wd-KjP"/>
@@ -1073,10 +1061,10 @@
                                                         </constraint>
                                                     </constraints>
                                                     <userDefinedRuntimeAttributes>
-                                                        <userDefinedRuntimeAttribute type="string" keyPath="titleLeftButton" value="Accept"/>
-                                                        <userDefinedRuntimeAttribute type="string" keyPath="titleRightButton" value="Reject"/>
-                                                        <userDefinedRuntimeAttribute type="string" keyPath="titleLeftView" value="Accepted"/>
-                                                        <userDefinedRuntimeAttribute type="string" keyPath="titleRightView" value="Rejected"/>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="titleRightButton" value="Accept"/>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="titleRightView" value="Accepted"/>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="titleLeftButton" value="Reject"/>
+                                                        <userDefinedRuntimeAttribute type="string" keyPath="titleLeftView" value="Rejected"/>
                                                     </userDefinedRuntimeAttributes>
                                                     <variation key="heightClass=regular-widthClass=compact">
                                                         <mask key="constraints">
@@ -1686,6 +1674,44 @@
                                     <outlet property="customRejectButton" destination="JMC-0f-hHa" id="nkw-vE-qK1"/>
                                 </connections>
                             </tableViewCell>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="dilemmaCell" rowHeight="70" id="kUa-JD-lJF" customClass="MatchAcceptCell" customModule="iCasting" customModuleProvider="target">
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="kUa-JD-lJF" id="VxA-IF-kRf">
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <view clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lEe-l9-LAx" customClass="DilemmaView" customModule="iCasting" customModuleProvider="target">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        </view>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="lEe-l9-LAx" firstAttribute="leading" secondItem="VxA-IF-kRf" secondAttribute="leadingMargin" constant="4" id="P5B-os-sCn"/>
+                                        <constraint firstAttribute="trailingMargin" secondItem="lEe-l9-LAx" secondAttribute="trailing" constant="4" id="kbh-2A-I9n"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="lEe-l9-LAx" secondAttribute="bottom" constant="6" id="n7i-nx-bb8"/>
+                                        <constraint firstItem="lEe-l9-LAx" firstAttribute="top" secondItem="VxA-IF-kRf" secondAttribute="topMargin" constant="7" id="yIX-bc-stK"/>
+                                    </constraints>
+                                    <variation key="default">
+                                        <mask key="constraints">
+                                            <exclude reference="P5B-os-sCn"/>
+                                            <exclude reference="kbh-2A-I9n"/>
+                                        </mask>
+                                    </variation>
+                                    <variation key="heightClass=regular-widthClass=compact">
+                                        <mask key="subviews">
+                                            <include reference="lEe-l9-LAx"/>
+                                        </mask>
+                                        <mask key="constraints">
+                                            <include reference="P5B-os-sCn"/>
+                                            <include reference="kbh-2A-I9n"/>
+                                            <include reference="n7i-nx-bb8"/>
+                                            <include reference="yIX-bc-stK"/>
+                                        </mask>
+                                    </variation>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="dilemmaView" destination="lEe-l9-LAx" id="qLU-LB-88H"/>
+                                </connections>
+                            </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="profileCell" textLabel="IPK-Kh-Vxp" style="IBUITableViewCellStyleDefault" id="aAw-9I-PqN">
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="aAw-9I-PqN" id="G4t-xL-NaM">
@@ -1741,6 +1767,9 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Details" id="g27-5t-DqM"/>
+                    <connections>
+                        <segue destination="noz-57-hQ6" kind="show" identifier="showConversation" id="sra-My-8PO"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QHR-nO-tLP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -2389,6 +2418,7 @@
         <image name="tones" width="25" height="25"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="sra-My-8PO"/>
         <segue reference="sFH-0R-1AL"/>
     </inferredMetricsTieBreakers>
 </document>

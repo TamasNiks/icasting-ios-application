@@ -22,8 +22,9 @@ class TalentMatchCard: MatchCard {
             var params: [String : AnyObject] = ["access_token":access_token]
             
             // TEST: comment the request code below if you do the accept test
-            //testAccept(callBack)
-            
+            testAccept(callBack)
+
+            /*
             request(.POST, url, parameters: params).responseJSON() { (request, response, json, error) in
                 
                 if (error != nil) {
@@ -48,7 +49,7 @@ class TalentMatchCard: MatchCard {
                 
                 println(response)
                 println(json)
-            }
+            }*/
         }
     }
     
@@ -61,9 +62,9 @@ class TalentMatchCard: MatchCard {
             var params: [String : AnyObject] = ["access_token":access_token]
             
             // TEST: comment the request code below if you do the reject
-            //testReject(callBack)
-            
-            
+            testReject(callBack)
+
+            /*
             request(.POST, url, parameters: params).responseJSON() { (request, response, json, error) in
                 
                 if (error != nil) {
@@ -87,7 +88,7 @@ class TalentMatchCard: MatchCard {
                 
                 println(response)
                 println(json)
-            }
+            }*/
 
         }
     }

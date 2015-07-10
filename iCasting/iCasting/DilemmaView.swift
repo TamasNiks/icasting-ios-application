@@ -8,12 +8,17 @@
 
 import UIKit
 
+
 class DilemmaView: UIView {
 
     let nibName: String = "DilemmaView"
     
     let ANIMATION_DURATION: NSTimeInterval = 0.7
 
+    var extendedButtonModeLeft: Bool = false
+    var extendedButtonModeRight: Bool = false
+    
+    
     var leftButtonColor: UIColor?
     var rightButtonColor: UIColor?
     
@@ -23,11 +28,10 @@ class DilemmaView: UIView {
     
     @IBOutlet weak var leftButton: UIButton!
     @IBOutlet weak var rightButton: UIButton!
-    @IBOutlet weak var leftViewLabel: UILabel!
-    @IBOutlet weak var rightViewLabel: UILabel!
+    @IBOutlet weak var leftViewLabel: UILabel! /// This is a label
+    @IBOutlet weak var rightViewButton: UIButton! //!!! This is a button
     
-    
-    @IBInspectable var titleLeftButton: String? {
+    var titleLeftButton: String? {
         get {
             return leftButton.titleForState(UIControlState.Normal)
         }
@@ -36,7 +40,7 @@ class DilemmaView: UIView {
         }
     }
 
-    @IBInspectable var titleRightButton: String? {
+    var titleRightButton: String? {
         get {
             return rightButton.titleForState(UIControlState.Normal)
         }
@@ -45,7 +49,7 @@ class DilemmaView: UIView {
         }
     }
 
-    @IBInspectable var titleLeftView: String? {
+    var titleLeftView: String? {
         get {
             return leftViewLabel.text
         }
@@ -54,12 +58,12 @@ class DilemmaView: UIView {
         }
     }
     
-    @IBInspectable var titleRightView: String? {
+    var titleRightView: String? {
         get {
-            return rightViewLabel.text
+            return rightViewButton.titleForState(UIControlState.Normal)
         }
         set {
-            rightViewLabel.text = newValue
+            rightViewButton.setTitle(newValue, forState: UIControlState.Normal)
         }
     }
     
@@ -96,12 +100,12 @@ class DilemmaView: UIView {
         startSettingsRightView(rightView)
         startSettingsLeftView(leftView)
 
-        self.leftButtonColor = self.leftButton.backgroundColor
-        self.rightButtonColor = self.rightButton.backgroundColor
+        leftButtonColor = leftButton.backgroundColor
+        rightButtonColor = rightButton.backgroundColor
     }
     
     func reinitialize() {
-        //println("Will reinitialize")
+        
         startSettingsMiddleView(buttonView)
         startSettingsLeftView(leftView)
         startSettingsRightView(rightView)
@@ -136,12 +140,26 @@ class DilemmaView: UIView {
     
     
     func setLeftView() {
-        self.finalSettingsView(self.leftView)
+        
+        if self.extendedButtonModeLeft == true
+        {
+            self.finalSettingsViewButtonMode(self.leftView)
+        } else {
+            self.finalSettingsView(self.leftView)
+        }
+        
         self.finalSettingsMiddleViewForLeft(self.buttonView)
     }
     
     func setRightView() {
-        self.finalSettingsView(self.rightView)
+        
+        if self.extendedButtonModeRight == true
+        {
+            self.finalSettingsViewButtonMode(self.rightView)
+        } else {
+            self.finalSettingsView(self.rightView)
+        }
+        
         self.finalSettingsMiddleViewForRight(self.buttonView)
     }
     
@@ -174,8 +192,8 @@ class DilemmaView: UIView {
         self.leftButton.alpha = 1
         self.rightButton.alpha = 1
         
-        self.leftButton.backgroundColor = self.leftButtonColor //UIColor.ICGreenDilemmaColor()
-        self.rightButton.backgroundColor = self.rightButtonColor //UIColor.ICRedDilemmaColor()
+        self.leftButton.backgroundColor = self.leftButtonColor
+        self.rightButton.backgroundColor = self.rightButtonColor
     }
     
     private func startSettingsLeftView(view: UIView) {
@@ -196,6 +214,11 @@ class DilemmaView: UIView {
     private func finalSettingsView(view: UIView) {
         view.alpha = 0.60
         view.backgroundColor = UIColor(white: 0.65, alpha: 1)
+        view.transform = CGAffineTransformMakeTranslation(0, 0)
+    }
+    
+    private func finalSettingsViewButtonMode(view: UIView) {
+        view.alpha = 1
         view.transform = CGAffineTransformMakeTranslation(0, 0)
     }
     

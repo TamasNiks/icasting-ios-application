@@ -43,6 +43,8 @@
 "RejectMessage" = "Als u een job weigert, wordt u verwijderd uit de lijst van matches. De client krijgt hiervan geen melding.";
 "Accept" = "Accepteer";
 "Reject" = "Weiger";
+"Accepted" = "Geaccepteerd";
+"Rejected" = "Geweigerd";
 "Cancel" = "Annuleer";
 
 "Announcement" = "Mededeling";
@@ -155,6 +157,11 @@
 "matches.details.gender.any" = "Geen voorkeur";
 "matches.details.gender.male" = "Ik ben opzoek naar een man.";
 "matches.details.gender.female" = "I'm searching for a female.";
+
+"match.decisionstate.accepted" = "Geaccepteerd: Wacht op opdrachtgever";
+"match.decisionstate.negotiation" = "Onderhandel";
+"match.decisionstate.closed" = "Opdracht is gesloten";
+"match.decisionstate.completed" = "Opdracht is voltooid";
 
 /* iCasting System text */
 

@@ -250,6 +250,77 @@ extension NegotiationDetailViewController {
 
 extension NegotiationDetailViewController {
 
+    // MARK: dilemma cell delegate used for offers
+    
+    func dilemmaCell(
+        cell: UITableViewCell,
+        didPressButtonForState decisionState: DecisionState,
+        forIndexPath indexPath: NSIndexPath,
+        startAnimation: () -> ()) {
+        
+            
+        let message = self.getModel(forIndexPath: indexPath)
+        
+        switch decisionState {
+            
+        case DecisionState.Accept:
+            
+            if message.type == TextType.Offer {
+                
+                (self.conversation as! MessageCommunicationProtocol).acceptOffer(message) { error in
+                    
+                    startAnimation()
+                }
+            }
+            
+            if message.type == TextType.ContractOffer {
+
+                (self.conversation as! MessageCommunicationProtocol).acceptContract(message) { error in
+                    
+                    // The animation will restart, because after the cell configuration, the state already has been set.
+                    self.configureCell(forMessage: message, andCell: cell)
+                    startAnimation()
+                }
+            }
+            
+            if message.type == TextType.RenegotationRequest {
+                
+                (self.conversation as! MessageCommunicationProtocol).acceptRenegotiationRequest(message) { error in
+                    
+                    startAnimation()
+                }
+            }
+            
+        case DecisionState.Reject:
+            
+            if message.type == TextType.Offer {
+                
+                (self.conversation as! MessageCommunicationProtocol).rejectOffer(message) { error in
+                    
+                    startAnimation()
+                }
+            }
+            
+            if message.type == TextType.ContractOffer {
+                
+                (self.conversation as! MessageCommunicationProtocol).rejectContract(message) { error in
+                    
+                    // The animation will restart, because after the cell configuration, the state already has been set.
+                    self.configureCell(forMessage: message, andCell: cell)
+                    startAnimation()
+                }
+            }
+            
+            if message.type == TextType.RenegotationRequest {
+                
+                (self.conversation as! MessageCommunicationProtocol).rejectRenegotiationRequest(message) { error in
+                    
+                    startAnimation()
+                }
+            }
+        }
+    }
+    
     
     func configureCell(forMessage message: Message, andCell cell: UITableViewCell) {
         
@@ -258,77 +329,6 @@ extension NegotiationDetailViewController {
         if let configurator = factory.getConfigurator() {
             configurator.configureCell(data: [CellKey.Model:message as Any])
         }
-    }
-    
-    // MARK: Offer cell delegate
-    
-    func offerCell(
-        cell: UITableViewCell,
-        didPressButtonWithOfferStatus dilemmaStatus: DilemmaStatus,
-        forIndexPath indexPath: NSIndexPath,
-        startAnimation: () -> ()) {
-        
-            
-            let message = self.getModel(forIndexPath: indexPath)
-            
-            switch dilemmaStatus {
-                
-            case DilemmaStatus.Accept:
-                
-                if message.type == TextType.Offer {
-                    
-                    (self.conversation as! MessageCommunicationProtocol).acceptOffer(message) { error in
-                        
-                        startAnimation()
-                    }
-                }
-                
-                if message.type == TextType.ContractOffer {
-
-                    (self.conversation as! MessageCommunicationProtocol).acceptContract(message) { error in
-                        
-                        // The animation will restart, because after the cell configuration, the state already has been set.
-                        self.configureCell(forMessage: message, andCell: cell)
-                        startAnimation()
-                    }
-                }
-                
-                if message.type == TextType.RenegotationRequest {
-                    
-                    (self.conversation as! MessageCommunicationProtocol).acceptRenegotiationRequest(message) { error in
-                        
-                        startAnimation()
-                    }
-                }
-                
-            case DilemmaStatus.Reject:
-                
-                if message.type == TextType.Offer {
-                    
-                    (self.conversation as! MessageCommunicationProtocol).rejectOffer(message) { error in
-                        
-                        startAnimation()
-                    }
-                }
-                
-                if message.type == TextType.ContractOffer {
-                    
-                    (self.conversation as! MessageCommunicationProtocol).rejectContract(message) { error in
-                        
-                        // The animation will restart, because after the cell configuration, the state already has been set.
-                        self.configureCell(forMessage: message, andCell: cell)
-                        startAnimation()
-                    }
-                }
-                
-                if message.type == TextType.RenegotationRequest {
-                    
-                    (self.conversation as! MessageCommunicationProtocol).rejectRenegotiationRequest(message) { error in
-                        
-                        startAnimation()
-                    }
-                }
-            }
     }
     
 

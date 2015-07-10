@@ -9,20 +9,6 @@
 import UIKit
 
 
-enum DilemmaStatus {
-    case Accept, Reject
-}
-
-
-protocol DilemmaCellDelegate {
-    func offerCell(
-        cell: UITableViewCell,
-        didPressButtonWithOfferStatus dilemmaStatus: DilemmaStatus,
-        forIndexPath indexPath: NSIndexPath,
-        startAnimation: ()->())
-}
-
-
 //**********************************************************
 
 
@@ -90,87 +76,6 @@ class MessageUnacceptedCell: UITableViewCell, CellVisitorAcceptProtocol {
     }
 }
 
-
-
-
-
-class DilemmaCell: UITableViewCell {
-
-    @IBOutlet weak var dilemmaView: DilemmaView!
-    
-    var indexPath: NSIndexPath?
-    
-    var delegate: DilemmaCellDelegate? {
-        didSet {
-            setup()
-        }
-    }
-    
-    var accepted: Bool? {
-        
-        willSet {
-            dilemmaView.reinitialize()
-            if let nv = newValue {
-                if nv == true {
-                    dilemmaView.setLeftView()
-                } else {
-                    dilemmaView.setRightView()
-                }
-            }
-        }
-    }
-    
-    var enabled: Bool = true {
-        
-        willSet {
-            if newValue == true {
-                dilemmaView.enableButtons()
-            } else {
-                dilemmaView.disableButtons()
-            }
-        }
-    }
-    
-    var rejectedTitle: String? {
-        set { dilemmaView.rightViewLabel.text = newValue }
-        get { return dilemmaView.rightViewLabel.text }
-    }
-    
-    var acceptedTitle: String? {
-        set { dilemmaView.leftViewLabel.text = newValue }
-        get { return dilemmaView.leftViewLabel.text }
-    }
-    
-    // iOS 8
-//    override func prepareForReuse() {
-//        self.accepted = nil
-//        self.enabled = true
-//    }
-    
-    private func setup() {
-        
-        dilemmaView.leftButton.addTarget(self, action: "onAcceptButtonPress:", forControlEvents: UIControlEvents.TouchUpInside)
-        dilemmaView.rightButton.addTarget(self, action: "onRejectButtonPress:", forControlEvents: UIControlEvents.TouchUpInside)
-    }
-    
-    func onAcceptButtonPress(event: UIButton) {
-        
-        if let ip = indexPath {
-            delegate?.offerCell(self, didPressButtonWithOfferStatus: DilemmaStatus.Accept, forIndexPath: ip, startAnimation: { () -> () in
-                self.dilemmaView.startLeftAnimation()
-            })
-        }
-    }
-    
-    func onRejectButtonPress(event: UIButton) {
-        
-        if let ip = indexPath {
-            delegate?.offerCell(self, didPressButtonWithOfferStatus: DilemmaStatus.Reject, forIndexPath: ip, startAnimation: { () -> () in
-                self.dilemmaView.startRightAnimation()
-            })
-        }
-    }
-}
 
 
 class MessageOfferCell: DilemmaCell {

@@ -75,7 +75,7 @@ class Push: PushProtocol {
         
         if DeviceToken.updatedToken || Push.config?.deviceID == nil {
             println("Push: Update in device token or device id == nil")
-            requestForRegisterDevice(callBack)
+            //requestForRegisterDevice(callBack)
         } else {
             println("Push: No update in device token")
         }

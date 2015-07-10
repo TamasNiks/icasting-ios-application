@@ -158,6 +158,11 @@
 "matches.details.gender.male" = "I'm searching for a male.";
 "matches.details.gender.female" = "I'm searching for a female.";
 
+"match.decisionstate.accepted" = "Accepted: Waiting for client";
+"match.decisionstate.negotiation" = "Negotiate";
+"match.decisionstate.closed" = "Client has made a selection";
+"match.decisionstate.completed" = "Job is completed";
+
 /* API Errors */
 
 "AuthenticationError" = "Login did not work, please fill in the right credentials.";

@@ -14,9 +14,7 @@ class MainTabBarController: UITabBarController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        self.selectedIndex = 0
-        
-        println("show tabbar controller")
+        self.selectedIndex = 1
     }
 
     override func didReceiveMemoryWarning() {

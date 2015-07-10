@@ -43,6 +43,8 @@
 "RejectMessage" = "If you reject a job, you will be removed on the list of matches, the client won't get notified";
 "Accept" = "Accept";
 "Reject" = "Reject";
+"Accepted" = "Accepted";
+"Rejected" = "Rejected";
 "Cancel" = "Cancel";
 
 "Announcement" = "Announcement";
@@ -155,6 +157,11 @@
 "matches.details.gender.any" = "No preferences";
 "matches.details.gender.male" = "I'm searching for a male.";
 "matches.details.gender.female" = "I'm searching for a female.";
+
+"match.decisionstate.accepted" = "Accepted: Waiting for client";
+"match.decisionstate.negotiation" = "Negotiate";
+"match.decisionstate.closed" = "Client has made a selection";
+"match.decisionstate.completed" = "Job is completed";
 
 /* API Errors */
 

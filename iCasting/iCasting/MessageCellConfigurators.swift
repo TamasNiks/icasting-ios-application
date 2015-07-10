@@ -251,7 +251,7 @@ class ContractOfferMessageCellConfigurator : AbstractCellConfigurator {
                     
                     c.enabled = true // This can set to true for both, because the buttons would go away for the other chat user
                     c.accepted = isIncomming ? nil : true
-                    statusText = isIncomming ? "!!! Client has accepted" : "Talent has not accepted yet"
+                    statusText = isIncomming ? String.fontAwesomeIconWithName(FontAwesome.Check)+" Client has accepted" : "Talent has not accepted yet"
                     // If talent, set to "Client has accepted" otherwise if client: "Talent has not accepted yet"
                     
                 case ContractState.ClientRejected:
@@ -266,7 +266,7 @@ class ContractOfferMessageCellConfigurator : AbstractCellConfigurator {
                     
                     c.enabled = true // This can set to true for both, because the buttons would go away for the other chat user
                     c.accepted = isIncomming ? true : nil
-                    statusText = isIncomming ? "Client has not accepted yet" : "!!! Talent has accepted"
+                    statusText = isIncomming ? "Client has not accepted yet" : String.fontAwesomeIconWithName(FontAwesome.Check)+" Talent has accepted"
                     // If talent, set to "Client has not accepted yet" otherwise if client: "Talent has accepted"
                     
                 case ContractState.TalentRejected:
@@ -279,12 +279,11 @@ class ContractOfferMessageCellConfigurator : AbstractCellConfigurator {
                 }
                 
                 c.desc.text = "Do you want to accept the contract?"
+                c.subdescription.font = UIFont.fontAwesomeOfSize(12)
                 c.subdescription.text = statusText
             }
         }
     }
-    
-
 }
 
 
