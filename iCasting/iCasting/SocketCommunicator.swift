@@ -1,5 +1,5 @@
 //
-//  SocketCommunicationHandler.swift
+//  SocketCommunicator.swift
 //  iCasting
 //
 //  Created by Tim van Steenoven on 09/06/15.
@@ -81,7 +81,7 @@ protocol SocketCommunicationHandlerDelegate {
 
 
 
-class SocketCommunicationHandler {
+class SocketCommunicator {
     
     // Create the socket and install it through the SocketConfig struct
     
@@ -210,7 +210,7 @@ class SocketCommunicationHandler {
 
 // Extension for sending emit messages
 
-extension SocketCommunicationHandler {
+extension SocketCommunicator {
     
     func sendMessage(message: String, acknowledged: (data: NSArray?) -> ()) {
         

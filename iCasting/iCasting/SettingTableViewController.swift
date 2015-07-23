@@ -40,10 +40,12 @@ class SettingTableViewController: UITableViewController {
                     
                 case CellIdentifier.Settings.LogOut.rawValue:
                     
-                    Auth().logout() { failure in
+                    Auth.logout() { failure in
                         if failure == nil {
                             println("Logout request successfully, unwind to login")
                             self.performSegueWithIdentifier("unwindToLogin", sender: self)
+                        } else {
+                            println("DEBUG: \(failure)")
                         }
                     }
                     

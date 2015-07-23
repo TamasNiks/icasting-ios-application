@@ -18,6 +18,11 @@ protocol CellIdentifierProtocol {
 
 enum CellIdentifier {
 
+    enum NegotiationOverview: String, CellIdentifierProtocol {
+        case
+        Default = "conversationCellidentifier"
+    }
+    
     enum Message: String, CellIdentifierProtocol {
         case
         MessageCell                     = "messageCell",
@@ -43,7 +48,8 @@ enum CellIdentifier {
     enum JobOverview: String, CellIdentifierProtocol {
         case
         Header = "headerCellIdentifier",
-        JobPoints = "jobPointsCellIdentifier"
+        JobPoints = "jobPointsCellIdentifier",
+        AdditionalRequests = "jobPointsAdditionalCellIdentifier"
     }
     
     enum Match: String, CellIdentifierProtocol {

@@ -65,7 +65,7 @@ class SocketMessageFactory: MessageFactoryProtocol  {
         let role: Role = Role.getRole(userID)
         
         let message: Message = Message(id: messageID, owner: userID, role: role, type: TextType.Offer)
-        let offer: Offer? = OfferSocketDataExtractor(offer: data).value
+        let offer: MessageOffer? = OfferSocketDataExtractor(offer: data).value
         message.offer = offer
         
         return message
@@ -83,7 +83,7 @@ class SocketMessageFactory: MessageFactoryProtocol  {
         let message: Message = Message(id: messageID, owner: userID, role: role, type: TextType.ContractOffer)
 
         // When getting an offer contract from a sockets, it always starts with NULL values
-        let offer: Offer? = Offer(stateComponents: StateComponents(acceptClient: nil, acceptTalent: nil, accepted: nil))
+        let offer: MessageOffer? = MessageOffer(stateComponents: StateComponents(acceptClient: nil, acceptTalent: nil, accepted: nil))
         message.offer = offer
         message.body = _message
         
@@ -102,7 +102,7 @@ class SocketMessageFactory: MessageFactoryProtocol  {
         let message: Message = Message(id: messageID, owner: userID, role: role, type: TextType.RenegotationRequest)
         
         // When getting an renegotiation request from a sockets, it always starts with an accept client to true, because only a client can send an renegotation request
-        let offer: Offer? = Offer(stateComponents: StateComponents(acceptClient: true, acceptTalent: nil, accepted: nil))
+        let offer: MessageOffer? = MessageOffer(stateComponents: StateComponents(acceptClient: true, acceptTalent: nil, accepted: nil))
         message.offer = offer
         message.body = _message
         
@@ -146,10 +146,10 @@ class HTTPMessageFactory: HTTPMessageFactoryProtocol {
             
             if let textType: TextType = TextType(rawValue: type) {
                 
-                var offer: Offer?
+                var offer: MessageOffer?
                 let read: Bool      =   data["read"].boolValue      // Has the message been read or not
                 var body: String    =   data["body"].stringValue    // If it is an text message, the body of the message will exist
-                let contract        =   MessageContract(contract: data["contract"].dictionaryValue).value   // Contract key value pairs if they exist
+                let contract        =   MessageTerms(contract: data["contract"].dictionaryValue).value   // Contract key value pairs if they exist
                 
                 
                 if textType == TextType.Offer {
@@ -186,81 +186,3 @@ class HTTPMessageFactory: HTTPMessageFactoryProtocol {
     }
 
 }
-
-
-
-
-
-// If the messages gets complexer, the message factory needs to be improved
-
-/*class AbstractMessageFactory {
-    
-    static func createMessage(fromJSON json: JSON) -> Message? {
-        
-        func getLocalizationForTextType(textType: TextType, body: String) -> String {
-            
-            if textType == TextType.SystemText || textType == TextType.SystemContractUnaccepted || textType == TextType.ContractOffer {
-                return NSLocalizedString(body, comment: "System text to translate")
-            }
-            return body
-        }
-        
-        
-        // Get the type of the message, this type is used to decide which kind of messages should be constructed.
-        let type: String = json["type"].stringValue
-        
-        // If the text type does not exist, do something else
-        if let textType = TextType(rawValue: type) {
-            
-            let id: String      =   json["_id"].stringValue     // Message id
-            let owner: String   =   json["owner"].stringValue   // The id of the owner of the message
-            let role: Role = Role.getRole(owner)                // Incomming, outgoing or system
-            
-            let message = Message(id: id, owner: owner, role: role, type: textType)
-
-            let type: String    =   json["type"].stringValue        // Offer, contract, system or text message
-            
-            // If a texttype does not exist, the message should not show, another option is to construct a system message in the else clausule
-            
-            if let textType: TextType = TextType(rawValue: type) {
-                
-                var offer: Offer?
-                let read: Bool      =   json["read"].boolValue      // Has the message been read or not
-                var body: String    =   json["body"].stringValue    // If it is an text message, the body of the message will exist
-                let contract        =   MessageContract(contract: json["contract"].dictionaryValue).value   // Contract key value pairs if they exist
-                
-                
-                if textType == TextType.Offer {
-                    
-                    offer = OfferHTTPDataExtractor(offer: json["offer"].dictionaryValue).value
-                }
-                
-                if textType == TextType.ContractOffer {
-                    
-                    offer = OfferContractHTTPDataExtractor(offer: json["offer"].dictionaryValue).value
-                    body = "icasting.chat.system.text.contractoffer"
-                }
-                
-                if textType == TextType.RenegotationRequest {
-                    
-                    offer = OfferContractHTTPDataExtractor(offer: json["offer"].dictionaryValue).value
-                    body = "icasting.chat.system.text.renegotiationrequest"
-                }
-                
-                body = getLocalizationForTextType(textType, body)
-                
-                message.body = body
-                message.offer = offer
-                message.contract = contract
-                message.read = read
-            }
-            
-//            let visitor = MessageVisitor(json: json)
-//            message.accept(visitor)
-            
-            return message
-        }
-        
-        return nil
-    }
-}*/

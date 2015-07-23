@@ -67,6 +67,7 @@ class MatchDetailTableViewController: UITableViewController {
     let rowsForStaticSection: Int = 4
     var matchDetails: MatchDetailType?
     
+    // MARK: - ViewController Life cycle
     
     override func viewDidLoad() {
         
@@ -288,7 +289,7 @@ extension MatchDetailTableViewController: DilemmaCellExtendedButtonDelegate {
         case DecisionState.Accept:
             
             ac = AcceptAlertController { () -> Void in
-                (self.matchCard! as! TalentMatchCard).accept() { possibleError in
+                self.matchCard!.accept() { possibleError in
                     if let error = possibleError {
                         self.showErrorAlertView(error)
                     } else {
@@ -302,7 +303,7 @@ extension MatchDetailTableViewController: DilemmaCellExtendedButtonDelegate {
         case DecisionState.Reject:
             
             ac = RejectAlertController { () -> Void in
-                (self.matchCard! as! TalentMatchCard).reject() { possibleError in
+                self.matchCard!.reject() { possibleError in
                     
                     if let error = possibleError {
                         self.showErrorAlertView(error)

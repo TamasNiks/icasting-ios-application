@@ -22,7 +22,7 @@ protocol ListExtractorProtocol {
 
 
 
-class MessageListExtractor: NSObject, ListExtractorProtocol {
+class MessageList: NSObject, ListExtractorProtocol {
     
     typealias J = JSON
     typealias I = Message

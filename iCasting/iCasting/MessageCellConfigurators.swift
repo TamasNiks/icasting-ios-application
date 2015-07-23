@@ -9,8 +9,6 @@
 import UIKit
 
 
-// When adding a new cell, add a configurator.
-
 enum CellKey {
     case Model, Delegate, IndexPath
 }
@@ -110,7 +108,7 @@ class OfferMessageCellConfigurator : AbstractCellConfigurator {
             
             c.accepted = offer.acceptTalent
             c.indexPath = data[.IndexPath] as? NSIndexPath
-            c.delegate = data[.Delegate] as? DilemmaCellDelegate
+            //c.delegate = data[.Delegate] as? DilemmaCellDelegate
         }
         
         configureCellText(data: data)
@@ -199,7 +197,7 @@ class ContractOfferMessageCellConfigurator : AbstractCellConfigurator {
         if let offer = message.offer {
 
             c.indexPath = data[.IndexPath] as? NSIndexPath
-            c.delegate = data[.Delegate] as? DilemmaCellDelegate
+            //c.delegate = data[.Delegate] as? DilemmaCellDelegate
         }
     
         configureCellText(data: data)
@@ -299,7 +297,7 @@ class RenegotiationRequestMessageCellConfigurator: AbstractCellConfigurator {
         if let offer = message.offer {
             
             c.indexPath = data[.IndexPath] as? NSIndexPath
-            c.delegate = data[.Delegate] as? DilemmaCellDelegate
+            //c.delegate = data[.Delegate] as? DilemmaCellDelegate
         }
         configureCellText(data: data)
     }

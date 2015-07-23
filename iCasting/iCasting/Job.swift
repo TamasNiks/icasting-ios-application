@@ -27,6 +27,7 @@ struct ContractType {
 // The points below are the global topics under where everything falls. The strings are to help to localize the name of the topics
 enum MainTopic: String {
     case
+    General             = "general",
     Finance             = "finance",
     BuyOff              = "buyoff",
     TimeLocation        = "timeandlocation",
@@ -46,16 +47,16 @@ enum ContractPoint: String {
     PaymentMethod   = "paymentMethod"
 }
 
-typealias JobContractList = [[MainTopic:[ContractType]]]
+typealias JobContractArray = [[MainTopic:[ContractType]]]
 
 class Job {
     
     let formatErrorString: String = "Not formatted correctly"
     
-    var list: JobContractList = JobContractList()
+    var list: JobContractArray = JobContractArray()
     
     private var source: JSON = JSON("")
-    private let matchID: String
+    let matchID: String
     private var root: [SubscriptType] = ["contract"]
     
     func getPath(type: ContractPoint) -> JSON {
@@ -150,7 +151,7 @@ class Job {
         self.matchID = matchID
     }
     
-    private func populate(source: JSON) {
+    func populate(source: JSON) {
         
         self.source = source
         self.buildList()
@@ -159,7 +160,7 @@ class Job {
     
     private func buildList() {
         
-        var resultList = JobContractList()
+        var resultList = JobContractArray()
         resultList.append([.Finance             :   [budget, travelExpenses]])
         resultList.append([.BuyOff              :   [buyOff]])
         resultList.append([.TimeLocation        :   [dateTime, location]])
@@ -259,43 +260,4 @@ class Job {
         return (localized: result, format: formatted)
     }
     
-}
-
-
-extension Job : ModelRequest {
-    
-    func get(callBack: RequestClosure) {
-        
-        // Do request here
-        let url: String = APIMatch.Match(self.matchID).value
-        let access_token: AnyObject = Auth.auth.access_token as! AnyObject
-        let params: [String : AnyObject] = [
-            POPULATE_KEY : "job.owner",
-            Authentication.TOKEN_KEY : access_token
-        ]
-        
-        request(Method.GET, url, parameters: params, encoding: ParameterEncoding.URL).responseJSON() { (request, response, json, error) -> Void in
-            
-            // Network or general errors?
-            if let errors = ICError(error: error).getErrors() {
-                callBack(failure: errors)
-            }
-            
-            // No network errors, extract json
-            if let _json: AnyObject = json {
-                
-                let parsedJSON = JSON(_json)
-                
-                // API Errors?
-                if let errors = ICError(json: parsedJSON).getErrors() {
-                    println(error)
-                    callBack(failure: errors)
-                    return
-                }
-                
-                self.populate(parsedJSON)
-                callBack(failure: nil)
-            }
-        }
-    }
 }

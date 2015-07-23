@@ -15,76 +15,55 @@ enum ImageSize: String {
     Thumbnail = "200x200"
 }
 
-struct NewsKey {
-    static let Title        : String = "title"
-    static let Summary      : String = "summary"
-    static let Body         : String = "body"
-    static let ImageID      : String = "image"
-    static let ID           : String = "id"
-    static let Published    : String = "published"
+class News {
+    var newsItems: [NewsItem] = [NewsItem]()
 }
 
-// TODO: Make use of JSON class and add getter functionalities to data
-class News : ModelProtocol {
+final class NewsItem: Printable, ResponseCollectionSerializable {
     
-    var newsItems : [AnyObject] = []
-
-    func initializeModel(json: JSON) {
-        
+    struct Key {
+        static let Title         = "title"
+        static let Summary       = "summary"
+        static let Body          = "body"
+        static let ImageID       = "image"
+        static let ID            = "id"
+        static let Published     = "published"
     }
     
-//    func initializeModel<U>(json: U) {
-//        
-//    }
+    let title: String
+    let body: String
+    let imageID: String
+    let published: String
+    var read: Bool = false
     
-//    /* Asks for all the items */
-//    func all(callBack: RequestClosure) {
-//
-//        
-//
-//    }
-    
-    /* Asks for one item for a given id */
-//    func one(id: String, callBack: RequestClosure) {
-//        
-//        var url: String = APINews.NewsItem(id).value
-//        request(.GET, url).responseJSON { (_, _, json, error) -> Void in
-//            if let result: AnyObject = json {
-//                self.newsItems = result as! [AnyObject]
-//                callBack(failure: nil)
-//            }
-//        }
-//    }
-}
+    init(title: String, body: String, imageID: String, published: String) {
+        self.title = title
+        self.body = body
+        self.imageID = imageID
+        self.published = published
+    }
 
-
-extension News : ModelRequest {
-    
-    func get(callBack: RequestClosure) {
+    @objc static func collection(#response: NSHTTPURLResponse, representation: AnyObject) -> [NewsItem] {
         
-        var url: String = APINews.NewsItems.value
-        request(.GET, url).responseJSON { (_, _, json, error) -> Void in
+        var list = [NewsItem]()
+        if let representation = representation as? [AnyObject] {
             
-            if let error = error {
-                let errors: ICErrorInfo? = ICError(error: error).getErrors()
-                callBack(failure: errors)
-            }
-            
-            if let result: AnyObject = json {
-                self.newsItems = result as! [AnyObject]
-                callBack(failure: nil)
+            list = representation.map { (transform: AnyObject) -> NewsItem in
+                
+                return NewsItem(
+                    title:      transform[Key.Title] as! String,
+                    body:       transform[Key.Body] as! String,
+                    imageID:    transform[Key.ImageID] as! String,
+                    published:  transform[Key.Published] as! String)
             }
         }
+        
+        return list
     }
     
-    func image(id: String, size: ImageSize, callBack : ((success:AnyObject, failure:NSError?)) -> () ) {
-
-        var url: String = APIMedia.ImageWithSize(id, size.rawValue).value
-        request(.GET, url).response { (request, response, data, error) -> Void in
-            if let result: AnyObject = data {
-                callBack((success:result, failure:nil))
-            }
-        }
+    var description: String {
+        return "Title: \(title)"
     }
 }
+
 

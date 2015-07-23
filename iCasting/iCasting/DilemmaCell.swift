@@ -36,6 +36,10 @@ enum DecisionState {
 
 class DilemmaCell: UITableViewCell {
     
+    let selectorReject: Selector = "onRejectButtonPress:"
+    let selectorAccept: Selector = "onAcceptButtonPress:"
+
+    
     // A tableview cell can conform to a dilemma cell as long as it contains a dilemma view in it. This is especially usefull for offers and matches
     @IBOutlet weak var dilemmaView: DilemmaView!
     
@@ -130,8 +134,8 @@ class DilemmaCell: UITableViewCell {
     }
     
     private func setup() {
-        DecisionState.Reject.getState(dilemmaView).addTarget(self, action: "onRejectButtonPress:", forControlEvents: UIControlEvents.TouchUpInside)
-        DecisionState.Accept.getState(dilemmaView).addTarget(self, action: "onAcceptButtonPress:", forControlEvents: UIControlEvents.TouchUpInside)
+        DecisionState.Reject.getState(dilemmaView).addTarget(self, action: selectorReject, forControlEvents: UIControlEvents.TouchUpInside)
+        DecisionState.Accept.getState(dilemmaView).addTarget(self, action: selectorAccept, forControlEvents: UIControlEvents.TouchUpInside)
     }
     
     func onAcceptButtonPress(event: UIButton) {
@@ -145,7 +149,8 @@ class DilemmaCell: UITableViewCell {
     func onAcceptedButtonPress(event: UIButton) {
         if let ip = indexPath {
             println("onAcceptedButtonPress")
-            (delegate as? DilemmaCellExtendedButtonDelegate)?.dilemmaCell(self, didPressDecidedButtonForState: DecisionState.Accept, forIndexPath: ip)
+            let extendedButtonDelegate = delegate as? DilemmaCellExtendedButtonDelegate
+            extendedButtonDelegate?.dilemmaCell(self, didPressDecidedButtonForState: DecisionState.Accept, forIndexPath: ip)
         } else {
             println("DEBUG: No indexpath given")
         }
@@ -160,5 +165,15 @@ class DilemmaCell: UITableViewCell {
         } else {
             println("DEBUG: No indexpath given")
         }
+    }
+    
+    deinit {
+        
+        println("will call de-init on dilemma cell")
+        
+//        let actionsLeftButton = dilemmaView.leftButton.actionsForTarget(self, forControlEvent: UIControlEvents.TouchUpInside)
+//        let actionsRightButton = dilemmaView.rightButton.actionsForTarget(self, forControlEvent: UIControlEvents.TouchUpInside)
+//        dilemmaView.leftButton.removeTarget(target: self, action: actionsLeftButton, forControlEvents: UIControlEvents.TouchUpInside)
+//        dilemmaView.rightButton.remo
     }
 }

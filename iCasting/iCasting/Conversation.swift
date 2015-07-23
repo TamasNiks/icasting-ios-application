@@ -30,8 +30,8 @@ struct ConversationToken : Printable {
 class Conversation: NSObject {
     
     let matchID: String
-    let messageList: MessageListExtractor = MessageListExtractor()
-    var socketCommunicationHandler: SocketCommunicationHandler?
+    let messageList: MessageList = MessageList()
+    var socketCommunicator: SocketCommunicator?
 
     
     dynamic var incommingUser: Bool = false // Indicates whether the chat partner of the client is available
@@ -48,11 +48,11 @@ class Conversation: NSObject {
     }
     
     func leaveConversation() {
-        self.socketCommunicationHandler?.stop()
+        self.socketCommunicator?.stop()
     }
     
     func enterConversation() {
-        self.socketCommunicationHandler?.start()
+        self.socketCommunicator?.start()
     }
     
 }
@@ -70,8 +70,8 @@ extension Conversation : SocketCommunicationHandlerDelegate {
     
     private func createSocketCommunicationHandler() {
         
-        self.socketCommunicationHandler = SocketCommunicationHandler(conversationToken: self.conversationToken!.token)
-        self.socketCommunicationHandler?.delegate = self
+        self.socketCommunicator = SocketCommunicator(conversationToken: self.conversationToken!.token)
+        self.socketCommunicator?.delegate = self
     }
     
 
@@ -245,12 +245,12 @@ extension Conversation : SocketCommunicationHandlerDelegate {
         let acceptTalent: Bool? = unwrap(byWho["acceptTalent"])
         let accepted: Bool?     = unwrap(byWho["accepted"])
         
-        println("acceptClient")
-        println(acceptClient)
-        println("acceptTalent")
-        println(acceptTalent)
-        println("accepted")
-        println(accepted)
+//        println("acceptClient")
+//        println(acceptClient)
+//        println("acceptTalent")
+//        println(acceptTalent)
+//        println("accepted")
+//        println(accepted)
         
         message.offer?.stateComponents = StateComponents(acceptClient: acceptClient, acceptTalent: acceptTalent, accepted: accepted)
         
@@ -300,10 +300,10 @@ extension Conversation: MessageCommunicationProtocol {
 
     func sendMessage(text: String, callBack: MessageCommunicationCallBack) {
      
-        let m: Message = Message(id: "", owner: Auth.auth.user_id!, role: Role.Outgoing, type: TextType.Text)
+        let m: Message = Message(id: String(), owner: Auth.passport!.user_id, role: Role.Outgoing, type: TextType.Text)
         m.body = text
 
-        self.socketCommunicationHandler?.sendMessage(m.body!, acknowledged: { (data) -> () in
+        self.socketCommunicator?.sendMessage(m.body!, acknowledged: { (data) -> () in
 
             if let d = data {
                 if let error: ICErrorInfo = ICError(string: d[0] as? String).getErrors() {
@@ -319,7 +319,7 @@ extension Conversation: MessageCommunicationProtocol {
     
     func acceptOffer(message: Message, callBack: MessageCommunicationCallBack) {
 
-        self.socketCommunicationHandler?.acceptOffer(message.id, acknowledged: { (data) -> () in
+        self.socketCommunicator?.acceptOffer(message.id, acknowledged: { (data) -> () in
             
             if let d = data {
                 let error: ICErrorInfo? = self.decideOfferAcceptRejection(d, withMessageToUpdate: message)
@@ -330,7 +330,7 @@ extension Conversation: MessageCommunicationProtocol {
     
     func rejectOffer(message: Message, callBack: MessageCommunicationCallBack) {
         
-        self.socketCommunicationHandler?.rejectOffer(message.id, acknowledged: { (data) -> () in
+        self.socketCommunicator?.rejectOffer(message.id, acknowledged: { (data) -> () in
             
             if let d = data {
                 let error: ICErrorInfo? = self.decideOfferAcceptRejection(d, withMessageToUpdate: message)
@@ -341,7 +341,7 @@ extension Conversation: MessageCommunicationProtocol {
     
     func acceptContract(message: Message, callBack: MessageCommunicationCallBack) {
         
-        self.socketCommunicationHandler?.acceptContract(message.id, acknowledged: { (data) -> () in
+        self.socketCommunicator?.acceptContract(message.id, acknowledged: { (data) -> () in
             
             if let d = data {
                 let error: ICErrorInfo? = self.decideContractAcceptRejection(d, withMessageToUpdate: message)
@@ -352,7 +352,7 @@ extension Conversation: MessageCommunicationProtocol {
 
     func rejectContract(message: Message, callBack: MessageCommunicationCallBack) {
         
-        self.socketCommunicationHandler?.rejectContract(message.id, acknowledged: { (data) -> () in
+        self.socketCommunicator?.rejectContract(message.id, acknowledged: { (data) -> () in
 
             if let d = data {
                 let error: ICErrorInfo? = self.decideContractAcceptRejection(d, withMessageToUpdate: message)
@@ -363,7 +363,7 @@ extension Conversation: MessageCommunicationProtocol {
     
     func acceptRenegotiationRequest(message: Message, callBack: MessageCommunicationCallBack) {
         
-        self.socketCommunicationHandler?.acceptRenegotiationRequest(message.id, acknowledged: { (data) -> () in
+        self.socketCommunicator?.acceptRenegotiationRequest(message.id, acknowledged: { (data) -> () in
             
             if let d = data {
                 let accepted = true
@@ -375,7 +375,7 @@ extension Conversation: MessageCommunicationProtocol {
     
     func rejectRenegotiationRequest(message: Message, callBack: MessageCommunicationCallBack) {
     
-        self.socketCommunicationHandler?.rejectRenegotiationRequest(message.id, acknowledged: { (data) -> () in
+        self.socketCommunicator?.rejectRenegotiationRequest(message.id, acknowledged: { (data) -> () in
             
             if let d = data {
                 let accepted = false
@@ -419,12 +419,7 @@ extension Conversation : ModelRequest {
     func get(callBack: RequestClosure) {
         
         // This is a two step request, first get the conversation, and for instant sending and receiving messages, we need a conversation token
-        
-        let url: String = APIMatch.MatchConversation(self.matchID).value
-        let access_token: AnyObject = Auth.auth.access_token as! AnyObject
-        let params: [String : AnyObject] = ["access_token":access_token]
-        
-        request(Method.GET, url, parameters: params, encoding: ParameterEncoding.URL).responseJSON() { (request, response, json, error) -> Void in
+        request(Router.Match.MatchConversation(self.matchID)).responseJSON() { (request, response, json, error) -> Void in
                 
             // Network or general errors?
             if let errors = ICError(error: error).getErrors() {
@@ -485,10 +480,10 @@ extension Conversation : ModelRequest {
                 callBack(failure: nil)
                 
                 // After that, add the listeners, this method will call the delegate for the handlers
-                self.socketCommunicationHandler?.addListeners()
+                self.socketCommunicator?.addListeners()
                 
                 // If everything is ready, start the socket
-                self.socketCommunicationHandler?.start()
+                self.socketCommunicator?.start()
                 
             }
         }
@@ -497,11 +492,7 @@ extension Conversation : ModelRequest {
     
     private func requestConversationToken(callBack: JSONResponeType) {
         
-        let url: String = APIMatch.MatchConversationToken(self.matchID).value
-        let access_token: AnyObject = Auth.auth.access_token as! AnyObject
-        let params: [String : AnyObject] = ["access_token":access_token]
-        
-        request(Method.GET, url, parameters: params, encoding: ParameterEncoding.URL)
+        request(Router.Match.MatchConversationToken(self.matchID))
             .responseJSON() { (request, response, json, error) -> Void in
                 callBack(request: request, response: response, json: json, error: error)
         }

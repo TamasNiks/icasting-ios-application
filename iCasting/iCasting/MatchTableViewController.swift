@@ -12,7 +12,7 @@ import UIKit
 class MatchTableViewController: UITableViewController, MatchCardDelegate {
 
     let match: Match = Match()
-    
+
     @IBAction func onFilterBarButtonTouch(sender: AnyObject) {
         
         let ac = FilterMatchAlertController(resource: match) {
@@ -27,32 +27,56 @@ class MatchTableViewController: UITableViewController, MatchCardDelegate {
         self.presentViewController(ac, animated: true, completion: nil)
     }
     
+    // MARK: - ViewController Life cycle
+
     override func viewDidLoad() {
         
         super.viewDidLoad()
         
-        refreshControl = UIRefreshControl()
-        refreshControl?.addTarget(self, action: ("handleRefresh:"), forControlEvents: UIControlEvents.ValueChanged)
-        refreshControl?.beginRefreshing()
-        handleRequest()
+        refreshControl?.addTarget(self, action: ("handleRefresh"), forControlEvents: UIControlEvents.ValueChanged)
+        
+        firstLoadRequest()
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
     
-    func handleRefresh(sender: AnyObject) {
-        
+    
+//    override func viewDidAppear(animated: Bool) {
+//        super.viewDidAppear(animated)
+//        let aiv = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
+//        aiv.frame = CGRectMake(self.view.center.x, self.view.center.y, 20, 20)
+//        aiv.color = UIColor.grayColor()
+//        self.view.addSubview(aiv)
+//    }
+    
+    func firstLoadRequest() {
+    
+        tableView.separatorStyle = UITableViewCellSeparatorStyle.None
+        startAnimatingLoaderTitleView()
+        handleRequest()
+    }
+    
+    func endLoadRequest() {
+        tableView.separatorStyle = UITableViewCellSeparatorStyle.SingleLine
+        stopAnimatingLoaderTitleView()
+        refreshControl?.endRefreshing()
+    }
+    
+    func handleRefresh() {
         let popTime = dispatch_time(DISPATCH_TIME_NOW, Int64(NSEC_PER_SEC))
-        dispatch_after(popTime, dispatch_get_main_queue(), {
+        dispatch_after(popTime, dispatch_get_main_queue()) { () -> Void in
             self.handleRequest()
-        })
+        }
     }
     
     func handleRequest() {
-        
+
         self.match.get() { failure in
-            self.refreshControl?.endRefreshing()
+
+            self.endLoadRequest()
+            
             println(failure?.description)
             
             self.match.filter(field: FilterStatusFields.Closed, allExcept: true)
@@ -89,7 +113,7 @@ class MatchTableViewController: UITableViewController, MatchCardDelegate {
 //            .Status,
 //            .JobProfileTalent])
         
-        let cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifier.Match.Detail.rawValue, forIndexPath: indexPath) as! MatchCell
+        let cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifier.Match.Detail.rawValue, forIndexPath: indexPath) as! MatchOverviewCell
         cell.configureCell(matchCard)
         return cell
     }
@@ -128,8 +152,10 @@ class MatchTableViewController: UITableViewController, MatchCardDelegate {
     func didAcceptMatch() {
         
         println("DID ACCEPT MATCH DELEGATE CALL")
-        if let indexPath: NSIndexPath? = self.tableView.indexPathForSelectedRow() {
-            self.tableView.reloadRowsAtIndexPaths([indexPath as! AnyObject], withRowAnimation: UITableViewRowAnimation.None)
+        if let indexPath: NSIndexPath = self.tableView.indexPathForSelectedRow() {
+            self.tableView.reloadRowsAtIndexPaths([indexPath as AnyObject], withRowAnimation: UITableViewRowAnimation.None)
+            //self.tableView.cellForRowAtIndexPath(indexPath)?.setSelected(true, animated: true)
+            self.tableView.selectRowAtIndexPath(indexPath, animated: true, scrollPosition: UITableViewScrollPosition.None)
         }
     }
     

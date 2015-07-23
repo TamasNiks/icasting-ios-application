@@ -62,7 +62,7 @@ class FamilyTableViewController: UITableViewController {
         setActivityIndicator()
         
         
-        Auth().logout() { failure in
+        Auth.logout() { failure in
             if failure == nil {
                 println("Logout request successfully, unwind to login")
                 self.performSegueWithIdentifier("unwindToLogin", sender: self)
@@ -78,7 +78,7 @@ class FamilyTableViewController: UITableViewController {
     
     func setNavigationItemTitle() {
         let format: String = NSLocalizedString("castingobjects.navigationitem.title", comment: "Casting objects navigation bar title")
-        self.navigationItem.title = String(format: format, User.sharedInstance.getValues()!.first)
+        self.navigationItem.title = String(format: format, User.sharedInstance.values!.first)
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -93,13 +93,11 @@ class FamilyTableViewController: UITableViewController {
     // MARK: - Table view data source
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        // #warning Potentially incomplete method implementation.
         // Return the number of sections.
         return 1
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete method implementation.
         // Return the number of rows in the section.
         return User.sharedInstance.castingObjects.count
     }

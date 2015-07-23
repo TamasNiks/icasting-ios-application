@@ -29,8 +29,8 @@
 /* Class = "UITabBarItem"; title = "News"; ObjectID = "FpU-yf-duC"; */
 "FpU-yf-duC.title" = "Nieuws";
 
-/* Class = "UINavigationItem"; title = "Matches"; ObjectID = "HFP-w8-LJr"; */
-"HFP-w8-LJr.title" = "Matches";
+/* Class = "UINavigationItem"; title = "Voorselectie"; ObjectID = "HFP-w8-LJr"; */
+"HFP-w8-LJr.title" = "Voorselectie";
 
 /* Class = "UIButton"; normalTitle = "Reject"; ObjectID = "JMC-0f-hHa"; */
 "JMC-0f-hHa.normalTitle" = "Afslaan";
@@ -38,8 +38,8 @@
 ///* Class = "UILabel"; text = "subtitle"; ObjectID = "JMm-o4-zvr"; */
 //"JMm-o4-zvr.text" = "subtitle";
 
-/* Class = "UITabBarItem"; title = "Matches"; ObjectID = "Jam-WV-to2"; */
-"Jam-WV-to2.title" = "Matches";
+/* Class = "UITabBarItem"; title = "Voorselectie"; ObjectID = "Jam-WV-to2"; */
+"Jam-WV-to2.title" = "Voorselectie";
 
 /* Class = "UILabel"; text = "Detail"; ObjectID = "QVs-DK-bl8"; */
 "QVs-DK-bl8.text" = "Detail";

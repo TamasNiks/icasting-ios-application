@@ -25,7 +25,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
         self.addObserver(self, forKeyPath: "tryToLogin", options: nil, context: nil)
     }
     
@@ -37,9 +36,10 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         self.keyboardController?.setObserver()
         self.keyboardController?.goingUpDivider = 8
         
-        // TODO: Comment this line on App Review
+        // TODO: Comment this line when going through App Review
         setTestDataOnInputFields()
         
+        // Try to login, if there's authentication data stored somewhere, it will login
         tryLoginSequence()
     }
     
@@ -73,8 +73,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         // Create the credentials
         var c: UserCredentials = UserCredentials(email: emailTextField.text, password: passwordTextField.text)
         
-        // and check them against validation rules
-        if !startValidateUserInput(c) {return}
+        // and check them against validation rules, stop executing the functions if there are errors
+        if !validateUserInput(c) { return }
         
         // The credentials are valid, try to login the user with the given credentials
         let appCredentials = Credentials()
@@ -83,25 +83,20 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
     
     
-    private func startValidateUserInput(c: UserCredentials) -> Bool {
+    private func validateUserInput(c: UserCredentials) -> Bool {
         
         // Check for errors through the Validator class
         if let list = Validator(credentials: c).check() {
             
-            var fullStr: String = ""
+            var message: String = ""
             for error: ErrorValidator in list {
-                fullStr += String(format: "- %@",arguments: [error.getLocalizedDescription()])
-                fullStr += "\n"
+                message += String(format: "- %@",arguments: [error.getLocalizedDescription()])
+                message += "\n"
                 println("Error: \(error.getLocalizedDescription())")
             }
             
-            let alertView = UIAlertView(
-                title: NSLocalizedString("Error", comment: ""),
-                message: fullStr,
-                delegate: nil,
-                cancelButtonTitle: nil,
-                otherButtonTitles: "Ok")
-            
+            let title = NSLocalizedString("Error", comment: "")
+            let alertView = UIAlertView( title: title, message: message, delegate: nil, cancelButtonTitle: nil, otherButtonTitles: "Ok")
             alertView.show()
             
             return false
@@ -115,13 +110,12 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         println("LoginViewController: tryLoginSequence")
         
         // First check if the user still exists, whether through facebook or normal login
-        if let
-            access_token = Auth.auth.access_token,
-            user_id = Auth.auth.user_id
+        if let passport = Auth.passport
         {
-            startLoginSequence(Credentials())
+            // Because the user is still loged in, we give don't send credentials as parameters
+            startLoginSequence(nil)
         }
-        // If the user doesn't have an authentication stored, check if Facebook is still logged in, if it is, logout, because the try to login depends totally on the access_token and user_id of iCasting. If it isn't there, the user should login manually, hence logout on facebook
+        // If the user doesn't have an passport authentication stored, check if Facebook is still logged in, if it is, logout, because the try to login depends totally on the access_token and user_id of iCasting. If it isn't there, the user should login manually, hence logout on facebook
         else {
             if let fbsdkCurrentAccessToken = FBSDKAccessToken.currentAccessToken() {
                 FBSDKLoginManager().logOut()
@@ -130,69 +124,91 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
     
     
-    private func startLoginSequence(c: Credentials) {
+    private func startLoginSequence(c: Credentials?) {
         
         self.tryToLogin = true
 
-        // TODO: When the access_token expires, (if it will expire), we need to find a way with error messages from the server to clear the tokens
-        
-        Auth().login(c) { errors in
-        
-            self.tryToLogin = false
-            
-            if let errors = errors {
-                
-                println(errors)
-                self.performErrorHandling(errors)
+        Auth.login(c) { error in
+
+            // First do some error handling from the login
+            if let error = error {
+                self.performErrorHandling(error)
                 return
             }
             
-            // Check if the user is client, because clients are not yet supported, show an alert and log out
-            
-            if User.sharedInstance.isClient {
+            // Create a completionHandler which gets called after all the necessary requests are done
+            let completionHandler: () -> () = {
+
+                self.tryToLogin = false
                 
-                let av = UIAlertView(title: NSLocalizedString("Announcement", comment: "Title of alert"),
-                    message: NSLocalizedString("login.alert.client.notsupported", comment: ""),
-                    delegate: nil,
-                    cancelButtonTitle: nil,
-                    otherButtonTitles: "Ok")
-                av.show()
+                // Check if the user is client, because clients are not yet supported, show an alert and log out
                 
-                Auth().logout({ (failure) -> () in println(failure) })
-                return
-            }
-            
-            // Try to register the device
-            
-            Push().registerDevice() { failure in
-                
-                if let failure = failure {
-                    println("Registering failure")
-                }
-                
-                if let config = Push.config {
-                    println("DeviceID: \(config.deviceID)")
+                if User.sharedInstance.isClient {
+                    
+                    let title = NSLocalizedString("Announcement", comment: "Title of alert")
+                    let message = NSLocalizedString("login.alert.client.notsupported", comment: "")
+                    let av = UIAlertView(title: title, message: message, delegate: nil, cancelButtonTitle: nil, otherButtonTitles: "Ok")
+                    av.show()
+                    
+                    Auth.logout({ (failure) -> () in println(failure) })
                     return
                 }
-            }
-            
-            // If the user is not a client or talent, it is a manager, it will have casting objects, show the overview
-            
-            if User.sharedInstance.isManager {
                 
-                self.performSegueWithIdentifier("showCastingObjects", sender: self)
-                return
+                // Try to register the device
+                
+                Push().registerDevice() { error in
+                    
+                    if let error = error {
+                        println("DEBUG: Registering failure - \(error)")
+                    }
+                }
+                
+                // If the user is not a client or talent, it is a manager, it will have casting objects, show the overview
+                
+                if User.sharedInstance.isManager {
+                    
+                    self.performSegueWithIdentifier("showCastingObjects", sender: self)
+                    return
+                }
+                
+                // If the user is talent, there's just one casting object, it has already been set in the model
+                
+                self.performSegueWithIdentifier("showMain", sender: self)
             }
             
-            // If the user is talent, there's just one casting object, it has already been set in the model
             
-            self.performSegueWithIdentifier("showMain", sender: self)
-
+            // Do the following up HTTP requests to get the app data
+            
+            // Get general user information
+            UserRequest().execute { error -> () in
+                
+                if let error = error {
+                    self.performErrorHandling(error)
+                    return
+                }
+                
+                // Get the casting object(s) from the user account
+                CastingObjectRequest().execute { error -> () in
+                    
+                    if let error = error {
+                        self.performErrorHandling(error)
+                        return
+                    }
+                    
+                    println(User.sharedInstance)
+                    completionHandler()
+                }
+            }
+            
         }
         
     }
     
     func performErrorHandling(errors: ICErrorInfo) {
+        
+        self.tryToLogin = false
+        
+        println(errors)
         
         if errors is ICAPIErrorInfo {
             if (errors as! ICAPIErrorInfo).name == ICAPIErrorNames.PassportAuthenticationError.rawValue {
@@ -202,27 +218,24 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
             }
         }
         
-        let fullStr: String = errors.localizedFailureReason
-        let alertView = UIAlertView(
-            title: NSLocalizedString("Login Error", comment: ""),
-            message: fullStr,
-            delegate: nil,
-            cancelButtonTitle: nil,
-            otherButtonTitles: "Ok")
+        let message = errors.localizedFailureReason
+        let title = NSLocalizedString("Login Error", comment: "")
+        let alertView = UIAlertView(title: title, message: message, delegate: nil, cancelButtonTitle: nil, otherButtonTitles: "Ok")
         alertView.show()
     }
     
     override func observeValueForKeyPath(keyPath: String, ofObject object: AnyObject, change: [NSObject : AnyObject], context: UnsafeMutablePointer<Void>) {
         
-        if tryToLogin == true {
-            SwiftSpinner.show("Login...")
-            self.loginButton.enabled = false
-        } else {
-            SwiftSpinner.hide()
-            self.loginButton.enabled = true
+        if keyPath == "tryToLogin" {
+            if tryToLogin == true {
+                SwiftSpinner.show("Login...")
+                self.loginButton.enabled = false
+            } else {
+                SwiftSpinner.hide()
+                self.loginButton.enabled = true
+            }
         }
     }
-    
 }
 
 
@@ -245,10 +258,9 @@ extension LoginViewController : FBSDKLoginButtonDelegate {
         }
     }
     
-    // Because the interface changes to another screen, the logout button wil never be seen. The user logs out via another screen. Thus we need to manage the logout manually.
     func loginButtonDidLogOut(loginButton: FBSDKLoginButton!) {
-        
-        Auth().logout({ (failure) -> () in println(failure) })
+        // Because the interface changes to another screen, the logout button wil never be seen. The user logs out via another screen. Thus we need to manage the logout manually.
+        Auth.logout { error in println(error) }
     }
 }
 
@@ -261,14 +273,14 @@ extension LoginViewController {
     func setTestDataOnInputFields() {
         
         // Family account
-        //        self.emailTextField.text = "tim.van.steenoven+family@icasting.com"
-        //        self.passwordTextField.text = "test"
+        //self.emailTextField.text = "tim.van.steenoven+family@icasting.com"
+        //self.passwordTextField.text = "test"
         
         self.emailTextField.text = "tim.van.steenoven@icasting.com"
         self.passwordTextField.text = "test"
         
-        //self.emailTextField.text = "boyd.rehorst+familie-account@icasting.com"
-        //self.passwordTextField.text = "abc"
+//        self.emailTextField.text = "boyd.rehorst+familie-account@icasting.com"
+//        self.passwordTextField.text = "abc"
         
         //        self.emailTextField.text = "timvs.nl@gmail.com"
         //        self.passwordTextField.text = "test"
@@ -279,7 +291,7 @@ extension LoginViewController {
     }
     
     func testLogout() {
-        Auth().logout({ (failure) -> () in println(failure) })
+        Auth.logout { error in println(error) }
     }
     
 }

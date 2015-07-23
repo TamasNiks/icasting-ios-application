@@ -11,21 +11,17 @@ import Foundation
 
 // TODO: JSON data is updated on the server, do something with it.
 
-class TalentMatchCard: MatchCard {
+extension MatchCard {
     
     func accept(callBack:RequestClosure) {
         
-        if let ID = super.getID(FieldID.MatchCardID) {
-            
-            var url: String = APIMatch.MatchAcceptTalent(ID).value
-            var access_token: AnyObject = Auth.auth.access_token as! AnyObject
-            var params: [String : AnyObject] = ["access_token":access_token]
+        if let ID = self.getID(FieldID.MatchCardID) {
             
             // TEST: comment the request code below if you do the accept test
             testAccept(callBack)
 
             /*
-            request(.POST, url, parameters: params).responseJSON() { (request, response, json, error) in
+            request(Router.Match.MatchAcceptTalent(ID)).responseJSON() { (request, response, json, error) in
                 
                 if (error != nil) {
                     NSLog("Error: \(error)")
@@ -55,17 +51,13 @@ class TalentMatchCard: MatchCard {
     
     func reject(callBack:RequestClosure) {
         
-        if let ID = super.getID(FieldID.MatchCardID) {
-            
-            var url: String = APIMatch.MatchRejectTalent(ID).value
-            var access_token: AnyObject = Auth.auth.access_token as! AnyObject
-            var params: [String : AnyObject] = ["access_token":access_token]
+        if let ID = self.getID(FieldID.MatchCardID) {
             
             // TEST: comment the request code below if you do the reject
             testReject(callBack)
 
             /*
-            request(.POST, url, parameters: params).responseJSON() { (request, response, json, error) in
+            request(APIMatch.MatchRejectTalent(ID)).responseJSON() { (request, response, json, error) in
                 
                 if (error != nil) {
                     NSLog("Error: \(error)")

@@ -28,13 +28,11 @@ class AcceptAlertController : ICAlertController {
     
     func configureAlertController() -> UIAlertController {
         
-        alertController.addAction(UIAlertAction(title: NSLocalizedString("Accept", comment: ""),
-            style: UIAlertActionStyle.Destructive) { (alertAction) -> Void in
+        alertController.addAction(UIAlertAction(title: NSLocalizedString("Accept", comment: ""), style: UIAlertActionStyle.Destructive) { (alertAction) -> Void in
                 self.postAction()
         })
         
-        alertController.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: ""),
-            style: UIAlertActionStyle.Cancel, handler: { (action) -> Void in
+        alertController.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: UIAlertActionStyle.Cancel, handler: { (action) -> Void in
         }))
         return alertController
     }

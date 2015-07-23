@@ -1,5 +1,5 @@
 //
-//  Contract.swift
+//  MessageTerms.swift
 //  iCasting
 //
 //  Created by Tim van Steenoven on 15/06/15.
@@ -8,9 +8,9 @@
 
 import Foundation
 
-// Different parts off a message are encapsulated.
+// This struct acts as a transformer from one value to another
 
-struct MessageContract {
+struct MessageTerms {
     
     var contract: [String:JSON] = [String:JSON]()
     
@@ -49,8 +49,7 @@ struct MessageContract {
     
     private func getLocalizationForValue(value: String) -> String {
         
-        let prefix = "negotiations.offer.title.%@"
-        let formatted = String(format: prefix, value)
+        let formatted = String(format: "negotiations.offer.title.%@", value)
         let translated = NSLocalizedString(formatted, comment: "")
         
         let postfix = NSLocalizedString("negotiations.agreement", comment: "")

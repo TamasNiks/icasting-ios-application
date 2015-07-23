@@ -31,7 +31,7 @@ class iCastingOfferTest: XCTestCase {
     
     func testContractOfferState() {
     
-        var offer: Offer = Offer(stateComponents: StateComponents(acceptClient: true, acceptTalent: nil, accepted: nil))
+        var offer: MessageOffer = MessageOffer(stateComponents: StateComponents(acceptClient: true, acceptTalent: nil, accepted: nil))
         XCTAssertTrue(offer.contractState != nil, "Should not be nil")
     
     }
@@ -65,7 +65,7 @@ class iCastingOfferTest: XCTestCase {
         var offerSocketDataExtractor = OfferSocketDataExtractor(offer: dummyDataArray)
         
         var bool = false
-        if let value: Offer = offerSocketDataExtractor.value {
+        if let value: MessageOffer = offerSocketDataExtractor.value {
             
             if let values = value.values {
                 for keyval: KeyVal in values {

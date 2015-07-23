@@ -21,7 +21,6 @@ class iCastingTests: XCTestCase {
         super.tearDown()
     }
     
-        
     func testSockets() {
         
         let socket = SocketIOClient(socketURL: "https://ws-demo.icasting.net/?auth=2574dfa254b540999a44a055c65df372bf7cf39355476603fd5f86e446c58945554779c4fd5f86e446c58fc0f7d14955")
@@ -29,9 +28,6 @@ class iCastingTests: XCTestCase {
         socket.on("connect") {data, ack in
             println("socket connected")
         }
-        
-        
-        
     }
     
     
@@ -71,7 +67,7 @@ class iCastingTests: XCTestCase {
         
         var params : [String:String] = ["access_token":"551d58a226042f74fb745533$aav7DtkBMnG/vBDzb5RHfIzuZY++39r1vCXrj4jxVHA="]
         var type : RequestProtocol = RequestFactory.request(ICMethod.post)
-        var request = type.create(APIAuth.Logout, content: (insert: nil, params: params))
+        var request = type.create(Router.Auth.Logout, content: (insert: nil, params: params))
         
         var data : NSData = request.HTTPBody!
         
@@ -86,7 +82,7 @@ class iCastingTests: XCTestCase {
         var params : [String:String] = ["access_token":"placeholder_token"]
         
         var type : RequestProtocol = RequestFactory.request(ICMethod.post)
-        var request = type.create(APIAuth.Logout, content: (insert: nil, params: params))
+        var request = type.create(Router.Auth.Logout, content: (insert: nil, params: params))
 
         var values = request.allHTTPHeaderFields!
         println("AllHTTPHeaderFields:")
@@ -133,7 +129,7 @@ class iCastingTests: XCTestCase {
     
     func testURLBuilder() {
         
-        let url: NSURL = ICURL.createURL(APINews.NewsItems, insert: nil, params: nil)
+        let url: NSURL = ICURL.createURL(Router.News.NewsItems, insert: nil, params: nil)
         XCTAssert(url.absoluteString == "https://api-demo.icasting.net/api/v1/newsItems", "URL create successful")
         
 //        let url2: NSURL = ICURL.createURL(APINews.newsItemWithID, insert: ["2323123132313133"], params: nil)

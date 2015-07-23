@@ -67,6 +67,8 @@ class DilemmaView: UIView {
         }
     }
     
+    // INIT
+    
     override init(frame: CGRect) {
         
         super.init(frame: frame)

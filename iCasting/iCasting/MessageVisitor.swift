@@ -48,10 +48,10 @@ class MessageVisitor: AbstractMessageVisitor {
         
         if let textType: TextType = TextType(rawValue: type) {
 
-            var offer: Offer?
+            var offer: MessageOffer?
             let read: Bool      =   json["read"].boolValue      // Has the message been read or not
             var body: String    =   json["body"].stringValue    // If it is an text message, the body of the message will exist
-            let contract        =   MessageContract(contract: json["contract"].dictionaryValue).value   // Contract key value pairs if they exist
+            let contract        =   MessageTerms(contract: json["contract"].dictionaryValue).value   // Contract key value pairs if they exist
  
 
             if textType == TextType.Offer {

@@ -33,28 +33,23 @@ enum NotificationTypes: String {
         
         switch self {
             
-        case .AchievementComplete:
+        case
+        .AchievementComplete:
             var args: [CVarArgType] = [parameters["desc"]!.stringValue, String(stringInterpolationSegment: parameters["xpReward"]!.intValue)]
             return String(format: format, arguments: args)
             
-        case .MatchMatched:
-            var args: [CVarArgType] = [parameters["jobTitle"]!.stringValue]
-            return String(format: format, arguments: args)
-            
-        case .MatchClientAccepted:
-            var args: [CVarArgType] = [parameters["jobTitle"]!.stringValue]
-            return String(format: format, arguments: args)
-            
-        case .MatchClientRejected:
-            var args: [CVarArgType] = [parameters["jobTitle"]!.stringValue]
-            return String(format: format, arguments: args)
-            
-        case .ChatMessage:
-            var args: [CVarArgType] = [parameters["jobTitle"]!.stringValue]
-            return String(format: format, arguments: args)
-            
-        case .ChatOffer:
-            return "Description of chat offer."//String(format: format, arguments: args)
+        case
+        .MatchMatched,
+        .MatchClientAccepted,
+        .MatchClientRejected,
+        .ChatMessage,
+        .ChatOffer:
+            if let jobTitle = parameters["jobTitle"] {
+                var args: [CVarArgType] = [jobTitle.stringValue]
+                return String(format: format, arguments: args)
+            } else {
+                return "-"
+            }
         }
     }
 }
@@ -76,82 +71,60 @@ enum NotificationTypes: String {
 //}
 
 
-class Notifications : ModelProtocol {
+final class NotificationItem : Printable, ResponseCollectionSerializable {
     
-    struct NotificationBody : Printable {
-        
-        let title: String
-        let desc: String
-        let date: String
-        
-        var description: String {
-            return "title: \(title), desc: \(desc), date: \(date)"
-        }
-        
+    let title: String
+    let desc: String
+    let date: String
+    
+    init(title: String, desc: String, date: String) {
+        self.title = title
+        self.desc = desc
+        self.date = date
     }
     
-    //var notifications: [Notification] = [Notification]()
-    var notifications: [NotificationBody] = [NotificationBody]()
-    
-    func initializeModel(json: JSON) {
-     
-        setBody(json)
+    var description: String {
+        return "title: \(title), desc: \(desc), date: \(date)"
     }
     
-    private func setBody(json: JSON) {
+    @objc static func collection(#response: NSHTTPURLResponse, representation: AnyObject) -> [NotificationItem] {
         
-        if let jsonArray: [JSON] = json.array {
+        var list = [NotificationItem]()
+        if let representation = representation as? [AnyObject] {
             
-            notifications = jsonArray.map( { (transform: JSON) -> NotificationBody in
+            list = representation.map { (transform: AnyObject) -> NotificationItem in
+                
+                let transform = JSON(transform)
                 
                 let type: String = transform["type"].stringValue
                 
                 if let notificationType = NotificationTypes(rawValue: type) {
-
+                    
                     let parameters = transform["parameters"].dictionaryValue
                     let title = notificationType.getTitle()
                     let desc = notificationType.getDescription(parameters)
                     let created = transform["created"].stringValue.ICdateToString(ICDateFormat.News) ?? "no date"
-                    return NotificationBody(title: title, desc: desc, date: created)
+                    return NotificationItem(title: title, desc: desc, date: created)
                 }
                 
                 println("DEBUG: \(type)")
-                return NotificationBody(title: "Unknown notification", desc: "Please contact me @ tim.van.steenoven@icasting.com", date: "-")
-            })
+                return NotificationItem(title: "Unknown notification", desc: "Please contact me @ tim.van.steenoven@icasting.com", date: "-")
+            }
+            return list
         }
+        
+        return [NotificationItem]()
     }
+}
+
+
+class Notifications: SubscriptType {
     
-    subscript(index: Int) -> NotificationBody {
+    var notifications: [NotificationItem] = [NotificationItem]()
+    
+    subscript(index: Int) -> NotificationItem {
         return notifications[index]
     }
 }
 
 
-extension Notifications : ModelRequest {
-    
-    func get(callBack: RequestClosure) {
-        
-        let url = APINotifications.Notifications.value
-        let params = [Authentication.TOKEN_KEY : Auth.auth.access_token!]
-        request(.GET, url, parameters: params, encoding: ParameterEncoding.URL).responseJSON { (request, response, json, error) -> Void in
-            
-            var errors: ICErrorInfo?
-            if let error = error {
-                errors = ICError(error: error).getErrors()
-            }
-            
-            if let json: AnyObject = json {
-                let json = JSON(json)
-                errors = ICError(json: json).getErrors()
-                if errors == nil {
-                    self.initializeModel(json)
-                }
-            }
-            
-            callBack(failure: errors)
-            
-        }
-        
-    }
-    
-}

@@ -8,18 +8,85 @@
 
 import UIKit
 
+class BlurredBackgroundView: UIView {
+    let imageView: UIImageView
+    let blurView: UIVisualEffectView
+    
+    override init(frame: CGRect) {
+        
+        let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.Light)
+        blurView = UIVisualEffectView(effect: blurEffect)
+        imageView = UIImageView(image: UIImage.gorgeousImage())
+        
+        super.init(frame: frame)
+        
+        addSubview(imageView)
+        addSubview(blurView)
+    }
+    
+    convenience required init(coder aDecoder: NSCoder) {
+        self.init(frame: CGRectZero)
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        imageView.frame = bounds
+        blurView.frame = bounds
+    }
+}
+
+extension UIImage {
+    class func gorgeousImage() -> UIImage {
+        return UIImage(named: "Default")!
+    }
+}
+
 class NotificationsTableViewController: UITableViewController {
 
     let NUM_SECTIONS: Int = 1
     
     var model: Notifications = Notifications()
     
+    @IBAction func onStopTapped(sender: UIBarButtonItem) {
+        
+        dismissViewControllerAnimated(true, completion: nil)
+
+    }
+    
+    // MARK: ViewController lifecycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        firstLoadRequest()
+    }
+    
+    func firstLoadRequest() {
+        
+        tableView.separatorStyle = UITableViewCellSeparatorStyle.None
+        startAnimatingLoaderTitleView()
+        handleRequest()
+    }
+    
+    func endLoadRequest() {
+        
+        tableView.separatorStyle = UITableViewCellSeparatorStyle.SingleLine
+        
+//        let blurredBackgroundView = BlurredBackgroundView(frame: CGRectZero)
+//        tableView.backgroundView = blurredBackgroundView
+//        tableView.separatorEffect = UIVibrancyEffect(forBlurEffect: blurredBackgroundView.blurView.effect as! UIBlurEffect)
+        
+        stopAnimatingLoaderTitleView()
+        refreshControl?.endRefreshing()
+    }
+    
+    
+    func handleRequest() {
+    
         model.get { (failure) -> () in
+            
+            self.endLoadRequest()
             self.tableView.reloadData()
         }
-        
     }
     
 //    override func viewWillDisappear(animated: Bool) {

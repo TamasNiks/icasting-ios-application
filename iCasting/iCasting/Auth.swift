@@ -31,7 +31,7 @@ struct FacebookCredentials {
 }
 //-----------------------------
 
-struct Authentication {
+struct Passport {
     
     static let TOKEN_KEY: String = "access_token"
     static let USERID_KEY: String = "user_id"
@@ -39,30 +39,30 @@ struct Authentication {
     private var _user_id : String? // = "551d58a226042f74fb745533"
     private var _access_token: String? //="551d58a226042f74fb745533$YENvtqK2Eis3oKCG6vo76IgilplRXFO9h+LMKT1HdRo="
     
-    private func saveAuthentication() {
-        println("Authentication will be saved")
+    private func savePassport() {
+        println("Passport will be saved")
         // TODO: A better store to save this information is probably the keychain, this is where Facebook it's access_token saves
-        NSUserDefaults.standardUserDefaults().setObject(_access_token, forKey: Authentication.TOKEN_KEY)
-        NSUserDefaults.standardUserDefaults().setObject(_user_id, forKey: Authentication.USERID_KEY)
+        NSUserDefaults.standardUserDefaults().setObject(_access_token, forKey: Passport.TOKEN_KEY)
+        NSUserDefaults.standardUserDefaults().setObject(_user_id, forKey: Passport.USERID_KEY)
     }
 
-    private mutating func clearAuthentication() {
+    private mutating func clearPassport() {
         _user_id = nil
         _access_token = nil
-        saveAuthentication()
-        println("Authentication successfully cleared")
+        savePassport()
+        println("Passport successfully cleared")
     }
     
     var access_token : String? {
 
-        var value: String? = NSUserDefaults.standardUserDefaults().objectForKey(Authentication.TOKEN_KEY) as? String
+        var value: String? = NSUserDefaults.standardUserDefaults().objectForKey(Passport.TOKEN_KEY) as? String
         println("Access token from NSuserDefaults: " + (value ?? "No access token set"))
         return value
     }
     
     var user_id : String? {
 
-        var value: String? = NSUserDefaults.standardUserDefaults().objectForKey(Authentication.USERID_KEY) as? String
+        var value: String? = NSUserDefaults.standardUserDefaults().objectForKey(Passport.USERID_KEY) as? String
         println("UserID from NSuserDefaults: " + (value ?? "No userid set"))
         return value
     }
@@ -75,79 +75,53 @@ typealias LoginClosure = RequestClosure
 class Auth {
     
     // If a new authentication construct is set, for example, if the login process has been succesfully finished
-    static var auth: Authentication = Authentication() {
+    private static var _passport: Passport = Passport() {
         willSet {
-            newValue.saveAuthentication()
+            newValue.savePassport()
         }
     }
     
     // Convenience getter to do the user id and access token check at once.
     static var passport: (user_id: String, access_token: String)? {
         if let
-            access_token = Auth.auth.access_token,
-            user_id = Auth.auth.user_id
+            access_token = Auth._passport.access_token,
+            user_id = Auth._passport.user_id
         {
             return (user_id: user_id, access_token: access_token)
         }
         return nil
     }
     
-    func login(credentials: Credentials, callBack: LoginClosure) {
+    static func login(credentials: Credentials?, callBack: LoginClosure) {
         
         LoginRequest(credentials: credentials).execute { errors -> () in
-
-            if let errors = errors {
-                callBack(failure: errors)
-                return
-            }
-            
-            // Get general user information
-            UserRequest().execute { errors -> () in
-
-                if let errors = errors {
-                    callBack(failure: errors)
-                    return
-                }
-                
-                // Get the casting object(s) from the user account
-                CastingObjectRequest().execute { error -> () in
-                 
-                    println(User.sharedInstance)
-                    callBack(failure: error)
-                }
-            }
+            callBack(failure: errors)
         }
     }
     
-    func logout(callBack: RequestClosure) {
+    static func logout(callBack: RequestClosure) {
+    
+        // First deregister the device
+        Push().deregisterDevice { failure in
+            
+            if let failure = failure {
+                println("DEBUG: "+failure.description)
+            }
         
-        if let token = Auth.auth.access_token {
-            
-            var params : [String:String] = [Authentication.TOKEN_KEY:token]
-            var req : NSURLRequest = (RequestFactory
-                .request(.post) as? RequestHeaderProtocol)!
-                .create(APIAuth.Logout, content: (insert: nil, params: params), withHeaders: ["Authorization":""])
-            
-            request(req).responseJSON(completionHandler: { (request, response, json, error) -> Void in
-               
-                if let error = error {
-                    let error: ICErrorInfo? = ICError(error: error).getErrors()
-                    callBack(failure: error)
-                }
+            request(Router.Auth.Logout).responseJSON(completionHandler: { (request, response, json, error) -> Void in
+                
+                var error: ICErrorInfo? = ICError(error: error).getErrors()
                 
                 if let json: AnyObject = json {
                     
                     let json = JSON(json)
-                    let errors: ICErrorInfo? = ICError(json: json).getErrors()
-                    
-                    if errors == nil {
-                        //println(json)
-                        Auth.auth.clearAuthentication()
+                    error = ICError(json: json).getErrors()
+                    if error == nil {
+                        Auth._passport.clearPassport()
                     }
-                    
-                    callBack(failure: errors)
                 }
                 
+                callBack(failure: error)
             })
         }
     }
@@ -164,9 +138,9 @@ protocol RequestCommand {
 class LoginRequest: RequestCommand {
     
     var loginType: LoginType = LoginType.NormalLogin
-    let credentials: Credentials
+    let credentials: Credentials?
     
-    init(credentials: Credentials) {
+    init(credentials: Credentials?) {
         self.credentials = credentials
     }
     
@@ -179,73 +153,56 @@ class LoginRequest: RequestCommand {
         }
         
         // Depending on which login credentials are set (facebook or normal), get the specific credentials
-        let rp = getRequestProperties()
+        let rp = getParameters()
         
         request(.POST, rp.url, parameters: rp.params).responseJSON() { (request, response, json, error) in
             
-            if let error = error {
-                let errors: ICErrorInfo? = ICError(error: error).getErrors()
-                callBack(failure: errors)
+            if let error = ICError(error: error).getErrors() {
+                callBack(failure: error)
             }
             
             if let json: AnyObject = json {
                 
-                println("LoginRequest call success")
-                let json = JSON(json)
-                let errors: ICErrorInfo? = ICError(json: json).getErrors()
+                let parsedJSON = JSON(json)
+                if let error: ICErrorInfo = ICError(json: parsedJSON).getErrors() {
                 
-                // Errors,
-                if errors == nil {
+                    println(error)
+                    callBack(failure: error)
+                    
+                } else {
 
-                    let authentication: Authentication = Authentication(
-                        _user_id:       json[Authentication.USERID_KEY].string,
-                        _access_token:  json[Authentication.TOKEN_KEY].string)
-
-                    Auth.auth = authentication
+                    let passport: Passport = Passport(
+                        _user_id:       parsedJSON[Passport.USERID_KEY].string,
+                        _access_token:  parsedJSON[Passport.TOKEN_KEY].string)
+                    
+                    Auth._passport = passport
+                    println(Auth.passport)
+                    
+                    callBack(failure: nil)
                 }
-                
-                callBack(failure: errors)
             }
         }
     }
     
     // In the future there can be more than two login methods, think about a better more loosly coupled implementation to cope with these methods
-    func getRequestProperties() -> (url:String, params:[String:AnyObject]) {
+    func getParameters() -> (url: URLStringConvertible, params: [String:AnyObject]) {
         
         // TODO: For a better flow, return nil if no params could be set.
-        var url: String = String()
+        var url: URLStringConvertible = String()
         var params: [String:AnyObject] = [String:AnyObject]()
         
-        if let c = credentials.userCredentials {
-            url = APIAuth.Login.value
-            params = ["email" : c.email, "password" : c.password]
+        if let credentials = self.credentials {
+            if let c = credentials.userCredentials {
+                url = Router.Auth.Login.url
+                params = ["email" : c.email, "password" : c.password]
+            }
+            
+            if let c = credentials.facebookCredentials {
+                url = Router.Auth.LoginFacebook.url
+                params = ["token" : c.userID]
+            }
         }
         
-        if let c = credentials.facebookCredentials {
-            url = APIAuth.LoginFacebook.value
-            params = ["token" : c.userID]
-        }
         return (url: url, params: params)
     }
 }
-
-
-class UserRequest: RequestCommand {
-    func execute(callBack:LoginClosure) {
-        (User.sharedInstance as ModelRequest).get { (failure) -> () in
-            callBack(failure: failure)
-        }
-    }
-}
-
-
-class CastingObjectRequest: RequestCommand {
-    func execute(callBack:LoginClosure) {
-        (CastingObject() as ModelRequest).get { (failure) -> () in
-            callBack(failure: failure)
-        }
-    }
-}
-
-
-

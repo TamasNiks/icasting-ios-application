@@ -13,7 +13,7 @@ protocol ValueProvider {
     var values: ValueType {get}
 }
 
-class CastingObject : ModelProtocol, ValueProvider {
+final class CastingObject : ValueProvider, ResponseCollectionSerializable {
 
     struct XPlog {
         let xp: Int
@@ -113,6 +113,7 @@ class CastingObject : ModelProtocol, ValueProvider {
         self.castingObjectValues = Values(stats: stats, xplog: xplog, counters: counters, achievementsProgress: achievementsProgress)
         
         
+        
 //        self.castingObjectValues = Values(
 //            id:             self.castingObject["_id"].string!,
 //            avatar:         self.castingObject["avatar"]["thumb"].string!,
@@ -127,11 +128,13 @@ class CastingObject : ModelProtocol, ValueProvider {
         self.castingObject = JSON("")
     }
     
-    func initializeModel(json: JSON) {
+    @objc static func collection(#response: NSHTTPURLResponse, representation: AnyObject) -> [CastingObject] {
         
-        println("CASTING OBJECTS JSON")
-        println(json)
+        let json = JSON(representation)
+        var castingObjects:[CastingObject] = json.arrayValue.map { CastingObject(json: $0) }
+        return castingObjects
     }
+    
     
     var id: String? {
         return self.castingObject["_id"].string
@@ -168,41 +171,11 @@ class CastingObject : ModelProtocol, ValueProvider {
     
 }
 
-extension CastingObject : ModelRequest {
-    
-    internal func get(callBack: RequestClosure) {
-        
-        if let passport = Auth.passport {
-        
-            let url: String = APICastingObject.UserCastingObjects(passport.user_id).value
-            var params: [String : AnyObject] = ["access_token":passport.access_token]
-            
-            request(.GET, url, parameters: params).responseJSON() { (request, response, json, error) in
-                
-                if (error != nil) {
-                    NSLog("Error: \(error)")
-                    println(request)
-                    println(response)
-                }
-                
-                if let json: AnyObject = json {
-                    
-                    println("CastingObjectRequest call success")
-                    let json = JSON(json)
-                    let errors: ICErrorInfo? = ICError(json: json).getErrors()
-                    
-                    if errors == nil {
-                        
-                        //self.initializeModel(json)
-                        
-                        var castingObjects:[CastingObject] = json.arrayValue.map { CastingObject(json: $0) }
-                        User.sharedInstance.castingObjects = castingObjects
-                        User.sharedInstance.setCastingObject(0)
-                    }
-                    
-                    callBack(failure:errors)
-                }
-            }
+
+class CastingObjectRequest: RequestCommand {
+    func execute(callBack:LoginClosure) {
+        (CastingObject() as ModelRequest).get { (failure) -> () in
+            callBack(failure: failure)
         }
     }
 }

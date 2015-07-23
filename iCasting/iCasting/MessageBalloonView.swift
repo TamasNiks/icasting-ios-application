@@ -17,6 +17,7 @@ class MessageBalloonView: UIView {
     let RECT_INSET: CGFloat = 10 // Lower is more room between border and text
     let LINE_WIDTH: CGFloat = 1
     let LINE_COLOR: UIColor = UIColor(white: 0.8, alpha: 1)
+    let FILL_COLOR: UIColor = UIColor(white: 0.98, alpha: 1)
     let CORNER_RADIUS: CGFloat = 8
     let HORIZONTAL_HOOK_POS: CGFloat = 40 // Less is more to the right
     let HOOK_WIDTH: CGFloat = 16
@@ -93,7 +94,14 @@ class MessageBalloonView: UIView {
         
         // Current context
 
-        UIColor.whiteColor().setFill()
+        switch self._position {
+        case .Right:
+            UIColor.whiteColor().setFill()
+        case .Left:
+            FILL_COLOR.setFill()
+        }
+        
+        
         LINE_COLOR.setStroke()
         
         let currentContext = UIGraphicsGetCurrentContext()
@@ -106,6 +114,7 @@ class MessageBalloonView: UIView {
         
         CGContextAddPath(currentContext, hookPath)
         CGContextDrawPath(currentContext, kCGPathFillStroke)
+        
         
         
     }

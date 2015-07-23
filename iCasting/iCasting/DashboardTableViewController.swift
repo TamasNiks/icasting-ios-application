@@ -9,6 +9,13 @@
 
 import UIKit
 
+struct SegueIdentifier {
+    static let Settings = "settingsSegueID"
+    static let Family = "unwindToFamilySegueID"
+}
+
+
+
 class DashboardTableViewController: UITableViewController {
 
     
@@ -26,10 +33,77 @@ class DashboardTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        configureNavigationItem()
         configureTableHeaderView()
         configureCells()
     }
 
+    
+    func configureNavigationItemView() {
+        
+        let iconSize: CGFloat = 35
+        let margin: CGFloat = 5
+        
+        let settingsButton = UIButton(frame: CGRectMake(iconSize, 0, iconSize, iconSize))
+        settingsButton.setImage(UIImage(named: "settings3"), forState: UIControlState.Normal)
+        settingsButton.addTarget(self, action: "handleSettingsBarButtonItemTapped:", forControlEvents: UIControlEvents.TouchUpInside)
+        settingsButton.frame.offset(dx: margin, dy: 0)
+        
+        let groupButton = UIButton(frame: CGRectMake(0, 0, iconSize, iconSize))
+        groupButton.setImage(UIImage(named: "group"), forState: UIControlState.Normal)
+        groupButton.addTarget(self, action: "handleSwitchFamilyBarButtonItemTapped:", forControlEvents: UIControlEvents.TouchUpInside)
+        groupButton.frame.offset(dx: margin, dy: 0)
+        
+        // Views
+        let customViewForBarButtonItems = UIView(frame: CGRectMake(0, 0, iconSize*2, iconSize))
+        customViewForBarButtonItems.addSubview(settingsButton)
+        
+        if User.sharedInstance.isManager {
+            customViewForBarButtonItems.addSubview(groupButton)
+        }
+        
+        let rightBarButtonItem = UIBarButtonItem(customView: customViewForBarButtonItems)
+        
+        self.navigationItem.setRightBarButtonItem(rightBarButtonItem, animated: false)
+    }
+    
+    
+    
+    func configureNavigationItem() {
+        
+        var switchFamilyMemberBarButtonItem: AnyObject?
+        if User.sharedInstance.isManager {
+            switchFamilyMemberBarButtonItem = UIBarButtonItem(image: UIImage(named: "group"),
+                style: UIBarButtonItemStyle.Plain,
+                target: self,
+                action: "handleSwitchFamilyBarButtonItemTapped:")
+        }
+        
+
+        let settingsBarButtonItem: AnyObject = UIBarButtonItem(image: UIImage(named: "settings3"),
+            style: UIBarButtonItemStyle.Plain,
+            target: self,
+            action: "handleSettingsBarButtonItemTapped:")
+        
+        var barButtonItems = [settingsBarButtonItem]
+        if let item: AnyObject = switchFamilyMemberBarButtonItem {
+            barButtonItems.append(item)
+        }
+        
+        self.navigationItem.setRightBarButtonItems(barButtonItems, animated: false)
+    }
+    
+    
+    func handleSwitchFamilyBarButtonItemTapped(sender: AnyObject) {
+        
+        self.performSegueWithIdentifier(SegueIdentifier.Family, sender: self)
+    }
+    
+    
+    func handleSettingsBarButtonItemTapped(sender: AnyObject) {
+        
+        self.performSegueWithIdentifier(SegueIdentifier.Settings, sender: self)
+    }
     
     func configureTableHeaderView() {
         
@@ -41,12 +115,8 @@ class DashboardTableViewController: UITableViewController {
     
     func configureCells() {
         
-        if User.sharedInstance.isManager == false {
-            self.navigationItem.rightBarButtonItem = nil //?.enabled = false
-        }
-        
         let user: User = User.sharedInstance
-        if let general = user.getValues() {
+        if let general = user.values {
             
             let castingObject = user.castingObject
             

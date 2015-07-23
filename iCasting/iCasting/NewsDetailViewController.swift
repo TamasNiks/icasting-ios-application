@@ -12,19 +12,13 @@ class NewsDetailViewController: UIViewController, UIWebViewDelegate {
 
     @IBOutlet weak var webView: UIWebView!
     
-    var item: NSDictionary?
+    var item: NewsItem!
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-    }
-
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         
         var news: News = News()
-        var body: String = (self.item?.objectForKey(NewsKey.Body) as? String)!
+        var body: String = self.item.body
 
         var html: String = "<html>"
         html += "<head>"
@@ -32,7 +26,7 @@ class NewsDetailViewController: UIViewController, UIWebViewDelegate {
         html += "<style> body {font-family:Helvetica; font-size:0.75em;} img {max-width:300px;} h1{color:#3C3C3C} </style>"
         html += "</head>"
         html += "<body>"
-        html += "<h1>\(self.item?.objectForKey(NewsKey.Title) ?? String())</h1>"
+        html += "<h1>\(self.item.title ?? String())</h1>"
         html += body
         html += "</body>"
         html += "</html>"
@@ -53,23 +47,9 @@ class NewsDetailViewController: UIViewController, UIWebViewDelegate {
         
     }
     
-    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
-
-    
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

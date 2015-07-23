@@ -14,7 +14,7 @@ protocol UserCastingObject {
     func castingObjectAtIndex(index: Int) -> CastingObject
 }
 
-class User : Printable, ModelProtocol, ValueProvider {
+class User : Printable, ResponseObjectSerializable {
 
     struct Values : Printable {
         let name: String
@@ -28,7 +28,11 @@ class User : Printable, ModelProtocol, ValueProvider {
         }
     }
     
-    static let sharedInstance: User = User()
+    static private var _sharedInstance: User = User()
+    
+    static var sharedInstance: User {
+        return _sharedInstance
+    }
 
     var values: Values?
     
@@ -59,27 +63,28 @@ class User : Printable, ModelProtocol, ValueProvider {
         return false
     }
     
-    func initializeModel(json: JSON) {
-        //println("USER JSON")
-        //println(json)
-        User.sharedInstance.setValues(json)
-    }
     
     var description: String {
         return "User: \(values?.description) \n castingObjects count: \(User.sharedInstance.castingObjects.count) \n castingObjectID: \(User.sharedInstance.castingObjectID) "
     }
+    
+    
+    init() {}
+    
+    @objc required init?(response: NSHTTPURLResponse, representation: AnyObject) {
+        
+        self.setValues(JSON(representation))
+        User._sharedInstance = self
+    }
+    
 }
 
 
 extension User : ValueProvider {
     
-    func getValues() -> User.Values? {
-        return values
-    }
-    
     private func setValues(json: JSON) {
         
-        User.sharedInstance.values = User.Values(
+        self.values = User.Values(
             name:       json["name"]["display"].string ?? "No name",
             first:      json["name"]["first"].string ?? "member",
             avatar:     json["avatar"]["thumb"].string ?? "",
@@ -104,39 +109,18 @@ extension User : UserCastingObject {
     
     
     func castingObjectAtIndex(index: Int) -> CastingObject {
+        
         return self.castingObjects[index]
     }
     
 }
 
-extension User : ModelRequest {
-    
-    internal func get(callBack:RequestClosure) {
-        
-        if let passport = Auth.passport {
-        
-            let url: String = APIUser.User(passport.user_id).value
-            var params: [String : AnyObject] = ["access_token":passport.access_token]
-            
-            request(.GET, url, parameters: params).responseJSON() { (request, response, json, error) in
-                
-                var errors: ICErrorInfo? = ICError(error: error).getErrors() //(json: json).getErrors()
-                if let json: AnyObject = json {
-                    
-                    println("UserRequest call success")
-                    let json = JSON(json)
-                    errors = ICError(json: json).getErrors()
-                    
-                    if errors == nil {
-                        self.initializeModel(json)
-                    }
-                    
-                }
-                
-                callBack(failure: errors)
-            }
+
+class UserRequest: RequestCommand {
+    func execute(callBack:LoginClosure) {
+        (User.sharedInstance as ModelRequest).get { (failure) -> () in
+            callBack(failure: failure)
         }
-        
     }
 }
 

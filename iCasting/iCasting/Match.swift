@@ -67,6 +67,12 @@ class Match : NSObject, MatchCardDelegate {
 
 extension Match {
     
+    func initializeModel(matches: [MatchCard]) {
+        self._matches = matches
+        self.filter()
+        self.setMatch(0)
+    }
+    
     func setMatch(index: Int) {
         
         if index >= 0 && index < matches.endIndex {
@@ -119,42 +125,17 @@ extension Match {
         
     }
     
-}
-
-
-
-
-// Match delegate
-
-extension Match {
     
-    // TIP: If there are more changes that should reflect the main matches, use a proxy or use a general onUpdate delegate method
-    func didRejectMatch() {
-        println("---- MATCH: Will remove from match model")
-        removeMatch()
-    }
-    
-    func didAcceptMatch() {
-        println("---- MATCH: Will mirror match model")
-        mirrorMatch()
-    }
-}
-
-
-
-
-extension Match {
-    
-    // Filter the matches based on the status of a match, parameter "allExcept" means that the result of the filter will contain everything, except the provided status. If parameter "original" == true, it will filter from the original requested "_matches" global var.
-    func filter(field:FilterStatusFields? = nil, allExcept:Bool = false) {
+    // Filter the matches based on the status of a match, parameter "allExcept" means that the result of the filter will contain everything, except the provided status.
+    func filter(field: FilterStatusFields? = nil, allExcept: Bool = false) {
         
         currentStatusField = (allExcept == true) ? nil : field
         
-        var mathesToFilter:[MatchCard] = matchesFromCastingObject
+        let matchesToFilter:[MatchCard] = matchesFromCastingObject
         
         if let f = field {
             
-            var filtered = mathesToFilter.filter { (obj) -> Bool in
+            let filtered = matchesToFilter.filter { (obj) -> Bool in
                 
                 //let path: [SubscriptType] = Fields.Status.getPath()
                 //let status = obj[path].stringValue
@@ -168,69 +149,25 @@ extension Match {
                 }
             }
             matches = filtered
-        }
             
-        else {
-            
-            // If no method parameters are set, go back to the original, all changes in one, should mirror the other, otherwise, you can get unexpected results, reload the data from the server instead.
-            matches = matchesFromCastingObject
+            return
         }
         
+        // If no method parameters are set, go back to the original, all changes in one, should mirror the other, otherwise, you can get unexpected results, reload the data from the server instead.
+        matches = matchesFromCastingObject
+        
+    }
+    
+    
+    // MARK: Match delegate
+    func didRejectMatch() {
+        println("---- MATCH: Will remove from match model")
+        removeMatch()
+    }
+    
+    func didAcceptMatch() {
+        println("---- MATCH: Will mirror match model")
+        mirrorMatch()
     }
     
 }
-
-
-
-
-extension Match : ModelRequest {
-    
-    func get(callBack: RequestClosure) {
-        
-        //self.matches = Dummy.matches.arrayValue
-        if let access_token: AnyObject = Auth.auth.access_token {
-            
-            println("CastingObjectID: "+User.sharedInstance.castingObjectID)
-            
-            var castingObjectID: String = User.sharedInstance.castingObjectID
-            var url: String = APIMatch.MatchCards.value
-            var params: [String : AnyObject] = ["access_token":access_token]
-            
-            request(Method.GET, url, parameters: params, encoding: ParameterEncoding.URL).responseJSON { (_, _, json, error) -> Void in
-                
-                if let error = error {
-                    let errors: ICErrorInfo? = ICError(error: error).getErrors()
-                    callBack(failure: errors)
-                }
-                
-                if let json: AnyObject = json {
-                    
-                    let json = JSON(json)
-                    let errors: ICErrorInfo? = ICError(json: json).getErrors()
-                    
-                    if errors == nil {
-                        self.initializeModel(json)
-                    }
-                    
-                    callBack(failure: errors)
-                }
-            }
-            
-            return Void()
-        }
-        
-        callBack(failure: nil)
-    }
-    
-    private func initializeModel(json: JSON) {
-        self._matches = json.arrayValue.map() { return TalentMatchCard(matchCard: $0) }
-        self.filter()
-        self.setMatch(0)
-    }
-    
-}
-
-
-
-
-

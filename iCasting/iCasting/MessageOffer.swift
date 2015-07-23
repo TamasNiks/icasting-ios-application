@@ -1,5 +1,5 @@
 //
-//  Offer.swift
+//  MessageOffer.swift
 //  iCasting
 //
 //  Created by Tim van Steenoven on 12/06/15.
@@ -10,69 +10,7 @@ import Foundation
 
 
 protocol OfferProtocol {
-    var value: Offer? { get }
-}
-
-
-
-enum ContractState {
-    
-    case
-    NeitherDecided, // Show buttons both
-    ClientAccepted, // Show buttons talent
-    ClientRejected, // Remove buttons both
-    TalentAccepted, // Show button client
-    TalentRejected, // Remove buttons both
-    BothAccepted    // Remove buttons both
-    
-    static func getState(#clientAccepted: Bool?, talentAccepted: Bool?, accepted: Bool?) -> ContractState {
-        
-        if let accepted = accepted {
-            
-            if accepted == true {
-                return ContractState.BothAccepted
-            }
-        }
-        
-        if let ca = clientAccepted {
-        
-            if talentAccepted == nil {
-
-                if ca == true {
-                    return ContractState.ClientAccepted
-                } else {
-                    return ContractState.ClientRejected
-                }
-            }
-        }
-        
-        if let ta = talentAccepted {
-
-            if clientAccepted == nil {
-                
-                if ta == true {
-                    return ContractState.TalentAccepted
-                } else {
-                    return ContractState.TalentRejected
-                }
-            }
-        }
-        
-        if let ca = clientAccepted, ta = talentAccepted {
-         
-            if ca == true && ta == true {
-                return ContractState.BothAccepted
-            }
-            if ca == false {
-                return ContractState.ClientRejected
-            }
-            if ta == false {
-                return ContractState.TalentRejected
-            }
-        }
-        
-        return ContractState.NeitherDecided
-    }
+    var value: MessageOffer? { get }
 }
 
 
@@ -83,9 +21,9 @@ struct StateComponents {
 }
 
 
-// The offer class defines a final object. Be aware that the offerAccepted property is for normal offers and the contractState for the situation if all the normal offers are accepted
+// The offer class defines a final object for both a normal offer, which only the client can send and the talent needs to accept/reject and a mutual agreement which is reflected by the contract state property
 
-class Offer {
+class MessageOffer {
     let name: String?
     let values: [KeyVal]?
     var acceptTalent: Bool?
@@ -96,15 +34,14 @@ class Offer {
     var stateComponents: StateComponents? {
         
         set {
-            _stateComponents = newValue
             if let val = newValue {
+                self._stateComponents = newValue
                 self.contractState = ContractState.getState(
                     clientAccepted: val.acceptClient,
                     talentAccepted: val.acceptTalent,
                     accepted:       val.accepted)
             }
         }
-        
         get {
             return _stateComponents
         }
@@ -131,7 +68,7 @@ class OfferDataExtractor: OfferProtocol {
     let formatErrorString: String = "Not formatted correctly"
     
     // Override this for custom implementation
-    var value: Offer? {
+    var value: MessageOffer? {
         get { return nil }
     }
 
@@ -222,14 +159,15 @@ class OfferDataExtractor: OfferProtocol {
 
 
 
-// Specialized classes for getting values from an HTTP call
+// Specialized classes for getting offer values from an HTTP call. It will try to create an offer object
 
 // OFFER
+
 class OfferHTTPDataExtractor: OfferDataExtractor {
  
     var offer: [String:JSON]?
     
-    override var value: Offer? {
+    override var value: MessageOffer? {
      
         if let o: [String:JSON] = offer {
             super.name              = o["path"]!.stringValue
@@ -237,7 +175,7 @@ class OfferHTTPDataExtractor: OfferDataExtractor {
             var dict: [String:JSON] = o["values"]!.dictionaryValue
             let values: [KeyVal] = super.getValues(dict)
             
-            return Offer(name: super.name, values: values, acceptTalent: accepted)
+            return MessageOffer(name: super.name, values: values, acceptTalent: accepted)
         }
         return nil
     }
@@ -248,11 +186,13 @@ class OfferHTTPDataExtractor: OfferDataExtractor {
     
 }
 
+// Specialized class, it will try to get a mutual agreement (offer contract)
+
 // OFFER CONTRACT
 
 class OfferContractHTTPDataExtractor: OfferHTTPDataExtractor {
     
-    override var value: Offer? {
+    override var value: MessageOffer? {
         
         if let o: [String:JSON] = offer {
             
@@ -260,16 +200,7 @@ class OfferContractHTTPDataExtractor: OfferHTTPDataExtractor {
             let acceptTalent: Bool? = o["acceptTalent"]?.bool
             let accepted: Bool?     = o["accepted"]?.bool
             
-            println("=========================")
-            println("acceptClient")
-            println(acceptClient)
-            println("acceptTalent")
-            println(acceptTalent)
-            println("accepted")
-            println(accepted)
-            println("=========================")
-            
-            return Offer(stateComponents: StateComponents(acceptClient: acceptClient, acceptTalent: acceptTalent, accepted: accepted))
+            return MessageOffer(stateComponents: StateComponents(acceptClient: acceptClient, acceptTalent: acceptTalent, accepted: accepted))
         }
         return nil
     }
@@ -282,7 +213,7 @@ class OfferSocketDataExtractor: OfferDataExtractor {
     
     var offer: NSArray?
     
-    override var value: Offer? {
+    override var value: MessageOffer? {
         
         if let o = offer {
             var json: JSON = JSON(o[2])
@@ -295,7 +226,7 @@ class OfferSocketDataExtractor: OfferDataExtractor {
             super.removeValuesForKeys(fromDictionary: &dict, keys: ignoreKeys)
             var values: [KeyVal] = super.getValues(dict)
             
-            return Offer(name: super.name, values: values, acceptTalent: accepted)
+            return MessageOffer(name: super.name, values: values, acceptTalent: accepted)
         }
         return nil
     }
@@ -323,102 +254,3 @@ class OfferSocketDataExtractor: OfferDataExtractor {
 
 
 
-// Modify a specific value from the API with a string connected to a key/value pair
-
-enum OfferValueExtractor: String {
-    
-    case TypeDateTime = "type.dateTime"
-    case DateStart = "dateStart"
-    case DateEnd = "dateEnd"
-    case TimeStart = "timeStart"
-    case TimeEnd = "timeEnd"
-    case HasBuyOff = "hasBuyOff"
-    case CompleteBuyOff = "completeBuyOff"
-    case HasTravelExpenses = "hasTravelExpenses"
-    case Budget = "times1000"
-    case BuyOffPeriod = "period"
-    case BuyOffMedium = "medium"
-    
-    func modify(value: Any?) -> String? {
-        
-        if let v = value {
-            
-            switch self {
-            case
-            .TypeDateTime:
-                
-                let str = (v as! JSON).stringValue
-                return getLocalizationForValue(str)
-                
-            case
-            .DateStart,
-            .DateEnd:
-                
-                let str = (v as! JSON).stringValue
-                let components: [String] = str.componentsSeparatedByString("T")
-                return components.first?.ICdateToString(ICDateFormat.General) ?? (str.isEmpty ? nil : str)
-                
-            case
-            .TimeStart,
-            .TimeEnd:
-                
-                return (v as! JSON).stringValue
-                
-            case
-            .HasBuyOff,
-            .CompleteBuyOff,
-            .HasTravelExpenses:
-                
-                let boolString = "\((v as! JSON).boolValue)"
-                let result = getLocalizationForValue(boolString)
-                return result
-                
-            case
-            .Budget:
-                
-                var intVal = (v as! JSON).intValue
-                intVal = intVal / 1000
-                let result = "€ \(intVal)"
-                return result
-                
-            case
-            .BuyOffPeriod:
-                
-                let double = (v as! JSON).doubleValue
-                let numOfMonths = Int(double * 12)
-                
-                var number: Int
-                var postfix: String
-                
-                if numOfMonths > 11 { //years
-                    number = Int(double)
-                    postfix = number == 1 ? getLocalizationForValue("year") : getLocalizationForValue("years")
-                    
-                } else {
-                    number = numOfMonths
-                    postfix = number == 1 ? getLocalizationForValue("month") : getLocalizationForValue("months")
-                }
-                
-                let period: String = "\(number) " + postfix
-                let forever: String = getLocalizationForValue("forever")
-                let result = numOfMonths == 0 ? forever : period
-                return result
-                
-            case
-            .BuyOffMedium:
-                
-                var result: String = String(", ").join((v as! JSON).arrayValue.map { $0.stringValue } )
-                return result.isEmpty ? nil : result
-            }
-        }
-        
-        return nil
-    }
-    
-    private func getLocalizationForValue(value: String) -> String {
-        
-        let prefix = "negotiations.offer.value.%@"
-        let formatted = String(format: prefix, value)
-        return NSLocalizedString(formatted, comment: "")
-    }
-}

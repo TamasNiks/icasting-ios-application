@@ -11,6 +11,10 @@
 "true" = "Yes";
 "false" = "No";
 
+/* Interface */
+
+"Loading" = "Loading";
+
 /* Specific */
 
 "specificJobInformation" = "Specific job information";
@@ -114,6 +118,7 @@
 "negotiation.state.accepted" = "%@ has accepted";
 "negotiation.state.rejected" = "%@ declined the contract";
 
+"negotiations.subject.title.general" = "General";
 "negotiations.subject.title.finance" = "Finance";
 "negotiations.subject.title.buyoff" = "Buy off";
 "negotiations.subject.title.timeandlocation" = "Time & location";
@@ -131,12 +136,14 @@
 "notification.desc.match-client_accepted" = "Your reaction for \"%@\" has been accepted";
 "notification.desc.match-client_rejected" = "Your reaction for \"%@\" has been rejected";
 "notification.desc.chat-message" = "You have received a message in a negotiation for \"%@\"";
+"notification.desc.chat-offer" = "You received an offer in a negotiation for \"%@\"";
 
 "notification.title.achievement-complete" = "You have completed an achievement!";
 "notification.title.match-matched" = "You are matched!";
-"notification.title.match-client_accepted" = "You have been accepted by a client.";
-"notification.title.match-client_rejected" = "You are not selected by a client.";
-"notification.title.chat-message" = "You received a new message.";
+"notification.title.match-client_accepted" = "You have been accepted by a client";
+"notification.title.match-client_rejected" = "You are not selected by a client";
+"notification.title.chat-message" = "You received a new message";
+"notification.title.chat-offer" = "You received a new offer!";
 
 
 /* Matches */

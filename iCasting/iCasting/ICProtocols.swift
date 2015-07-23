@@ -12,9 +12,6 @@ protocol ModelProtocol {
     func initializeModel(json: JSON)
 }
 
-protocol ModelRequest {
-    func get(callBack: RequestClosure)
-}
 
 protocol MatchCardDelegate {
     func didRejectMatch()

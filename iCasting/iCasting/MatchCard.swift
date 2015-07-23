@@ -1,5 +1,5 @@
 //
-//  MatchValues.swift
+//  MatchCard.swift
 //  iCasting
 //
 //  Created by Tim van Steenoven on 15/05/15.
@@ -11,53 +11,6 @@ import Foundation
 typealias ArrayStringValue = [[String:String]]
 typealias ArrayStringStringBool = [[String: [String:Bool]]]
 
-// STATIC VALUE EXTRACTOR AND DYNAMIC VALUE EXTRACTOR
-// Access to singular values as well as group values
-
-
-enum MatchValue: Any {
-    case Date(String?)
-    case Time(String?)
-    case Budget(Int?)
-    case Boolean(Bool?)
-    case Age(String?)
-    
-    // Further customize specific field data
-    func modify() -> String? {
-        
-        var str: String?
-
-        switch self {
-        case .Date(let val):
-            
-            if let val = val { str = val.ICdateToString(ICDateFormat.Match) }
-            
-        case .Time(let val):
-            
-            if let val = val { str = val.ICTime() }
-            
-        case .Budget(let val):
-            
-            if let val = val { str = "\(val / 1000)" }
-            
-        case .Boolean(let val):
-            
-            if let val = val { str = NSLocalizedString(val.description, comment:"") }
-            
-        case .Age(let val):
-            
-            if let val = val {
-                if val == "0" {
-                    str = NSLocalizedString("matches.values.age.justborn", comment: "")
-                } else {
-                    let postfix = NSLocalizedString("matches.values.age.years", comment: "")
-                    str = String(format: "%@ %@", arguments: [val, postfix])
-                }
-            }
-        }
-        return str
-    }
-}
 
 func ==(lhs: MatchCard, rhs: MatchCard) -> Bool {
     return lhs.getID(FieldID.MatchCardID) == rhs.getID(FieldID.MatchCardID)
@@ -66,7 +19,7 @@ func ==(lhs: MatchCard, rhs: MatchCard) -> Bool {
 
 // The MatchCard class is an object wrapper to expose certain properties and methods for the generic JSON object
 
-class MatchCard : NSObject, Equatable, Printable {
+final class MatchCard : NSObject, Equatable, Printable, ResponseCollectionSerializable {
     
     private var matchCard: JSON = JSON("")
     private let contract: [SubscriptType] = FieldRoots.RootJobContract.getPath()
@@ -93,6 +46,15 @@ class MatchCard : NSObject, Equatable, Printable {
         self.profile = filterArrayForNil(include)
     }
     
+    static func collection(#response: NSHTTPURLResponse, representation: AnyObject) -> [MatchCard] {
+        
+        var list = [MatchCard]()
+        if let representation = representation as? [AnyObject] {
+            list = representation.map() { return MatchCard(matchCard: JSON($0)) }
+        }
+        return list
+    }
+    
     subscript(index: Int) -> ArrayStringValue {
         return profile[index]
     }
@@ -113,9 +75,44 @@ class MatchCard : NSObject, Equatable, Printable {
             }
         }
     }
-
+    
+    func didMakeDecision(decision: DecisionState, callBack:RequestClosure) {
+        
+        if let ID = getID(FieldID.MatchCardID) {
+            
+            var req: URLRequestConvertible!
+            if decision == DecisionState.Accept {
+                req = Router.Match.MatchAcceptTalent(ID)
+            } else {
+                req = Router.Match.MatchRejectTalent(ID)
+            }
+            // TEST: comment the request code below if you do the accept test
+            //testAccept(callBack)
+            
+            request(req).responseJSON() { (request, response, json, error) in
+                
+                var errors: ICErrorInfo? = ICError(error: error).getErrors()
+                
+                if let json: AnyObject = json {
+                    
+                    let parsedJSON = JSON(json)
+                    
+                    errors = ICError(json: parsedJSON).getErrors()
+                    
+                    // Before doing a success callback to the controller, first delegate
+                    if errors == nil {
+                        
+                        self.setStatus(FilterStatusFields.TalentAccepted)
+                        self.delegate?.didAcceptMatch()
+                        
+                    }
+                }
+                
+                callBack(failure: errors)
+            }
+        }
+    }
 }
-
 
 
 
@@ -180,7 +177,7 @@ extension MatchCard {
     }
     
     var dateStart: String {
-        return MatchValue.Date(getValue(.JobDateStart)).modify() ?? "-"
+        return MatchValueExtractor.Date(getValue(.JobDateStart)).modify() ?? "-"
     }
     
     var typeTalent: String {
@@ -197,11 +194,11 @@ extension MatchCard {
     }
     
     var ageMinimum: String? {
-        return MatchValue.Age(matchCard[profileRoot]["age"]["minimum"].string).modify()
+        return MatchValueExtractor.Age(matchCard[profileRoot]["age"]["minimum"].string).modify()
     }
 
     var ageMaximum: String? {
-        return MatchValue.Age(matchCard[profileRoot]["age"]["maximum"].string).modify()
+        return MatchValueExtractor.Age(matchCard[profileRoot]["age"]["maximum"].string).modify()
     }
     
     func getID(ID: FieldID) -> String? {
@@ -243,7 +240,7 @@ extension MatchCard {
         var value = [[String:String?]]()
         value.append([ "type"     :   root["type"].string ])
         value.append([ "dateStart":   dateStart ])
-        value.append([ "dateEnd"  :   MatchValue.Date(root["dateEnd"].string).modify() ])
+        value.append([ "dateEnd"  :   MatchValueExtractor.Date(root["dateEnd"].string).modify() ])
         value.append([ "timeStart":   root["timeStart"].string ])
         value.append([ "timeEnd"  :   root["timeEnd"].string ])
         return filterDictionaryInArrayForNil(value)
@@ -265,8 +262,8 @@ extension MatchCard {
         
         let root = getJSON(FieldRoots.RootJobContract)
         var value = [[String:String?]]()
-        value.append(["budget"             : MatchValue.Budget(root["budget", "times1000"].intValue).modify() ])
-        value.append(["hasTravelExpenses"  : MatchValue.Boolean(root["travelExpenses", "hasTravelExpenses"].boolValue).modify() ])
+        value.append(["budget"             : MatchValueExtractor.Budget(root["budget", "times1000"].intValue).modify() ])
+        value.append(["hasTravelExpenses"  : MatchValueExtractor.Boolean(root["travelExpenses", "hasTravelExpenses"].boolValue).modify() ])
         value.append(["paymentMethod"      : root["paymentMethod", "type"].string ])
         return filterDictionaryInArrayForNil(value)
     }
@@ -281,20 +278,12 @@ extension MatchCard {
         return filterDictionaryInArrayForNil(value)
     }
     
-//    struct MatchDetailType2 {
-//        let general: MatchStaticFieldType
-//        var details: MatchDynamicFieldType
-//    }
-    
     func getOverview() -> MatchDetailType {
         
         var details = MatchDynamicFieldType()
         details.updateValue(dateTime, forKey: .JobDateTime)
         details.updateValue(location, forKey: .JobContractLocation)
         details.updateValue(payment,  forKey: .JobPayment)
-        
-        //let mdt: MatchDetailType2 = MatchDetailType2(general: general, details: details)
-        
         return (general: general, details: details)
     }
     
@@ -304,7 +293,7 @@ extension MatchCard {
 
 
 
-// EXPERIMENT: Experimenting for the best way of getting dynamic profile data
+// EXPERIMENT: Experimenting for a convenient way of getting dynamic profile data
 
 extension MatchCard {
     

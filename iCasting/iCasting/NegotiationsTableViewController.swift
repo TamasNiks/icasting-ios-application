@@ -8,31 +8,48 @@
 
 import UIKit
 
-class ConversationCell: UITableViewCell {
-    
-    @IBOutlet weak var customTitle: UILabel!
-    @IBOutlet weak var customSubtitle: UILabel!
-    @IBOutlet weak var customImageView: UIImageView!
-    //@IBOutlet weak var customDate: UILabel!
-
-}
-
 
 class NegotiationsTableViewController: UITableViewController {
 
     var match: Match = Match()
     
-    func handleRefresh(sender: AnyObject) {
-        let popTime = dispatch_time(DISPATCH_TIME_NOW, Int64(NSEC_PER_SEC))
-        dispatch_after(popTime, dispatch_get_main_queue(), {
-            self.handleRequest()
-        })
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        refreshControl?.addTarget(self, action: ("handleRequest"), forControlEvents: UIControlEvents.ValueChanged)
+
+        firstLoadRequest()
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+    }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+    func firstLoadRequest() {
+        
+        tableView.separatorStyle = UITableViewCellSeparatorStyle.None
+        startAnimatingLoaderTitleView()
+        handleRequest()
+    }
+    
+    func endLoadRequest() {
+        
+        tableView.separatorStyle = UITableViewCellSeparatorStyle.SingleLine
+        stopAnimatingLoaderTitleView()
+        refreshControl?.endRefreshing()
     }
     
     func handleRequest() {
         
         self.match.get() { failure in
-            self.refreshControl?.endRefreshing()
+
+            self.endLoadRequest()
+            
             println(failure?.description)
             self.match.filter(field: .Negotiations)
             //println(self.match.matches[1].getData([Fields.JobTitle]))
@@ -46,62 +63,29 @@ class NegotiationsTableViewController: UITableViewController {
         }
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        refreshControl = UIRefreshControl()
-        refreshControl?.addTarget(self, action: ("handleRefresh:"), forControlEvents: UIControlEvents.ValueChanged)
-        refreshControl?.beginRefreshing()
-        handleRequest()
-    }
-    
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
     // MARK: - Table view data source
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        // #warning Potentially incomplete method implementation.
+
         // Return the number of sections.
         return 1
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete method implementation.
+
         // Return the number of rows in the section.
         return self.match.matches.count
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("conversationCellidentifier", forIndexPath: indexPath) as! ConversationCell
+        
+        let cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifier.NegotiationOverview.Default.rawValue, forIndexPath: indexPath) as! ConversationOverviewCell
 
-        let matchAtIndex: MatchCard = self.match.matches[indexPath.row]
-        var data: [Fields: String] = matchAtIndex.getData([.JobTitle, .JobDescShort, .JobDescLong, .JobDateStart, .ClientAvatar])
-        
-        
-        //var info: [String:String] = self.match.getCellInfo(index: indexPath.row)
-        cell.customTitle.text = data[.JobTitle]
-        cell.customSubtitle.text = data[.JobDescShort]
-        //cell.customDate.text = String(format: "Start: %@", data[.JobDateStart]!)
-        
-        var base64: String = data[.ClientAvatar]!
-        if let image: UIImage = ICImages.ImageWithString(base64).image {
-            cell.customImageView.image = image
-        } else {
-            cell.customImageView.image = ICImages.PlaceHolderClientAvatar.image
-        }
-        cell.customImageView.makeRound(35, borderWidth: 4, withBorderColor: UIColor(red: 123/255, green: 205/255, blue: 105/255, alpha: 1))
+        configCell(cell, indexPath: indexPath)
         
         return cell
     }
 
-    
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return 90
     }
@@ -110,8 +94,77 @@ class NegotiationsTableViewController: UITableViewController {
         
         self.match.setMatch(indexPath.row)
         performSegueWithIdentifier("showConversation", sender: self)
+    }
+ 
+    
+    // MARK: End data source
+    
+    func getModel(forIndexPath indexPath: NSIndexPath) -> MatchCard {
+        
+        return match.matches[indexPath.row]
+    }
+    
+    func configCell(cell: UITableViewCell, indexPath: NSIndexPath) {
+        
+        if let cell = cell as? ConversationOverviewCell {
+
+
+            let matchAtIndex = self.getModel(forIndexPath: indexPath)
+            let data: [Fields: String] = matchAtIndex.getData([.JobTitle, .ClientName, .ClientCompany, .ClientAvatar])
+            
+            func setSubtitle() {
+                
+                cell.customSubtitle.font = UIFont.fontAwesomeOfSize(cell.customSubtitle.font.pointSize)
+                
+                
+                let buildingIcon = String.fontAwesomeIconWithName(FontAwesome.Building)
+                let userIcon = String.fontAwesomeIconWithName(FontAwesome.User)
+                let clientCompany = data[.ClientCompany]
+                let clientName = data[.ClientName]
+                
+                var cellText = String()
+                
+                if clientCompany != "-" {
+                    cellText += buildingIcon
+                    cellText += " \(clientCompany!)" //\u{2003}
+                } else if clientName != "-" {
+                    cellText += userIcon
+                    cellText += " \(clientName!)"
+                } else {
+                    cellText += String()
+                }
+                
+                cell.customSubtitle.text = cellText//data[.ClientCompany]
+            }
+            
+            cell.customTitle.text = data[.JobTitle]
+            setSubtitle()
+            
+            
+            let base64: String = data[.ClientAvatar]!
+            if let image: UIImage = ICImages.ImageWithString(base64).image {
+                cell.customImageView.image = image
+            } else {
+                cell.customImageView.image = ICImages.PlaceHolderClientAvatar.image
+            }
+            
+            cell.customImageView.makeRound(35)
+            
+        }
+        
+
+        
+        
+//        customIconCompany.font = UIFont.fontAwesomeOfSize(20)
+//        customIconCompany.text = String.fontAwesomeIconWithName(FontAwesome.Building)
+//        customIconClient.font = UIFont.fontAwesomeOfSize(20)
+//        customIconClient.text = String.fontAwesomeIconWithName(FontAwesome.User)
+//        
+//        customCompany.text = item.general[.ClientCompany]
+//        customClient.text = item.general[.ClientName]
         
     }
+    
     
     // MARK: - Navigation
 
@@ -120,7 +173,7 @@ class NegotiationsTableViewController: UITableViewController {
         // Get the new view controller using [segue destinationViewController].
         // Pass the selected object to the new view controller.
         
-        var vc = segue.destinationViewController as! NegotiationDetailViewController
+        let vc = segue.destinationViewController as! NegotiationDetailViewController
         //vc.hidesBottomBarWhenPushed = true
         vc.matchID = self.match.selectedMatch!.getID(FieldID.MatchCardID)
         

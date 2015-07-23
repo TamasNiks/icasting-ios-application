@@ -31,8 +31,8 @@ extension MatchHeaderCell {
         customIconClient.font = UIFont.fontAwesomeOfSize(20)
         customIconClient.text = String.fontAwesomeIconWithName(FontAwesome.User)
         
-        customCompany.text = item.general[.ClientCompany] ?? "Niet ingevuld"
-        customClient.text = item.general[.ClientName] ?? "Niet ingevuld"
+        customCompany.text = item.general[.ClientCompany] ?? "-"
+        customClient.text = item.general[.ClientName] ?? "-"
         
 //        var talent = NSMutableAttributedString(string: "Talent: ", attributes: [NSFontAttributeName: UIFont.systemFontOfSize(14)])
 //        talent.appendAttributedString(NSAttributedString(string: item.job["talent"]!, attributes: [NSFontAttributeName: UIFont.boldSystemFontOfSize(14)]))

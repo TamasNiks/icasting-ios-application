@@ -23,7 +23,7 @@ enum Role: Int {
     
     static func getRole(owner: String) -> Role {
         // TODO: Get the id from a casting object
-        return (Auth.auth.user_id == owner) ? Role.Outgoing : Role.Incomming
+        return (Auth.passport!.user_id == owner) ? Role.Outgoing : Role.Incomming
     }
 }
 
@@ -39,7 +39,7 @@ enum TextType: String {
 
 
 
-// A class to hold message data and which is compatible to work with observer patterns like key-value and notifications, because an object is constructed from a class and not a struct, it can be bridged to obj-c, in contrast to structs
+// A container class for all possible message data
 
 class Message: MessageAcceptVisitorProtocol {
 
@@ -55,8 +55,8 @@ class Message: MessageAcceptVisitorProtocol {
     var body: String?
     var read: Bool = false
 
-    var contract: [MessageContract.NegotiationPoint]?   //The contract is optional, only the json list always gives contract values
-    var offer: Offer?                                   // The offer is optional, because there is not always an offer key
+    var contract: [MessageTerms.NegotiationPoint]?   //The contract is optional, only the json list always gives contract values
+    var offer: MessageOffer?                            // The offer is optional, because there is not always an offer key
     
     init(id: String, owner: String, role: Role, type: TextType) {
 
@@ -66,6 +66,7 @@ class Message: MessageAcceptVisitorProtocol {
         self.type   = type
     }
     
+    // EXPERIMENT
     func accept(visitor: MessageVisitorProtocol) {
         visitor.visits(self)
     }
@@ -77,7 +78,7 @@ class Message: MessageAcceptVisitorProtocol {
 
 /*****************************************************************/
 
-// Experiment
+// EXPERIMENT
 /*
 class BaseMessage {
     
