@@ -159,9 +159,9 @@ extension MatchCard {
 
 // Extension to get specific values from MatchCard
 
-typealias ArrayDictionaryType = [[String:String]]
+//typealias ArrayDictionaryType = [[String:String]]
 typealias MatchStaticFieldType = [Fields:String?]
-typealias MatchDynamicFieldType = [Fields: [[String:String]] ] // Dictionary with Fields key and a an array of Dictionaries of type String key values
+typealias MatchDynamicFieldType = [Fields: StringDictionaryArray] // Dictionary with Fields key and a an array of Dictionaries of type String key values
 typealias MatchDetailType = (general: MatchStaticFieldType, details: MatchDynamicFieldType)
 
 extension MatchCard {
@@ -236,7 +236,7 @@ extension MatchCard {
         return header
     }
     
-    var dateTime: ArrayDictionaryType {
+    var dateTime: StringDictionaryArray {
         
         let root = getJSON(.JobDateTime)
         var value = [[String:String?]]()
@@ -248,7 +248,7 @@ extension MatchCard {
         return filterDictionaryInArrayForNil(value)
     }
     
-    var location: ArrayDictionaryType {
+    var location: StringDictionaryArray {
         
         let root = getJSON(.JobContractLocation)
         var value = [[String:String?]]()
@@ -260,7 +260,7 @@ extension MatchCard {
         return filterDictionaryInArrayForNil(value)
     }
     
-    var payment: ArrayDictionaryType {
+    var payment: StringDictionaryArray {
         
         let root = getJSON(FieldRoots.RootJobContract)
         var value = [[String:String?]]()
@@ -270,7 +270,7 @@ extension MatchCard {
         return filterDictionaryInArrayForNil(value)
     }
     
-    var specific: ArrayDictionaryType {
+    var specific: StringDictionaryArray {
         
         var value = [[String:String?]]()
         value.append(["typeTalent" : typeTalent])

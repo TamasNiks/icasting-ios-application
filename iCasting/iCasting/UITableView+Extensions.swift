@@ -47,30 +47,28 @@ extension UITableView {
     }
     
     
-    func calculateHeight(fromTitle title: String, andDetail detail: String) -> CGFloat {
+    func calculateHeight(fromTitle title: String, titleFontSize: CGFloat, andDetail detail: String, detailFontSize: CGFloat) -> CGFloat {
         
-        let tableViewCellInset: CGFloat = 5
+        let tableViewCellInset: CGFloat = 15
         
         let labelWidth: CGFloat = UIScreen.mainScreen().bounds.size.width - tableViewCellInset * 2
         
-        let titleText = NSAttributedString(string: title, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(17)] )
-        let detailText = NSAttributedString(string: detail, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(13)] )
-        
-        let options: NSStringDrawingOptions = NSStringDrawingOptions.UsesLineFragmentOrigin | NSStringDrawingOptions.UsesFontLeading
-        
-        let boundingRectForTitleText: CGRect = titleText.boundingRectWithSize(
-            CGSizeMake(labelWidth, CGFloat.max),
-            options: options,
-            context: nil)
-        
-        let boundingRectForDetail: CGRect = detailText.boundingRectWithSize(
-            CGSizeMake(labelWidth, CGFloat.max),
-            options: options,
-            context: nil)
-        
+        let titleText = NSAttributedString(string: title, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(titleFontSize)] )
+        let detailText = NSAttributedString(string: detail, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(detailFontSize)] )
+
+        let options: NSStringDrawingOptions = NSStringDrawingOptions.UsesLineFragmentOrigin | NSStringDrawingOptions.UsesFontLeading | NSStringDrawingOptions.TruncatesLastVisibleLine
+
+        func rect(str: NSAttributedString) -> CGRect {
+            return str.boundingRectWithSize(
+                CGSizeMake(labelWidth, CGFloat.max),
+                options: options,
+                context: nil)
+        }
+
+        let boundingRectForTitleText: CGRect = rect(titleText)
+        let boundingRectForDetail: CGRect = rect(detailText)
+
         return ceil(boundingRectForTitleText.size.height + boundingRectForDetail.size.height) + tableViewCellInset * 2
-        
-        
     }
     
     func calculateHeight(fromString string: String, forFontSize size: CGFloat) -> CGFloat {

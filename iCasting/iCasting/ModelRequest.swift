@@ -88,12 +88,7 @@ extension Match : ModelRequest {
     
     func get(callBack: RequestClosure) {
         
-        println("CastingObjectID: "+User.sharedInstance.castingObjectID)
-        
-        // TODO: Change this to a particularly match request
-        
         let castingObjectID: String = User.sharedInstance.castingObjectID
-        //let req = Router.Match.MatchCards
         let req = Router.Match.MatchesCastingObjectCards(castingObjectID)
         
         request(req).responseCollection { (_, _, collection: [MatchCard]?, error) -> Void in
@@ -101,7 +96,7 @@ extension Match : ModelRequest {
             var errors: ICErrorInfo? = ICError(error: error).getErrors()
             
             if let collection = collection {
-                println("WILL INITIALIZE MODEL")
+
                 self.initializeModel(collection)
             }
             

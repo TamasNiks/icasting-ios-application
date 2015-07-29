@@ -45,6 +45,7 @@ class MatchTableViewController: ICTableViewController, MatchCardDelegate {
     
     
     
+    
     // MARK: - Table view data source
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -72,16 +73,7 @@ class MatchTableViewController: ICTableViewController, MatchCardDelegate {
     }
     
     
-    
-    // MARK: - Navigation
 
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        var destination = segue.destinationViewController as! MatchDetailTableViewController
-        destination.delegate = self
-        destination.matchCard = self.match.selectedMatch
-    }
-    
-    
     
     // MARK: MatchDetailViewController Delegates
     
@@ -115,5 +107,16 @@ class MatchTableViewController: ICTableViewController, MatchCardDelegate {
             self.tableView.setTableHeaderViewWithResults(NSLocalizedString(statusFieldLocalizationKey, comment: ""))
             }.configureAlertController()
         self.presentViewController(ac, animated: true, completion: nil)
+    }
+    
+    
+    
+    
+    // MARK: - Navigation
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        var destination = segue.destinationViewController as! MatchDetailTableViewController
+        destination.delegate = self
+        destination.matchCard = self.match.selectedMatch
     }
 }

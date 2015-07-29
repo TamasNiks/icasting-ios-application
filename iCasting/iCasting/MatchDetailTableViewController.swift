@@ -8,58 +8,9 @@
 
 import UIKit
 
-// This is an enum that holds the cell identifiers with their properties, coupled to rows and sections. The cell type is registered with the AbstractCellsType enum placed in the ICExtension file and conforms to CellsProtocol
-
-enum MatchCells: Int, CellsProtocol {
-    
-    // Define cells here with their reuseable identifiers. Use the following pattern: 0(=section)0(=row), to clarify a new section, create a case for every new section
-    // Be aware to modify the structure of your model if you loop through it to prevent out of bounds errors.
-    
-    // SECTION 1
-    case HeaderCell=00, AcceptCell, SummaryCell, ProfileCell
-    
-    // SECTION 2
-    case DetailCell=10
-    
-    // A getter for the cell properties, see the struct for details
-    
-    var properties: CellProperties {
-
-        switch self {
-        case .HeaderCell:
-            return CellProperties(reuse: CellIdentifier.MatchDetail.Header.rawValue, height: 150)
-        case .SummaryCell:
-            return CellProperties(reuse: CellIdentifier.MatchDetail.Summary.rawValue)
-        case .AcceptCell:
-            return CellProperties(reuse: CellIdentifier.MatchDetail.Dilemma.rawValue, height: 70)
-        case .ProfileCell:
-            return CellProperties(reuse: CellIdentifier.MatchDetail.Profile.rawValue)
-        case .DetailCell:
-            return CellProperties(reuse: CellIdentifier.MatchDetail.Detail.rawValue)
-        }
-    }
-}
 
 
-struct SectionCount {
-    
-    var numberOfStaticSections: Int = 0
-    var numberOfdynamicSections: Int = 0
-    var sections: Int {
-        return numberOfStaticSections + numberOfdynamicSections
-    }
-    func getDynamicSection(section: Int) -> Int {
-        return section - numberOfStaticSections
-    }
-}
-
-
-
-
-
-// MARK: - MatchDetailTableViewController
-
-class MatchDetailTableViewController: UITableViewController {
+class MatchDetailTableViewController: ICTableViewController {
 
     var delegate: MatchCardDelegate?
     var matchCard: MatchCard? //= TalentMatch()
@@ -67,22 +18,14 @@ class MatchDetailTableViewController: UITableViewController {
     let rowsForStaticSection: Int = 4
     var matchDetails: MatchDetailType?
     
+    var job: Job?
+    
     // MARK: - ViewController Life cycle
     
     override func viewDidLoad() {
         
         super.viewDidLoad()
-        
-        NSIndexPath.defaultCellType = AbstractCellsType.matchCells
-        NSIndexPath.defaultCellValue = MatchCells.DetailCell.rawValue
-        
-        self.matchDetails = self.matchCard!.getOverview()
-        
-        self.sectionCount.numberOfStaticSections = 1
-        self.sectionCount.numberOfdynamicSections = self.matchDetails!.details.count
-        
-        // Setup the seperator lines between the cell
-        self.tableView.setWholeSeperatorLines()
+        prepareViewController()
     }
     
     
@@ -101,6 +44,22 @@ class MatchDetailTableViewController: UITableViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
+    
+    func prepareViewController() {
+        
+        NSIndexPath.defaultCellPropertyType = AbstractCellProperty.MatchDetailCells
+        NSIndexPath.defaultCellIndex = 10
+        
+        self.matchDetails = self.matchCard?.getOverview()
+        
+        self.sectionCount.numberOfStaticSections = 1
+        if let matchDetails = self.matchDetails {
+            self.sectionCount.numberOfdynamicSections = matchDetails.details.count
+        }
+        
+        // Setup the seperator lines between the cell
+        self.tableView.setWholeSeperatorLines()
+    }
 }
 
 
@@ -111,11 +70,9 @@ class MatchDetailTableViewController: UITableViewController {
 
 extension MatchDetailTableViewController {
     
-    
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return self.sectionCount.sections
+        return sectionCount.sections
     }
-    
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
@@ -124,52 +81,65 @@ extension MatchDetailTableViewController {
             return rowsForStaticSection
         }
         
-        // Rows for dynamic section, sectionForDynamic starts at zero for the array
-        var sectionForDynamic: Int = self.sectionCount.getDynamicSection(section)
-        var fields:[Fields] = self.matchDetails!.details.keys.array
-        var f: Fields = fields[sectionForDynamic]
-        return self.matchDetails!.details[f]!.count
+        // Return the number of rows in the section.
+        let dict = getSectionOfModel(inSection: section)
+        return dict.count
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        let cellIdentifier: MatchCells = indexPath.cellIdentifier as! MatchCells
+        let cellIdentifier = indexPath.cellIdentifier
         let reuseIdentifier: String = cellIdentifier.properties.reuse
         
-        var cell = tableView.dequeueReusableCellWithIdentifier(reuseIdentifier, forIndexPath: indexPath) as! UITableViewCell
-        self.configCell(&cell, identifier: cellIdentifier, indexPath: indexPath)
+        let cell = tableView.dequeueReusableCellWithIdentifier(reuseIdentifier, forIndexPath: indexPath) as! UITableViewCell
+        
+        configCell(cell, identifier: cellIdentifier, indexPath: indexPath)
+        
         return cell
     }
     
     
-    // Private methods 
+    // Data source helper methods
     
-    private func configCell(inout cell: UITableViewCell, identifier: MatchCells, indexPath: NSIndexPath) {
+    func getModel(forIndexPath indexPath: NSIndexPath) -> [String:String] {
+        
+        let array = getSectionOfModel(inSection: indexPath.section)
+        return array[indexPath.row]
+    }
+    
+    override func getSectionOfModel(inSection section: Int) -> StringDictionaryArray {
+        
+        // Rows for dynamic section, sectionForDynamic starts at zero for the array
+        let sectionForDynamic: Int = sectionCount.getDynamicSection(section)
+        let fields: [Fields] = matchDetails!.details.keys.array
+        let f: Fields = fields[sectionForDynamic]
+        return matchDetails!.details[f]!
+    }
+    
+    func configCell(cell: UITableViewCell, identifier: CellIdentifierPropertyProtocol, indexPath: NSIndexPath) {
         
         
-        if cell is MatchHeaderCell {
-            (cell as! MatchHeaderCell).configureCell(matchDetails!)
-        }
-        
-        else if cell is MatchSummaryCell {
-            (cell as! MatchSummaryCell).configureCell(matchDetails!)
-        }
-
-        else if cell is MatchAcceptCell {
-            (cell as! MatchAcceptCell).delegate = self
-            (cell as! MatchAcceptCell).indexPath = indexPath
-            (cell as! MatchAcceptCell).configureCell(matchCard!)
-        }
-        
-        else if cell is MatchDefaultCell {
-         
-            var sectionForDynamic: Int = self.sectionCount.getDynamicSection(indexPath.section)
-            var field:Fields = self.matchDetails!.details.keys.array[sectionForDynamic]
-            var rowValue = self.matchDetails!.details[field]![indexPath.row]
-            (cell as! MatchDefaultCell).configureCell(rowValue)
-        }
-        
-        else {
+        if let c = cell as? MatchHeaderCell {
+            
+            c.configureCell(matchDetails!)
+            
+        } else if let c = cell as? MatchSummaryCell {
+            
+            c.configureCell(matchDetails!)
+            
+        } else if let c = cell as? MatchAcceptCell {
+            
+            c.delegate = self
+            c.indexPath = indexPath
+            c.configureCell(matchCard!)
+            
+        } else if let c = cell as? MatchDefaultCell {
+            
+            //let dict = getSectionOfModel(inSection: indexPath.section)
+            let rowValue = getModel(forIndexPath: indexPath) //dict[indexPath.row]
+            c.configureCell(rowValue)
+            
+        } else {
             
             println("no cell config for id: ")
             println(identifier.properties.reuse)
@@ -185,38 +155,15 @@ extension MatchDetailTableViewController {
 
 extension MatchDetailTableViewController {
     
-
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         
-        let TableViewCellInset: CGFloat = 15
+        let cellIdentifier = indexPath.cellIdentifier
         
-        let cellIdentifier: MatchCells = indexPath.cellIdentifier as! MatchCells
-        
-        if cellIdentifier == .SummaryCell {
-            
+        if cellIdentifier.rawValue == CellIdentifier.MatchDetail.Summary.rawValue {
+
             var title: String = matchDetails!.general[.JobTitle]!!
             var desc: String = matchDetails!.general[.JobDescLong]!!
-
-            let labelWidth: CGFloat = self.tableView.bounds.size.width - TableViewCellInset * 2
-            
-            let titleText = NSAttributedString(string: title, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(16)] )
-            let detailText = NSAttributedString(string: desc, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(11)] )
-            
-            let options: NSStringDrawingOptions = NSStringDrawingOptions.UsesLineFragmentOrigin | NSStringDrawingOptions.UsesFontLeading | NSStringDrawingOptions.TruncatesLastVisibleLine
-            
-            
-            func rect(str: NSAttributedString) -> CGRect {
-                return str.boundingRectWithSize(
-                    CGSizeMake(labelWidth, CGFloat.max),
-                    options: options,
-                    context: nil)
-            }
-            
-            let boundingRectForTitleText: CGRect = rect(titleText)
-            let boundingRectForDetail: CGRect = rect(detailText)
-            
-            
-            return ceil(boundingRectForTitleText.size.height + boundingRectForDetail.size.height) + TableViewCellInset * 2
+            return self.tableView.calculateHeight(fromTitle: title, titleFontSize: 16, andDetail: desc, detailFontSize: 11)
         }
         
         return cellIdentifier.properties.height
@@ -224,17 +171,21 @@ extension MatchDetailTableViewController {
 
     override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
-        if section == 0 { return nil }
-        var sectionForDynamic: Int = self.sectionCount.getDynamicSection(section)
-        var field: Fields = self.matchDetails!.details.keys.array[sectionForDynamic]
-        var label: String = field.header
+        if section == 0 {
+            return nil
+        }
         
+        let sectionForDynamic: Int = self.sectionCount.getDynamicSection(section)
+        let field: Fields = self.matchDetails!.details.keys.array[sectionForDynamic]
+        let label: String = field.header
         return createHeaderLabel(label)
     }
     
     override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         
-        if section > 0 {return 30}
+        if section > 0 {
+            return 30
+        }
         return 0
     }
     
@@ -262,14 +213,13 @@ extension MatchDetailTableViewController {
         label.textColor = UIColor.darkTextColor()
         return label
     }
-    
 }
 
 
 
 
 
-// MARK: - IBActions
+// MARK: - Dilemma Cell Extended Button Delegate
 
 extension MatchDetailTableViewController: DilemmaCellExtendedButtonDelegate {
 
@@ -330,43 +280,6 @@ extension MatchDetailTableViewController: DilemmaCellExtendedButtonDelegate {
         
     }
     
-    
-    
-   /* @IBAction func onAccept(sender: AnyObject) {
-        println("I ACCEPT")
-        
-        let ac = AcceptAlertController { () -> Void in
-            (self.matchCard! as! TalentMatchCard).accept() { possibleError in
-                if let error = possibleError {
-                    self.showErrorAlertView(error)
-                } else {
-                    self.tableView.reloadRowsAtIndexPaths([NSIndexPath(forRow: 1, inSection: 0)], withRowAnimation: UITableViewRowAnimation.Fade)
-                    self.delegate?.didAcceptMatch()
-                }
-            }
-        }.configureAlertController()
-        self.presentViewController(ac, animated: true, completion: nil)
-    }
-    
-    
-    @IBAction func onReject(sender: AnyObject) {
-        println("I REJECT")
-
-        let ac = RejectAlertController { () -> Void in
-            (self.matchCard! as! TalentMatchCard).reject() { possibleError in
-                
-                if let error = possibleError {
-                    self.showErrorAlertView(error)
-                } else {
-                    self.delegate?.didRejectMatch()
-                    self.navigationController?.popViewControllerAnimated(true)
-                }
-            }
-        }.configureAlertController()
-        self.presentViewController(ac, animated: true, completion: nil)
-    }*/
-    
-    
     func showErrorAlertView(error: ICErrorInfo) {
         
         let fullStr: String = error.localizedFailureReason
@@ -411,8 +324,6 @@ extension MatchDetailTableViewController : UIScrollViewDelegate {
             cell.frame = rect
         }
     }
-    
-    
 }
 
 

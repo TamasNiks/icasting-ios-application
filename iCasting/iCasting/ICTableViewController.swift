@@ -8,6 +8,19 @@
 
 import UIKit
 
+// This struct helps to get the right sections if a tableview consists of static sections, this means predefined sections which are always there, and dynamic sections, which means sections to loop through and are variable.
+struct SectionCount {
+    
+    var numberOfStaticSections: Int = 0
+    var numberOfdynamicSections: Int = 0
+    var sections: Int {
+        return numberOfStaticSections + numberOfdynamicSections
+    }
+    func getDynamicSection(section: Int) -> Int {
+        return section - numberOfStaticSections
+    }
+}
+
 class ICTableViewController: UITableViewController {
 
     var model: ModelRequest?
@@ -74,5 +87,15 @@ class ICTableViewController: UITableViewController {
     func requestSucceedWithModel(model: ModelRequest) -> Bool {
         // Abstract...
         return false
+    }
+    
+    func getModel<U: ModelRequest>(forIndexPath indexPath: NSIndexPath) -> U? {
+        // Abstract...
+        return nil
+    }
+    
+    func getSectionOfModel(inSection section: Int) -> StringDictionaryArray {
+        // Abstract...
+        return StringDictionaryArray()
     }
 }

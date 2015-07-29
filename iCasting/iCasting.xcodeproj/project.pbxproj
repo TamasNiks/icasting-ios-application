@@ -8,12 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		22014EFE1B381320001AD8A5 /* CellIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22014EFD1B381320001AD8A5 /* CellIdentifier.swift */; };
-		22014EFF1B381320001AD8A5 /* CellIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22014EFD1B381320001AD8A5 /* CellIdentifier.swift */; };
 		220587F51AD565590010DA92 /* RequestFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220587F41AD565590010DA92 /* RequestFactory.swift */; };
 		22060E8E1B1EEE30000A3F2C /* SizingCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22060E8B1B1EEE30000A3F2C /* SizingCellProvider.swift */; };
-		22060E8F1B1EEE30000A3F2C /* SizingCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22060E8B1B1EEE30000A3F2C /* SizingCellProvider.swift */; };
 		22060E901B1EEE30000A3F2C /* CellReuser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22060E8C1B1EEE30000A3F2C /* CellReuser.swift */; };
-		22060E911B1EEE30000A3F2C /* CellReuser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22060E8C1B1EEE30000A3F2C /* CellReuser.swift */; };
 		22060E921B1EEE30000A3F2C /* MessageCellConfigurators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22060E8D1B1EEE30000A3F2C /* MessageCellConfigurators.swift */; };
 		22060E931B1EEE30000A3F2C /* MessageCellConfigurators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22060E8D1B1EEE30000A3F2C /* MessageCellConfigurators.swift */; };
 		22082C881AF7C24A00AF5EDB /* NegotiationsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22082C871AF7C24A00AF5EDB /* NegotiationsTableViewController.swift */; };
@@ -186,7 +183,6 @@
 		226B2EA01B07C667001DA2BD /* MatchDefaultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 226B2E9F1B07C667001DA2BD /* MatchDefaultCell.swift */; };
 		226B2EA11B07C667001DA2BD /* MatchDefaultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 226B2E9F1B07C667001DA2BD /* MatchDefaultCell.swift */; };
 		226B2EA41B0814B7001DA2BD /* MatchProfileTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 226B2EA31B0814B7001DA2BD /* MatchProfileTableViewController.swift */; };
-		226B2EA51B0814B7001DA2BD /* MatchProfileTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 226B2EA31B0814B7001DA2BD /* MatchProfileTableViewController.swift */; };
 		226C27C31AD5310F00A6A2EE /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 226C27C21AD5310F00A6A2EE /* User.swift */; };
 		226C27C51AD5321300A6A2EE /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 226C27C41AD5321300A6A2EE /* Router.swift */; };
 		2273B7601AD6AAC000CC3EFB /* News.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2273B75F1AD6AAC000CC3EFB /* News.swift */; };
@@ -198,6 +194,10 @@
 		227E33AD1B58EFC700CE399F /* ModelRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227E33AC1B58EFC600CE399F /* ModelRequest.swift */; };
 		227E33AE1B58EFC700CE399F /* ModelRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227E33AC1B58EFC600CE399F /* ModelRequest.swift */; };
 		227EB27B1B68CE840066D1DC /* LoginSequenceTemp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227EB27A1B68CE840066D1DC /* LoginSequenceTemp.swift */; };
+		227EB27E1B6934010066D1DC /* CellProperty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227EB27D1B6934010066D1DC /* CellProperty.swift */; };
+		227EB2801B6956300066D1DC /* AbstractCellConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22EA18C31B4C16920064BF09 /* AbstractCellConfigurator.swift */; };
+		227EB2811B69566F0066D1DC /* CellIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22014EFD1B381320001AD8A5 /* CellIdentifier.swift */; };
+		227EB2831B695BAF0066D1DC /* CellProperty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227EB27D1B6934010066D1DC /* CellProperty.swift */; };
 		228333D41B62A4F600BD3315 /* SegueIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 228333D31B62A4F600BD3315 /* SegueIdentifier.swift */; };
 		228333D61B63A69B00BD3315 /* LoginSequenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 228333D51B63A69B00BD3315 /* LoginSequenceController.swift */; };
 		2289BFFF1B0373DF00A7307C /* CastingObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2289BFFE1B0373DF00A7307C /* CastingObject.swift */; };
@@ -253,7 +253,6 @@
 		22C908651AD55FE50067A378 /* ICURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C908641AD55FE50067A378 /* ICURL.swift */; };
 		22E39EAC1AEFD3BB00F01BA0 /* News.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2273B75F1AD6AAC000CC3EFB /* News.swift */; };
 		22EA18C41B4C16920064BF09 /* AbstractCellConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22EA18C31B4C16920064BF09 /* AbstractCellConfigurator.swift */; };
-		22EA18C51B4C16920064BF09 /* AbstractCellConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22EA18C31B4C16920064BF09 /* AbstractCellConfigurator.swift */; };
 		22EA18F71B4DB25F0064BF09 /* DilemmaCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22EA18F61B4DB25F0064BF09 /* DilemmaCell.swift */; };
 		22EA18F81B4DB25F0064BF09 /* DilemmaCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22EA18F61B4DB25F0064BF09 /* DilemmaCell.swift */; };
 		22EA18FA1B4DC3820064BF09 /* DilemmaState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22EA18F91B4DC3820064BF09 /* DilemmaState.swift */; };
@@ -426,6 +425,7 @@
 		227B707B1B604BC700CD4DFE /* ConversationOverviewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationOverviewCell.swift; sourceTree = "<group>"; };
 		227E33AC1B58EFC600CE399F /* ModelRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ModelRequest.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		227EB27A1B68CE840066D1DC /* LoginSequenceTemp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginSequenceTemp.swift; sourceTree = "<group>"; };
+		227EB27D1B6934010066D1DC /* CellProperty.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CellProperty.swift; sourceTree = "<group>"; };
 		228333D31B62A4F600BD3315 /* SegueIdentifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SegueIdentifier.swift; sourceTree = "<group>"; };
 		228333D51B63A69B00BD3315 /* LoginSequenceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginSequenceController.swift; sourceTree = "<group>"; };
 		2289BFFE1B0373DF00A7307C /* CastingObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = CastingObject.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -911,6 +911,7 @@
 				22EA18F61B4DB25F0064BF09 /* DilemmaCell.swift */,
 				22EA18F91B4DC3820064BF09 /* DilemmaState.swift */,
 				22060E8B1B1EEE30000A3F2C /* SizingCellProvider.swift */,
+				227EB27D1B6934010066D1DC /* CellProperty.swift */,
 				22EA19341B4DCFDF0064BF09 /* MatchCells */,
 				22EA19351B4DD0DE0064BF09 /* MessageCells */,
 				222B69E31B5E518D003CF594 /* News */,
@@ -1284,6 +1285,7 @@
 				2256CE241AF2CD17005D40EB /* ExampleDrawerVisualStateManager.swift in Sources */,
 				2256CE0D1AF2C7BF005D40EB /* DrawerVisualState.swift in Sources */,
 				2256CE1B1AF2CD17005D40EB /* CenterTableViewCell.swift in Sources */,
+				227EB27E1B6934010066D1DC /* CellProperty.swift in Sources */,
 				2252C0CD1B53BFF30050DF8B /* UITableView+Extensions.swift in Sources */,
 				22082CDB1AFB927A00AF5EDB /* SocketEngineClient.swift in Sources */,
 				2252C0D91B53C18C0050DF8B /* CustomActivityIndicatorView.swift in Sources */,
@@ -1312,6 +1314,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				227EB2831B695BAF0066D1DC /* CellProperty.swift in Sources */,
 				222CBB6B1B06940800D91137 /* TalentMatchCard.swift in Sources */,
 				22082C8F1AF9F89500AF5EDB /* Conversation.swift in Sources */,
 				22223E281B208780001711C4 /* MessageBalloonView.swift in Sources */,
@@ -1327,11 +1330,9 @@
 				227B707D1B604BC700CD4DFE /* ConversationOverviewCell.swift in Sources */,
 				226B2E9E1B07C2E9001DA2BD /* MatchAcceptCell.swift in Sources */,
 				22EA193E1B51D1730064BF09 /* ContractState.swift in Sources */,
-				22060E911B1EEE30000A3F2C /* CellReuser.swift in Sources */,
 				2256CE261AF2D3D2005D40EB /* DrawerBarButtonItem.swift in Sources */,
 				222CBB6C1B06940B00D91137 /* MatchFields.swift in Sources */,
 				2252C0CE1B53BFF30050DF8B /* UITableView+Extensions.swift in Sources */,
-				22060E8F1B1EEE30000A3F2C /* SizingCellProvider.swift in Sources */,
 				228E35171ADC4655006D0BEA /* RequestFactory.swift in Sources */,
 				2252C0C51B53BF770050DF8B /* Int+Extensions.swift in Sources */,
 				22AD1B371B5F95B7007DC0B7 /* StatusIndicatorView.swift in Sources */,
@@ -1360,15 +1361,14 @@
 				22EA19441B526C4A0064BF09 /* OfferValueExtractor.swift in Sources */,
 				2257A2DE1B3D5F6100F7962E /* SwiftOverlays.swift in Sources */,
 				22082C921AFA243000AF5EDB /* MessageCells.swift in Sources */,
-				226B2EA51B0814B7001DA2BD /* MatchProfileTableViewController.swift in Sources */,
-				22EA18C51B4C16920064BF09 /* AbstractCellConfigurator.swift in Sources */,
 				226A9E8D1AEED71400AB9EFF /* Alamofire.swift in Sources */,
 				226B2EA11B07C667001DA2BD /* MatchDefaultCell.swift in Sources */,
+				227EB2801B6956300066D1DC /* AbstractCellConfigurator.swift in Sources */,
 				22B06AF51B1C538A002A7805 /* DilemmaView.swift in Sources */,
-				22014EFF1B381320001AD8A5 /* CellIdentifier.swift in Sources */,
 				22082CE21AFB927A00AF5EDB /* SocketIOClient.swift in Sources */,
 				22740F851AD80EC700755146 /* ICURL.swift in Sources */,
 				2256CE271AF2D443005D40EB /* AnimatedMenuButton.swift in Sources */,
+				227EB2811B69566F0066D1DC /* CellIdentifier.swift in Sources */,
 				22667FE41B61408D00938C4F /* BlurredBackgroundView.swift in Sources */,
 				2252C0C11B53BEDD0050DF8B /* UIColor+Extensions.swift in Sources */,
 				22538B4D1B2AD96A00F80E77 /* MessageOffer.swift in Sources */,

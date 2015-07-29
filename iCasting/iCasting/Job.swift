@@ -147,7 +147,8 @@ class Job {
     }
     
     init(matchID: String) {
-        
+    
+        // The match ID will be used for a API request
         self.matchID = matchID
     }
     
@@ -157,6 +158,15 @@ class Job {
         self.buildList()
     }
     
+    func resolveList() {
+        
+        
+        
+    }
+    
+    
+    
+    // MARK: Private methods
     
     private func buildList() {
         

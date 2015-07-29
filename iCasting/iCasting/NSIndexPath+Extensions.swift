@@ -8,64 +8,31 @@
 
 import Foundation
 
-// We create an extension of NSIndexPath to "inject" the cell identifiers to the specific indexPath which will be used by the tableview, don't forget to define a default cell type and value in your view controller: For every tableview, which needs specific reuse identifier, you can create an enum implementation with all the reuse identifiers which conforms to the Cells protocol and add it to the AbstractCellType enum.
+
+
+// We create an extension of NSIndexPath to "inject" the cell identifiers to the specific indexPath which will be used by the tableview, don't forget to define a default cell type and value in your view controller: For every tableview, that needs specific reuse identifiers, you can create an enum implementation with all the reuse identifiers which conforms to the CellPropertyProtocol and add it to the AbstractCellType enum.
 
 extension NSIndexPath {
     
-    static var defaultCellType: AbstractCellsType = AbstractCellsType(rawValue: 0)!
-    static var defaultCellValue: Int? = 0
+    static var defaultCellPropertyType: AbstractCellProperty = AbstractCellProperty(rawValue: 0)!
+    static var defaultCellIndex: Int? = 0
     
-    var cellIdentifier: CellsProtocol {
+    // The cell identifier is binded to the indexPath, it will get the right properties depending on the section and row defined in the CellPropertyProtocol
+    var cellIdentifier: CellIdentifierPropertyProtocol {
         
         get {
             // Bundle the section and row so it can match the enumeration cell type raw int value
-            let index: Int = ("\(self.section)"+"\(self.row)").toInt()!
-            var cellType: AbstractCellsType = NSIndexPath.defaultCellType
-            var cellValue: Int = NSIndexPath.defaultCellValue!
+            let index = ("\(self.section)"+"\(self.row)").toInt()!
             
-            var _cell: CellsProtocol = cellType.rawValue(cellValue)!
-            if let c: CellsProtocol = cellType.rawValue(index) {
-                _cell = c
+            // Get the default CellPropertyProtocol from the AbstractCellPropertyType, change this in the view controller through the static property
+            var type: AbstractCellProperty = NSIndexPath.defaultCellPropertyType
+
+            // Get the right cell enumeration if it exist with the index, otherwise get the default
+            var cell: CellIdentifierPropertyProtocol = type.getCellFromIdentifier(defaulCellIndex: NSIndexPath.defaultCellIndex!)!
+            if let c: CellIdentifierPropertyProtocol = type.getCellFromIdentifier(defaulCellIndex: index) {
+                cell = c
             }
-            return _cell
+            return cell
         }
-    }
-}
-
-
-protocol CellsProtocol {
-    var properties: CellProperties {get}
-}
-
-
-enum AbstractCellsType: Int {
-    case matchCells = 0 //, other cell types
-    
-    func rawValue(value: Int) -> CellsProtocol?  {
-        switch self {
-        case .matchCells:
-            return MatchCells(rawValue: value)
-        }
-    }
-}
-
-
-
-
-
-// A struct that will hold all the cell properties, extend it to add functionality
-
-struct CellProperties {
-    
-    let reuse: String
-    let height: CGFloat
-    
-    init(reuse: String, height: CGFloat) {
-        self.reuse = reuse
-        self.height = height
-    }
-    init(reuse: String) {
-        self.reuse = reuse
-        self.height = 44
     }
 }
