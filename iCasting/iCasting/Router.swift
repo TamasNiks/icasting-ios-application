@@ -58,6 +58,9 @@ enum Router {
     }
     
 
+    
+    
+    
     enum CastingObject: EndpointProtocol {
         
         case
@@ -98,6 +101,9 @@ enum Router {
         }
 
     }
+    
+    
+    
     
     
     enum Auth: EndpointProtocol {
@@ -156,6 +162,9 @@ enum Router {
     }
     
     
+    
+    
+    
     enum News : EndpointProtocol {
         
         case
@@ -197,6 +206,9 @@ enum Router {
     }
     
     
+    
+    
+    
     enum Media: EndpointProtocol {
         
         case
@@ -231,6 +243,9 @@ enum Router {
             return mutableURLRequest
         }
     }
+    
+    
+    
     
     
     enum Match: EndpointProtocol {
@@ -343,6 +358,9 @@ enum Router {
             return mutableURLRequest
         }
     }
+    
+    
+    
     
     
     enum Push: EndpointProtocol {

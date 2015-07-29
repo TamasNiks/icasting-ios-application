@@ -17,13 +17,11 @@
 		22060E921B1EEE30000A3F2C /* MessageCellConfigurators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22060E8D1B1EEE30000A3F2C /* MessageCellConfigurators.swift */; };
 		22060E931B1EEE30000A3F2C /* MessageCellConfigurators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22060E8D1B1EEE30000A3F2C /* MessageCellConfigurators.swift */; };
 		22082C881AF7C24A00AF5EDB /* NegotiationsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22082C871AF7C24A00AF5EDB /* NegotiationsTableViewController.swift */; };
-		22082C891AF7C24A00AF5EDB /* NegotiationsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22082C871AF7C24A00AF5EDB /* NegotiationsTableViewController.swift */; };
 		22082C8E1AF9F89500AF5EDB /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22082C8D1AF9F89500AF5EDB /* Conversation.swift */; };
 		22082C8F1AF9F89500AF5EDB /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22082C8D1AF9F89500AF5EDB /* Conversation.swift */; };
 		22082C911AFA243000AF5EDB /* MessageCells.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22082C901AFA243000AF5EDB /* MessageCells.swift */; };
 		22082C921AFA243000AF5EDB /* MessageCells.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22082C901AFA243000AF5EDB /* MessageCells.swift */; };
 		22082C951AFA2C2A00AF5EDB /* NegotiationDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22082C931AFA2C2A00AF5EDB /* NegotiationDetailViewController.swift */; };
-		22082C961AFA2C2A00AF5EDB /* NegotiationDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22082C931AFA2C2A00AF5EDB /* NegotiationDetailViewController.swift */; };
 		22082CD51AFB927A00AF5EDB /* SocketAckManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22082CC81AFB927A00AF5EDB /* SocketAckManager.swift */; };
 		22082CD61AFB927A00AF5EDB /* SocketAckManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22082CC81AFB927A00AF5EDB /* SocketAckManager.swift */; };
 		22082CD71AFB927A00AF5EDB /* SocketAnyEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22082CC91AFB927A00AF5EDB /* SocketAnyEvent.swift */; };
@@ -94,17 +92,15 @@
 		224DE1711B27364C00A0752E /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224DE16F1B27362500A0752E /* Message.swift */; };
 		224DE1721B27365000A0752E /* SocketCommunicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224DE16D1B27308200A0752E /* SocketCommunicator.swift */; };
 		224F77F61AF0F6BE00D88F99 /* ICImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224F77F51AF0F6BE00D88F99 /* ICImage.swift */; };
-		224F77F81AF133AB00D88F99 /* MatchTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22103B2A1AE549DF00C34C89 /* MatchTableViewController.swift */; };
 		224F77F91AF133D200D88F99 /* ICImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224F77F51AF0F6BE00D88F99 /* ICImage.swift */; };
-		224F77FB1AF1342200D88F99 /* MatchDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22103B281AE542D400C34C89 /* MatchDetailTableViewController.swift */; };
 		224F77FC1AF1343900D88F99 /* FontAwesome.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22103B2C1AE5597800C34C89 /* FontAwesome.swift */; };
 		224FF3041B08A989007D9CA7 /* iCastingMatchCardTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224FF3031B08A989007D9CA7 /* iCastingMatchCardTest.swift */; };
 		225029571B09DBDF00228582 /* ICFilters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225029561B09DBDF00228582 /* ICFilters.swift */; };
 		225029581B09DBDF00228582 /* ICFilters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225029561B09DBDF00228582 /* ICFilters.swift */; };
 		22528FE61AF3A7B700F550F8 /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22528FE51AF3A7B700F550F8 /* SwiftyJSON.swift */; };
 		22528FE71AF3A7B700F550F8 /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22528FE51AF3A7B700F550F8 /* SwiftyJSON.swift */; };
-		2252C0C01B53BEDD0050DF8B /* UIColor+ICColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2252C0BF1B53BEDD0050DF8B /* UIColor+ICColor.swift */; };
-		2252C0C11B53BEDD0050DF8B /* UIColor+ICColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2252C0BF1B53BEDD0050DF8B /* UIColor+ICColor.swift */; };
+		2252C0C01B53BEDD0050DF8B /* UIColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2252C0BF1B53BEDD0050DF8B /* UIColor+Extensions.swift */; };
+		2252C0C11B53BEDD0050DF8B /* UIColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2252C0BF1B53BEDD0050DF8B /* UIColor+Extensions.swift */; };
 		2252C0C41B53BF770050DF8B /* Int+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2252C0C31B53BF770050DF8B /* Int+Extensions.swift */; };
 		2252C0C51B53BF770050DF8B /* Int+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2252C0C31B53BF770050DF8B /* Int+Extensions.swift */; };
 		2252C0C71B53BF990050DF8B /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2252C0C61B53BF990050DF8B /* String+Extensions.swift */; };
@@ -122,7 +118,6 @@
 		2252C0D91B53C18C0050DF8B /* CustomActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2252C0D81B53C18C0050DF8B /* CustomActivityIndicatorView.swift */; };
 		2252C0DA1B53C18C0050DF8B /* CustomActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2252C0D81B53C18C0050DF8B /* CustomActivityIndicatorView.swift */; };
 		2252C0DC1B53C20D0050DF8B /* NSIndexPath+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2252C0DB1B53C20D0050DF8B /* NSIndexPath+Extensions.swift */; };
-		2252C0DD1B53C20D0050DF8B /* NSIndexPath+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2252C0DB1B53C20D0050DF8B /* NSIndexPath+Extensions.swift */; };
 		2252EA8D1B0CBBD1001862C5 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2252EA8C1B0CBBD1001862C5 /* FBSDKCoreKit.framework */; };
 		2252EA8F1B0CBC20001862C5 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2252EA8E1B0CBC20001862C5 /* FBSDKLoginKit.framework */; };
 		2252EA911B0CBC35001862C5 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2252EA901B0CBC35001862C5 /* Bolts.framework */; };
@@ -155,16 +150,21 @@
 		2257A2DD1B3D5F6100F7962E /* SwiftOverlays.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2257A2DC1B3D5F6100F7962E /* SwiftOverlays.swift */; };
 		2257A2DE1B3D5F6100F7962E /* SwiftOverlays.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2257A2DC1B3D5F6100F7962E /* SwiftOverlays.swift */; };
 		2257A2E01B3DAE4800F7962E /* JobOverviewTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2257A2DF1B3DAE4800F7962E /* JobOverviewTableViewController.swift */; };
-		2257A2E11B3DAE4800F7962E /* JobOverviewTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2257A2DF1B3DAE4800F7962E /* JobOverviewTableViewController.swift */; };
 		2257A2E31B3DAF8000F7962E /* Job.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2257A2E21B3DAF8000F7962E /* Job.swift */; };
 		2257A2E41B3DAF8000F7962E /* Job.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2257A2E21B3DAF8000F7962E /* Job.swift */; };
-		2257A2E61B41897800F7962E /* Push.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2257A2E51B41897800F7962E /* Push.swift */; };
-		2257A2E71B41897800F7962E /* Push.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2257A2E51B41897800F7962E /* Push.swift */; };
+		2257A2E61B41897800F7962E /* PushNotificationDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2257A2E51B41897800F7962E /* PushNotificationDevice.swift */; };
+		2257A2E71B41897800F7962E /* PushNotificationDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2257A2E51B41897800F7962E /* PushNotificationDevice.swift */; };
 		225C11511AE50197008654A7 /* NewsDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225C11501AE50197008654A7 /* NewsDetailViewController.swift */; };
 		225C11531AE51C05008654A7 /* MatchOverviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225C11521AE51C05008654A7 /* MatchOverviewCell.swift */; };
 		22647DB51B0DE60B00F18C71 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22647DB41B0DE60B00F18C71 /* Notifications.swift */; };
 		22647DB61B0DE60B00F18C71 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22647DB41B0DE60B00F18C71 /* Notifications.swift */; };
 		22647DB81B0E089F00F18C71 /* iCastingNotificationTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22647DB71B0E089F00F18C71 /* iCastingNotificationTest.swift */; };
+		22667FE31B61408D00938C4F /* BlurredBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22667FE21B61408D00938C4F /* BlurredBackgroundView.swift */; };
+		22667FE41B61408D00938C4F /* BlurredBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22667FE21B61408D00938C4F /* BlurredBackgroundView.swift */; };
+		22667FE61B6142C900938C4F /* NotificationTrafficControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22667FE51B6142C900938C4F /* NotificationTrafficControl.swift */; };
+		22667FE71B6142C900938C4F /* NotificationTrafficControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22667FE51B6142C900938C4F /* NotificationTrafficControl.swift */; };
+		226680E41B62644300938C4F /* CWStatusBarNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 226680E31B62644300938C4F /* CWStatusBarNotification.m */; };
+		226680E51B62644300938C4F /* CWStatusBarNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 226680E31B62644300938C4F /* CWStatusBarNotification.m */; };
 		2268C5361ACE905D00E58BF4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2268C5351ACE905D00E58BF4 /* AppDelegate.swift */; };
 		2268C5381ACE905D00E58BF4 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2268C5371ACE905D00E58BF4 /* LoginViewController.swift */; };
 		2268C53D1ACE905D00E58BF4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2268C53B1ACE905D00E58BF4 /* Main.storyboard */; };
@@ -197,12 +197,14 @@
 		227C7BD91AEA48D700624E12 /* ICProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A464C11AE93955000100C9 /* ICProtocols.swift */; };
 		227E33AD1B58EFC700CE399F /* ModelRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227E33AC1B58EFC600CE399F /* ModelRequest.swift */; };
 		227E33AE1B58EFC700CE399F /* ModelRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227E33AC1B58EFC600CE399F /* ModelRequest.swift */; };
+		227EB27B1B68CE840066D1DC /* LoginSequenceTemp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227EB27A1B68CE840066D1DC /* LoginSequenceTemp.swift */; };
+		228333D41B62A4F600BD3315 /* SegueIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 228333D31B62A4F600BD3315 /* SegueIdentifier.swift */; };
+		228333D61B63A69B00BD3315 /* LoginSequenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 228333D51B63A69B00BD3315 /* LoginSequenceController.swift */; };
 		2289BFFF1B0373DF00A7307C /* CastingObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2289BFFE1B0373DF00A7307C /* CastingObject.swift */; };
 		2289C0001B0373DF00A7307C /* CastingObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2289BFFE1B0373DF00A7307C /* CastingObject.swift */; };
 		2289C0021B0393BE00A7307C /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2289C0011B0393BE00A7307C /* MainTabBarController.swift */; };
 		2289C0031B0393BE00A7307C /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2289C0011B0393BE00A7307C /* MainTabBarController.swift */; };
 		2289C0051B03968600A7307C /* FamilyTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2289C0041B03968600A7307C /* FamilyTableViewController.swift */; };
-		2289C0061B03968600A7307C /* FamilyTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2289C0041B03968600A7307C /* FamilyTableViewController.swift */; };
 		228E35171ADC4655006D0BEA /* RequestFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220587F41AD565590010DA92 /* RequestFactory.swift */; };
 		228EAA821B2EF677009C4EAE /* MessageCellCongifuratorVisitors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 228EAA811B2EF677009C4EAE /* MessageCellCongifuratorVisitors.swift */; };
 		228EAA831B2EF677009C4EAE /* MessageCellCongifuratorVisitors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 228EAA811B2EF677009C4EAE /* MessageCellCongifuratorVisitors.swift */; };
@@ -210,15 +212,14 @@
 		229A3C8D1B301BE600D175F4 /* TextInputViewControllerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229A3C8C1B301BE600D175F4 /* TextInputViewControllerTest.swift */; };
 		229A3C8E1B301BE600D175F4 /* TextInputViewControllerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229A3C8C1B301BE600D175F4 /* TextInputViewControllerTest.swift */; };
 		229A3C901B30270300D175F4 /* ChatTextInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229A3C8F1B30270300D175F4 /* ChatTextInputViewController.swift */; };
-		229A3C911B30270300D175F4 /* ChatTextInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229A3C8F1B30270300D175F4 /* ChatTextInputViewController.swift */; };
 		229A3C931B316C3C00D175F4 /* KeyboardController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229A3C921B316C3C00D175F4 /* KeyboardController.swift */; };
 		229A3C941B316C3C00D175F4 /* KeyboardController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229A3C921B316C3C00D175F4 /* KeyboardController.swift */; };
 		229A3C961B32C2FA00D175F4 /* MessageVisitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229A3C951B32C2FA00D175F4 /* MessageVisitor.swift */; };
 		229A3C971B32C2FA00D175F4 /* MessageVisitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229A3C951B32C2FA00D175F4 /* MessageVisitor.swift */; };
 		22A464C21AE93955000100C9 /* ICProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A464C11AE93955000100C9 /* ICProtocols.swift */; };
 		22AD0DAF1AD6CDB900F0496A /* NewsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22AD0DAE1AD6CDB900F0496A /* NewsTableViewController.swift */; };
-		22AD1B361B5F95B7007DC0B7 /* CircleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22AD1B351B5F95B7007DC0B7 /* CircleView.swift */; };
-		22AD1B371B5F95B7007DC0B7 /* CircleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22AD1B351B5F95B7007DC0B7 /* CircleView.swift */; };
+		22AD1B361B5F95B7007DC0B7 /* StatusIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22AD1B351B5F95B7007DC0B7 /* StatusIndicatorView.swift */; };
+		22AD1B371B5F95B7007DC0B7 /* StatusIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22AD1B351B5F95B7007DC0B7 /* StatusIndicatorView.swift */; };
 		22B06AF41B1C4EF8002A7805 /* DilemmaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B06AF31B1C4EF8002A7805 /* DilemmaView.swift */; };
 		22B06AF51B1C538A002A7805 /* DilemmaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B06AF31B1C4EF8002A7805 /* DilemmaView.swift */; };
 		22B06AF81B1C53FC002A7805 /* DilemmaView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 22B06AF71B1C53FC002A7805 /* DilemmaView.xib */; };
@@ -347,7 +348,7 @@
 		22501EA01AD5C6EC00BD13E4 /* StructPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = StructPlayground.playground; sourceTree = "<group>"; };
 		225029561B09DBDF00228582 /* ICFilters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ICFilters.swift; sourceTree = "<group>"; };
 		22528FE51AF3A7B700F550F8 /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyJSON.swift; sourceTree = "<group>"; };
-		2252C0BF1B53BEDD0050DF8B /* UIColor+ICColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+ICColor.swift"; sourceTree = "<group>"; };
+		2252C0BF1B53BEDD0050DF8B /* UIColor+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Extensions.swift"; sourceTree = "<group>"; };
 		2252C0C31B53BF770050DF8B /* Int+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Int+Extensions.swift"; sourceTree = "<group>"; };
 		2252C0C61B53BF990050DF8B /* String+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		2252C0C91B53BFC70050DF8B /* UIImageView+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImageView+Extensions.swift"; sourceTree = "<group>"; };
@@ -384,11 +385,15 @@
 		2257A2DC1B3D5F6100F7962E /* SwiftOverlays.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftOverlays.swift; sourceTree = "<group>"; };
 		2257A2DF1B3DAE4800F7962E /* JobOverviewTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JobOverviewTableViewController.swift; sourceTree = "<group>"; };
 		2257A2E21B3DAF8000F7962E /* Job.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = Job.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		2257A2E51B41897800F7962E /* Push.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Push.swift; sourceTree = "<group>"; };
+		2257A2E51B41897800F7962E /* PushNotificationDevice.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushNotificationDevice.swift; sourceTree = "<group>"; };
 		225C11501AE50197008654A7 /* NewsDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsDetailViewController.swift; sourceTree = "<group>"; };
 		225C11521AE51C05008654A7 /* MatchOverviewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchOverviewCell.swift; sourceTree = "<group>"; };
 		22647DB41B0DE60B00F18C71 /* Notifications.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = Notifications.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		22647DB71B0E089F00F18C71 /* iCastingNotificationTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = iCastingNotificationTest.swift; sourceTree = "<group>"; };
+		22667FE21B61408D00938C4F /* BlurredBackgroundView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlurredBackgroundView.swift; sourceTree = "<group>"; };
+		22667FE51B6142C900938C4F /* NotificationTrafficControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationTrafficControl.swift; sourceTree = "<group>"; };
+		226680E21B62644300938C4F /* CWStatusBarNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CWStatusBarNotification.h; sourceTree = "<group>"; };
+		226680E31B62644300938C4F /* CWStatusBarNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CWStatusBarNotification.m; sourceTree = "<group>"; };
 		2268C5301ACE905D00E58BF4 /* iCasting.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iCasting.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2268C5341ACE905D00E58BF4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2268C5351ACE905D00E58BF4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -420,6 +425,9 @@
 		22740F841AD7CD1B00755146 /* GeneralPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = GeneralPlayground.playground; sourceTree = "<group>"; };
 		227B707B1B604BC700CD4DFE /* ConversationOverviewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationOverviewCell.swift; sourceTree = "<group>"; };
 		227E33AC1B58EFC600CE399F /* ModelRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ModelRequest.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		227EB27A1B68CE840066D1DC /* LoginSequenceTemp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginSequenceTemp.swift; sourceTree = "<group>"; };
+		228333D31B62A4F600BD3315 /* SegueIdentifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SegueIdentifier.swift; sourceTree = "<group>"; };
+		228333D51B63A69B00BD3315 /* LoginSequenceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginSequenceController.swift; sourceTree = "<group>"; };
 		2289BFFE1B0373DF00A7307C /* CastingObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = CastingObject.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		2289C0011B0393BE00A7307C /* MainTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
 		2289C0041B03968600A7307C /* FamilyTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FamilyTableViewController.swift; sourceTree = "<group>"; };
@@ -433,7 +441,7 @@
 		22A464C11AE93955000100C9 /* ICProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ICProtocols.swift; sourceTree = "<group>"; };
 		22AD0DAB1AD6C0E100F0496A /* JSONPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = JSONPlayground.playground; sourceTree = "<group>"; };
 		22AD0DAE1AD6CDB900F0496A /* NewsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsTableViewController.swift; sourceTree = "<group>"; };
-		22AD1B351B5F95B7007DC0B7 /* CircleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircleView.swift; sourceTree = "<group>"; };
+		22AD1B351B5F95B7007DC0B7 /* StatusIndicatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatusIndicatorView.swift; sourceTree = "<group>"; };
 		22B06AF31B1C4EF8002A7805 /* DilemmaView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DilemmaView.swift; sourceTree = "<group>"; };
 		22B06AF71B1C53FC002A7805 /* DilemmaView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DilemmaView.xib; sourceTree = "<group>"; };
 		22BB6D2C1ADEB43500C5C6C1 /* ValidatorPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = ValidatorPlayground.playground; sourceTree = "<group>"; };
@@ -516,7 +524,6 @@
 			isa = PBXGroup;
 			children = (
 				22C908641AD55FE50067A378 /* ICURL.swift */,
-				220587F41AD565590010DA92 /* RequestFactory.swift */,
 				226C27C41AD5321300A6A2EE /* Router.swift */,
 			);
 			name = HTTP;
@@ -559,6 +566,7 @@
 		22103B2F1AE559E300C34C89 /* Vendor */ = {
 			isa = PBXGroup;
 			children = (
+				226680E61B62644B00938C4F /* CWStatusBarNotification */,
 				22C598BF1B2F12380008CFCD /* JSQToolbar */,
 				223A7DD11AFD16B8002FB978 /* SwiftSpinner.swift */,
 				22528FE51AF3A7B700F550F8 /* SwiftyJSON.swift */,
@@ -609,7 +617,7 @@
 			children = (
 				2256CDD31AF254FD005D40EB /* Auth.swift */,
 				2289BFFE1B0373DF00A7307C /* CastingObject.swift */,
-				2257A2E51B41897800F7962E /* Push.swift */,
+				2257A2E51B41897800F7962E /* PushNotificationDevice.swift */,
 				226C27C21AD5310F00A6A2EE /* User.swift */,
 			);
 			name = User;
@@ -630,7 +638,7 @@
 		2252C0C21B53BF0C0050DF8B /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				2252C0BF1B53BEDD0050DF8B /* UIColor+ICColor.swift */,
+				2252C0BF1B53BEDD0050DF8B /* UIColor+Extensions.swift */,
 				2252C0C31B53BF770050DF8B /* Int+Extensions.swift */,
 				2252C0C61B53BF990050DF8B /* String+Extensions.swift */,
 				2252C0C91B53BFC70050DF8B /* UIImageView+Extensions.swift */,
@@ -690,6 +698,15 @@
 			path = VisualStateManager;
 			sourceTree = "<group>";
 		};
+		226680E61B62644B00938C4F /* CWStatusBarNotification */ = {
+			isa = PBXGroup;
+			children = (
+				226680E21B62644300938C4F /* CWStatusBarNotification.h */,
+				226680E31B62644300938C4F /* CWStatusBarNotification.m */,
+			);
+			name = CWStatusBarNotification;
+			sourceTree = "<group>";
+		};
 		2268C5271ACE905D00E58BF4 = {
 			isa = PBXGroup;
 			children = (
@@ -718,6 +735,8 @@
 			isa = PBXGroup;
 			children = (
 				22EA18C61B4D82C20064BF09 /* Main */,
+				22103B2F1AE559E300C34C89 /* Vendor */,
+				22EA18C21B4C15D10064BF09 /* Experiment */,
 				226C27C81AD551BA00A6A2EE /* Playgrounds */,
 				2268C5331ACE905D00E58BF4 /* Supporting Files */,
 				22C87B2B1B540FE900184283 /* iCasting-Bridging-Header.h */,
@@ -760,10 +779,10 @@
 		226B2E981B07B351001DA2BD /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				227EB27C1B68D0F30066D1DC /* Base */,
 				229A3C8F1B30270300D175F4 /* ChatTextInputViewController.swift */,
 				2249D5B71B05FA6600473A20 /* DashboardTableViewController.swift */,
 				2289C0041B03968600A7307C /* FamilyTableViewController.swift */,
-				223CB4891B45A3F70040DFF2 /* ICTableViewController.swift */,
 				2257A2DF1B3DAE4800F7962E /* JobOverviewTableViewController.swift */,
 				2268C5371ACE905D00E58BF4 /* LoginViewController.swift */,
 				2289C0011B0393BE00A7307C /* MainTabBarController.swift */,
@@ -816,16 +835,25 @@
 			isa = PBXGroup;
 			children = (
 				229A3C921B316C3C00D175F4 /* KeyboardController.swift */,
+				228333D51B63A69B00BD3315 /* LoginSequenceController.swift */,
 				226B2E981B07B351001DA2BD /* ViewControllers */,
 			);
 			name = Controllers;
+			sourceTree = "<group>";
+		};
+		227EB27C1B68D0F30066D1DC /* Base */ = {
+			isa = PBXGroup;
+			children = (
+				223CB4891B45A3F70040DFF2 /* ICTableViewController.swift */,
+			);
+			name = Base;
 			sourceTree = "<group>";
 		};
 		2294185B1AD8753000BD83C6 /* Views */ = {
 			isa = PBXGroup;
 			children = (
 				2232E57F1B5FEB8100C69CA6 /* BorderView.swift */,
-				22AD1B351B5F95B7007DC0B7 /* CircleView.swift */,
+				22AD1B351B5F95B7007DC0B7 /* StatusIndicatorView.swift */,
 				2252C0D81B53C18C0050DF8B /* CustomActivityIndicatorView.swift */,
 				22B06AF31B1C4EF8002A7805 /* DilemmaView.swift */,
 				22223E261B208780001711C4 /* MessageBalloonView.swift */,
@@ -834,6 +862,7 @@
 				22EA18C11B4C15A40064BF09 /* Cells */,
 				2268C5401ACE905D00E58BF4 /* LaunchScreen.xib */,
 				2268C53B1ACE905D00E58BF4 /* Main.storyboard */,
+				22667FE21B61408D00938C4F /* BlurredBackgroundView.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -895,6 +924,8 @@
 				228EAA811B2EF677009C4EAE /* MessageCellCongifuratorVisitors.swift */,
 				226B2E911B079494001DA2BD /* ArrayDataSource.swift */,
 				22C598EC1B2F366C0008CFCD /* AuthExtension.swift */,
+				220587F41AD565590010DA92 /* RequestFactory.swift */,
+				227EB27A1B68CE840066D1DC /* LoginSequenceTemp.swift */,
 			);
 			name = Experiment;
 			sourceTree = "<group>";
@@ -910,12 +941,12 @@
 				22A464C11AE93955000100C9 /* ICProtocols.swift */,
 				2273B7621AD6B54600CC3EFB /* ICType.swift */,
 				224A5A781ADE8F3C00E22DE1 /* ICValidator.swift */,
-				2273B75C1AD69E4F00CC3EFB /* Controllers */,
-				22EA18C21B4C15D10064BF09 /* Experiment */,
+				22667FE51B6142C900938C4F /* NotificationTrafficControl.swift */,
+				228333D31B62A4F600BD3315 /* SegueIdentifier.swift */,
 				2252C0C21B53BF0C0050DF8B /* Extensions */,
 				220587F81AD572520010DA92 /* HTTP */,
 				220587F91AD573130010DA92 /* Models */,
-				22103B2F1AE559E300C34C89 /* Vendor */,
+				2273B75C1AD69E4F00CC3EFB /* Controllers */,
 				2294185B1AD8753000BD83C6 /* Views */,
 			);
 			name = Main;
@@ -1146,7 +1177,7 @@
 				227E33AD1B58EFC700CE399F /* ModelRequest.swift in Sources */,
 				226B2E961B07A33E001DA2BD /* ICAlertControllers.swift in Sources */,
 				22EA18F71B4DB25F0064BF09 /* DilemmaCell.swift in Sources */,
-				22AD1B361B5F95B7007DC0B7 /* CircleView.swift in Sources */,
+				22AD1B361B5F95B7007DC0B7 /* StatusIndicatorView.swift in Sources */,
 				22082C951AFA2C2A00AF5EDB /* NegotiationDetailViewController.swift in Sources */,
 				22C598CE1B2F12500008CFCD /* JSQMessagesToolbarContentView.m in Sources */,
 				220587F51AD565590010DA92 /* RequestFactory.swift in Sources */,
@@ -1154,7 +1185,7 @@
 				226B2E9D1B07C2E9001DA2BD /* MatchAcceptCell.swift in Sources */,
 				22C598ED1B2F366C0008CFCD /* AuthExtension.swift in Sources */,
 				2257A2DD1B3D5F6100F7962E /* SwiftOverlays.swift in Sources */,
-				2252C0C01B53BEDD0050DF8B /* UIColor+ICColor.swift in Sources */,
+				2252C0C01B53BEDD0050DF8B /* UIColor+Extensions.swift in Sources */,
 				22C598E41B2F169E0008CFCD /* UIImage+JSQMessages.m in Sources */,
 				22C908651AD55FE50067A378 /* ICURL.swift in Sources */,
 				223E49C21B02389B00BB6BB3 /* SettingTableViewController.swift in Sources */,
@@ -1163,6 +1194,7 @@
 				22EA18C41B4C16920064BF09 /* AbstractCellConfigurator.swift in Sources */,
 				228EAA821B2EF677009C4EAE /* MessageCellCongifuratorVisitors.swift in Sources */,
 				22082C8E1AF9F89500AF5EDB /* Conversation.swift in Sources */,
+				228333D41B62A4F600BD3315 /* SegueIdentifier.swift in Sources */,
 				22A464C21AE93955000100C9 /* ICProtocols.swift in Sources */,
 				22082CE91AFB927A00AF5EDB /* SocketTypes.swift in Sources */,
 				2256CE0A1AF2C7BF005D40EB /* AnimatedMenuButton.swift in Sources */,
@@ -1175,12 +1207,14 @@
 				22C598CC1B2F12500008CFCD /* JSQMessagesInputToolbar.m in Sources */,
 				2249D5B81B05FA6600473A20 /* DashboardTableViewController.swift in Sources */,
 				2256CE0B1AF2C7BF005D40EB /* DrawerBarButtonItem.swift in Sources */,
+				22667FE61B6142C900938C4F /* NotificationTrafficControl.swift in Sources */,
 				22647DB51B0DE60B00F18C71 /* Notifications.swift in Sources */,
 				2273B7601AD6AAC000CC3EFB /* News.swift in Sources */,
 				2257A2E31B3DAF8000F7962E /* Job.swift in Sources */,
 				22AD0DAF1AD6CDB900F0496A /* NewsTableViewController.swift in Sources */,
 				2256CE1D1AF2CD17005D40EB /* SideDrawerTableViewCell.swift in Sources */,
 				22EA193D1B51D1730064BF09 /* ContractState.swift in Sources */,
+				227EB27B1B68CE840066D1DC /* LoginSequenceTemp.swift in Sources */,
 				226B2EA01B07C667001DA2BD /* MatchDefaultCell.swift in Sources */,
 				222CBB641B0663D100D91137 /* MatchCard.swift in Sources */,
 				225C11531AE51C05008654A7 /* MatchOverviewCell.swift in Sources */,
@@ -1216,6 +1250,7 @@
 				22060E921B1EEE30000A3F2C /* MessageCellConfigurators.swift in Sources */,
 				225C11511AE50197008654A7 /* NewsDetailViewController.swift in Sources */,
 				223A7DD21AFD16B8002FB978 /* SwiftSpinner.swift in Sources */,
+				22667FE31B61408D00938C4F /* BlurredBackgroundView.swift in Sources */,
 				229A3C8D1B301BE600D175F4 /* TextInputViewControllerTest.swift in Sources */,
 				224A5A791ADE8F3C00E22DE1 /* ICValidator.swift in Sources */,
 				224DE1701B27362500A0752E /* Message.swift in Sources */,
@@ -1245,6 +1280,7 @@
 				2256CE221AF2CD17005D40EB /* ExampleSideDrawerViewController.swift in Sources */,
 				22C598DE1B2F169E0008CFCD /* UIView+JSQMessages.m in Sources */,
 				2252C0DC1B53C20D0050DF8B /* NSIndexPath+Extensions.swift in Sources */,
+				228333D61B63A69B00BD3315 /* LoginSequenceController.swift in Sources */,
 				2256CE241AF2CD17005D40EB /* ExampleDrawerVisualStateManager.swift in Sources */,
 				2256CE0D1AF2C7BF005D40EB /* DrawerVisualState.swift in Sources */,
 				2256CE1B1AF2CD17005D40EB /* CenterTableViewCell.swift in Sources */,
@@ -1256,9 +1292,10 @@
 				22060E8E1B1EEE30000A3F2C /* SizingCellProvider.swift in Sources */,
 				2256CE1F1AF2CD17005D40EB /* ExampleCenterTableViewController.swift in Sources */,
 				2289C0051B03968600A7307C /* FamilyTableViewController.swift in Sources */,
-				2257A2E61B41897800F7962E /* Push.swift in Sources */,
+				2257A2E61B41897800F7962E /* PushNotificationDevice.swift in Sources */,
 				222CBB6A1B0693FD00D91137 /* MatchFields.swift in Sources */,
 				22082CE11AFB927A00AF5EDB /* SocketIOClient.swift in Sources */,
+				226680E41B62644300938C4F /* CWStatusBarNotification.m in Sources */,
 				222495DA1B1753F100F021D2 /* MessageList.swift in Sources */,
 				22103B2D1AE5597800C34C89 /* FontAwesome.swift in Sources */,
 				22EA19401B526BB70064BF09 /* MatchValueExtractor.swift in Sources */,
@@ -1297,19 +1334,17 @@
 				22060E8F1B1EEE30000A3F2C /* SizingCellProvider.swift in Sources */,
 				228E35171ADC4655006D0BEA /* RequestFactory.swift in Sources */,
 				2252C0C51B53BF770050DF8B /* Int+Extensions.swift in Sources */,
-				22AD1B371B5F95B7007DC0B7 /* CircleView.swift in Sources */,
+				22AD1B371B5F95B7007DC0B7 /* StatusIndicatorView.swift in Sources */,
 				224FF3041B08A989007D9CA7 /* iCastingMatchCardTest.swift in Sources */,
 				22EA19411B526BB70064BF09 /* MatchValueExtractor.swift in Sources */,
 				22392D291AD811720086BE5F /* ICType.swift in Sources */,
-				22082C961AFA2C2A00AF5EDB /* NegotiationDetailViewController.swift in Sources */,
 				224A5A7A1ADE8F3C00E22DE1 /* ICValidator.swift in Sources */,
-				224F77FB1AF1342200D88F99 /* MatchDetailTableViewController.swift in Sources */,
 				2289C0031B0393BE00A7307C /* MainTabBarController.swift in Sources */,
 				229A3C8E1B301BE600D175F4 /* TextInputViewControllerTest.swift in Sources */,
 				229A3C941B316C3C00D175F4 /* KeyboardController.swift in Sources */,
 				22060E931B1EEE30000A3F2C /* MessageCellConfigurators.swift in Sources */,
 				224DE1711B27364C00A0752E /* Message.swift in Sources */,
-				2257A2E71B41897800F7962E /* Push.swift in Sources */,
+				2257A2E71B41897800F7962E /* PushNotificationDevice.swift in Sources */,
 				22082CE81AFB927A00AF5EDB /* SocketParser.swift in Sources */,
 				2268C54E1ACE905D00E58BF4 /* iCastingTests.swift in Sources */,
 				22082CEE1AFB927A00AF5EDB /* WebSocket.swift in Sources */,
@@ -1334,8 +1369,8 @@
 				22082CE21AFB927A00AF5EDB /* SocketIOClient.swift in Sources */,
 				22740F851AD80EC700755146 /* ICURL.swift in Sources */,
 				2256CE271AF2D443005D40EB /* AnimatedMenuButton.swift in Sources */,
-				2252C0C11B53BEDD0050DF8B /* UIColor+ICColor.swift in Sources */,
-				2252C0DD1B53C20D0050DF8B /* NSIndexPath+Extensions.swift in Sources */,
+				22667FE41B61408D00938C4F /* BlurredBackgroundView.swift in Sources */,
+				2252C0C11B53BEDD0050DF8B /* UIColor+Extensions.swift in Sources */,
 				22538B4D1B2AD96A00F80E77 /* MessageOffer.swift in Sources */,
 				226B2E931B079494001DA2BD /* ArrayDataSource.swift in Sources */,
 				22082CDC1AFB927A00AF5EDB /* SocketEngineClient.swift in Sources */,
@@ -1346,15 +1381,12 @@
 				222495DB1B1753F100F021D2 /* MessageList.swift in Sources */,
 				225029581B09DBDF00228582 /* ICFilters.swift in Sources */,
 				227E33AE1B58EFC700CE399F /* ModelRequest.swift in Sources */,
-				2257A2E11B3DAE4800F7962E /* JobOverviewTableViewController.swift in Sources */,
 				22C598E71B2F169E0008CFCD /* NSBundle+JSQMessages.m in Sources */,
 				22C598EE1B2F366C0008CFCD /* AuthExtension.swift in Sources */,
 				22082CE01AFB927A00AF5EDB /* SocketFixUTF8.swift in Sources */,
 				2252C0D11B53C01E0050DF8B /* UITableViewCell+Extensions.swift in Sources */,
 				22FB74CD1B16F70A000C6373 /* MatchSummaryCell.swift in Sources */,
 				227C7BD91AEA48D700624E12 /* ICProtocols.swift in Sources */,
-				224F77F81AF133AB00D88F99 /* MatchTableViewController.swift in Sources */,
-				229A3C911B30270300D175F4 /* ChatTextInputViewController.swift in Sources */,
 				224A5A771ADE8BDB00E22DE1 /* ICError.swift in Sources */,
 				2256CE251AF2D3BD005D40EB /* DrawerController.swift in Sources */,
 				2257A2E41B3DAF8000F7962E /* Job.swift in Sources */,
@@ -1372,17 +1404,17 @@
 				222B69DF1B5E4889003CF594 /* Placeholder.swift in Sources */,
 				224F77FC1AF1343900D88F99 /* FontAwesome.swift in Sources */,
 				22EA18F81B4DB25F0064BF09 /* DilemmaCell.swift in Sources */,
+				22667FE71B6142C900938C4F /* NotificationTrafficControl.swift in Sources */,
 				22647DB61B0DE60B00F18C71 /* Notifications.swift in Sources */,
-				22082C891AF7C24A00AF5EDB /* NegotiationsTableViewController.swift in Sources */,
 				22E39EAC1AEFD3BB00F01BA0 /* News.swift in Sources */,
 				2256CE291AF2D4D3005D40EB /* DrawerVisualState.swift in Sources */,
 				22FF4CAA1B21A7CC00098996 /* iCastingNegotiationTest.swift in Sources */,
 				2252C0D41B53C0410050DF8B /* UIView+Extensions.swift in Sources */,
 				2289C0001B0373DF00A7307C /* CastingObject.swift in Sources */,
-				2289C0061B03968600A7307C /* FamilyTableViewController.swift in Sources */,
 				22528FE71AF3A7B700F550F8 /* SwiftyJSON.swift in Sources */,
 				228EAA831B2EF677009C4EAE /* MessageCellCongifuratorVisitors.swift in Sources */,
 				22C598CD1B2F12500008CFCD /* JSQMessagesInputToolbar.m in Sources */,
+				226680E51B62644300938C4F /* CWStatusBarNotification.m in Sources */,
 				222B1CE21B5CD73E00A4B988 /* Request+Extensions.swift in Sources */,
 				22C598E11B2F169E0008CFCD /* NSString+JSQMessages.m in Sources */,
 				229A3C971B32C2FA00D175F4 /* MessageVisitor.swift in Sources */,

@@ -1,5 +1,5 @@
 //
-//  CircleView.swift
+//  StatusIndicatorView.swift
 //  iCasting
 //
 //  Created by Tim van Steenoven on 22/07/15.
@@ -9,33 +9,15 @@
 import UIKit
 
 
-class MatchStatusColor {
+
+class StatusIndicatorView: UIView {
     
-    static func color(status: FilterStatusFields) -> UIColor? {
-        
-        switch status {
-         
-        case .Pending:
-            return UIColor.lightGrayColor()
-        case .TalentAccepted:
-            return UIColor.orangeColor()
-        case .Negotiations:
-            return UIColor(red: 123/255, green: 205/255, blue: 105/255, alpha: 1)
-        case .Closed:
-            return UIColor.redColor()
-        default:
-            return nil
-        }
-    }
-}
-
-
-class StatusIndicator: UIView {
+    var circle: UIView?
     
     init(frame: CGRect, status: FilterStatusFields) {
         
         super.init(frame: frame)
-        let color = MatchStatusColor.color(status)
+        let color = UIColor.color(forMatchStatus: status)
         createCircle(color)
     }
 
@@ -45,18 +27,36 @@ class StatusIndicator: UIView {
         createCircle(color)
     }
     
+    func startAnimating() {
+        
+        fadeInOut()
+    }
+    
+    private func fadeInOut() {
+
+        UIView.animateWithDuration(0.50, animations: { () -> Void in
+            let a = self.circle?.alpha
+            self.circle?.alpha = a == 1 ? 0.25 : 1
+        }) { (bool) -> Void in
+            self.fadeInOut()
+        }
+    }
+
     private func createCircle(color: UIColor?) {
         
         let circle = CircleView(frame: frame)
         circle.color = color
         self.backgroundColor = UIColor.whiteColor()
         self.addSubview(circle)
+        self.circle = circle
     }
     
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
 }
+
+
 
 
 
@@ -76,7 +76,6 @@ class CircleView: UIView {
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
-    
     
     
     // Only override drawRect: if you perform custom drawing.

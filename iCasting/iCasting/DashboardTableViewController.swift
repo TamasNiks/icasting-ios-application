@@ -9,12 +9,6 @@
 
 import UIKit
 
-struct SegueIdentifier {
-    static let Settings = "settingsSegueID"
-    static let Family = "unwindToFamilySegueID"
-}
-
-
 
 class DashboardTableViewController: UITableViewController {
 
@@ -96,7 +90,7 @@ class DashboardTableViewController: UITableViewController {
     
     func handleSwitchFamilyBarButtonItemTapped(sender: AnyObject) {
         
-        self.performSegueWithIdentifier(SegueIdentifier.Family, sender: self)
+        self.performSegueWithIdentifier(SegueIdentifier.Unwind.Family, sender: self)
     }
     
     

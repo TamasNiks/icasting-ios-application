@@ -40,11 +40,11 @@ class Match : NSObject, MatchCardDelegate {
     // Contains the original matches from the request, all changes to the matches array must mirror the _matches array
     private var _matches: [MatchCard] = [MatchCard]()
 
-    // Contains the original matches filtered by casting object
+    // Contains the original matches filtered by casting object, be sure to change the path of the casting object id when changing the API request. This can be different.
     private var matchesFromCastingObject: [MatchCard] {
         get {
             return _matches.filter { (obj) -> Bool in
-                return obj.raw["castingObject"].stringValue == User.sharedInstance.castingObjectID
+                return obj.raw["castingObject", "_id"].stringValue == User.sharedInstance.castingObjectID
             }
         }
     }
@@ -68,10 +68,12 @@ class Match : NSObject, MatchCardDelegate {
 extension Match {
     
     func initializeModel(matches: [MatchCard]) {
+        
         self._matches = matches
         self.filter()
         self.setMatch(0)
     }
+    
     
     func setMatch(index: Int) {
         
@@ -81,6 +83,7 @@ extension Match {
             selectedMatch?.delegate = self
         }
     }
+    
     
     private func getMatch(index: Int?) -> MatchCard? {
         
@@ -92,6 +95,7 @@ extension Match {
         }
         return item
     }
+    
     
     // Remove the selected match from the filtered matches and from the original matches collection
     func removeMatch() {
@@ -131,14 +135,11 @@ extension Match {
         
         currentStatusField = (allExcept == true) ? nil : field
         
-        let matchesToFilter:[MatchCard] = matchesFromCastingObject
+        let matchesToFilter: [MatchCard] = matchesFromCastingObject
         
         if let f = field {
             
             let filtered = matchesToFilter.filter { (obj) -> Bool in
-                
-                //let path: [SubscriptType] = Fields.Status.getPath()
-                //let status = obj[path].stringValue
                 
                 let status = obj.getStatus()
                 
@@ -155,15 +156,16 @@ extension Match {
         
         // If no method parameters are set, go back to the original, all changes in one, should mirror the other, otherwise, you can get unexpected results, reload the data from the server instead.
         matches = matchesFromCastingObject
-        
     }
     
     
     // MARK: Match delegate
+    
     func didRejectMatch() {
         println("---- MATCH: Will remove from match model")
         removeMatch()
     }
+    
     
     func didAcceptMatch() {
         println("---- MATCH: Will mirror match model")

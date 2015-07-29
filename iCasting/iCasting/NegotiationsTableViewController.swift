@@ -9,59 +9,40 @@
 import UIKit
 
 
-class NegotiationsTableViewController: UITableViewController {
+class NegotiationsTableViewController: ICTableViewController {
 
     var match: Match = Match()
     
+    
+    
+    // MARK: - Table view controller life cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        refreshControl?.addTarget(self, action: ("handleRequest"), forControlEvents: UIControlEvents.ValueChanged)
 
+        setModel(match)
         firstLoadRequest()
     }
     
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-    }
-
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
-    func firstLoadRequest() {
+    override func requestSucceedWithModel(model: ModelRequest) -> Bool {
         
-        tableView.separatorStyle = UITableViewCellSeparatorStyle.None
-        startAnimatingLoaderTitleView()
-        handleRequest()
-    }
-    
-    func endLoadRequest() {
-        
-        tableView.separatorStyle = UITableViewCellSeparatorStyle.SingleLine
-        stopAnimatingLoaderTitleView()
-        refreshControl?.endRefreshing()
-    }
-    
-    func handleRequest() {
-        
-        self.match.get() { failure in
+        self.match.filter(field: .Negotiations)
 
-            self.endLoadRequest()
-            
-            println(failure?.description)
-            self.match.filter(field: .Negotiations)
-            //println(self.match.matches[1].getData([Fields.JobTitle]))
-            
-            if self.match.matches.isEmpty {
-                self.tableView.setTableHeaderViewWithoutResults(NSLocalizedString("NoNegotiations", comment: ""))
-            } else {
-                self.tableView.tableHeaderView = nil
-                self.tableView.reloadData()
-            }
+        if self.match.matches.isEmpty {
+            self.tableView.setTableHeaderViewWithoutResults(NSLocalizedString("NoNegotiations", comment: ""))
+            return false
+        } else {
+            self.tableView.tableHeaderView = nil
+            return true
         }
     }
+    
+    
     
     // MARK: - Table view data source
 
@@ -93,8 +74,9 @@ class NegotiationsTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
         self.match.setMatch(indexPath.row)
-        performSegueWithIdentifier("showConversation", sender: self)
+        performSegueWithIdentifier(SegueIdentifier.Conversation, sender: self)
     }
+ 
  
     
     // MARK: End data source
@@ -149,21 +131,9 @@ class NegotiationsTableViewController: UITableViewController {
             }
             
             cell.customImageView.makeRound(35)
-            
         }
-        
-
-        
-        
-//        customIconCompany.font = UIFont.fontAwesomeOfSize(20)
-//        customIconCompany.text = String.fontAwesomeIconWithName(FontAwesome.Building)
-//        customIconClient.font = UIFont.fontAwesomeOfSize(20)
-//        customIconClient.text = String.fontAwesomeIconWithName(FontAwesome.User)
-//        
-//        customCompany.text = item.general[.ClientCompany]
-//        customClient.text = item.general[.ClientName]
-        
     }
+    
     
     
     // MARK: - Navigation
@@ -178,6 +148,5 @@ class NegotiationsTableViewController: UITableViewController {
         vc.matchID = self.match.selectedMatch!.getID(FieldID.MatchCardID)
         
     }
-
 
 }

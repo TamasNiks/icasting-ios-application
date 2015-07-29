@@ -78,7 +78,7 @@ class NewsTableViewController: UITableViewController {
         cell.detailTextLabel?.text = published
         cell.indentationLevel = 0
         
-        // If the image has been set, the tag will change to 1 if the image has been set and the
+        // If the image has been set, the tag will change to 1
         if cell.imageView?.tag == 0 {
             cell.imageView?.image = Placeholder(frame: CGRectMake(0, 0, 100, 100)).image
             news.image(image, size: ImageSize.Thumbnail) { result in
@@ -94,7 +94,7 @@ class NewsTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
         selectedItem = news.newsItems[indexPath.row]
-        performSegueWithIdentifier("ShowDetail2News", sender: self)
+        performSegueWithIdentifier(SegueIdentifier.NewsDetail, sender: self)
     
     }
 

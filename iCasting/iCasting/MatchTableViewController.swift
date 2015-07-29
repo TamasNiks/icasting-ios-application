@@ -9,23 +9,11 @@
 import UIKit
 
 
-class MatchTableViewController: UITableViewController, MatchCardDelegate {
+class MatchTableViewController: ICTableViewController, MatchCardDelegate {
 
     let match: Match = Match()
-
-    @IBAction func onFilterBarButtonTouch(sender: AnyObject) {
-        
-        let ac = FilterMatchAlertController(resource: match) {
-            self.tableView.reloadSections(NSIndexSet(index: 0), withRowAnimation: UITableViewRowAnimation.Fade)
-
-            var statusFieldLocalizationKey: String = "ActiveFilter"
-            if let currentStatusField = self.match.currentStatusField {
-                statusFieldLocalizationKey = currentStatusField.rawValue
-            }
-            self.tableView.setTableHeaderViewWithResults(NSLocalizedString(statusFieldLocalizationKey, comment: ""))
-        }.configureAlertController()
-        self.presentViewController(ac, animated: true, completion: nil)
-    }
+    
+    
     
     // MARK: - ViewController Life cycle
 
@@ -33,8 +21,7 @@ class MatchTableViewController: UITableViewController, MatchCardDelegate {
         
         super.viewDidLoad()
         
-        refreshControl?.addTarget(self, action: ("handleRefresh"), forControlEvents: UIControlEvents.ValueChanged)
-        
+        setModel(match)
         firstLoadRequest()
     }
     
@@ -42,55 +29,21 @@ class MatchTableViewController: UITableViewController, MatchCardDelegate {
         super.didReceiveMemoryWarning()
     }
     
-    
-//    override func viewDidAppear(animated: Bool) {
-//        super.viewDidAppear(animated)
-//        let aiv = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
-//        aiv.frame = CGRectMake(self.view.center.x, self.view.center.y, 20, 20)
-//        aiv.color = UIColor.grayColor()
-//        self.view.addSubview(aiv)
-//    }
-    
-    func firstLoadRequest() {
-    
-        tableView.separatorStyle = UITableViewCellSeparatorStyle.None
-        startAnimatingLoaderTitleView()
-        handleRequest()
-    }
-    
-    func endLoadRequest() {
-        tableView.separatorStyle = UITableViewCellSeparatorStyle.SingleLine
-        stopAnimatingLoaderTitleView()
-        refreshControl?.endRefreshing()
-    }
-    
-    func handleRefresh() {
-        let popTime = dispatch_time(DISPATCH_TIME_NOW, Int64(NSEC_PER_SEC))
-        dispatch_after(popTime, dispatch_get_main_queue()) { () -> Void in
-            self.handleRequest()
+    override func requestSucceedWithModel(model: ModelRequest) -> Bool {
+        
+        self.match.filter(field: FilterStatusFields.Closed, allExcept: true)
+        
+        if self.match.matches.isEmpty {
+            
+            self.tableView.setTableHeaderViewWithoutResults(NSLocalizedString("NoMatches", comment: ""))
+            return false
+        } else {
+            self.tableView.setTableHeaderViewWithResults(NSLocalizedString("ActiveFilter", comment: ""))
+            return true
         }
     }
     
-    func handleRequest() {
-
-        self.match.get() { failure in
-
-            self.endLoadRequest()
-            
-            println(failure?.description)
-            
-            self.match.filter(field: FilterStatusFields.Closed, allExcept: true)
-            
-            if self.match.matches.isEmpty {
-                self.tableView.setTableHeaderViewWithoutResults(NSLocalizedString("NoMatches", comment: ""))
     
-            } else {
-                self.tableView.setTableHeaderViewWithResults(NSLocalizedString("ActiveFilter", comment: ""))
-                self.tableView.reloadData()
-            }
-            self.tableView.reloadData()
-        }
-    }
     
     // MARK: - Table view data source
 
@@ -102,17 +55,8 @@ class MatchTableViewController: UITableViewController, MatchCardDelegate {
         return self.match.matches.count
     }
 
-    
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let matchCard: MatchCard = self.match.matches[indexPath.row]
-//        var data: [Fields: String] = matchCard.getData([
-//            .JobTitle,
-//            .JobDescription,
-//            .JobDateStart,
-//            .ClientAvatar,
-//            .Status,
-//            .JobProfileTalent])
-        
         let cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifier.Match.Detail.rawValue, forIndexPath: indexPath) as! MatchOverviewCell
         cell.configureCell(matchCard)
         return cell
@@ -124,7 +68,7 @@ class MatchTableViewController: UITableViewController, MatchCardDelegate {
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         self.match.setMatch(indexPath.row)
-        performSegueWithIdentifier("showMatchID", sender: self)
+        performSegueWithIdentifier(SegueIdentifier.MatchID, sender: self)
     }
     
     
@@ -159,17 +103,17 @@ class MatchTableViewController: UITableViewController, MatchCardDelegate {
         }
     }
     
-    
-    
-    /*func setupLeftMenuButton() {
-        let leftDrawerButton = DrawerBarButtonItem(target: self, action: "leftDrawerButtonPress:")
-        self.navigationItem.setLeftBarButtonItem(leftDrawerButton, animated: true)
+    @IBAction func onFilterBarButtonTouch(sender: AnyObject) {
+        
+        let ac = FilterMatchAlertController(resource: match) {
+            self.tableView.reloadSections(NSIndexSet(index: 0), withRowAnimation: UITableViewRowAnimation.Fade)
+            
+            var statusFieldLocalizationKey: String = "ActiveFilter"
+            if let currentStatusField = self.match.currentStatusField {
+                statusFieldLocalizationKey = currentStatusField.rawValue
+            }
+            self.tableView.setTableHeaderViewWithResults(NSLocalizedString(statusFieldLocalizationKey, comment: ""))
+            }.configureAlertController()
+        self.presentViewController(ac, animated: true, completion: nil)
     }
-    
-    // MARK: - Button Handlers
-    
-    func leftDrawerButtonPress(sender: AnyObject?) {
-        self.evo_drawerController?.toggleDrawerSide(.Left, animated: true, completion: nil)
-    }*/
-    
 }

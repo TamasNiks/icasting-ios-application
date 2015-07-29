@@ -324,7 +324,7 @@ extension MatchDetailTableViewController: DilemmaCellExtendedButtonDelegate {
     
     func dilemmaCell(cell: UITableViewCell, didPressDecidedButtonForState decidedState: DecisionState, forIndexPath indexPath: NSIndexPath) {
         
-        self.performSegueWithIdentifier("showConversation", sender: nil)
+        self.performSegueWithIdentifier(SegueIdentifier.Conversation, sender: nil)
         
         println("back to match view controller")
         

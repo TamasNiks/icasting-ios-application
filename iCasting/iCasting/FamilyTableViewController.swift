@@ -1,5 +1,5 @@
 //
-//  CastingObjectsTableViewController.swift
+//  FamilyTableViewController.swift
 //  iCasting
 //
 //  Created by Tim van Steenoven on 13/05/15.
@@ -65,8 +65,10 @@ class FamilyTableViewController: UITableViewController {
         Auth.logout() { failure in
             if failure == nil {
                 println("Logout request successfully, unwind to login")
-                self.performSegueWithIdentifier("unwindToLogin", sender: self)
+                self.performSegueWithIdentifier(SegueIdentifier.Unwind.Login, sender: self)
+                return
             }
+            println("DEBUG - FamilyTableViewController: Logout \(failure)")
         }
     }
     
@@ -123,7 +125,7 @@ class FamilyTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
         (User.sharedInstance as UserCastingObject).setCastingObject(indexPath.row)
-        self.performSegueWithIdentifier("showMain", sender: self)
+        self.performSegueWithIdentifier(SegueIdentifier.Main, sender: self)
     }
     
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {

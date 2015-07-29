@@ -43,7 +43,7 @@ class SettingTableViewController: UITableViewController {
                     Auth.logout() { failure in
                         if failure == nil {
                             println("Logout request successfully, unwind to login")
-                            self.performSegueWithIdentifier("unwindToLogin", sender: self)
+                            self.performSegueWithIdentifier(SegueIdentifier.Unwind.Login, sender: self)
                         } else {
                             println("DEBUG: \(failure)")
                         }
@@ -51,7 +51,7 @@ class SettingTableViewController: UITableViewController {
                     
                 case CellIdentifier.Settings.ChangeCastingObject.rawValue:
                     
-                    self.performSegueWithIdentifier("unwindToChooseCastingObject", sender: self)
+                    self.performSegueWithIdentifier(SegueIdentifier.Unwind.CastingObjects, sender: self)
                     
                 default:
                     println("Warning: Not added to reuseIdentifiers enum.")

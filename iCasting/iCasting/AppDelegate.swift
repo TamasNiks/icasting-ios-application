@@ -29,6 +29,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GGLInstanceIDDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
 
+        println("application:didFinishLaunchingWithOptions")
+        
         // Configure the Google context: parses the GoogleService-Info.plist, and initializes
         // the services that have entries in the file
         var configureError:NSError?
@@ -132,7 +134,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GGLInstanceIDDelegate {
         GCMService.sharedInstance().appDidReceiveMessage(userInfo);
         // Handle the received message
 
-        NSNotificationCenter.defaultCenter().postNotificationName(messageKey, object: nil, userInfo: userInfo)
+        
+        
+        
+        //NSNotificationCenter.defaultCenter().postNotificationName(messageKey, object: nil, userInfo: userInfo)
     }
     
     
@@ -144,8 +149,35 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GGLInstanceIDDelegate {
         
         // Handle the received message
         // Invoke the completion handler passing the appropriate UIBackgroundFetchResult value
-        NSNotificationCenter.defaultCenter().postNotificationName(messageKey, object: nil, userInfo: userInfo)
         
+        
+        if application.applicationState == UIApplicationState.Active {
+
+            let notification = CWStatusBarNotification()
+            notification.notificationLabelBackgroundColor = UIColor.redColor()
+            notification.notificationStyle = CWNotificationStyle.NavigationBarNotification
+            notification.displayNotificationWithMessage("Hello World", forDuration: 4.0)
+            
+            let receivedNotificationKey = "PushNotification"
+            NSNotificationCenter.defaultCenter().postNotificationName(receivedNotificationKey, object: nil, userInfo: userInfo)
+            //NSNotificationCenter.defaultCenter().postNotification(notification: NSNotification)
+
+        } else {
+
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                
+                let localNotification = UILocalNotification()
+                localNotification.alertTitle = "The title of the notification"
+                localNotification.alertBody = "The body of the notification"
+                localNotification.userInfo = nil
+                localNotification.fireDate = NSDate()
+                //application.presentLocalNotificationNow(localNotification)
+                application.scheduleLocalNotification(localNotification)
+                
+            })
+            
+        }
+    
         handler(UIBackgroundFetchResult.NoData)
     }
 
@@ -200,12 +232,13 @@ func configureAndRegisterRemoteNotifications(application: UIApplication) {
 
 func saveAPNSDeviceToken(token: NSData) {
     
-    PushToken.token = Push.convertDeviceTokenToHexadecimal(token)
+    PushToken.token = PushNotificationDevice.convertDeviceTokenToHexadecimal(token)
 }
 
 
 func saveGCMRegistrationToken(token: String) {
     // TODO: It is not 100% guaranteed that a registration token will be set if a user logs in and want to register the device, come up with something that handles this.
+    println("AppDelegate: GCM token will be saved")
     PushToken.token = token
 }
 

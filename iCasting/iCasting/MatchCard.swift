@@ -63,6 +63,7 @@ final class MatchCard : NSObject, Equatable, Printable, ResponseCollectionSerial
         
         let key: [SubscriptType] = Fields.Status.getPath()
         let status = matchCard[key].stringValue
+        println("satus: "+status)
         return FilterStatusFields.allValues[status]
     }
     
@@ -86,6 +87,7 @@ final class MatchCard : NSObject, Equatable, Printable, ResponseCollectionSerial
             } else {
                 req = Router.Match.MatchRejectTalent(ID)
             }
+            
             // TEST: comment the request code below if you do the accept test
             //testAccept(callBack)
             

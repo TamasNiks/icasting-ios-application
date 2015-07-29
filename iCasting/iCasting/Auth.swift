@@ -40,7 +40,7 @@ struct Passport {
     private var _access_token: String? //="551d58a226042f74fb745533$YENvtqK2Eis3oKCG6vo76IgilplRXFO9h+LMKT1HdRo="
     
     private func savePassport() {
-        println("Passport will be saved")
+        println("Passport update will be saved")
         // TODO: A better store to save this information is probably the keychain, this is where Facebook it's access_token saves
         NSUserDefaults.standardUserDefaults().setObject(_access_token, forKey: Passport.TOKEN_KEY)
         NSUserDefaults.standardUserDefaults().setObject(_user_id, forKey: Passport.USERID_KEY)
@@ -102,10 +102,12 @@ class Auth {
     static func logout(callBack: RequestClosure) {
     
         // First deregister the device
-        Push().deregisterDevice { failure in
+        PushNotificationDevice.sharedInstance.deregisterDevice { failure in
             
             if let failure = failure {
                 println("DEBUG: "+failure.description)
+                callBack(failure: failure)
+                return
             }
         
             request(Router.Auth.Logout).responseJSON(completionHandler: { (request, response, json, error) -> Void in

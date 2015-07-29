@@ -60,4 +60,23 @@ extension UIColor {
         return UIColor(red: 46.rgb, green: 204.rgb, blue: 113.rgb, alpha: 1)
     }
     
+    
+    
+    static func color(forMatchStatus status: FilterStatusFields) -> UIColor? {
+        
+        switch status {
+            
+        case .Pending:
+            return UIColor.lightGrayColor()
+        case .TalentAccepted:
+            return UIColor.orangeColor()
+        case .Negotiations:
+            return UIColor(red: 123/255, green: 205/255, blue: 105/255, alpha: 1)
+        case .Closed:
+            return UIColor.redColor()
+        default:
+            return nil
+        }
+    }
+    
 }

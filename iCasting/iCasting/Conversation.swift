@@ -41,7 +41,7 @@ class Conversation: NSObject {
         return messageList.list
     }
     
-    private var conversationToken: ConversationToken?
+    internal var conversationToken: ConversationToken?
 
     init(matchID:String) {
         self.matchID = matchID
@@ -68,7 +68,7 @@ class Conversation: NSObject {
 extension Conversation : SocketCommunicationHandlerDelegate {
     
     
-    private func createSocketCommunicationHandler() {
+    internal func createSocketCommunicationHandler() {
         
         self.socketCommunicator = SocketCommunicator(conversationToken: self.conversationToken!.token)
         self.socketCommunicator?.delegate = self
@@ -414,99 +414,5 @@ extension Conversation: MessageCommunicationProtocol {
 
 
 
-extension Conversation : ModelRequest {
-    
-    func get(callBack: RequestClosure) {
-        
-        // This is a two step request, first get the conversation, and for instant sending and receiving messages, we need a conversation token
-        request(Router.Match.MatchConversation(self.matchID)).responseJSON() { (request, response, json, error) -> Void in
-                
-            // Network or general errors?
-            if let errors = ICError(error: error).getErrors() {
-                callBack(failure: errors)
-            }
-            
-            // No network errors, extract json
-            if let _json: AnyObject = json {
-                
-                let messagesJSON = JSON(_json)
-                
-                // API Errors?
-                if let errors = ICError(json: messagesJSON).getErrors() {
-                    println(error)
-                    callBack(failure: errors)
-                    return
-                }
-                
-                
-                // There are no errors, perform the next request
-                self.performRequestConversationToken(messagesJSON, callBack: callBack)
 
-            }
-        }
-    }
-    
-    
-    private func performRequestConversationToken(messagesJSON: JSON, callBack: RequestClosure) {
-
-        // Request the conversation token
-        self.requestConversationToken { (request, response, json, error) -> () in
-            
-            // Network or general errors?
-            if let errors = ICError(error: error).getErrors() {
-                callBack(failure: errors)
-            }
-            
-            // No network errors, extract json
-            if let _json: AnyObject = json {
-                
-                let tokenJSON = JSON(_json)
-                
-                // API Errors?
-                if let errors = ICError(json: tokenJSON).getErrors() {
-                    println(errors)
-                    callBack(failure: errors)
-                    return
-                }
-                
-                // There are no errors, get everything to work
-                self.setToken(tokenJSON)
-                self.messageList.buildList(fromJSON: messagesJSON)
-                
-                // First, create a socket service, it wil set the delegate as well.
-                self.createSocketCommunicationHandler()
-                
-                // Then let the controller know the first get request is ready, so it can prepare the view and observers.
-                callBack(failure: nil)
-                
-                // After that, add the listeners, this method will call the delegate for the handlers
-                self.socketCommunicator?.addListeners()
-                
-                // If everything is ready, start the socket
-                self.socketCommunicator?.start()
-                
-            }
-        }
-    }
-    
-    
-    private func requestConversationToken(callBack: JSONResponeType) {
-        
-        request(Router.Match.MatchConversationToken(self.matchID))
-            .responseJSON() { (request, response, json, error) -> Void in
-                callBack(request: request, response: response, json: json, error: error)
-        }
-    }
-    
-    
-    private func setToken(json: JSON) {
-        
-        // TEST: if necessary, test all the values at once before create an instant of conversation token
-        let values = [
-            json["token"].stringValue,
-            json["client"].stringValue,
-            json["url"].stringValue]
-        conversationToken = ConversationToken(token: values[0], client: values[1], url: values[2])
-    }
-}
 

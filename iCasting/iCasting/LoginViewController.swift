@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import FBSDKCoreKit
+//import FBSDKCoreKit
 import FBSDKLoginKit
 
 
@@ -16,17 +16,22 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var loginButton: UIButton!
-    
     @IBAction func prepareForUnwind(segue:UIStoryboardSegue) {}
     
-    dynamic var tryToLogin: Bool = false
-    
+    //dynamic var tryToLogin: Bool = false
+    let loginSequenceController = LoginSequenceController()
+    let kTryToLoginKeyPath = "loginSequenceController.tryToLogin"
     var keyboardController: KeyboardController?
+    
+    
+    
+    // MARK: ViewController life cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.addObserver(self, forKeyPath: "tryToLogin", options: nil, context: nil)
+        self.addObserver(self, forKeyPath: kTryToLoginKeyPath, options: nil, context: nil)
     }
+    
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(false)
@@ -40,31 +45,28 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         setTestDataOnInputFields()
         
         // Try to login, if there's authentication data stored somewhere, it will login
-        tryLoginSequence()
+        loginSequenceController.tryLoginSequence((success: {
+        
+                self.performRightSegue()
+            
+            }, failure: { error in
+        
+                self.performErrorHandling(error)
+        }))
     }
+    
     
     override func viewDidDisappear(animated: Bool) {
         super.viewDidDisappear(animated)
         self.keyboardController?.removeObserver()
     }
     
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
 
-    
-    // MARK: Textfield Delegate Methods
-
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
-        if textField != self.passwordTextField {
-            self.passwordTextField.becomeFirstResponder()
-        } else {
-            textField.resignFirstResponder()
-        }
-        return true
-    }
-    
 
     // Normal login
     
@@ -77,9 +79,18 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         if !validateUserInput(c) { return }
         
         // The credentials are valid, try to login the user with the given credentials
-        let appCredentials = Credentials()
-        appCredentials.userCredentials = c
-        startLoginSequence(appCredentials)
+        let credentials = Credentials()
+        credentials.userCredentials = c
+        
+        loginSequenceController.startLoginSequence(credentials, result: (success: {
+            
+                self.performRightSegue()
+            
+            }, failure: { error in
+        
+                self.performErrorHandling(error)
+            }
+        ))
     }
     
     
@@ -104,109 +115,25 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         return true
     }
     
-    
-    private func tryLoginSequence() {
+     
+    private func performRightSegue() {
+     
+        // If the user is not a client or talent, it is a manager, it will have casting objects, show the overview
         
-        println("LoginViewController: tryLoginSequence")
+        if User.sharedInstance.isManager {
+            
+            self.performSegueWithIdentifier(SegueIdentifier.CastingObjects, sender: self)
+            return
+        }
         
-        // First check if the user still exists, whether through facebook or normal login
-        if let passport = Auth.passport
-        {
-            // Because the user is still loged in, we give don't send credentials as parameters
-            startLoginSequence(nil)
-        }
-        // If the user doesn't have an passport authentication stored, check if Facebook is still logged in, if it is, logout, because the try to login depends totally on the access_token and user_id of iCasting. If it isn't there, the user should login manually, hence logout on facebook
-        else {
-            if let fbsdkCurrentAccessToken = FBSDKAccessToken.currentAccessToken() {
-                FBSDKLoginManager().logOut()
-            }
-        }
+        // If the user is talent, there's just one casting object, it has already been set in the model
+        self.performSegueWithIdentifier(SegueIdentifier.Main, sender: self)
     }
     
     
-    private func startLoginSequence(c: Credentials?) {
+    private func performErrorHandling(errors: ICErrorInfo) {
         
-        self.tryToLogin = true
-
-        Auth.login(c) { error in
-
-            // First do some error handling from the login
-            if let error = error {
-                self.performErrorHandling(error)
-                return
-            }
-            
-            // Create a completionHandler which gets called after all the necessary requests are done
-            let completionHandler: () -> () = {
-
-                self.tryToLogin = false
-                
-                // Check if the user is client, because clients are not yet supported, show an alert and log out
-                
-                if User.sharedInstance.isClient {
-                    
-                    let title = NSLocalizedString("Announcement", comment: "Title of alert")
-                    let message = NSLocalizedString("login.alert.client.notsupported", comment: "")
-                    let av = UIAlertView(title: title, message: message, delegate: nil, cancelButtonTitle: nil, otherButtonTitles: "Ok")
-                    av.show()
-                    
-                    Auth.logout({ (failure) -> () in println(failure) })
-                    return
-                }
-                
-                // Try to register the device
-                
-                Push().registerDevice() { error in
-                    
-                    if let error = error {
-                        println("DEBUG: Registering failure - \(error)")
-                    }
-                }
-                
-                // If the user is not a client or talent, it is a manager, it will have casting objects, show the overview
-                
-                if User.sharedInstance.isManager {
-                    
-                    self.performSegueWithIdentifier("showCastingObjects", sender: self)
-                    return
-                }
-                
-                // If the user is talent, there's just one casting object, it has already been set in the model
-                
-                self.performSegueWithIdentifier("showMain", sender: self)
-            }
-            
-            
-            // Do the following up HTTP requests to get the app data
-            
-            // Get general user information
-            UserRequest().execute { error -> () in
-                
-                if let error = error {
-                    self.performErrorHandling(error)
-                    return
-                }
-                
-                // Get the casting object(s) from the user account
-                CastingObjectRequest().execute { error -> () in
-                    
-                    if let error = error {
-                        self.performErrorHandling(error)
-                        return
-                    }
-                    
-                    println(User.sharedInstance)
-                    completionHandler()
-                }
-            }
-            
-        }
-        
-    }
-    
-    func performErrorHandling(errors: ICErrorInfo) {
-        
-        self.tryToLogin = false
+        loginSequenceController.tryToLogin = false
         
         println(errors)
         
@@ -224,17 +151,33 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         alertView.show()
     }
     
+    
     override func observeValueForKeyPath(keyPath: String, ofObject object: AnyObject, change: [NSObject : AnyObject], context: UnsafeMutablePointer<Void>) {
         
-        if keyPath == "tryToLogin" {
-            if tryToLogin == true {
+        if keyPath == kTryToLoginKeyPath {
+            
+            if loginSequenceController.tryToLogin == true {
                 SwiftSpinner.show("Login...")
                 self.loginButton.enabled = false
-            } else {
+            }
+            else {
                 SwiftSpinner.hide()
                 self.loginButton.enabled = true
             }
         }
+    }
+    
+    
+    
+    // MARK: Textfield Delegate Methods
+    
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        if textField != self.passwordTextField {
+            self.passwordTextField.becomeFirstResponder()
+        } else {
+            textField.resignFirstResponder()
+        }
+        return true
     }
 }
 
@@ -252,9 +195,20 @@ extension LoginViewController : FBSDKLoginButtonDelegate {
         else if result.isCancelled {
         }
         else {
+            
             let credentials = Credentials()
             credentials.facebookCredentials = FacebookCredentials(userID: result.token.userID)
-            startLoginSequence(credentials)
+
+            loginSequenceController.startLoginSequence(credentials, result: (success: {
+                
+                    self.performRightSegue()
+                
+                }, failure: { error in
+                    
+                    self.performErrorHandling(error)
+                    
+                }
+            ))
         }
     }
     
