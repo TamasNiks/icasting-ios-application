@@ -48,8 +48,8 @@
 		22103B291AE542D400C34C89 /* MatchDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22103B281AE542D400C34C89 /* MatchDetailTableViewController.swift */; };
 		22103B2B1AE549DF00C34C89 /* MatchTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22103B2A1AE549DF00C34C89 /* MatchTableViewController.swift */; };
 		22103B2D1AE5597800C34C89 /* FontAwesome.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22103B2C1AE5597800C34C89 /* FontAwesome.swift */; };
-		221B57F31AF3E686004ABE43 /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 221B57F21AF3E686004ABE43 /* Match.swift */; };
-		221B57F41AF3E686004ABE43 /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 221B57F21AF3E686004ABE43 /* Match.swift */; };
+		221B57F31AF3E686004ABE43 /* MatchCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 221B57F21AF3E686004ABE43 /* MatchCollection.swift */; };
+		221B57F41AF3E686004ABE43 /* MatchCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 221B57F21AF3E686004ABE43 /* MatchCollection.swift */; };
 		22223E271B208780001711C4 /* MessageBalloonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22223E261B208780001711C4 /* MessageBalloonView.swift */; };
 		22223E281B208780001711C4 /* MessageBalloonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22223E261B208780001711C4 /* MessageBalloonView.swift */; };
 		222495DA1B1753F100F021D2 /* MessageList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222495D91B1753F100F021D2 /* MessageList.swift */; };
@@ -330,7 +330,7 @@
 		22103B2C1AE5597800C34C89 /* FontAwesome.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FontAwesome.swift; sourceTree = "<group>"; };
 		22103B2E1AE5598100C34C89 /* FontAwesome.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome.otf; sourceTree = "<group>"; };
 		2211A5E21ADC5B61004DD8DE /* ClosurePlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = ClosurePlayground.playground; sourceTree = "<group>"; };
-		221B57F21AF3E686004ABE43 /* Match.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = Match.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		221B57F21AF3E686004ABE43 /* MatchCollection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = MatchCollection.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		222014E51AEF92D7004500FA /* JSONParsePlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = JSONParsePlayground.playground; sourceTree = "<group>"; };
 		22223E261B208780001711C4 /* MessageBalloonView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageBalloonView.swift; sourceTree = "<group>"; };
 		222495D91B1753F100F021D2 /* MessageList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageList.swift; sourceTree = "<group>"; };
@@ -625,7 +625,7 @@
 		222CBB651B06641800D91137 /* Match */ = {
 			isa = PBXGroup;
 			children = (
-				221B57F21AF3E686004ABE43 /* Match.swift */,
+				221B57F21AF3E686004ABE43 /* MatchCollection.swift */,
 				222CBB631B0663D100D91137 /* MatchCard.swift */,
 				2259A61C1B7262860088622D /* MatchCardData.swift */,
 				222CBB691B0693FD00D91137 /* MatchFields.swift */,
@@ -1093,6 +1093,7 @@
 					};
 					2268C5461ACE905D00E58BF4 = {
 						CreatedOnToolsVersion = 6.2;
+						TestTargetID = 2268C52F1ACE905D00E58BF4;
 					};
 				};
 			};
@@ -1313,7 +1314,7 @@
 				22103B291AE542D400C34C89 /* MatchDetailTableViewController.swift in Sources */,
 				224DE16E1B27308200A0752E /* SocketCommunicator.swift in Sources */,
 				2259A5E41B712F1F0088622D /* MatchStatusColor.swift in Sources */,
-				221B57F31AF3E686004ABE43 /* Match.swift in Sources */,
+				221B57F31AF3E686004ABE43 /* MatchCollection.swift in Sources */,
 				2256CE231AF2CD17005D40EB /* ExampleViewController.swift in Sources */,
 				22103B2B1AE549DF00C34C89 /* MatchTableViewController.swift in Sources */,
 				22082CD71AFB927A00AF5EDB /* SocketAnyEvent.swift in Sources */,
@@ -1449,7 +1450,7 @@
 				22082CDA1AFB927A00AF5EDB /* SocketEngine.swift in Sources */,
 				22082CDE1AFB927A00AF5EDB /* SocketEventHandler.swift in Sources */,
 				22082CE41AFB927A00AF5EDB /* SocketLogger.swift in Sources */,
-				221B57F41AF3E686004ABE43 /* Match.swift in Sources */,
+				221B57F41AF3E686004ABE43 /* MatchCollection.swift in Sources */,
 				2252C0CB1B53BFC70050DF8B /* UIImageView+Extensions.swift in Sources */,
 				226B2E971B07A33E001DA2BD /* ICAlertControllers.swift in Sources */,
 				22C224D11ADD175C00202BF9 /* User.swift in Sources */,
@@ -1542,6 +1543,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -1670,6 +1672,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "iCasting/iCasting-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/iCasting.app/iCasting";
 			};
 			name = Debug;
 		};
@@ -1686,6 +1689,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "iCasting/iCasting-Bridging-Header.h";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/iCasting.app/iCasting";
 			};
 			name = Release;
 		};

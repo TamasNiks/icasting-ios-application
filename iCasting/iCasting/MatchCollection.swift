@@ -1,5 +1,5 @@
 //
-//  Match.swift
+//  MatchCollection.swift
 //  iCasting
 //
 //  Created by Tim van Steenoven on 01/05/15.
@@ -32,7 +32,7 @@ enum FilterStatusFields: String {
 
 
 
-class Match : NSObject, MatchCardObserver {
+class MatchCollection : NSObject, MatchCardObserver {
     
     // Contains the original matches from the request, all changes to the matches array must mirror the _matches array
     private var _matches: [MatchCard] = [MatchCard]()

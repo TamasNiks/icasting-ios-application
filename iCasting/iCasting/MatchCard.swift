@@ -52,19 +52,17 @@ final class MatchCard : NSObject, Equatable, Printable, ResponseCollectionSerial
     
     weak var observer: MatchCardObserver?
     
-    var raw: JSON {
-        return matchCard
-    }
+    var raw: JSON { return matchCard }
     
     
-    override var description: String {
-        return profile.description
-    }
+//    override var description: String {
+//        return profile.description
+//    }
     
     
-    subscript(index: Int) -> ArrayStringValue {
-        return profile[index]
-    }
+//    subscript(index: Int) -> ArrayStringValue {
+//        return profile[index]
+//    }
     
     
     // Init
@@ -99,7 +97,7 @@ final class MatchCard : NSObject, Equatable, Printable, ResponseCollectionSerial
         
         let path: [SubscriptType] = Fields.Status.getPath()
         let status = matchCard[path].stringValue
-        println("satus: "+status)
+        println("status: "+status)
         return FilterStatusFields.allValues[status]
     }
     
@@ -166,6 +164,9 @@ final class MatchCard : NSObject, Equatable, Printable, ResponseCollectionSerial
     func dispatchDecision(decision: DecisionState, callBack: RequestClosure) {
         
         if let ID = getID(.MatchCardID) {
+            
+//            testDecision(decision, callBack: callBack)
+//            return
             
             var req: URLRequestConvertible!
             if decision == DecisionState.Accept {

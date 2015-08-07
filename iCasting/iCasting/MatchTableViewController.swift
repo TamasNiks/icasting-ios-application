@@ -10,8 +10,7 @@ import UIKit
 
 class MatchTableViewController: ICTableViewController, MatchCardObserver {
 
-    let match: Match = Match()
-    
+    let match: MatchCollection = MatchCollection()
     
     // MARK: - ViewController Life cycle
 
@@ -33,7 +32,6 @@ class MatchTableViewController: ICTableViewController, MatchCardObserver {
         self.match.filter(field: FilterStatusFields.Closed, allExcept: true)
         
         if self.match.matches.isEmpty {
-            
             self.tableView.setTableHeaderViewWithoutResults(NSLocalizedString("NoMatches", comment: ""))
             return false
         } else {
@@ -85,11 +83,11 @@ class MatchTableViewController: ICTableViewController, MatchCardObserver {
     func didAcceptMatch() {
         
         println("DID ACCEPT MATCH DELEGATE CALL")
-        if let indexPath: NSIndexPath = self.tableView.indexPathForSelectedRow() {
-            self.tableView.reloadRowsAtIndexPaths([indexPath as AnyObject], withRowAnimation: UITableViewRowAnimation.None)
-            //self.tableView.cellForRowAtIndexPath(indexPath)?.setSelected(true, animated: true)
-            self.tableView.selectRowAtIndexPath(indexPath, animated: true, scrollPosition: UITableViewScrollPosition.None)
-        }
+        // It will automaticaly reload the cell by the viewWillAppear method, this doesn't need to implement this method.
+//        if let indexPath: NSIndexPath = self.tableView.indexPathForSelectedRow() {
+//            self.tableView.reloadRowsAtIndexPaths([indexPath as AnyObject], withRowAnimation: UITableViewRowAnimation.None)
+//            self.tableView.selectRowAtIndexPath(indexPath, animated: true, scrollPosition: UITableViewScrollPosition.None)
+//        }
     }
     
     func hasChangedStatus() {}

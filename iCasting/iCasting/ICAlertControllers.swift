@@ -73,9 +73,9 @@ class FilterMatchAlertController : ICAlertController {
     private let alertController: UIAlertController
     let postAction: ()->Void
     
-    let match: Match
+    let match: MatchCollection
     
-    init(resource: Match, postAction: () -> Void) {
+    init(resource: MatchCollection, postAction: () -> Void) {
         self.match = resource
         self.postAction = postAction
         

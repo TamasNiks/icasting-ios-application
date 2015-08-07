@@ -245,14 +245,13 @@ extension ConversationViewController {
     }
     
     
-    
     func getDefaultCell(forIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        
         let cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifier.Message.SystemMessageCell.rawValue,
             forIndexPath: indexPath) as! UITableViewCell
         cell.textLabel?.text = "DEBUG: Don't forget to bind the TextType to the CellIdentifier!"
         return cell
     }
-    
     
     
     func getAndConfigCell(indexPath: NSIndexPath) -> UITableViewCell? {
@@ -263,25 +262,33 @@ extension ConversationViewController {
             identifier = CellIdentifier.Message.fromTextType(message.type),
             cellReuser = cellReuser {
                 
-            let cell: UITableViewCell? = cellReuser.reuseCell(identifier, indexPath: indexPath, configuratorType: message.type)
-            let cellConfigurator = cellReuser.configuratorFactory.getConfigurator()
+                let cell: UITableViewCell? = cellReuser.reuseCell(identifier, indexPath: indexPath, configuratorType: message.type)
+                let cellConfigurator = cellReuser.configuratorFactory.getConfigurator()
+                    
+                let data = [
+                    CellKey.Model : message as Any,
+                    CellKey.IndexPath : indexPath,
+                    CellKey.Delegate : self
+                    ]
                 
-            if let cc = cellConfigurator as? ReportedCompleteMessageCellConfigurator {
-                cc.rated = matchCard.talentHasRated
-            }
-            
-            let data = [
-                CellKey.Model : message as Any,
-                CellKey.IndexPath : indexPath,
-                CellKey.Delegate : self
-                ]
+                // Add a rating to a cell configurator, because of a possible bug on the platform, also check the status
+                func setRatingForCellConfigurator() {
+                    if let cc = cellConfigurator as? ReportedCompleteMessageCellConfigurator {
+                        if let status = matchCard.getStatus() {
+                            if status == FilterStatusFields.Completed {
+                                cc.rated = matchCard.talentHasRated
+                            }
+                        }
+                    }
+                }
                 
-            cellConfigurator?.configureCell(data: data)
-            
-            // For changes inside a message, add a changeObserver
-            addChangeInMessageObserver(forMessage: message, withCellIdentifier: identifier)
-                
-            return cell
+                setRatingForCellConfigurator()
+                cellConfigurator?.configureCell(data: data)
+
+                // For changes inside a message, add a changeObserver
+                addObserverForChangeInMessage(forMessage: message, withCellIdentifier: identifier)
+                    
+                return cell
         }
         
         return nil
@@ -528,7 +535,7 @@ extension ConversationViewController : ConversationErrorDelegate {
     }
     
     
-    func addChangeInMessageObserver(forMessage message: Message, withCellIdentifier cellIdentifer: CellIdentifier.Message?) {
+    func addObserverForChangeInMessage(forMessage message: Message, withCellIdentifier cellIdentifer: CellIdentifier.Message?) {
 
         // There are two options to update a cell. The easiest is just to reload the cell with a prebuild animation. The data source will get the updated model and after going through a cell configurator the cell should reflect the latest changes. The shortcut is to pass the updated message to a cell configurator (see function below). But then you have to take care of visual feedback of a change in a cell to the user in the configurator. Therefor it is better to use the reloadRowsAtIndexPath for incomming changes in messages. It's less of a hassle, less code and it follows the MVC cycle. The outgoing changes in messages (device side changes) will be handled differently.
         

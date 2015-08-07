@@ -91,7 +91,7 @@ extension Notifications : ModelRequest {
 
 
 // COLLECTION
-extension Match : ModelRequest {
+extension MatchCollection : ModelRequest {
     
     func get(callBack: RequestClosure) {
         

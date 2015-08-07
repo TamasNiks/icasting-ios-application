@@ -31,7 +31,6 @@ class ConcreteMessageCellCongifuratorVisitors: MessageCellCongifuratorVisitors {
         self.data = data
     }
     
-    
     func visit(cell: MessageCell) {
         
         var oc: AbstractCellConfigurator = TextMessageCellConfigurator(cell: cell)
@@ -58,6 +57,4 @@ class ConcreteMessageCellCongifuratorVisitors: MessageCellCongifuratorVisitors {
         var oc: AbstractCellConfigurator = OfferMessageCellConfigurator(cell: cell)
         oc.configureCell(data: data)
     }
-    
-    
 }

@@ -359,8 +359,9 @@ class ReportedCompleteMessageCellConfigurator: AbstractCellConfigurator {
         
         // Depending on the rated property, decide if the user can press on the button to rate, or to consider it done
         func setButtonMarkCompleted() {
-            if let rated = rated {
-                if !rated {
+
+            if let rated = self.rated {
+                if rated ==  false {
                     c.acceptedWithButton = true
                     c.acceptedTitle = NSLocalizedString("Rate", comment:"")
                     return

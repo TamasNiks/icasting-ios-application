@@ -10,8 +10,7 @@ import UIKit
 
 class NegotiationsTableViewController: ICTableViewController {
 
-    var match: Match = Match()
-    
+    let match: MatchCollection = MatchCollection()
     
     // MARK: - Table view controller life cycle
     
@@ -25,13 +24,11 @@ class NegotiationsTableViewController: ICTableViewController {
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     
     override func requestSucceedWithModel(model: ModelRequest) -> Bool {
         
-        //self.match.filter(field: .Completed)
         self.match.filter([.Negotiations, .Completed])
         
         if self.match.matches.isEmpty {

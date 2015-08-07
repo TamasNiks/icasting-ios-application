@@ -2,7 +2,6 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="9pv-A4-QxB">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
-        <capability name="Alignment constraints to the first baseline" minToolsVersion="6.0"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
@@ -1717,117 +1716,7 @@
                                 </tableViewCellContentView>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="decisionCell" rowHeight="70" id="2mP-Gv-1dK" customClass="MatchDecisionCell" customModule="iCasting" customModuleProvider="target">
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="2mP-Gv-1dK" id="ap3-5q-lXF">
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <subviews>
-                                        <button opaque="NO" tag="1" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="awb-6J-aFT">
-                                            <rect key="frame" x="95" y="7" width="150" height="30"/>
-                                            <color key="backgroundColor" red="0.1960784314" green="0.78039215689999997" blue="0.30980392159999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" constant="100" id="MLC-yU-S2u">
-                                                    <variation key="heightClass=regular-widthClass=compact" constant="150"/>
-                                                </constraint>
-                                            </constraints>
-                                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                            <state key="normal" title="Accept">
-                                                <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                            </state>
-                                            <state key="disabled" title="Accepted"/>
-                                            <variation key="default">
-                                                <mask key="constraints">
-                                                    <exclude reference="MLC-yU-S2u"/>
-                                                </mask>
-                                            </variation>
-                                            <variation key="heightClass=regular-widthClass=compact">
-                                                <mask key="constraints">
-                                                    <exclude reference="MLC-yU-S2u"/>
-                                                </mask>
-                                            </variation>
-                                            <connections>
-                                                <action selector="onAccept:" destination="N73-Xm-znu" eventType="touchUpInside" id="Rhn-qC-OcJ"/>
-                                            </connections>
-                                        </button>
-                                        <button opaque="NO" tag="2" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JMC-0f-hHa">
-                                            <rect key="frame" x="344" y="7" width="150" height="30"/>
-                                            <color key="backgroundColor" red="0.74509803919999995" green="0.1450980392" blue="0.20392156859999999" alpha="1" colorSpace="calibratedRGB"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" constant="100" id="NS4-zk-3kW">
-                                                    <variation key="heightClass=regular-widthClass=compact" constant="150"/>
-                                                </constraint>
-                                            </constraints>
-                                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                            <state key="normal" title="Reject">
-                                                <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            </state>
-                                            <variation key="default">
-                                                <mask key="constraints">
-                                                    <exclude reference="NS4-zk-3kW"/>
-                                                </mask>
-                                            </variation>
-                                            <variation key="heightClass=regular-widthClass=compact">
-                                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
-                                                <mask key="constraints">
-                                                    <exclude reference="NS4-zk-3kW"/>
-                                                </mask>
-                                            </variation>
-                                            <connections>
-                                                <action selector="onReject:" destination="N73-Xm-znu" eventType="touchUpInside" id="j11-Jt-eoQ"/>
-                                            </connections>
-                                        </button>
-                                    </subviews>
-                                    <constraints>
-                                        <constraint firstItem="awb-6J-aFT" firstAttribute="top" secondItem="ap3-5q-lXF" secondAttribute="topMargin" constant="7" id="AzM-at-2dj"/>
-                                        <constraint firstAttribute="trailingMargin" secondItem="JMC-0f-hHa" secondAttribute="trailing" constant="30" id="EtO-62-Upk">
-                                            <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
-                                        </constraint>
-                                        <constraint firstItem="awb-6J-aFT" firstAttribute="width" secondItem="JMC-0f-hHa" secondAttribute="width" id="XqU-Sa-WuS"/>
-                                        <constraint firstItem="awb-6J-aFT" firstAttribute="baseline" secondItem="JMC-0f-hHa" secondAttribute="firstBaseline" id="cUW-7Y-42B"/>
-                                        <constraint firstItem="awb-6J-aFT" firstAttribute="leading" secondItem="ap3-5q-lXF" secondAttribute="leadingMargin" constant="25" id="g4K-L3-MP0">
-                                            <variation key="heightClass=regular-widthClass=compact" constant="0.0"/>
-                                        </constraint>
-                                        <constraint firstAttribute="bottomMargin" secondItem="awb-6J-aFT" secondAttribute="bottom" constant="6" id="hlZ-BO-5HH"/>
-                                        <constraint firstItem="JMC-0f-hHa" firstAttribute="top" secondItem="awb-6J-aFT" secondAttribute="top" id="jjE-BP-gJ4"/>
-                                        <constraint firstItem="JMC-0f-hHa" firstAttribute="baseline" secondItem="awb-6J-aFT" secondAttribute="firstBaseline" id="vNH-MC-UIr"/>
-                                        <constraint firstItem="JMC-0f-hHa" firstAttribute="leading" secondItem="awb-6J-aFT" secondAttribute="trailing" constant="15" id="zN6-XV-qXF">
-                                            <variation key="heightClass=regular-widthClass=compact" constant="8"/>
-                                        </constraint>
-                                    </constraints>
-                                    <variation key="default">
-                                        <mask key="constraints">
-                                            <exclude reference="AzM-at-2dj"/>
-                                            <exclude reference="XqU-Sa-WuS"/>
-                                            <exclude reference="cUW-7Y-42B"/>
-                                            <exclude reference="g4K-L3-MP0"/>
-                                            <exclude reference="hlZ-BO-5HH"/>
-                                            <exclude reference="EtO-62-Upk"/>
-                                            <exclude reference="jjE-BP-gJ4"/>
-                                            <exclude reference="vNH-MC-UIr"/>
-                                            <exclude reference="zN6-XV-qXF"/>
-                                        </mask>
-                                    </variation>
-                                    <variation key="heightClass=regular-widthClass=compact">
-                                        <mask key="constraints">
-                                            <include reference="AzM-at-2dj"/>
-                                            <include reference="XqU-Sa-WuS"/>
-                                            <include reference="cUW-7Y-42B"/>
-                                            <include reference="g4K-L3-MP0"/>
-                                            <include reference="hlZ-BO-5HH"/>
-                                            <include reference="EtO-62-Upk"/>
-                                            <include reference="jjE-BP-gJ4"/>
-                                            <include reference="vNH-MC-UIr"/>
-                                            <include reference="zN6-XV-qXF"/>
-                                        </mask>
-                                    </variation>
-                                </tableViewCellContentView>
-                                <connections>
-                                    <outlet property="customAcceptButton" destination="awb-6J-aFT" id="Ymz-lT-J39"/>
-                                    <outlet property="customRejectButton" destination="JMC-0f-hHa" id="nkw-vE-qK1"/>
-                                </connections>
-                            </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="dilemmaCell" rowHeight="70" id="kUa-JD-lJF" customClass="MatchDecisionCell" customModule="iCasting" customModuleProvider="target">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="decisionCell" rowHeight="70" id="kUa-JD-lJF" customClass="MatchDecisionCell" customModule="iCasting" customModuleProvider="target">
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="kUa-JD-lJF" id="VxA-IF-kRf">
                                     <autoresizingMask key="autoresizingMask"/>
@@ -2671,6 +2560,6 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="sFH-0R-1AL"/>
-        <segue reference="pYP-vz-7sl"/>
+        <segue reference="sra-My-8PO"/>
     </inferredMetricsTieBreakers>
 </document>

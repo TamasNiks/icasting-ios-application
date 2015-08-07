@@ -70,7 +70,7 @@ enum CellIdentifier {
     enum MatchDetail: String, CellIdentifierPropertyProtocol {
         case
         Header  = "headerCell",
-        Dilemma = "dilemmaCell",
+        Dilemma = "decisionCell",
         Summary = "summaryCell",
         Profile = "profileCell",
         Detail  = "detailCell"
