@@ -9,20 +9,21 @@
 import UIKit
 
 // If you make use of the CellReuser, it inherets functionality from the cell configurator. So be sure that if you get the configurator, create one first. If you don't make use of the CellReuser, it's not really worth using it.
-class CellReuser: CellConfiguratorFactory {
+class CellReuser {
     
     var tableView: UITableView
+    var configuratorFactory: AbstractCellConfiguratorFactory
     
-    init(tableView: UITableView) {
+    init(tableView: UITableView, cellConfiguratorFactory: AbstractCellConfiguratorFactory) {
         self.tableView = tableView
-        super.init(cellIdentifier: nil, cell: nil)
+        self.configuratorFactory = cellConfiguratorFactory
     }
     
-    func reuseCell(cellIdentifier: CellIdentifierProtocol, indexPath: NSIndexPath) -> UITableViewCell? {
+    func reuseCell(cellIdentifier: CellIdentifierProtocol, indexPath: NSIndexPath, configuratorType: ConfiguratorTypeProtocol) -> UITableViewCell? {
         
-        super.cellIdentifier = cellIdentifier
-        super.cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier.rawValue, forIndexPath: indexPath) as? UITableViewCell
-        return super.cell
+        configuratorFactory.configuratorType = configuratorType
+        configuratorFactory.cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier.rawValue, forIndexPath: indexPath) as? UITableViewCell
+        return configuratorFactory.cell
     }
 }
 

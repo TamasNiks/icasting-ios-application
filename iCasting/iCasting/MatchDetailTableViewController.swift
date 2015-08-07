@@ -12,13 +12,13 @@ import UIKit
 
 class MatchDetailTableViewController: ICTableViewController {
 
-    var delegate: MatchCardDelegate?
-    var matchCard: MatchCard? //= TalentMatch()
+    weak var delegate: MatchCardObserver?
+    var ratingController: RatingController!
+    var matchCard: MatchCard! //= TalentMatch()
     var sectionCount: SectionCount = SectionCount(numberOfStaticSections: 1, numberOfdynamicSections: 0)
     let rowsForStaticSection: Int = 4
     var matchDetails: MatchDetailType?
     
-    var job: Job?
     
     // MARK: - ViewController Life cycle
     
@@ -28,47 +28,62 @@ class MatchDetailTableViewController: ICTableViewController {
         prepareViewController()
     }
     
-    
-    // Configure the scrolling behavior of the header cell
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         
-        if let cell1:UITableViewCell = self.tableView.cellForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0)) {
-            if let cell2:UITableViewCell = self.tableView.cellForRowAtIndexPath(NSIndexPath(forRow: 1, inSection: 0)) {
-                self.tableView.insertSubview(cell2, aboveSubview: cell1)
+        // Configure the scrolling behavior of the header cell
+        if let cell1:UITableViewCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0)) {
+            if let cell2:UITableViewCell = tableView.cellForRowAtIndexPath(NSIndexPath(forRow: 1, inSection: 0)) {
+                tableView.insertSubview(cell2, aboveSubview: cell1)
             }
         }
     }
     
-    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
+    
     
     func prepareViewController() {
         
         NSIndexPath.defaultCellPropertyType = AbstractCellProperty.MatchDetailCells
         NSIndexPath.defaultCellIndex = 10
         
-        self.matchDetails = self.matchCard?.getOverview()
+        ratingController = RatingController(viewController: self)
         
-        self.sectionCount.numberOfStaticSections = 1
+        matchDetails = matchCard?.getOverview()
+        
+        sectionCount.numberOfStaticSections = 1
+        
         if let matchDetails = self.matchDetails {
-            self.sectionCount.numberOfdynamicSections = matchDetails.details.count
+            sectionCount.numberOfdynamicSections = matchDetails.details.count
         }
         
         // Setup the seperator lines between the cell
-        self.tableView.setWholeSeperatorLines()
+        tableView.setWholeSeperatorLines()
     }
-}
-
-
-
-
-
-// MARK: - Table view data source
-
-extension MatchDetailTableViewController {
+    
+    
+    // Data source helper methods
+    
+    func getModel(forIndexPath indexPath: NSIndexPath) -> [String:String] {
+        
+        let array = getSectionOfModel(inSection: indexPath.section)
+        return array[indexPath.row]
+    }
+    
+    override func getSectionOfModel(inSection section: Int) -> StringDictionaryArray {
+        
+        // Rows for dynamic section, sectionForDynamic starts at zero for the array
+        let sectionForDynamic: Int = sectionCount.getDynamicSection(section)
+        let fields: [Fields] = matchDetails!.details.keys.array
+        let f: Fields = fields[sectionForDynamic]
+        return matchDetails!.details[f]!
+    }
+    
+    
+    
+    // MARK: - Table view data source
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return sectionCount.sections
@@ -93,31 +108,12 @@ extension MatchDetailTableViewController {
         
         let cell = tableView.dequeueReusableCellWithIdentifier(reuseIdentifier, forIndexPath: indexPath) as! UITableViewCell
         
-        configCell(cell, identifier: cellIdentifier, indexPath: indexPath)
+        configureCell(cell, indexPath: indexPath, identifier: cellIdentifier)
         
         return cell
     }
     
-    
-    // Data source helper methods
-    
-    func getModel(forIndexPath indexPath: NSIndexPath) -> [String:String] {
-        
-        let array = getSectionOfModel(inSection: indexPath.section)
-        return array[indexPath.row]
-    }
-    
-    override func getSectionOfModel(inSection section: Int) -> StringDictionaryArray {
-        
-        // Rows for dynamic section, sectionForDynamic starts at zero for the array
-        let sectionForDynamic: Int = sectionCount.getDynamicSection(section)
-        let fields: [Fields] = matchDetails!.details.keys.array
-        let f: Fields = fields[sectionForDynamic]
-        return matchDetails!.details[f]!
-    }
-    
-    func configCell(cell: UITableViewCell, identifier: CellIdentifierPropertyProtocol, indexPath: NSIndexPath) {
-        
+    override func configureCell(cell: UITableViewCell, indexPath: NSIndexPath, identifier: CellIdentifierProtocol) {
         
         if let c = cell as? MatchHeaderCell {
             
@@ -127,7 +123,7 @@ extension MatchDetailTableViewController {
             
             c.configureCell(matchDetails!)
             
-        } else if let c = cell as? MatchAcceptCell {
+        } else if let c = cell as? MatchDecisionCell {
             
             c.delegate = self
             c.indexPath = indexPath
@@ -142,7 +138,7 @@ extension MatchDetailTableViewController {
         } else {
             
             println("no cell config for id: ")
-            println(identifier.properties.reuse)
+            println(identifier.rawValue)
         }
     }
 }
@@ -224,73 +220,68 @@ extension MatchDetailTableViewController {
 extension MatchDetailTableViewController: DilemmaCellExtendedButtonDelegate {
 
     
+    func handleDecision(decisionState: DecisionState, startAnimation: () -> ()) {
+        
+        self.matchCard?.dispatchDecision(decisionState, callBack: { (error) -> () in
+            if let error = error {
+                super.performErrorHandling(error)
+                return
+            }
+            startAnimation()
+            switch decisionState {
+            case DecisionState.Accept:
+                self.delegate?.didAcceptMatch()
+            case DecisionState.Reject:
+                self.navigationController?.popViewControllerAnimated(true)
+                self.delegate?.didRejectMatch()
+            }
+        })
+    }
+    
+    
     func dilemmaCell(
         cell: UITableViewCell,
         didPressButtonForState decisionState: DecisionState,
         forIndexPath indexPath: NSIndexPath,
         startAnimation: () -> ()) {
         
-        println("dilemma cell delegate")
-        
-        var ac: UIAlertController
-        
-        switch decisionState {
+            println("Dilemma cell delegate")
             
-        case DecisionState.Accept:
+            var ac: UIAlertController
             
-            ac = AcceptAlertController { () -> Void in
-                self.matchCard!.accept() { possibleError in
-                    if let error = possibleError {
-                        self.showErrorAlertView(error)
-                    } else {
-                        startAnimation()
-                        self.delegate?.didAcceptMatch()
-                    }
-                }
+            switch decisionState {
+                
+            case DecisionState.Accept:
+                
+                ac = AcceptAlertController { () -> Void in
+                    self.handleDecision(decisionState, startAnimation: startAnimation)
                 }.configureAlertController()
-            
-            
-        case DecisionState.Reject:
-            
-            ac = RejectAlertController { () -> Void in
-                self.matchCard!.reject() { possibleError in
-                    
-                    if let error = possibleError {
-                        self.showErrorAlertView(error)
-                    } else {
-                        startAnimation()
-                        self.navigationController?.popViewControllerAnimated(true)
-                        self.delegate?.didRejectMatch()
-                    }
-                }
+                
+            case DecisionState.Reject:
+                
+                ac = RejectAlertController { () -> Void in
+                    self.handleDecision(decisionState, startAnimation: startAnimation)
                 }.configureAlertController()
-        }
-        
-        println("should present")
-        self.presentViewController(ac, animated: true, completion: nil)
-        
+            }
+            
+            self.presentViewController(ac, animated: true, completion: nil)
     }
     
-    
+
     func dilemmaCell(cell: UITableViewCell, didPressDecidedButtonForState decidedState: DecisionState, forIndexPath indexPath: NSIndexPath) {
-        
-        self.performSegueWithIdentifier(SegueIdentifier.Conversation, sender: nil)
-        
-        println("back to match view controller")
-        
+
+        if let mc = self.matchCard, status = mc.getStatus()  {
+
+            let conditions = status == FilterStatusFields.Negotiations || status == FilterStatusFields.Completed && mc.talentHasRated == false
+            
+            if conditions {
+                
+                tableView.selectRowAtIndexPath(indexPath, animated: false, scrollPosition: UITableViewScrollPosition.None)
+                performSegueWithIdentifier(SegueIdentifier.Conversation, sender: nil)
+            }
+        }
     }
     
-    func showErrorAlertView(error: ICErrorInfo) {
-        
-        let fullStr: String = error.localizedFailureReason
-        let alertView = UIAlertView(
-            title: NSLocalizedString("Error", comment: ""),
-            message: fullStr,
-            delegate: nil,
-            cancelButtonTitle: nil,
-            otherButtonTitles: "Ok")
-        alertView.show()
-    }
     
     // MARK: - Navigation
     
@@ -300,10 +291,14 @@ extension MatchDetailTableViewController: DilemmaCellExtendedButtonDelegate {
             destination.matchCard = self.matchCard
         }
         
-        if let destination = segue.destinationViewController as? NegotiationDetailViewController {
+        if let destination = segue.destinationViewController as? ConversationViewController {
             destination.matchID = self.matchCard?.getID(FieldID.MatchCardID)
+            destination.matchCard = self.matchCard
         }
         
+        if let destination = segue.destinationViewController as? ClientProfileTableViewController {
+            destination.matchID = self.matchCard?.getID(FieldID.MatchCardID)
+        }
     }
 }
 

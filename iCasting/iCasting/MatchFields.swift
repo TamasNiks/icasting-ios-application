@@ -45,6 +45,8 @@ enum FieldID: Int, FieldPathProtocol {
 enum Fields: Int, FieldPathProtocol {
     
     case Status
+    case Read
+    case ClientRating
     case ClientName, ClientCompany, ClientAvatar
     case JobTitle, JobDescShort, JobDescLong
     case JobDateTime, JobDateTimeType, JobDateStart, JobDateEnd, JobTimeStart, JobTimeEnd
@@ -57,6 +59,10 @@ enum Fields: Int, FieldPathProtocol {
         switch self {
         case .Status:
             return ["status"]
+        case .Read:
+            return ["read", "talent"]
+        case .ClientRating:
+            return ["client", "company", "ratings"]
         case .ClientName:
             return ["client","name","display"]
         case .ClientCompany:

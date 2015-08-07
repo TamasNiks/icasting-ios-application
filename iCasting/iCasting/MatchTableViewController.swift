@@ -8,11 +8,9 @@
 
 import UIKit
 
-
-class MatchTableViewController: ICTableViewController, MatchCardDelegate {
+class MatchTableViewController: ICTableViewController, MatchCardObserver {
 
     let match: Match = Match()
-    
     
     
     // MARK: - ViewController Life cycle
@@ -20,14 +18,15 @@ class MatchTableViewController: ICTableViewController, MatchCardDelegate {
     override func viewDidLoad() {
         
         super.viewDidLoad()
-        
         setModel(match)
         firstLoadRequest()
     }
     
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
+    
     
     override func requestSucceedWithModel(model: ModelRequest) -> Bool {
         
@@ -42,8 +41,6 @@ class MatchTableViewController: ICTableViewController, MatchCardDelegate {
             return true
         }
     }
-    
-    
     
     
     // MARK: - Table view data source
@@ -94,6 +91,9 @@ class MatchTableViewController: ICTableViewController, MatchCardDelegate {
             self.tableView.selectRowAtIndexPath(indexPath, animated: true, scrollPosition: UITableViewScrollPosition.None)
         }
     }
+    
+    func hasChangedStatus() {}
+    
     
     @IBAction func onFilterBarButtonTouch(sender: AnyObject) {
         

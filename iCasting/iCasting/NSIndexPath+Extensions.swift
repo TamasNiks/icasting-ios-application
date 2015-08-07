@@ -8,8 +8,6 @@
 
 import Foundation
 
-
-
 // We create an extension of NSIndexPath to "inject" the cell identifiers to the specific indexPath which will be used by the tableview, don't forget to define a default cell type and value in your view controller: For every tableview, that needs specific reuse identifiers, you can create an enum implementation with all the reuse identifiers which conforms to the CellPropertyProtocol and add it to the AbstractCellType enum.
 
 extension NSIndexPath {

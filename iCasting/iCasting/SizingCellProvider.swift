@@ -8,7 +8,6 @@
 
 import UIKit
 
-
 class SizingCellProvider {
     
     typealias CellDataProviderType = (cellConfigurator: AbstractCellConfigurator?)->()
@@ -17,14 +16,20 @@ class SizingCellProvider {
     static var sizingTokens: [String : dispatch_once_t] = [String : dispatch_once_t]()
     static var sizingCells: [String : UITableViewCell] = [String : UITableViewCell]()
     
+    var cellConfiguratorFactory: AbstractCellConfiguratorFactory
     
-    init(tableView: UITableView) {
+    init(tableView: UITableView, cellConfiguratorFactory: AbstractCellConfiguratorFactory) {
         
         self.tableView = tableView
+        self.cellConfiguratorFactory = cellConfiguratorFactory
     }
     
     
-    func heightForCustomCell(fromIdentifier identifier: CellIdentifierProtocol, calculatorType: CellHeightStrategyType, dataProvider: CellDataProviderType) -> CGFloat {
+    func heightForCustomCell(
+        fromIdentifier identifier: CellIdentifierProtocol,
+        configuratorType: ConfiguratorTypeProtocol?,
+        calculatorType: CellHeightStrategyType,
+        dataProvider: CellDataProviderType) -> CGFloat {
         
         // Intialize tokens for the dispatch_once function and grap the cell for one time only in the lifetime of the app
         
@@ -37,7 +42,7 @@ class SizingCellProvider {
         
         // First fill the cell with necessary sizing data like strings.
         
-        let cell = provideCellWithDataForSizing(identifier, dataProvider: dataProvider)
+        let cell = provideCellWithDataForSizing(identifier, configuratorType: configuratorType, dataProvider: dataProvider)
         
         // Then grab a calculator based on the specified cell height calculator type. Typically this will be a standard cell or a custom cell with constraints. Either way, the cell needs to be prepared before using a calculator. To use the AutoLayout calculator, add constraints to the contentView of the cell.
        
@@ -58,14 +63,15 @@ class SizingCellProvider {
     }
     
 
-    private func provideCellWithDataForSizing(identifier: CellIdentifierProtocol, dataProvider: CellDataProviderType) -> UITableViewCell {
+    private func provideCellWithDataForSizing(identifier: CellIdentifierProtocol, configuratorType: ConfiguratorTypeProtocol?, dataProvider: CellDataProviderType) -> UITableViewCell {
         
         let cell: UITableViewCell? = SizingCellProvider.sizingCells[identifier.rawValue]
         
-        let configuratorFactory = CellConfiguratorFactory(cellIdentifier: identifier, cell: cell)
+        let configuratorFactory = MessageCellConfiguratorFactory(configuratorType: configuratorType, cell: cell)
         let configurator: AbstractCellConfigurator? = configuratorFactory.getConfigurator()
         
         dataProvider(cellConfigurator: configurator)
+        
         return cell!
     }
     

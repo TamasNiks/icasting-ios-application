@@ -8,8 +8,6 @@
 
 import Foundation
 
-
-
 enum ImageSize: String {
     case Full = "",
     Thumbnail = "200x200"

@@ -26,7 +26,7 @@ enum ICErrorType : Int {
 // These API error text keys correspondends to the name key of the API call, add new keys to the struct error and to the Localizable.strings file
 
 private struct ICAPIErrorText {
-    static let Names: [String] = ["AuthenticationError", "InsufficientCreditsError"]
+    static let Names: [String] = ["AuthenticationError", "InsufficientCreditsError", "AlreadyRatedMatchError"]
     static let GenericError: String = "Error"
     static let NoErrorDescription: String = "NoErrorDescription"
 }

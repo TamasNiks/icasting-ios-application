@@ -19,7 +19,6 @@ class MatchOverviewCell: UITableViewCell {
     @IBOutlet weak var statusIndicatorText: UILabel!
 
     var customImageView: UIImageView!
-
 }
 
 
@@ -48,13 +47,13 @@ extension MatchOverviewCell {
     
     func setStatus(status: FilterStatusFields?) {
         
-        let tagForReset = 1
+        let tagForReuse = 1
         
-        if let view = statusIndicatorView.viewWithTag(tagForReset) {
+        if let view = statusIndicatorView.viewWithTag(tagForReuse) {
             view.removeFromSuperview()
         }
 
-        if let view = customViewForImage.viewWithTag(tagForReset) {
+        if let view = customViewForImage.viewWithTag(tagForReuse) {
             view.removeFromSuperview()
         }
         
@@ -70,36 +69,54 @@ extension MatchOverviewCell {
                 customNegotiationIcon.hidden = true
             }
             
-            if let color = UIColor.color(forMatchStatus: status) {
+            if let color = MatchStatusColor.color(status) {
                 
                 // Sets the border around the image view
-                let borderedView = BorderView(view: customImageView, round: true, initialInset: 5)
-                .border(width: 1.5, color: UIColor.whiteColor())
-                .border(width: 4, color: color)
-                borderedView.tag = tagForReset
-                
+                let borderedView = createBorderedView(color)
                 // Add the result to the custom view for showing
                 customViewForImage.addSubview(borderedView)
-                
                 // Create the status indicator and add it as a subview
-                let statusIndicator = StatusIndicatorView(frame: CGRectMake(0, 0, 11, 11), color: color)
-                statusIndicator.tag = tagForReset
-                statusIndicator.center = CGPointMake(15/2, 15/2)
-                statusIndicatorView.addSubview(statusIndicator)
+                setStatusIndicatorView(color)
                 
-//                if status == FilterStatusFields.Negotiations {
-//                    statusIndicator.startAnimating()
-//                }
-
                 return
             }
         }
         
-        customImageView.makeRound(customImageView.frame.width/2, withBorderWidth:2, andBorderColor: UIColor(white: 0.85, alpha: 1))
-        customImageView.tag = tagForReset
-        customViewForImage.addSubview(customImageView)
-        let statusIndicator = StatusIndicatorView(frame: CGRectMake(0, 0, 15, 15), color: UIColor.grayColor())
-        statusIndicator.tag = tagForReset
+        let nonBorderedCustomImageView = createNonBorderedView()
+        customViewForImage.addSubview(nonBorderedCustomImageView)
+        setStatusIndicatorView(UIColor.brownColor())
+    }
+    
+    
+    private func setStatusIndicatorView(color: UIColor) {
+        
+        let tagForReuse = 1
+        let si = StatusIndicatorView(frame: CGRectMake(0, 0, 11, 11), color: color)
+        si.tag = tagForReuse
+        si.center = CGPointMake(15/2, 15/2)
+        statusIndicatorView.addSubview(si)
+    }
+    
+    
+    private func createBorderedView(color: UIColor) -> UIView {
+        
+        let tagForReuse = 1
+        let borderedView = BorderView(view: customImageView, round: true, initialInset: 5)
+            .border(width: 1.5, color: UIColor.whiteColor())
+            .border(width: 4, color: color)
+        borderedView.tag = tagForReuse
+        
+        return borderedView
+    }
+    
+    
+    private func createNonBorderedView() -> UIView {
+        
+        let tagForReuse = 1
+        customImageView.frame = CGRectInset(customImageView.frame, 5.5, 5.5)
+        customImageView.makeRound(customImageView.frame.width/2, withBorderWidth:0, andBorderColor: UIColor(white: 1, alpha: 1))
+        customImageView.tag = tagForReuse
+        return customImageView
     }
     
 }

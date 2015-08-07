@@ -71,3 +71,16 @@ extension String {
     }
     
 }
+
+extension String {
+    
+    // TODO: Improve localization in switch statement
+    enum User: String { case Client = "Client", Talent = "Talent" }
+    
+    static func getLocalization(format: String, clientOrTalent user: User) -> String {
+        let userString: String = NSLocalizedString(user.rawValue, comment: "")
+        let localizedFormat: String = NSLocalizedString(format, comment: "")
+        return String(format: localizedFormat, userString)
+    }
+    
+}

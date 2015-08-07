@@ -8,7 +8,6 @@
 
 import UIKit
 
-
 class DilemmaView: UIView {
 
     let nibName: String = "DilemmaView"

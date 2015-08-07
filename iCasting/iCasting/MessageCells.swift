@@ -50,32 +50,17 @@ class MessageCell: UITableViewCell, CellVisitorAcceptProtocol {
 }
 
 
-
-
-
-class MessageSystemCell: UITableViewCell, CellVisitorAcceptProtocol {
+class MessageSystemCell: UITableViewCell {
     
     @IBOutlet weak var systemMessageLabel: UILabel!
-    
-    func accept(configurator: MessageCellCongifuratorVisitors) {
-        configurator.visit(self)
-    }
 }
 
 
-
-
-
-class MessageUnacceptedCell: UITableViewCell, CellVisitorAcceptProtocol {
+class MessageUnacceptedCell: UITableViewCell {
     
     @IBOutlet weak var systemMessageLabel: UILabel!
     @IBOutlet weak var unacceptedPointsLabel: UILabel!
-    
-    func accept(configurator: MessageCellCongifuratorVisitors) {
-        configurator.visit(self)
-    }
 }
-
 
 
 class MessageOfferCell: DilemmaCell {
@@ -91,14 +76,16 @@ class MessageContractOfferCell: DilemmaCell {
     @IBOutlet weak var desc: UILabel!
     @IBOutlet weak var subdescription: UILabel!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-    
 }
 
 
-class MessageRenegotiationRequestCell: DilemmaCell {
-    
+class MessageDefaultDecisionCell: DilemmaCell {
+
+    @IBOutlet weak var messageTitle: UILabel!
     @IBOutlet weak var title: UILabel!
 }
+
+
 
 
 

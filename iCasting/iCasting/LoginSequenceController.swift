@@ -44,7 +44,6 @@ class LoginSequenceController: NSObject {
             
             // First do some error handling from the login
             if let error = error {
-                //self.performErrorHandling(error)
                 result.failure(error: error)
                 return
             }
@@ -92,7 +91,6 @@ class LoginSequenceController: NSObject {
             UserRequest().execute { error -> () in
                 
                 if let error = error {
-                    //self.performErrorHandling(error)
                     result.failure(error: error)
                     return
                 }
@@ -101,7 +99,6 @@ class LoginSequenceController: NSObject {
                 CastingObjectRequest().execute { error -> () in
                     
                     if let error = error {
-                        //self.performErrorHandling(error)
                         result.failure(error: error)
                         return
                     }

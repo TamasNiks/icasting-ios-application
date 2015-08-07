@@ -8,7 +8,6 @@
 
 import UIKit
 
-
 class JobOverviewTableViewController: ICTableViewController {
 
     var matchID: String?
@@ -51,7 +50,8 @@ class JobOverviewTableViewController: ICTableViewController {
         return false
     }
     
-    private func getModel(forIndexPath indexPath: NSIndexPath) -> [String:String] {
+    
+    func getModel(forIndexPath indexPath: NSIndexPath) -> [String:String] {
         
         let array = getSectionOfModel(inSection: indexPath.section)
         return array[indexPath.row]
@@ -60,16 +60,32 @@ class JobOverviewTableViewController: ICTableViewController {
     override func getSectionOfModel(inSection section: Int) -> StringDictionaryArray {
      
         // Because there are more sections than in the model, we need to resolve this difference in offset
-        let _section = sectionCount.getDynamicSection(section)
+        let s = sectionCount.getDynamicSection(section)
         
-        let contractTypes: [ContractType] = dataSource[_section].values.first!
+        let contractTypes: [ContractType] = dataSource[s].values.first!
         
         var array = StringDictionaryArray()
-        for type in contractTypes {
-            array += type.values
+        for ct in contractTypes {
+            array += ct.values
         }
         return array
     }
+    
+    func getIdentifierForCell(indexPath: NSIndexPath) -> CellIdentifierProtocol {
+        
+        var identifier = indexPath.section == 0 ? CellIdentifier.JobOverview.Header : CellIdentifier.JobOverview.JobPoints
+        
+        let _section = sectionCount.getDynamicSection(indexPath.section)
+        if indexPath.section > 0 {
+            if dataSource[_section].keys.first! == MainTopic.AdditionalRequests {
+                identifier = CellIdentifier.JobOverview.AdditionalRequests
+            }
+        }
+        
+        return identifier
+    }
+    
+    
     
     // MARK: - Table view data source
 
@@ -77,6 +93,7 @@ class JobOverviewTableViewController: ICTableViewController {
         return sectionCount.sections
     }
 
+    
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 
         if section == 0 {
@@ -93,48 +110,35 @@ class JobOverviewTableViewController: ICTableViewController {
         
         let identifier = getIdentifierForCell(indexPath)
         let cell = tableView.dequeueReusableCellWithIdentifier(identifier.rawValue, forIndexPath: indexPath) as! UITableViewCell
-
-        
+        configureCell(cell, indexPath: indexPath, identifier: identifier)
+        return cell
+    }
+    
+    
+    override func configureCell(cell: UITableViewCell, indexPath: NSIndexPath, identifier: CellIdentifierProtocol) {
         // Configure the cell...
         
         switch identifier as! CellIdentifier.JobOverview  {
             
         case .Header:
-    
-            cell.textLabel!.text = job.title
-            cell.detailTextLabel!.text = job.description
+            
+            cell.textLabel?.text = job.title
+            cell.detailTextLabel?.text = job.description
             
         case .JobPoints:
-
+            
             let modelForIndexPath = getModel(forIndexPath: indexPath)
-            cell.textLabel!.text = modelForIndexPath.keys.first?.ICLocalizedOfferName
-            cell.detailTextLabel!.text = modelForIndexPath.values.first
+            cell.textLabel?.text = modelForIndexPath.keys.first?.ICLocalizedOfferName
+            cell.detailTextLabel?.text = modelForIndexPath.values.first
             
         case .AdditionalRequests:
             let modelForIndexPath = getModel(forIndexPath: indexPath)
-            cell.textLabel!.text = modelForIndexPath.values.first
+            cell.textLabel?.text = modelForIndexPath.values.first
         }
-    
-        return cell
     }
     
-    
-    func getIdentifierForCell(indexPath: NSIndexPath) -> CellIdentifierProtocol {
-        
-        var identifier = indexPath.section == 0 ? CellIdentifier.JobOverview.Header : CellIdentifier.JobOverview.JobPoints
-        
-        let _section = sectionCount.getDynamicSection(indexPath.section)
-        if indexPath.section > 0 {
-            if dataSource[_section].keys.first! == MainTopic.AdditionalRequests {
-                identifier = CellIdentifier.JobOverview.AdditionalRequests
-            }
-        }
-        
-        return identifier
-    }
     
 
-    
     // MARK: - Table view delegates
     
     override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
@@ -147,19 +151,23 @@ class JobOverviewTableViewController: ICTableViewController {
     
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
 
+        // Height for the Job title and description
         if indexPath.section == 0 {
-            if let model = model {
+            if let model = self.model {
                 return tableView.calculateHeight(fromTitle: job.title, titleFontSize: 17, andDetail: job.description, detailFontSize: 13)
             }
         }
-        else {
-            let key = getModel(forIndexPath: indexPath).keys.first!
-            if key == ContractPoint.Requests.rawValue {
-                let value = getModel(forIndexPath: indexPath).values.first!
-                return tableView.calculateHeight(fromString: value, forFontSize: 13)
+
+        // Height for the requests
+        let model = getModel(forIndexPath: indexPath)
+        if let key = model.keys.first {
+            if ContractPoint.Requests.rawValue == key {
+                let value = model.values.first!
+                return tableView.calculateHeight(fromString: value, forFontSize: 14)
             }
         }
-        
+
+        // Use the standard height
         return 44
     }
     

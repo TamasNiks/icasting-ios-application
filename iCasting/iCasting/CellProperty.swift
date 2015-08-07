@@ -8,9 +8,6 @@
 
 import Foundation
 
-
-
-
 // A struct that will hold all the cell properties, extend it to add functionality
 
 struct CellProperties {

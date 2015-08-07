@@ -8,8 +8,6 @@
 
 import UIKit
 
-
-
 class StatusIndicatorView: UIView {
     
     var circle: UIView?
@@ -17,7 +15,7 @@ class StatusIndicatorView: UIView {
     init(frame: CGRect, status: FilterStatusFields) {
         
         super.init(frame: frame)
-        let color = UIColor.color(forMatchStatus: status)
+        let color = MatchStatusColor.color(status)
         createCircle(color)
     }
 

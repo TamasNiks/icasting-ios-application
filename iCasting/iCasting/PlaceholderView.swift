@@ -8,8 +8,7 @@
 
 import Foundation
 
-
-class Placeholder: UIView {
+class PlaceholderView: UIView {
     
     var image: UIImage? {
         

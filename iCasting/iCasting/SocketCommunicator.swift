@@ -18,29 +18,36 @@ struct SocketConfig {
     static var forceWebsockets:Bool = false
 }
 
-
-// to recieve feedback from a listener, add a handler here, after that, we can call it from a specific socket listener
-
-struct SocketHandlers {
+enum On: String {
     
-    typealias SocketHandlerType = (data: NSArray?)->()
+    // Client events
+    case Connect                    = "connect"
+    case Error                      = "error"
     
-    var authenticated               : SocketHandlerType = { data in }
-    var connected                   : SocketHandlerType = { data in }
-    var receivedMessage             : SocketHandlerType = { data in }
-    var receivedOffer               : SocketHandlerType = { data in }
-    var offerAccepted               : SocketHandlerType = { data in }
-    var offerRejected               : SocketHandlerType = { data in }
-    var userjoined                  : SocketHandlerType = { data in }
-    var userleft                    : SocketHandlerType = { data in }
-    var receivedContractOffer       : SocketHandlerType = { data in }
-    var contractOfferAccepted       : SocketHandlerType = { data in }
-    var contractOfferRejected       : SocketHandlerType = { data in }
-    var receivedRenegotiationRequest: SocketHandlerType = { data in }
-    var renegotiationRequestAccepted: SocketHandlerType = { data in }
-    var renegotiationRequestRejected: SocketHandlerType = { data in }
+    // API events
+    case Authenticated              = "authenticated"
+
+    case UserJoin                   = "user join"
+    case UserLeft                   = "user left"
+
+    case Message                    = "message"
+
+    case Offer                      = "offer"
+    case AcceptOffer                = "accept offer"
+    case RejectOffer                = "reject offer"
+    
+    case ContractOffer              = "contract offer"
+    case AccceptContractOffer       = "accept contract offer"
+    case RejectContractOffer        = "reject contract offer"
+    
+    case RenegotiationRequest       = "renegotiation request"
+    case AcceptRenegotiationRequest = "accept renegotiation request"
+    case RejectRenegotiationRequest = "reject renegotiation request"
+    
+    case CompletedConfirmation      = "completed confirmation"
+    case MarkCompleted              = "mark completed"
+    case MarkNotCompleted           = "mark not completed"
 }
-
 
 enum Emit: String {
     case Authenticate           = "authenticate"
@@ -51,34 +58,42 @@ enum Emit: String {
     case ContractReject         = "reject contract offer"
     case RenegotiationAccept    = "accept renegotiation request"
     case RenegotationReject     = "reject renegotiation request"
+    case MarkCompleted          = "mark completed"
+    case MarkNotCompleted       = "mark not completed"
 }
 
-enum On: String {
-    case Authenticated          = "authenticated"
-    case Message                = "message"
-    case Offer                  = "offer"
-    case UserJoin               = "user join"
-    case UserLeft               = "user left"
-    case AcceptOffer            = "accept offer"
-    case RejectOffer            = "reject offer"
+// to recieve feedback from a listener, add a handler here, after that, we can call it from a specific socket listener
+
+struct SocketHandlers {
     
-    case ContractOffer          = "contract offer"
-    case AccceptContractOffer   = "accept contract offer"
-    case RejectContractOffer    = "reject contract offer"
+    typealias SocketHandlerType = (data: NSArray)->Void
+    var handlers : [On:SocketHandlerType] = [On:SocketHandlerType]()
+    var errorHandler: (error: ICErrorInfo)->() = { error in }
     
-    case RenegotiationRequest         = "renegotiation request"
-    case AcceptRenegotiationRequest   = "accept renegotiation request"
-    case RejectRenegotiationRequest   = "reject renegotiation request"
+    mutating func addHandler(on: On, handler: SocketHandlerType) -> SocketHandlers {
+        
+        handlers.updateValue(handler, forKey: on)
+        return self
+    }
+    
+    internal func tryPerformSocketError(data: NSArray?) -> Bool {
+        
+        if data == nil {
+            //var error = NSError(domain: "Negotiation", code: 0, userInfo: [NSLocalizedDescriptionKey : "The data is Empty"])
+            let error = ICError(string: "Message contains no data").getErrors()!
+            errorHandler(error: error)
+            return true
+        }
+        return false
+    }
 }
 
 
-protocol SocketCommunicationHandlerDelegate {
+protocol SocketCommunicatorHandlerDelegate: class {
     
-    func handlersForSocketListeners() -> SocketHandlers
+    //func handlersForSocketListeners() -> SocketHandlers
+    func handlersDictionaryForSocketListeners() -> SocketHandlers
 }
-
-
-
 
 
 class SocketCommunicator {
@@ -93,8 +108,8 @@ class SocketCommunicator {
     
     // Init vars
     
-    var conversationToken: String // "cc0f111e9679f0c987cd757b7886f3b34c37b5c4551d58a226042f74fb7455335550719e98c8d69c856e08826aa67555"
-    var delegate: SocketCommunicationHandlerDelegate?
+    var conversationToken: String
+    weak var delegate: SocketCommunicatorHandlerDelegate?
     
     init(conversationToken: String) {
         self.conversationToken = conversationToken
@@ -104,91 +119,53 @@ class SocketCommunicator {
     
     func addListeners() {
         
-        let handlers: SocketHandlers = self.delegate?.handlersForSocketListeners() ?? SocketHandlers()
+        let dictionaryHandlers = self.delegate?.handlersDictionaryForSocketListeners() ?? SocketHandlers()
         
-        self.socket.on("connect") {[conversationToken] data, ack in
-            
-            handlers.connected(data: data)
+        // Add connect listener
+        self.socket.on(On.Connect.rawValue) {[conversationToken] data, ack in
             
             self.socket.emitWithAck(Emit.Authenticate.rawValue, conversationToken)(timeout:0) { data in
-
+                
                 println("SocketCommunicationHandler: authenticated with ack")
             }
         }
         
-        self.socket.on(On.Authenticated.rawValue) { data, ack in
+        // Add error listener
+        self.socket.on(On.Error.rawValue) { data, ack in
             
-            handlers.authenticated(data: data)
-        }
-        
-        self.socket.on(On.Message.rawValue) { data, ack in
-
-            handlers.receivedMessage(data: data)
-        }
-
-        self.socket.on(On.Offer.rawValue) { data, ack in
-            
-            handlers.receivedOffer(data: data)
-        }
-        
-        
-        self.socket.on(On.UserJoin.rawValue) { data, ack in
-            
-            handlers.userjoined(data: data)
-            
-            if let user_id = data?[0] as? String {
-                println(user_id)
+            println("ERROR DATA")
+            if let data = data {
+                println("ERROR DATA IN DATA")
+                if let errorString = data[0] as? String {
+                    println("ERROR DATA AS STRING")
+                    println(errorString)
+                    let error = ICError(string: errorString).getErrors()!
+                    dictionaryHandlers.errorHandler(error: error)
+                }
             }
-            ack?("User has been joined", "test")
         }
         
-        self.socket.on(On.UserLeft.rawValue) { data, ack in
+        for (name, handler) in dictionaryHandlers.handlers {
             
-            handlers.userleft(data: data)
-        }
-        
-        self.socket.on(On.AcceptOffer.rawValue) { data, ack in
-            
-            handlers.offerAccepted(data: data)
-        }
-        
-        self.socket.on(On.RejectOffer.rawValue) { data, ack in
-            
-            handlers.offerRejected(data: data)
-        }
-        
-        self.socket.on(On.ContractOffer.rawValue) { data, ack in
-            
-            handlers.receivedContractOffer(data: data)
-        }
+            self.socket.on(name.rawValue, callback: { (data, ack) -> Void in
+                
+                if dictionaryHandlers.tryPerformSocketError(data) == false {
+                    
+                    handler(data: data!)
 
-        self.socket.on(On.AccceptContractOffer.rawValue) { data, ack in
-         
-            handlers.contractOfferAccepted(data: data)
+                    // User join
+                    if name == On.UserJoin {
+                        if let user_id = data?[0] as? String {
+                            println(user_id)
+                        }
+                        ack?("User has been joined", "test")
+                    }
+                }
+            })
         }
         
-        self.socket.on(On.RejectContractOffer.rawValue) { data, ack in
-         
-            handlers.contractOfferRejected(data: data)
-        }
-        
-        self.socket.on(On.RenegotiationRequest.rawValue) { data, ack in
-            
-            //String message	Object user_id	String message_id
-            handlers.receivedRenegotiationRequest(data: data)
-        }
-        
-        self.socket.on(On.AcceptRenegotiationRequest.rawValue) { data, ack in
-            
-            handlers.renegotiationRequestAccepted(data: data)
-        }
-        
-        self.socket.on(On.RejectRenegotiationRequest.rawValue) { data, ack in
-            
-            handlers.renegotiationRequestRejected(data: data)
-        }
-        
-        //socket.onAny {println("Got event: \($0.event), with items: \($0)")}
+         //socket.onAny {println("Got event: \($0.event), with items: \($0)")}
+
     }
     
     
@@ -273,6 +250,25 @@ extension SocketCommunicator {
             acknowledged(data: data)
         }
     }
+    
+    
+    func acceptJobCompleted(messageID: String, acknowledged: (data: NSArray?) ->()) {
+        
+        self.socket.emitWithAck(Emit.MarkCompleted.rawValue, messageID)(timeout: 0) { data in
+            //String error	String new status	Object by who
+            acknowledged(data: data)
+        }
+    }
+    
+    
+    func rejectJobCompleted(messageID: String, acknowledged: (data: NSArray?) ->()) {
+        
+        self.socket.emitWithAck(Emit.MarkNotCompleted.rawValue, messageID)(timeout: 0) { data in
+            //String error	String new status	Object by who
+            acknowledged(data: data)
+        }
+    }
+    
 }
 
 

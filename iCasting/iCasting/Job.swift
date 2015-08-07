@@ -47,7 +47,7 @@ enum ContractPoint: String {
     PaymentMethod   = "paymentMethod"
 }
 
-typealias JobContractArray = [[MainTopic:[ContractType]]]
+typealias JobContractArray = [ [MainTopic:[ContractType]] ]
 
 class Job {
     
@@ -56,7 +56,6 @@ class Job {
     var list: JobContractArray = JobContractArray()
     
     private var source: JSON = JSON("")
-    let matchID: String
     private var root: [SubscriptType] = ["contract"]
     
     func getPath(type: ContractPoint) -> JSON {
@@ -146,10 +145,19 @@ class Job {
         return ContractType(name: type, values: values, negotiatable: negotiatable)
     }
     
+    let matchID: String
+    
     init(matchID: String) {
     
         // The match ID will be used for a API request
         self.matchID = matchID
+    }
+    
+    init(source: JSON) {
+        
+        self.source = source
+        self.matchID = String()
+        self.buildList()
     }
     
     func populate(source: JSON) {
@@ -158,13 +166,7 @@ class Job {
         self.buildList()
     }
     
-    func resolveList() {
-        
-        
-        
-    }
-    
-    
+
     
     // MARK: Private methods
     
@@ -179,6 +181,14 @@ class Job {
         self.list = resultList
     }
 
+    
+    func resolveList() {
+    
+        
+        
+        
+    }
+    
     
     private func createDateTime(source: [String:JSON]) -> StringDictionaryArray {
 
@@ -226,6 +236,8 @@ class Job {
         return filterDictionaryInArrayForNil(result)
     }
     
+    
+    // MARK: - Format value extractor
     
     private func formatWithOfferValueExtractor(source: [String:JSON]) -> [String:JSON] {
 

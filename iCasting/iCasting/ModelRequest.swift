@@ -12,6 +12,12 @@ protocol ModelRequest {
     func get(callBack: RequestClosure)
 }
 
+protocol ModelRequestID: ModelRequest {
+    static func get(callBack: RequestCompletion, id: String)
+}
+
+
+typealias RequestCompletion = (success: AnyObject?, failure: ICErrorInfo?) -> ()
 
 
 
@@ -31,12 +37,13 @@ extension News : ModelRequest {
         }
     }
     
-    func image(id: String, size: ImageSize, callBack : ((success:AnyObject?, failure:NSError?)) -> () ) {
+    func image(id: String, size: ImageSize, callBack: RequestCompletion) {
         
         let req = Router.Media.ImageWithSize(id, size.rawValue)
         request(req).response { (request, response, data, error) -> Void in
-        
-            callBack((success:data, failure:error))
+            
+            let error: ICErrorInfo? = ICError(error: error).getErrors()
+            callBack(success: data, failure: error)
         }
     }
 }
@@ -160,13 +167,44 @@ extension Job : ModelRequest {
 
 
 
+extension MatchCard : ModelRequestID {
+
+    // OBJECT
+    static func get(callBack: RequestCompletion, id: String) {
+    
+        let req = Router.Match.MatchPopulateJobOwner(id)
+        request(req).responseObject { (request, response, object: MatchCard?, error) -> Void in
+
+            let error: ICErrorInfo? = ICError(error: error).getErrors()
+            callBack(success: object, failure: error)
+        }
+    }
+    
+    func get(callBack: RequestClosure) {}
+    
+    func rate(grade: String, callBack: RequestClosure) {
+        
+        let params: [String:AnyObject] = ["grade" : grade]
+        let req = Router.Match.MatchRateClient(self.getID(FieldID.MatchCardID) ?? "0", parameters: params)
+        request(req).responseJSON() { (request, response, json, error) in
+            
+            var error: ICErrorInfo? = ICError(error: error).getErrors()
+            if let _json: AnyObject = json {
+                error = ICError(json: JSON(_json)).getErrors()
+            }
+            
+            callBack(failure: error)
+        }
+    }
+}
 
 extension Conversation : ModelRequest {
     
     func get(callBack: RequestClosure) {
         
         // This is a two step request, first get the conversation, and for instant sending and receiving messages, we need a conversation token
-        request(Router.Match.MatchConversation(self.matchID)).responseJSON() { (request, response, json, error) -> Void in
+        let req = Router.Match.MatchConversation(self.matchID)
+        request(req).responseJSON() { (request, response, json, error) -> Void in
             
             // Network or general errors?
             if let errors = ICError(error: error).getErrors() {

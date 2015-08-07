@@ -83,7 +83,7 @@ class ChatTextInputViewController: UIViewController, JSQMessagesInputToolbarDele
         self.inputToolbar.contentView.textView.addObserver(self,
             forKeyPath: NSStringFromSelector(Selector("contentSize")),
             options: NSKeyValueObservingOptions.Old | NSKeyValueObservingOptions.New,
-            context: &NegotiationDetailViewController.kJSQMessagesKeyValueObservingContext)
+            context: &ConversationViewController.kJSQMessagesKeyValueObservingContext)
     }
     
     
@@ -91,7 +91,7 @@ class ChatTextInputViewController: UIViewController, JSQMessagesInputToolbarDele
         
         self.inputToolbar.contentView.textView.removeObserver(self,
             forKeyPath: NSStringFromSelector(Selector("contentSize")),
-            context: &NegotiationDetailViewController.kJSQMessagesKeyValueObservingContext)
+            context: &ConversationViewController.kJSQMessagesKeyValueObservingContext)
     }
     
     

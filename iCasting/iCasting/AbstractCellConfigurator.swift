@@ -15,6 +15,10 @@ protocol CellConfiguratorProtocol {
 }
 
 
+protocol ConfiguratorTypeProtocol {
+    var rawValue: String { get }
+}
+
 
 // ABSTRACT BASE CLASS
 
@@ -28,7 +32,6 @@ class AbstractCellConfigurator : CellConfiguratorProtocol {
     
     func configureCell(#data: CellDataType) {
         configureCellText(data: data)
-        
         /* Abstract ...  */
     }
     
@@ -37,53 +40,55 @@ class AbstractCellConfigurator : CellConfiguratorProtocol {
 
 
 
-
 // ABSTRACT FACTORY
 
-class CellConfiguratorFactory {
-    
+protocol CellConfiguratorFactoryProtocol {
+    func getConfigurator() -> AbstractCellConfigurator?
+}
+
+
+class AbstractCellConfiguratorFactory: CellConfiguratorFactoryProtocol {
+
     var cell: UITableViewCell?
-    var cellIdentifier: CellIdentifierProtocol? //CellIdentifier.Message?
+    var configuratorType: ConfiguratorTypeProtocol? //CellIdentifier.Message?
     
-    init(cellIdentifier: CellIdentifierProtocol?, cell: UITableViewCell?) {
+    init() {}
+    
+    init(configuratorType: ConfiguratorTypeProtocol?, cell: UITableViewCell?) {
         
-        self.cellIdentifier = cellIdentifier
+        self.configuratorType = configuratorType
         self.cell = cell
     }
-    
+
+    // Override this method...
     func getConfigurator() -> AbstractCellConfigurator? {
-        
-        if let identifier = self.cellIdentifier, cell = self.cell {
+        return nil
+    }
+}
+
+
+class MessageCellConfiguratorFactory: AbstractCellConfiguratorFactory {
+    
+    override func getConfigurator() -> AbstractCellConfigurator? {
+    
+        if let cell = self.cell, let configuratorType = configuratorType as? TextType {
             
-            switch identifier.rawValue {
+            switch configuratorType {
                 
-            case CellIdentifier.Message.MessageCell.rawValue:
-                
+            case TextType.Text:
                 return TextMessageCellConfigurator(cell: cell)
-                
-            case CellIdentifier.Message.UnacceptedCell.rawValue:
-                
-                return UnacceptedListMessageCellConfigurator(cell: cell)
-                
-            case CellIdentifier.Message.SystemMessageCell.rawValue:
-                
+            case TextType.SystemText:
                 return SystemMessageCellConfigurator(cell: cell)
-                
-            case CellIdentifier.Message.OfferMessageCell.rawValue:
-                
+            case TextType.Offer:
                 return OfferMessageCellConfigurator(cell: cell)
-                
-            case CellIdentifier.Message.ContractOfferMessageCell.rawValue:
-                
+            case TextType.ContractOffer:
                 return ContractOfferMessageCellConfigurator(cell: cell)
-                
-            case CellIdentifier.Message.RenegotiationRequestMessageCell.rawValue:
-                
+            case TextType.RenegotationRequest:
                 return RenegotiationRequestMessageCellConfigurator(cell: cell)
-                
-            default:
-                
-                return nil
+            case TextType.SystemContractUnaccepted:
+                return UnacceptedListMessageCellConfigurator(cell: cell)
+            case TextType.ReportedComplete:
+                return ReportedCompleteMessageCellConfigurator(cell: cell)
             }
         }
         
@@ -91,6 +96,6 @@ class CellConfiguratorFactory {
     }
 }
 
-//NegotiationDetailCellConfiguratorFactory
+
 
 

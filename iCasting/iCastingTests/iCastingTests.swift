@@ -21,6 +21,7 @@ class iCastingTests: XCTestCase {
         super.tearDown()
     }
     
+    
     func testSockets() {
         
         let socket = SocketIOClient(socketURL: "https://ws-demo.icasting.net/?auth=2574dfa254b540999a44a055c65df372bf7cf39355476603fd5f86e446c58945554779c4fd5f86e446c58fc0f7d14955")
@@ -179,7 +180,28 @@ class iCastingTests: XCTestCase {
         XCTAssert(id == "54e6fbf172a116be7fe7f8ab", "Passes test")
     }*/
     
+    
     func testJSON() {
+        
+        //let dict: [String:String] = ["A":"A", "B":"B"]
+        let dict = ["A":"A", "B":"B", "ratedBy":["client":6]]
+        var json = JSON(dict)
+        
+        if let ratedBy = json["ratedBy"].dictionary {
+            
+            json["ratedBy"]["talent"].float = 1.5
+            println(json)
+            
+        } else {
+            
+            json["ratedBy"] = JSON(["talent":1.5])
+            println(json)
+        }
+        
+        
+    }
+    
+    func testNativeJSON() {
         
         let string = "[ {\"name\": \"John\", \"age\": 21}, {\"name\": \"Bob\", \"age\": 35} ]"
         

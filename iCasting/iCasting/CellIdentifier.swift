@@ -8,7 +8,6 @@
 
 import Foundation
 
-
 protocol CellIdentifierProtocol {
     var rawValue: String { get }
 }
@@ -32,21 +31,22 @@ enum CellIdentifier {
     enum Message: String, CellIdentifierProtocol {
         case
         MessageCell                     = "messageCell",
-        UnacceptedCell                  = "unacceptedMessageCell",
-        SystemMessageCell               = "generalSystemMessageCell",
-        OfferMessageCell                = "offerMessageCell",
+        SummaryMessageCell              = "summaryMessageCell",
+        SystemMessageCell               = "systemMessageCell",
+        SubtitleDecissionMessageCell    = "subtitleDecissionMessageCell",
         ContractOfferMessageCell        = "contractOfferMessageCell",
-        RenegotiationRequestMessageCell = "renegotiationRequestMessageCell"
+        DefaultDecissionMessageCell     = "defaultDecissionMessageCell"
         
-        // Bind the TextType of the cells with the CellIdentifiers, so the right cells will get reused.
-        static func fromTextType(type: TextType) -> CellIdentifier.Message? {
+        // Bind the TextType of the message with the Cell Reuse Identifiers, so the right cells for the specific type of messages will get reused.
+        static func fromTextType(type: TextType) -> Message? {
             var ids = [
-                TextType.Text                       :   CellIdentifier.Message.MessageCell,
-                TextType.SystemText                 :   CellIdentifier.Message.SystemMessageCell,
-                TextType.SystemContractUnaccepted   :   CellIdentifier.Message.UnacceptedCell,
-                TextType.Offer                      :   CellIdentifier.Message.OfferMessageCell,
-                TextType.ContractOffer              :   CellIdentifier.Message.ContractOfferMessageCell,
-                TextType.RenegotationRequest        :   CellIdentifier.Message.RenegotiationRequestMessageCell
+                TextType.Text                       :   MessageCell,
+                TextType.SystemContractUnaccepted   :   SummaryMessageCell,
+                TextType.SystemText                 :   SystemMessageCell,
+                TextType.Offer                      :   SubtitleDecissionMessageCell,
+                TextType.ContractOffer              :   ContractOfferMessageCell,
+                TextType.RenegotationRequest        :   DefaultDecissionMessageCell,
+                TextType.ReportedComplete           :   DefaultDecissionMessageCell
             ]
             return ids[type]
         }
@@ -69,11 +69,11 @@ enum CellIdentifier {
     
     enum MatchDetail: String, CellIdentifierPropertyProtocol {
         case
-        Header = "headerCell",
-        Dilemma = "dilemmaCell",//"acceptCell",
+        Header  = "headerCell",
+        Dilemma = "dilemmaCell",
         Summary = "summaryCell",
         Profile = "profileCell",
-        Detail = "detailCell"
+        Detail  = "detailCell"
         
         var properties: CellProperties {
             
@@ -98,7 +98,8 @@ enum CellIdentifier {
                 01 : Dilemma,
                 02 : Summary,
                 03 : Profile,
-                10 : Detail]
+                10 : Detail
+            ]
         }
     }
     
@@ -113,6 +114,14 @@ enum CellIdentifier {
         case
         LogOut = "logoutCellID",
         ChangeCastingObject = "changeCastingObjectCellID"
+    }
+    
+    
+    enum ClientProfile: String, CellIdentifierProtocol {
+        case
+        CompanySize = "clientCompanySizeCellID",
+        CompanyCOC = "clientCompanyCOCCellID",
+        AboutUs = "clientCompanyAboutUsCellID"
     }
 }
 

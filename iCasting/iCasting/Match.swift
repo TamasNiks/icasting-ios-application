@@ -8,16 +8,14 @@
 
 import Foundation
 
-
-
-
 enum FilterStatusFields: String {
     case // These String values are the localization tokens
     Negotiations    = "NegotiationFilter",
     Pending         = "UnansweredFilter",
     TalentAccepted  = "PendingClientFilter",
     Closed          = "ClosedFilter",
-    Completed       = "FinishedFilter"
+    Completed       = "FinishedFilter",
+    Conflict        = "Conflict"
     
     // The keys are corresponding with the json keys
     static let allValues = [
@@ -26,16 +24,15 @@ enum FilterStatusFields: String {
         "talent accepted"   :   TalentAccepted, // Accepted by the talent
         "closed"            :   Closed,         // Rejected by the talent
         "completed"         :   Completed,      // Match finnished
-        "contract accepted" :   Negotiations    //
+        "contract accepted" :   Negotiations,   // The talent and client are in negotiation mode
+        "conflict"          :   Conflict        // A conflict happened where the client or the talent didn't end the job correctly
     ]
 }
 
 
 
 
-/* MATCH MODEL */
-
-class Match : NSObject, MatchCardDelegate {
+class Match : NSObject, MatchCardObserver {
     
     // Contains the original matches from the request, all changes to the matches array must mirror the _matches array
     private var _matches: [MatchCard] = [MatchCard]()
@@ -60,12 +57,7 @@ class Match : NSObject, MatchCardDelegate {
     
     // If the user selects a status, this var will be set
     var currentStatusField: FilterStatusFields?
-}
 
-
-
-
-extension Match {
     
     func initializeModel(matches: [MatchCard]) {
         
@@ -80,7 +72,7 @@ extension Match {
         if index >= 0 && index < matches.endIndex {
             selectedMatch = matches[index]
             selectedMatchIndex = index
-            selectedMatch?.delegate = self
+            selectedMatch?.observer = self
         }
     }
     
@@ -130,6 +122,25 @@ extension Match {
     }
     
     
+    // Filter
+    func filter(fields: [FilterStatusFields]) {
+     
+        let matchesToFilter: [MatchCard] = matchesFromCastingObject
+        
+        let filtered = matchesToFilter.filter { (obj) -> Bool in
+            
+            let status = obj.getStatus()
+            for f in fields {
+                if (status == f) {
+                    return true
+                }
+            }
+            return false
+        }
+        matches = filtered
+    }
+    
+    
     // Filter the matches based on the status of a match, parameter "allExcept" means that the result of the filter will contain everything, except the provided status.
     func filter(field: FilterStatusFields? = nil, allExcept: Bool = false) {
         
@@ -159,17 +170,19 @@ extension Match {
     }
     
     
-    // MARK: Match delegate
+    // MARK: - MatchCard observer methods
     
     func didRejectMatch() {
-        println("---- MATCH: Will remove from match model")
+        println("Match: Will remove from match model")
         removeMatch()
     }
     
-    
     func didAcceptMatch() {
-        println("---- MATCH: Will mirror match model")
-        mirrorMatch()
+        hasChangedStatus()
     }
     
+    func hasChangedStatus() {
+        println("Match: Will mirror match model")
+        mirrorMatch()
+    }
 }

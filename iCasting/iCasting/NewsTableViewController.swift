@@ -80,12 +80,14 @@ class NewsTableViewController: UITableViewController {
         
         // If the image has been set, the tag will change to 1
         if cell.imageView?.tag == 0 {
-            cell.imageView?.image = Placeholder(frame: CGRectMake(0, 0, 100, 100)).image
-            news.image(image, size: ImageSize.Thumbnail) { result in
-                if let success: AnyObject = result.success {
+            cell.imageView?.image = PlaceholderView(frame: CGRectMake(0, 0, 100, 100)).image
+
+            news.image(image, size: ImageSize.Thumbnail, callBack: { (success, failure) -> () in
+                if let success: AnyObject = success {
                     cell._image = UIImage(data: success as! NSData)
                 }
-            }
+            })
+            
         }
         
         return cell
@@ -117,6 +119,4 @@ class NewsTableViewController: UITableViewController {
             vc.item = item
         }
     }
-
-
 }

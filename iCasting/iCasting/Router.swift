@@ -259,7 +259,8 @@ enum Router {
         MatchAcceptTalent(String),
         MatchRejectTalent(String),
         MatchConversation(String),
-        MatchConversationToken(String)
+        MatchConversationToken(String),
+        MatchRateClient(String, parameters: [String : AnyObject])
         
         func endpoint() -> String {
             switch self {
@@ -281,6 +282,8 @@ enum Router {
                 return "match/\(id)/conversation"
             case .MatchConversationToken(let id):
                 return "match/\(id)/conversationToken"
+            case .MatchRateClient(let id, let parameters):
+                return "match/\(id)/rateClient"
             }
         }
         
@@ -297,9 +300,9 @@ enum Router {
                 return .GET
             case
             MatchAcceptTalent,
-            MatchRejectTalent:
+            MatchRejectTalent,
+            MatchRateClient:
                 return .POST
-
             }
         }
         
@@ -318,6 +321,8 @@ enum Router {
             switch self {
             case .MatchPopulateJobOwner:
                 return ParameterEncoding.URL.encode(URLRequest, parameters: [POPULATE_KEY : "job.owner"]).0
+            case .MatchRateClient(let id, let parameters):
+                return ParameterEncoding.JSON.encode(URLRequest, parameters: parameters).0
             default:
                 return URLRequest
             }

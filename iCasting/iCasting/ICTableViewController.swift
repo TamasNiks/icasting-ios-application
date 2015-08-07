@@ -35,6 +35,16 @@ class ICTableViewController: UITableViewController {
         refreshControl?.addTarget(self, action: ("handleRefresh"), forControlEvents: UIControlEvents.ValueChanged)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "receivedNotification:", name: "PushNotification", object: nil)
     }
+    
+    // Sometimes the data model in a detail view will change, for example, accepting / rejecting a match or rating a job. This should inflict the master view as well. When the user navigates back, the cell that presents this data must show the changes as well. Usually, when the model changes, all observers should be notified.
+    override func viewWillAppear(animated: Bool) {
+        
+        if let ip = tableView.indexPathForSelectedRow() {
+            tableView.deselectRowAtIndexPath(ip, animated: true)
+            tableView.reloadRowsAtIndexPaths([ip as AnyObject], withRowAnimation: UITableViewRowAnimation.None)
+        }
+        super.viewWillAppear(animated)
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -84,6 +94,18 @@ class ICTableViewController: UITableViewController {
         }
     }
     
+    func performErrorHandling(error: ICErrorInfo) {
+        
+        let message: String = error.localizedFailureReason
+        let ac = UIAlertController(
+            title: NSLocalizedString("Error", comment: ""),
+            message: message,
+            preferredStyle: UIAlertControllerStyle.Alert)
+        
+        ac.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.Cancel, handler: { (action) -> Void in }))
+        self.presentViewController(ac, animated: true, completion: nil)
+    }
+    
     func requestSucceedWithModel(model: ModelRequest) -> Bool {
         // Abstract...
         return false
@@ -98,4 +120,11 @@ class ICTableViewController: UITableViewController {
         // Abstract...
         return StringDictionaryArray()
     }
+    
+    func configureCell(cell: UITableViewCell, indexPath: NSIndexPath, identifier: CellIdentifierProtocol) {
+        // Abstract
+    }
+    
+    
+    
 }

@@ -159,7 +159,7 @@ class OfferDataExtractor: OfferProtocol {
 
 
 
-// Specialized classes for getting offer values from an HTTP call. It will try to create an offer object
+// Specialized classes for getting offer values from an HTTP call. It will try to create an offer object constructed with offer points
 
 // OFFER
 
@@ -167,23 +167,22 @@ class OfferHTTPDataExtractor: OfferDataExtractor {
  
     var offer: [String:JSON]?
     
+    init(offer: [String:JSON]?) {
+        self.offer = offer
+    }
+    
     override var value: MessageOffer? {
      
         if let o: [String:JSON] = offer {
-            super.name              = o["path"]!.stringValue
+            super.name              = o["path"]?.stringValue ?? String()
             let accepted: Bool?     = o["accepted"]?.bool
-            var dict: [String:JSON] = o["values"]!.dictionaryValue
+            var dict: [String:JSON] = o["values"]?.dictionaryValue ?? [String:JSON]()
             let values: [KeyVal] = super.getValues(dict)
             
             return MessageOffer(name: super.name, values: values, acceptTalent: accepted)
         }
         return nil
     }
-    
-    init(offer: [String:JSON]?) {
-        self.offer = offer
-    }
-    
 }
 
 // Specialized class, it will try to get a mutual agreement (offer contract)
@@ -205,6 +204,27 @@ class OfferContractHTTPDataExtractor: OfferHTTPDataExtractor {
         return nil
     }
 }
+
+// Specialized class
+
+// REPORTED COMPLETE
+
+class OfferReportedCompleteHTTPDataExtractor: OfferHTTPDataExtractor {
+    
+    override var value: MessageOffer? {
+        
+        if let o: [String:JSON] = offer {
+            
+            let acceptClient: Bool? = o["acceptClient"]?.bool
+            let acceptTalent: Bool? = o["acceptTalent"]?.bool
+            let accepted: Bool?     = o["accepted"]?.bool
+            return MessageOffer(stateComponents: StateComponents(acceptClient: acceptClient, acceptTalent: acceptTalent, accepted: accepted))
+        }
+        return nil
+    }
+}
+
+
 
 
 // Specialized classes for getting values from a socket call

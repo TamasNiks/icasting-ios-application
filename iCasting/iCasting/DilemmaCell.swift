@@ -8,17 +8,20 @@
 
 import Foundation
 
-
-protocol DilemmaCellDelegate {
+@objc protocol DilemmaCellDelegate: class {
     func dilemmaCell(cell: UITableViewCell, didPressButtonForState decisionState: DecisionState, forIndexPath indexPath: NSIndexPath, startAnimation: ()->())
 }
 
-protocol DilemmaCellExtendedButtonDelegate: DilemmaCellDelegate {
+@objc protocol DilemmaCellExtendedButtonDelegate: DilemmaCellDelegate {
+    // Next to the accept / reject buttons, there can be extended buttons for follow up actions. This delegate method is when a user presses a follow up button
     func dilemmaCell(cell: UITableViewCell, didPressDecidedButtonForState decidedState: DecisionState, forIndexPath indexPath: NSIndexPath)
+    
+    // Control the button directly with this delegate
+//    optional func dilemmaCell(cell: UITableViewCell, didPressDecidedButton button: UIButton, forState decidedState: DecisionState, forIndexPath indexPath: NSIndexPath)
 }
 
 // Because we want to switch easily the internal workings of the left and right button for a client class, we bind it inside an enumeration with the meaning of reject and accept, so we just need to change the return values.
-enum DecisionState {
+@objc enum DecisionState: Int {
     case Accept, Reject
     
     func getState(dilemmaView: DilemmaView) -> DilemmaState {
@@ -32,8 +35,6 @@ enum DecisionState {
 }
 
 
-
-
 class DilemmaCell: UITableViewCell {
     
     let selectorReject: Selector = "onRejectButtonPress:"
@@ -45,7 +46,7 @@ class DilemmaCell: UITableViewCell {
     
     var indexPath: NSIndexPath?
     
-    var delegate: DilemmaCellDelegate? {
+    weak var delegate: DilemmaCellDelegate? {
         didSet {
             setup()
         }
@@ -134,6 +135,7 @@ class DilemmaCell: UITableViewCell {
     }
     
     private func setup() {
+        
         DecisionState.Reject.getState(dilemmaView).addTarget(self, action: selectorReject, forControlEvents: UIControlEvents.TouchUpInside)
         DecisionState.Accept.getState(dilemmaView).addTarget(self, action: selectorAccept, forControlEvents: UIControlEvents.TouchUpInside)
     }
@@ -159,6 +161,7 @@ class DilemmaCell: UITableViewCell {
     func callDelegate(decisionState state: DecisionState) {
 
         if let ip = indexPath {
+            println("DilemmaCell: Will call delegate")
             delegate?.dilemmaCell(self, didPressButtonForState: state, forIndexPath: ip, startAnimation: { () -> () in
                 state.getState(self.dilemmaView).startAnimation()
             })

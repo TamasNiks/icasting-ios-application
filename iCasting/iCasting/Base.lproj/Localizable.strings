@@ -56,6 +56,10 @@
 "Talent" = "Talent";
 "Client" = "Client";
 
+"Completed" = "Completed";
+"Conflict" = "Conflict";
+"Rate" = "Rate";
+
 /* Login */
 "login.alert.client.notsupported" = "The client is not yet supported with this version of the app. We will let you know if client support is added in future versions.";
 
@@ -114,9 +118,19 @@
 "negotiations.offer.title.requests" = "Additional requests";
 
 "negotiations.renegotiation.title" = "Renegotiation request";
+"negotiations.reportedcomplete.messagetitle" = "Job completion";
+"negotiations.reportedcomplete.title" = "Mark the job as completed or not completed";
+"negotiations.reportedcomplete.bothaccepted" = "Both marked the job as complete";
+"negotiations.reportedcomplete.accepted" = "%@ marked the job as complete";
+"negotiations.reportedcomplete.rejected" = "%@ marked the job as not complete";
+
+"negotiations.decisionbutton.rejectedtitle" = "%@ rejected";
+"negotiations.decisionbutton.acceptedtitle" = "%@ accepted";
+
+"negotiation.contract.desc" = "Do you want to accept the contract?";
 
 "negotiation.state.bothaccepted" = "Both accepted contract";
-"negotiation.state.neitherdecided" = "%@ has not accepted yet";
+"negotiation.state.notdecided" = "%@ has not accepted yet";
 "negotiation.state.accepted" = "%@ has accepted";
 "negotiation.state.rejected" = "%@ declined the contract";
 
@@ -128,8 +142,10 @@
 
 // iCasting System text
 
-"icasting.chat.system.text.contractoffer" = "Do you want to accept the contract?";
 "icasting.chat.system.text.welcome" = "Welcome to the conversation";
+"icasting.chat.system.text.contractoffer" = "Do you want to accept the contract?";
+"icasting.chat.system.text.reportedcomplete" = "Do you want to mark the job as completed?";
+
 "icasting.chat.system.contract.fields.unaccepted" = "There are a few points that have to be negotiated. As soon as these have been negotiated and accepted, the client can send a mutual agreement to confirm the job.";
 
 /* Notifications */
@@ -170,6 +186,8 @@
 "match.decisionstate.negotiation" = "Negotiate";
 "match.decisionstate.closed" = "Client has made a selection";
 "match.decisionstate.completed" = "Job is completed";
+"match.decisionstate.completed.notrated" = "Rate now";
+"match.decisionstate.conflict" = "Unknown";
 
 /* API Errors */
 

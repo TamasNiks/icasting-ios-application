@@ -73,8 +73,11 @@ extension UITableView {
     
     func calculateHeight(fromString string: String, forFontSize size: CGFloat) -> CGFloat {
         
-        let TableViewCellInset: CGFloat = 16
-        let labelWidth: CGFloat = self.bounds.size.width - TableViewCellInset * 2
+        let tableViewCellInset: CGFloat = 15
+        
+        //let labelWidth: CGFloat = self.bounds.size.width - TableViewCellInset * 2
+        let labelWidth: CGFloat = UIScreen.mainScreen().bounds.size.width - tableViewCellInset * 2
+        
         let text = NSAttributedString(string: string, attributes: [NSFontAttributeName:UIFont.systemFontOfSize(size)])
         
         
@@ -91,7 +94,7 @@ extension UITableView {
         }
         
         let boundingRectForText: CGRect = rect(text)
-        return ceil(boundingRectForText.size.height) + TableViewCellInset * 2
+        return ceil(boundingRectForText.size.height) + tableViewCellInset * 2
     }
     
     

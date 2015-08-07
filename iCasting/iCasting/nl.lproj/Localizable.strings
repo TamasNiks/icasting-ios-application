@@ -56,6 +56,10 @@
 "Talent" = "Talent";
 "Client" = "Opdrachtgever";
 
+"Completed" = "Afgerond";
+"Conflict" = "Conflict";
+"Rate" = "Beoordeel";
+
 /* Login */
 "login.alert.client.notsupported" = "Voor deze versie van de app wordt de client nog niet ondersteund. We laten het u weten als client ondersteuning wordt ondersteund in toekomstige versies";
 
@@ -114,9 +118,19 @@
 "negotiations.offer.title.requests" = "Aanvullende verzoeken";
 
 "negotiations.renegotiation.title" = "Heronderhandel verzoek";
+"negotiations.reportedcomplete.messagetitle" = "Job voltooid";
+"negotiations.reportedcomplete.title" = "Wil je de opdracht markeren als voltooid?";
+"negotiations.reportedcomplete.bothaccepted" = "Beide partijen hebben de opdracht gemarkeerd als afgerond";
+"negotiations.reportedcomplete.accepted" = "%@ heeft de opdracht gemarkeerd als afgerond";
+"negotiations.reportedcomplete.rejected" = "%@ heeft de opdracht als niet gemarkeerd afgerond";
+
+"negotiations.decisionbutton.rejectedtitle" = "%@ heeft afgewezen";
+"negotiations.decisionbutton.acceptedtitle" = "%@ heeft geaccepteerd";
+
+"negotiation.contract.desc" = "Wilt u het contract accepteren?";
 
 "negotiation.state.bothaccepted" = "Beide hebben het contract geacepteerd";
-"negotiation.state.neitherdecided" = "%@ heeft nog niet gereageerd";
+"negotiation.state.notdecided" = "%@ heeft nog niet gereageerd";
 "negotiation.state.accepted" = "%@ heeft geacepteerd";
 "negotiation.state.rejected" = "%@ heeft het contract gewijgerd";
 
@@ -169,6 +183,8 @@
 "match.decisionstate.negotiation" = "Onderhandel";
 "match.decisionstate.closed" = "Opdracht is gesloten";
 "match.decisionstate.completed" = "Opdracht is voltooid";
+"match.decisionstate.completed.notrated" = "Beoordeel nu";
+"match.decisionstate.conflict" = "Onbekend";
 
 /* iCasting System text */
 

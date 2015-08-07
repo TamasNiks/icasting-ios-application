@@ -32,7 +32,7 @@ class TextMessageCellConfigurator : AbstractCellConfigurator {
         
         let messageText = getSafeText(message.body)
         
-        if message.role == Role.Outgoing {
+        if message.role == MessageRole.Outgoing {
             
             c.rightMessageLabel.text = messageText
             c.showOutgoingMessageView()
@@ -108,7 +108,7 @@ class OfferMessageCellConfigurator : AbstractCellConfigurator {
             
             c.accepted = offer.acceptTalent
             c.indexPath = data[.IndexPath] as? NSIndexPath
-            //c.delegate = data[.Delegate] as? DilemmaCellDelegate
+            c.delegate = data[.Delegate] as? DilemmaCellDelegate
         }
         
         configureCellText(data: data)
@@ -197,7 +197,7 @@ class ContractOfferMessageCellConfigurator : AbstractCellConfigurator {
         if let offer = message.offer {
 
             c.indexPath = data[.IndexPath] as? NSIndexPath
-            //c.delegate = data[.Delegate] as? DilemmaCellDelegate
+            c.delegate = data[.Delegate] as? DilemmaCellDelegate
         }
     
         configureCellText(data: data)
@@ -210,74 +210,83 @@ class ContractOfferMessageCellConfigurator : AbstractCellConfigurator {
         
         if let offer = message.offer {
         
-            // TODO: Improve localization in switch statement
-            enum User: String { case Client = "Client", Talent = "Talent" }
-            func getLocalization(format: String, clientOrTalent user: User) -> String {
-                let userString: String = NSLocalizedString(user.rawValue, comment: "")
-                let localizedFormat: String = NSLocalizedString(format, comment: "")
-                return String(format: localizedFormat, userString)
-            }
+            let checkMark = String.fontAwesomeIconWithName(FontAwesome.Check)+" "
             
             var isIncomming: Bool {
-                return message.role == Role.Incomming ? true : false
+                return message.role == MessageRole.Incomming ? true : false
             }
             
             if let contractState = offer.contractState {
-
-                //println("Has contractState")
                 
                 var statusText: String = String()
                 c.activityIndicator.startAnimating()
                 
                 switch contractState {
                     
-                case ContractState.BothAccepted:
+                case .BothAccepted:
                     
                     c.accepted = true
-                    statusText = NSLocalizedString("negotiation.state.bothaccepted", comment: "")
+                    statusText = checkMark+" "+NSLocalizedString("negotiation.state.bothaccepted", comment: "")
                     c.activityIndicator.stopAnimating()
                     
-                case ContractState.NeitherDecided:
+                case .NeitherDecided:
                     
                     c.enabled = true
                     c.accepted = nil
-                    let who = isIncomming ? User.Client : User.Talent
-                    statusText = getLocalization("negotiation.state.neitherdecided", clientOrTalent: who)
-                    // If talent, set to "Client has not accepted yet" otherwise "Talent has not accepted yet"
                     
-                case ContractState.ClientAccepted:
+                    // If talent, set to "Client has not accepted yet" otherwise "Talent has not accepted yet"
+                    let who = isIncomming ? String.User.Client : String.User.Talent
+                    statusText = String.getLocalization("negotiation.state.notdecided", clientOrTalent: who)
+                    
+                    
+                case .ClientAccepted:
                     
                     c.enabled = true // This can set to true for both, because the buttons would go away for the other chat user
                     c.accepted = isIncomming ? nil : true
-                    statusText = isIncomming ? String.fontAwesomeIconWithName(FontAwesome.Check)+" Client has accepted" : "Talent has not accepted yet"
-                    // If talent, set to "Client has accepted" otherwise if client: "Talent has not accepted yet"
                     
-                case ContractState.ClientRejected:
+                    // If talent, set to "Client has accepted" otherwise if client: "Talent has not decided yet"
+                    let talentText = String.getLocalization("negotiation.state.notdecided", clientOrTalent: String.User.Talent)
+                    let clientText = checkMark+String.getLocalization("negotiation.state.accepted", clientOrTalent: String.User.Client)
+                    statusText = isIncomming ? clientText : talentText
+
+                case .ClientRejected:
                     
                     c.enabled = false
                     c.accepted = isIncomming ? nil : false
-                    statusText = isIncomming ? "Client declined contract" : "You declined the contract"
-                    c.activityIndicator.stopAnimating()
-                    // Finished: If talent, set to "Client rejected" if client, set button to " You rejected"
                     
-                case ContractState.TalentAccepted:
+                    // If talent, set to "Client rejected" otherwise if client, set button to "You declinded contract"
+                    let clientText = String.getLocalization("negotiation.state.rejected", clientOrTalent: String.User.Client)
+                    let userText = String(format: NSLocalizedString("negotiation.state.rejected", comment: ""), "You")
+                    statusText = isIncomming ? clientText : userText
+                   
+                    c.activityIndicator.stopAnimating()
+                    
+                case .TalentAccepted:
                     
                     c.enabled = true // This can set to true for both, because the buttons would go away for the other chat user
                     c.accepted = isIncomming ? true : nil
-                    statusText = isIncomming ? "Client has not accepted yet" : String.fontAwesomeIconWithName(FontAwesome.Check)+" Talent has accepted"
-                    // If talent, set to "Client has not accepted yet" otherwise if client: "Talent has accepted"
                     
-                case ContractState.TalentRejected:
+                    // If talent, set to "Client has not accepted yet" otherwise if client: "Talent has accepted"
+                    let clientText = String.getLocalization("negotiation.state.notdecided", clientOrTalent: String.User.Client)
+                    let talentText = checkMark+String.getLocalization("negotiation.state.accepted", clientOrTalent: String.User.Talent)
+                    statusText = isIncomming ? clientText : talentText
+                    
+                case .TalentRejected:
                     
                     c.enabled = false
                     c.accepted = isIncomming ? false : nil
-                    statusText = isIncomming ? "You declined the contract" : "Talent declined contract"
-                    c.activityIndicator.stopAnimating()
+                    
                     // Finished: If talent, set to "You rejected" if client, set to "Talent rejected"
+                    let talentText = String.getLocalization("negotiation.state.rejected", clientOrTalent: String.User.Talent)
+                    let userText = String(format: NSLocalizedString("negotiation.state.rejected", comment: ""), "You")
+                    statusText = isIncomming ? talentText : userText
+                    
+                    c.activityIndicator.stopAnimating()
+                    
                 }
                 
-                c.desc.text = "Do you want to accept the contract?"
-                c.subdescription.font = UIFont.fontAwesomeOfSize(12)
+                c.desc.text = NSLocalizedString("negotiation.contract.desc", comment:"")
+                c.subdescription.font = UIFont.fontAwesomeOfSize(14)
                 c.subdescription.text = statusText
             }
         }
@@ -291,20 +300,20 @@ class RenegotiationRequestMessageCellConfigurator: AbstractCellConfigurator {
     
     override func configureCell(#data: CellDataType) {
         
-        let c = cell as! MessageRenegotiationRequestCell
+        let c = cell as! MessageDefaultDecisionCell
         let message: Message = data[.Model] as! Message
         
         if let offer = message.offer {
             
             c.indexPath = data[.IndexPath] as? NSIndexPath
-            //c.delegate = data[.Delegate] as? DilemmaCellDelegate
+            c.delegate = data[.Delegate] as? DilemmaCellDelegate
         }
         configureCellText(data: data)
     }
     
     override func configureCellText(#data: CellDataType) {
         
-        let c = cell as! MessageRenegotiationRequestCell
+        let c = cell as! MessageDefaultDecisionCell
         let message: Message = data[.Model] as! Message
         
         if let offer = message.offer {
@@ -317,9 +326,77 @@ class RenegotiationRequestMessageCellConfigurator: AbstractCellConfigurator {
                 c.accepted = nil
             }
         }
-        
+
         c.title.text = NSLocalizedString("negotiations.renegotiation.title", comment: "")
     }
 }
 
+
+
+
+class ReportedCompleteMessageCellConfigurator: AbstractCellConfigurator {
+
+    let checkMark = String.fontAwesomeIconWithName(FontAwesome.Check)+" "
+    var rated: Bool?
+    
+    override func configureCell(#data: CellDataType) {
+        
+        let c = cell as! MessageDefaultDecisionCell
+        let message: Message = data[.Model] as! Message
+        
+        if let offer = message.offer {
+            c.indexPath = data[.IndexPath] as? NSIndexPath
+            c.delegate = data[.Delegate] as? DilemmaCellExtendedButtonDelegate
+        }
+        
+        configureCellText(data: data)
+    }
+    
+    override func configureCellText(#data: CellDataType) {
+        
+        let c = cell as! MessageDefaultDecisionCell
+        let message: Message = data[.Model] as! Message
+        
+        // Depending on the rated property, decide if the user can press on the button to rate, or to consider it done
+        func setButtonMarkCompleted() {
+            if let rated = rated {
+                if !rated {
+                    c.acceptedWithButton = true
+                    c.acceptedTitle = NSLocalizedString("Rate", comment:"")
+                    return
+                }
+            }
+            c.accepted = false
+            c.rejectedTitle = NSLocalizedString("Completed", comment: "")
+        }
+        
+        if let offer = message.offer {
+            
+            c.title.font = UIFont.fontAwesomeOfSize(12)
+            
+            if offer.contractState == ContractState.BothAccepted {
+                setButtonMarkCompleted()
+                c.title?.text = checkMark+NSLocalizedString("negotiations.reportedcomplete.bothaccepted", comment:"")
+            } else if offer.contractState == ContractState.TalentAccepted {
+                c.accepted = true
+                c.title?.text = checkMark+String.getLocalization("negotiations.reportedcomplete.accepted", clientOrTalent: String.User.Talent)
+            } else if offer.contractState == ContractState.TalentRejected {
+                c.accepted = false
+                c.title?.text = String.getLocalization("negotiations.reportedcomplete.rejected", clientOrTalent: String.User.Talent)
+            } else if offer.contractState == ContractState.ClientAccepted {
+                setButtonMarkCompleted()
+                c.title?.text = checkMark+String.getLocalization("negotiations.reportedcomplete.accepted", clientOrTalent: String.User.Client)
+            } else if offer.contractState == ContractState.ClientRejected {
+                c.accepted = false
+                c.title?.text = String.getLocalization("negotiations.reportedcomplete.rejected", clientOrTalent: String.User.Client)
+                c.rejectedTitle = NSLocalizedString("Conflict", comment: "")
+            } else {
+                c.accepted = nil
+                c.title?.text = NSLocalizedString("negotiations.reportedcomplete.title", comment: "")
+            }
+        }
+        
+        c.messageTitle?.text = NSLocalizedString("negotiations.reportedcomplete.messagetitle", comment: "")
+    }
+}
 

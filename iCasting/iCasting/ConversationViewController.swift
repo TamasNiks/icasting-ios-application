@@ -1,5 +1,5 @@
 //
-//  NegotiationDetailTableViewController.swift
+//  ConversationViewController.swift
 //  iCasting
 //
 //  Created by Tim van Steenoven on 06/05/15.
@@ -8,32 +8,38 @@
 
 import UIKit
 
-class NegotiationDetailViewController:
-ChatTextInputViewController,
+
+
+class ConversationViewController: ChatTextInputViewController,
 UITableViewDataSource,
 UITableViewDelegate,
 UIScrollViewDelegate,
-DilemmaCellDelegate
+DilemmaCellExtendedButtonDelegate
  {
+    enum PopUpState { case Success, Error }
     
     @IBOutlet weak var tableView: UITableView!
     
     // The matchID is needed to get the right conversation
     var matchID: String?
     
+    // To get access to specific features of the matchcard we need to get this passed as well
+    weak var matchCard: MatchCard!
+    
     // The conversation is the entry point for the message data model. It also handles the traffic between Socket and controller
     var conversation: Conversation?
     
-    // A shortcut to the message array. Giving a empty message array, to table view can initialze it's rendering before the model gets it's data
+    // A shortcut to the message array. Given an empty message array so the table view can initialze it's rendering before the model gets it's data
     var messages: [Message] {
         return conversation?.messages ?? [Message]()
     }
     
-    var sizingCellProvider  : SizingCellProvider?
-    var cellReuser          : CellReuser?
+    var sizingCellProvider  : SizingCellProvider!
+    var cellReuser          : CellReuser!
     var keyboardController  : KeyboardController?
+    var ratingController    : RatingController!
     
-    //var observing: Bool = false
+    var observing: Bool = false
     var viewIsLoaded: Bool = false
     
     // Contexts are used by the KVO, to decide and respond on what kind of path has changed
@@ -58,21 +64,24 @@ DilemmaCellDelegate
         super.addKeyValueObserverForTextinput()
     }
     
+    
     override func viewDidAppear(animated: Bool) {
         if !viewIsLoaded {
             viewIsLoaded = true
-            initializeModel()
+            prepareModel()
             handleRequest()
         }
     }
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
 
+    
     deinit {
-        println("Will deinit NegotiationDetailViewController")
+        println("Will deinit ConversationViewController")
         conversation?.leaveConversation()
         keyboardController?.removeObserver()
         super.removeKeyValueObserverForTextinput()
@@ -88,42 +97,58 @@ DilemmaCellDelegate
     
     private func prepareViewController() {
         
-        sizingCellProvider = SizingCellProvider(tableView: tableView)
-        cellReuser = CellReuser(tableView: tableView)
+        DodoBarDefaultStyles.cornerRadius = 5
+        DodoLabelDefaultStyles.font = UIFont.preferredFontForTextStyle(UIFontTextStyleBody)
+        DodoPresets.Success.style.bar.backgroundColor = UIColor.ICGreenColor()
+        
+        let ccf = MessageCellConfiguratorFactory()
+        sizingCellProvider = SizingCellProvider(tableView: tableView, cellConfiguratorFactory: ccf)
+        cellReuser = CellReuser(tableView: tableView, cellConfiguratorFactory: ccf)
 
         // Create a keyboard controller with views to handle keyboard events
         keyboardController = KeyboardController(views: [tableView, inputToolbar])
         keyboardController?.setObserver()
         
+        // Create a controller to give the rating
+        ratingController = RatingController(viewController: self)
+        
         addGestureRecognizer()
+        
+        // tableView.rowHeight = UITableViewAutomaticDimension
+        // tableView.estimatedRowHeight = 100
     }
     
     
-    private func initializeModel() {
+    private func prepareModel() {
         
         if let ID = matchID {
             conversation = Conversation(matchID: ID)
+            conversation?.delegate = self
         }
     }
     
-    
-    func handleRequest() {
+    private func handleRequest() {
         
         // Get all the current messages available from the server
         // TODO: For best results, you should get the latest 20 messages and load another
         
         showWaitOverlay()
         
-            
+        // TODO: Only make the conversation active if the job is not marked completed
+        
         conversation?.get() { failure in
             
-            println("DONE")
             self.removeAllOverlays()
+            
+            if let failure = failure {
+                
+                self.performErrorHandling(failure)
+                return
+            }
             
             if self.messages.isEmpty == false {
                 
                 println("ConversationTableViewController: request finnished, will reload the table")
-                
                 self.tableView.reloadData()
                 self.scrollToBottom()
                 self.addKeyValueObservers()
@@ -131,10 +156,38 @@ DilemmaCellDelegate
         }
     }
 
+    
     private func addGestureRecognizer() {
         
         let tgr: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "handleTapGestureRecognizer:")
         tableView.addGestureRecognizer(tgr)
+    }
+    
+    
+    private func performErrorHandling(errors: ICErrorInfo) {
+        
+        let message = errors.localizedFailureReason
+        let title = NSLocalizedString("Error", comment: "")
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
+        
+        // Add a basic action for errors
+        var action: UIAlertAction = UIAlertAction(title: "Ok", style: UIAlertActionStyle.Cancel) { (action) -> Void in
+            alertController.removeFromParentViewController()
+        }
+        
+        // If it is a specific network error, apperently the user could not connect because of unavailable internet connection
+        if errors.type == ICErrorType.NetworkErrorInfo {
+            
+            println("ICErrorType.NetworkErrorInfo")
+            
+            action = UIAlertAction(title: "Try again", style: UIAlertActionStyle.Default, handler: { (action) -> Void in
+                self.handleRequest()
+                alertController.removeFromParentViewController()
+            })
+        }
+        
+        alertController.addAction(action)
+        presentViewController(alertController, animated: true, completion: nil)
     }
 }
 
@@ -144,7 +197,7 @@ DilemmaCellDelegate
 
 // MARK: - DATA SOURCE
 
-extension NegotiationDetailViewController {
+extension ConversationViewController {
 
     // MARK: Table view data source methods
 
@@ -173,11 +226,16 @@ extension NegotiationDetailViewController {
     }
 
     
+//    func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+//        return 100
+//    }
+    
+    
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         
         return getHeightForCell(indexPath)
     }
-    
+
 
     // MARK: Data source helper methods
     
@@ -187,9 +245,14 @@ extension NegotiationDetailViewController {
     }
     
     
+    
     func getDefaultCell(forIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        return tableView.dequeueReusableCellWithIdentifier(CellIdentifier.Message.SystemMessageCell.rawValue, forIndexPath: indexPath) as! UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifier.Message.SystemMessageCell.rawValue,
+            forIndexPath: indexPath) as! UITableViewCell
+        cell.textLabel?.text = "DEBUG: Don't forget to bind the TextType to the CellIdentifier!"
+        return cell
     }
+    
     
     
     func getAndConfigCell(indexPath: NSIndexPath) -> UITableViewCell? {
@@ -200,15 +263,23 @@ extension NegotiationDetailViewController {
             identifier = CellIdentifier.Message.fromTextType(message.type),
             cellReuser = cellReuser {
                 
-            let cell: UITableViewCell? = cellReuser.reuseCell(identifier, indexPath: indexPath)
-            let cellConfigurator = cellReuser.getConfigurator()
+            let cell: UITableViewCell? = cellReuser.reuseCell(identifier, indexPath: indexPath, configuratorType: message.type)
+            let cellConfigurator = cellReuser.configuratorFactory.getConfigurator()
+                
+            if let cc = cellConfigurator as? ReportedCompleteMessageCellConfigurator {
+                cc.rated = matchCard.talentHasRated
+            }
             
-            //let data: [CellKey:Any] = [CellKey.Model:message as Any, CellKey.IndexPath:indexPath]
-            let data: [CellKey:Any] = [CellKey.Model:message as Any, CellKey.IndexPath:indexPath, CellKey.Delegate: self]
+            let data = [
+                CellKey.Model : message as Any,
+                CellKey.IndexPath : indexPath,
+                CellKey.Delegate : self
+                ]
+                
             cellConfigurator?.configureCell(data: data)
             
             // For changes inside a message, add a changeObserver
-            addChangeObserver(forMessage: message, withCellIdentifier: identifier)
+            addChangeInMessageObserver(forMessage: message, withCellIdentifier: identifier)
                 
             return cell
         }
@@ -225,15 +296,18 @@ extension NegotiationDetailViewController {
         var height: CGFloat = 60
         
         // Check if a specific text type is bound with a cell identifier, extra safe check
-        if let _identifier = identifier {
+        if let identifier = identifier {
             
             // Exclude the cell, that should not get measured
-            if _identifier != CellIdentifier.Message.SystemMessageCell {
+            if identifier != CellIdentifier.Message.SystemMessageCell {
                 
                 // The sizing cell provider gets the right cell once depending on the identifier. It asks to configure the cell, so it can measure the height based on the content through an calculator strategy
-                height = sizingCellProvider!.heightForCustomCell(fromIdentifier: _identifier, calculatorType:.AutoLayout) { (cellConfigurator) -> () in
+                height = sizingCellProvider.heightForCustomCell(
+                    fromIdentifier: identifier,
+                    configuratorType: message.type,
+                    calculatorType:.AutoLayout) { (cellConfigurator) -> () in
                     
-                    cellConfigurator?.configureCellText(data: [.Model:message as Any])
+                        cellConfigurator?.configureCellText(data: [.Model:message as Any])
                 }
             }
         }
@@ -247,16 +321,16 @@ extension NegotiationDetailViewController {
 
 // MARK: - DELEGATE AND HELPERS
 
-extension NegotiationDetailViewController {
+extension ConversationViewController {
 
     // MARK: dilemma cell delegate used for all kind of offer terms and contract questions
     
-    func dilemmaCell(
-        cell: UITableViewCell,
+    func dilemmaCell(cell: UITableViewCell,
         didPressButtonForState decisionState: DecisionState,
         forIndexPath indexPath: NSIndexPath,
         startAnimation: () -> ()) {
         
+            println("did press button")
             
             let message = self.getModel(forIndexPath: indexPath)
             
@@ -292,6 +366,16 @@ extension NegotiationDetailViewController {
                     }
                 }
                 
+                if message.type == TextType.ReportedComplete {
+                    
+                    messageCommunication.acceptJobCompleted(message) { error in
+                        
+                        // The animation will restart, because after the cell configuration, the state already has been set.
+                        self.configureCell(forMessage: message, andCell: cell)
+                        startAnimation()
+                    }
+                }
+                
             case DecisionState.Reject:
                 
                 if message.type == TextType.Offer {
@@ -319,23 +403,58 @@ extension NegotiationDetailViewController {
                         startAnimation()
                     }
                 }
+                
+                if message.type == TextType.ReportedComplete {
+                    
+                    messageCommunication.rejectJobCompleted(message) { error in
+                        
+                        // The animation will restart, because after the cell configuration, the state already has been set.
+                        self.configureCell(forMessage: message, andCell: cell)
+                        startAnimation()
+                    }
+                }
+        }
+    }
+    
+
+    // The extended button needs to be controlled by the delegate in three different states: loading state, finished state failure, finished state success
+    
+    func dilemmaCell(cell: UITableViewCell, didPressDecidedButtonForState decidedState: DecisionState, forIndexPath indexPath: NSIndexPath) {
+        
+        ratingController.show { [weak self] grade in
+
+            let _grade = grade
+            self?.matchCard.rate(grade, callBack: { (failure) -> () in
+
+                println("REQUEST: did rate client request")
+                
+                if let error = failure {
+                    self?.performErrorHandling(error)
+                } else {
+                    
+                    let float: Float = NSString(string: _grade).floatValue
+                    self?.matchCard.setLocalTalentRating(float)
+                    self?.tableView.reloadRowsAtIndexPaths([indexPath as AnyObject], withRowAnimation: UITableViewRowAnimation.None)
+                }
+            })
+            
         }
     }
     
     
     func configureCell(forMessage message: Message, andCell cell: UITableViewCell) {
         
-        let cellIdentifier = CellIdentifier.Message.fromTextType(message.type)
-        let factory = CellConfiguratorFactory(cellIdentifier: cellIdentifier, cell: cell)
+        //let cellIdentifier = CellIdentifier.Message.fromTextType(message.type)
+        let factory = MessageCellConfiguratorFactory(configuratorType: message.type, cell: cell)
         if let configurator = factory.getConfigurator() {
             configurator.configureCell(data: [CellKey.Model:message as Any])
         }
     }
     
-
+    
     // MARK: Table view controller functions
     
-    func insertAtBottom(forRole role: Role) {
+    func insertAtBottom(forRole role: MessageRole) {
 
         var rowAnimation: UITableViewRowAnimation
         
@@ -366,12 +485,13 @@ extension NegotiationDetailViewController {
     // TEST
     
     @IBAction func onTestItemPressed(sender: AnyObject) {
-        let incommingMessage: Message = Message(id: "123445", owner: "54321", role: Role.Incomming, type: TextType.Text)
+        
+        let incommingMessage: Message = Message(id: "123445", owner: "54321", role: MessageRole.Incomming, type: TextType.Text)
         incommingMessage.body = "This is an incomming message"
         conversation?.messageList.list.append(incommingMessage)
         var time: dispatch_time_t = dispatch_time(DISPATCH_TIME_NOW, Int64(1 * Double(NSEC_PER_SEC) ) )
         dispatch_after(time, dispatch_get_main_queue()) { () -> Void in
-            let outgoingMessage: Message = Message(id: "8327932874", owner: "23423897", role: Role.Outgoing, type: TextType.Text)
+            let outgoingMessage: Message = Message(id: "8327932874", owner: "23423897", role: MessageRole.Outgoing, type: TextType.Text)
             outgoingMessage.body = "This is an outgoing message"
             self.conversation?.messageList.list.append(outgoingMessage)
         }
@@ -384,26 +504,33 @@ extension NegotiationDetailViewController {
 
 // MARK: - OBSERVING
 
-extension NegotiationDetailViewController {
+extension ConversationViewController : ConversationErrorDelegate {
     
     
     func addKeyValueObservers() {
-        conversation?.addObserver(self, forKeyPath: ObservableConversationPath.messageList, options: nil, context: &newMessagesListContext)
-        conversation?.addObserver(self, forKeyPath: ObservableConversationPath.incommingUser, options: NSKeyValueObservingOptions.New, context: &userJoinedOrLeft)
-        conversation?.addObserver(self, forKeyPath: ObservableConversationPath.authenticated, options: NSKeyValueObservingOptions.New, context: &userAuthenticate)
-        //observing = true
+        conversation?.addObserver(self,
+            forKeyPath: ObservableConversationPath.messageList, options: nil, context: &newMessagesListContext)
+        conversation?.addObserver(self,
+            forKeyPath: ObservableConversationPath.incommingUser, options: NSKeyValueObservingOptions.New, context: &userJoinedOrLeft)
+        conversation?.addObserver(self,
+            forKeyPath: ObservableConversationPath.authenticated, options: NSKeyValueObservingOptions.New, context: &userAuthenticate)
+        observing = true
     }
     
+    
     func removeKeyValueObservers() {
-        //if observing {
+        if observing {
             conversation?.removeObserver(self, forKeyPath: ObservableConversationPath.messageList, context: &newMessagesListContext)
             conversation?.removeObserver(self, forKeyPath: ObservableConversationPath.incommingUser, context: &userJoinedOrLeft)
             conversation?.removeObserver(self, forKeyPath: ObservableConversationPath.authenticated, context: &userAuthenticate)
-            //observing = false
-        //}
+            observing = false
+        }
     }
     
-    func addChangeObserver(forMessage message: Message, withCellIdentifier cellIdentifer: CellIdentifier.Message?) {
+    
+    func addChangeInMessageObserver(forMessage message: Message, withCellIdentifier cellIdentifer: CellIdentifier.Message?) {
+
+        // There are two options to update a cell. The easiest is just to reload the cell with a prebuild animation. The data source will get the updated model and after going through a cell configurator the cell should reflect the latest changes. The shortcut is to pass the updated message to a cell configurator (see function below). But then you have to take care of visual feedback of a change in a cell to the user in the configurator. Therefor it is better to use the reloadRowsAtIndexPath for incomming changes in messages. It's less of a hassle, less code and it follows the MVC cycle. The outgoing changes in messages (device side changes) will be handled differently.
         
         /*func changeWithConfigurator(cell: UITableViewCell) {
             let factory = CellConfiguratorFactory(cellIdentifier: cellIdentifer, cell: cell)
@@ -415,9 +542,8 @@ extension NegotiationDetailViewController {
 
         // Here we create a closure which can be called later if a change in a particularly message occur
         message.notifyChange = {
+            
             [weak self] (message: Message, index: Int) in
-
-        // There are two options to update a cell. The easiest is just to reload the cell with a prebuild animation. The data source will get the updated model and after going through a cell configurator the cell should reflect the latest changes. The shortcut is to pass the updated message to a cell configurator (see function above). But then you have to take care of visual feedback of a change in a cell to the user in the configurator. Therefor it is better to use the reloadRowsAtIndexPath for incomming changes in messages. It's less of a hassle, less code and it follows the MVC cycle. The outgoing changes in messages (device side changes) will be handled differently.
             
             let ip = NSIndexPath(forRow: index, inSection: 0)
             if let cell = self!.tableView.cellForRowAtIndexPath(ip) {
@@ -454,20 +580,32 @@ extension NegotiationDetailViewController {
         
         if context == &userAuthenticate {
             
-            // EXPERIMENT: Show a short message
-            DodoBarDefaultStyles.cornerRadius = 5
-            DodoPresets.Success.style.bar.backgroundColor = UIColor.ICGreenColor()
-            DodoLabelDefaultStyles.font = UIFont.preferredFontForTextStyle(UIFontTextStyleBody)
-            self.view.dodo.style.bar.animationShow = DodoAnimations.Fade.show
-            self.view.dodo.style.bar.animationHide = DodoAnimations.Fade.hide
-            self.view.dodo.style.leftButton.icon = .Close
-            self.view.dodo.style.bar.hideAfterDelaySeconds = 2
-            self.view.dodo.style.bar.hideOnTap = true
-            self.view.dodo.success("Conversation active")
+            showAnnouncement("Conversation active", state: PopUpState.Success)
         }
         
         super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
     }
+    
+    
+    func receivedErrorForConversation(error: ICErrorInfo) {
+        showAnnouncement(error.localizedFailureReason, state: PopUpState.Error)
+    }
+    
+    func showAnnouncement(announcement: String, state: PopUpState) {
+    
+        self.view.dodo.style.bar.animationShow = DodoAnimations.Fade.show
+        self.view.dodo.style.bar.animationHide = DodoAnimations.Fade.hide
+        self.view.dodo.style.leftButton.icon = .Close
+        self.view.dodo.style.bar.hideAfterDelaySeconds = 2
+        self.view.dodo.style.bar.hideOnTap = true
+        
+        switch state {
+        case .Success: self.view.dodo.success(announcement)
+        case .Error: self.view.dodo.error(announcement)
+        }
+        
+    }
+    
 }
 
 
@@ -475,7 +613,7 @@ extension NegotiationDetailViewController {
 
 // MARK: TEXT INPUT TOOLBAR
 
-extension NegotiationDetailViewController {
+extension ConversationViewController {
 
     // MARK: Add compatibility for text input field: JSQ Messages Input Toolbar Delegate
     
@@ -517,7 +655,7 @@ extension NegotiationDetailViewController {
     }
 }
 
-extension NegotiationDetailViewController {
+extension ConversationViewController {
     
     // MARK: - Navigation
     

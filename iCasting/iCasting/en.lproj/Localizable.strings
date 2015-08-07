@@ -54,6 +54,10 @@
 "Talent" = "Talent";
 "Client" = "Client";
 
+"Completed" = "Completed";
+"Conflict" = "Conflict";
+"Rate" = "Rate";
+
 /* Login */
 "login.alert.client.notsupported" = "The client is not yet supported with this version of the app. We will let you know if client support is added in future versions.";
 
@@ -112,9 +116,19 @@
 "negotiations.offer.title.requests" = "Additional requests";
 
 "negotiations.renegotiation.title" = "Renegotiation request";
+"negotiations.reportedcomplete.messagetitle" = "Job completion";
+"negotiations.reportedcomplete.title" = "Mark the job as completed or not completed";
+"negotiations.reportedcomplete.bothaccepted" = "Both marked the job as complete";
+"negotiations.reportedcomplete.accepted" = "%@ marked the job as complete";
+"negotiations.reportedcomplete.rejected" = "%@ marked the job as not complete";
+
+"negotiations.decisionbutton.rejectedtitle" = "%@ rejected";
+"negotiations.decisionbutton.acceptedtitle" = "%@ accepted";
+
+"negotiation.contract.desc" = "Do you want to accept the contract?";
 
 "negotiation.state.bothaccepted" = "Both accepted contract";
-"negotiation.state.neitherdecided" = "%@ has not accepted yet";
+"negotiation.state.notdecided" = "%@ has not accepted yet";
 "negotiation.state.accepted" = "%@ has accepted";
 "negotiation.state.rejected" = "%@ declined the contract";
 
@@ -123,6 +137,8 @@
 "negotiations.subject.title.buyoff" = "Buy off";
 "negotiations.subject.title.timeandlocation" = "Time & location";
 "negotiations.subject.title.additionalrequests" = "Additional requests";
+
+
 
 // iCasting System text
 
@@ -169,6 +185,8 @@
 "match.decisionstate.negotiation" = "Negotiate";
 "match.decisionstate.closed" = "Client has made a selection";
 "match.decisionstate.completed" = "Job is completed";
+"match.decisionstate.completed.notrated" = "Rate now";
+"match.decisionstate.conflict" = "Unknown";
 
 /* API Errors */
 
