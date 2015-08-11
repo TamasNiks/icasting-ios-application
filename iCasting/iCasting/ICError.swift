@@ -9,27 +9,32 @@
 import Foundation
 
 
+///Error domain
+public let kICErrorDomain: String = "ICErrorDomain"
+
+///Error codes
+public let kICErrorAPI: Int = 100
+public let kICErrorClientNotSupported: Int = 101
+public let kICErrorEmailNotVerified: Int = 102
+
+
+// These API error keys corresponds with the name key of the API call, add new keys to the struct error and to the Localizable.strings file
 enum ICAPIErrorNames: String {
-    case PassportAuthenticationError = "PassportAuthenticationError"
+    case AuthenticationError = "AuthenticationError"
+    case InsufficientCreditsError = "InsufficientCreditsError"
+    case AlreadyRatedMatchError = "AlreadyRatedMatchError"
+    case PassportAuthenticationError = "PassportAuthenticationError" //FB
 }
+
+
 
 protocol ICErrorInfo : Printable {
-    var type: ICErrorType { get }
-    var localizedFailureReason: String { get }
+    var localizedDescription: String { get }
+    var error: NSError { get }
 }
 
-enum ICErrorType : Int {
-    case NetworkErrorInfo, APIErrorInfo, SocketErrorInfo
-}
-
-
-// These API error text keys correspondends to the name key of the API call, add new keys to the struct error and to the Localizable.strings file
-
-private struct ICAPIErrorText {
-    static let Names: [String] = ["AuthenticationError", "InsufficientCreditsError", "AlreadyRatedMatchError"]
-    static let GenericError: String = "Error"
-    static let NoErrorDescription: String = "NoErrorDescription"
-}
+private let localizedDescriptionComment = "The different API errors will be translated properly according to the name"
+private let unknownDescription = "Unknown description"
 
 
 struct ICSocketErrorInfo: ICErrorInfo {
@@ -42,29 +47,25 @@ struct ICSocketErrorInfo: ICErrorInfo {
         return "errors: \(errors)"
     }
     
-    var type: ICErrorType {
-        return ICErrorType.SocketErrorInfo
+    var localizedDescription: String {
+        return error.localizedDescription ?? unknownDescription
     }
     
-    
-    var localizedFailureReason: String {
-        for value in ICAPIErrorText.Names {
-            if value == name {
-                return NSLocalizedString(value, comment: "The different API errors will be translated properly")
-            }
-        }
-        return NSLocalizedString(errors[0], comment: "If an API error key does not exist, the original text will show up to give the user some information")
-        //        if name == ICAPIErrorText.GenericError {
-        //            return NSLocalizedString(errors[0], comment: "The different API errors will be translated properly")
-        //        }
+    var error: NSError {
         
-        //        return NSLocalizedString(ICAPIErrorText.NoErrorDescription, comment: "If an API error does not exist, this text will show up")
+        var errorDesc: String = ""
+        if let APIName = ICAPIErrorNames(rawValue: name) {
+            errorDesc = NSLocalizedString(APIName.rawValue, comment: localizedDescriptionComment)
+        } else {
+            errorDesc = NSLocalizedString(errors[0], comment: localizedDescriptionComment)
+        }
+        
+        return NSError(domain: name, code: kICErrorAPI, userInfo: [NSLocalizedDescriptionKey : errorDesc])
     }
-    
 }
 
 
-struct ICNetworkErrorInfo : ICErrorInfo {
+struct ICGeneralErrorInfo : ICErrorInfo {
     
     let errors: [NSError]
     
@@ -72,12 +73,12 @@ struct ICNetworkErrorInfo : ICErrorInfo {
         return "errors: \(errors)"
     }
     
-    var type: ICErrorType {
-        return ICErrorType.NetworkErrorInfo
+    var localizedDescription: String {
+        return errors[0].localizedDescription
     }
     
-    var localizedFailureReason: String {
-        return errors[0].localizedDescription
+    var error: NSError {
+        return errors[0]
     }
 }
 
@@ -91,28 +92,19 @@ struct ICAPIErrorInfo : ICErrorInfo {
         return "errors: \(errors), name: \(name)"
     }
     
-    var type: ICErrorType {
-        return ICErrorType.APIErrorInfo
+    var localizedDescription: String {
+        return error.localizedDescription ?? unknownDescription
     }
     
-    var localizedFailureReason: String {
-        for value in ICAPIErrorText.Names {
-            if value == name {
-                return NSLocalizedString(value, comment: "The different API errors will be translated properly")
-            }
-        }
-        return NSLocalizedString(errors[0], comment: "If an API error key does not exist, the original text will show up to give the user some information")
-//        if name == ICAPIErrorText.GenericError {
-//            return NSLocalizedString(errors[0], comment: "The different API errors will be translated properly")
-//        }
-        
-//        return NSLocalizedString(ICAPIErrorText.NoErrorDescription, comment: "If an API error does not exist, this text will show up")
+    var error: NSError {
+        var errorDesc = NSLocalizedString(errors[0], comment: localizedDescriptionComment)
+        return NSError(domain: name, code: kICErrorAPI, userInfo: [NSLocalizedDescriptionKey : errorDesc])
     }
-    
 }
 
 
-// This class represents one access point to create error information depending on the type of an error, it returns the right structure containing error related information. It's up to the specific class to handle the errors
+// This class represents one access point to create error information depending on the type of an error, it returns the right struct containing error related information. This struct acts as a wrapped for a NSError object. It's up to the specific class to handle the errors
+
 class ICError {
     
     var errorJson: JSON?
@@ -130,21 +122,21 @@ class ICError {
     init(string: String?) {
         self.socketError = string == "<null>" ? nil : string
     }
-    
-    func getErrors() -> ICErrorInfo? {
+
+    var errorInfo: ICErrorInfo? {
         
         if let errorJson = self.errorJson {
 
             if let errors = errorJson["errors"].array {
                 if errors.isEmpty == false {
-                    var stringErrors: [String] = errors.map({ return $0.string! })
+                    var stringErrors: [String] = errors.map({ return $0.stringValue })
                     return ICAPIErrorInfo(errors: stringErrors, name: errorJson["name"].stringValue)
                 }
             }
         }
         
         if let error: NSError = self.error {
-            return ICNetworkErrorInfo(errors: [error])
+            return ICGeneralErrorInfo(errors: [error])
         }
         
         
@@ -154,5 +146,36 @@ class ICError {
         
         return nil
     }
+}
+
+
+
+// This extensions adds support for custom run time errors which are made on the fly when necessary. 
+// Useful for restrictions that are not handled by the API
+
+extension ICError {
     
+     enum CustomErrorInfoType {
+        
+        case ClientNotSupportedError, EmailNotVerifiedError
+        
+        var errorInfo: ICErrorInfo {
+            
+            switch self {
+                
+            case .ClientNotSupportedError:
+                
+                let errorMessage = NSLocalizedString("alert.client.notsupported", comment: "")
+                let error = NSError(domain: kICErrorDomain, code: kICErrorClientNotSupported, userInfo: [NSLocalizedDescriptionKey : errorMessage])
+                return ICError(error: error).errorInfo!
+                
+            case .EmailNotVerifiedError:
+                
+                let errorMessage = NSLocalizedString("alert.user.emailnotverified", comment: "")
+                let error = NSError(domain: kICErrorDomain, code: kICErrorEmailNotVerified, userInfo: [NSLocalizedDescriptionKey : errorMessage])
+                return ICError(error: error).errorInfo!
+                
+            }
+        }
+    }
 }

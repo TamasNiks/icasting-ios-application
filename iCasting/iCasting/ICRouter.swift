@@ -1,5 +1,5 @@
 //
-//  Router.swift
+//  ICRouter.swift
 //  iCasting
 //
 //  Created by T. van Steenoven on 08-04-15.
@@ -28,12 +28,15 @@ enum Router {
     enum User: EndpointProtocol {
         
         case
-        ReadUser(String)
+        ReadUser(String),
+        VerifyEmailUser(String)
         
         func endpoint() -> String {
             switch self {
             case .ReadUser(let id):
                 return "user/\(id)"
+            case .VerifyEmailUser(let id):
+                return "verify/email/\(id)"
             }
         }
         
@@ -41,14 +44,14 @@ enum Router {
             switch self {
             case .ReadUser:
                 return .GET
+            case .VerifyEmailUser:
+                return .POST
             }
         }
         
         var url: URLStringConvertible { return ICURL.createURL(self) }
         
         var URLRequest: NSURLRequest {
-            
-            //API.test()
             
             let mutableURLRequest = NSMutableURLRequest(URL: self.url as! NSURL)
             mutableURLRequest.HTTPMethod = self.method.rawValue
@@ -336,19 +339,27 @@ enum Router {
     enum Notifications: EndpointProtocol {
         
         case
-        Notifications
+        Notifications,
+        NotificationsPage(Int),
+        NotificationsLimit(Int)
         
         func endpoint() -> String {
             switch self {
             case .Notifications:
                 return "notifications"
+            case .NotificationsPage(let page):
+                return "notifications?page=\(page)"
+            case .NotificationsLimit(let limit):
+                return "notifications?limit=\(limit)"
             }
         }
     
         var method: Method {
             switch self {
             case
-            Notifications:
+            Notifications,
+            NotificationsPage,
+            NotificationsLimit:
                 return .GET
             }
         }

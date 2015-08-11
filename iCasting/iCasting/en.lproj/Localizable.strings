@@ -14,6 +14,7 @@
 /* Interface */
 
 "Loading" = "Loading";
+"NoResults" = "There are no results to show";
 
 /* Specific */
 
@@ -48,6 +49,7 @@
 "Accept" = "Accept";
 "Reject" = "Reject";
 "Cancel" = "Cancel";
+"Continue" = "Continue";
 
 "Announcement" = "Announcement";
 
@@ -58,8 +60,11 @@
 "Conflict" = "Conflict";
 "Rate" = "Rate";
 
-/* Login */
-"login.alert.client.notsupported" = "The client is not yet supported with this version of the app. We will let you know if client support is added in future versions.";
+/* Alerts */
+"alert.client.notsupported" = "The client is not yet supported with this version of the app. We will let you know if client support is added in future versions.";
+"alert.user.emailnotverified" = "Your email address needs to be verified to accept matches. If you haven't received the email for verification, click the button below. After verification, please login again.";
+"alert.user.emailverificationsend" = "An e-mail has been send to you. It can take a couple of minutes before it arrives. If you didn't receive anything, check your spam folder, else try to send a verification mail again.";
+"alert.user.resendverificationmail" = "Resend verification email";
 
 /* Family: Casting Objects */
 "castingobjects.navigationitem.title" = "Welcome %@";
@@ -138,7 +143,7 @@
 "negotiations.subject.title.timeandlocation" = "Time & location";
 "negotiations.subject.title.additionalrequests" = "Additional requests";
 
-
+"negotiations.overlay.message.conversationactive" = "Conversation active";
 
 // iCasting System text
 
@@ -147,6 +152,9 @@
 "icasting.chat.system.contract.fields.unaccepted" = "There are a few points that have to be negotiated. As soon as these have been negotiated and accepted, the client can send a mutual agreement to confirm the job.";
 
 /* Notifications */
+
+"notifications.tableview.header.last" = "Last %@ notifications";
+
 "notification.desc.achievement-complete" = "You have completed \"%@\" and earned %@ XP.";
 "notification.desc.match-matched" = "You have a match with \"%@\"";
 "notification.desc.match-client_accepted" = "Your reaction for \"%@\" has been accepted";

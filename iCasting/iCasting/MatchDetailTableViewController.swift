@@ -64,6 +64,25 @@ class MatchDetailTableViewController: ICTableViewController {
     }
     
     
+    // MARK: - Navigation
+    
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if let destination = segue.destinationViewController as? MatchProfileTableViewController {
+            destination.matchCard = self.matchCard
+        }
+        
+        if let destination = segue.destinationViewController as? ConversationViewController {
+            destination.matchID = self.matchCard?.getID(FieldID.MatchCardID)
+            destination.matchCard = self.matchCard
+        }
+        
+        if let destination = segue.destinationViewController as? ClientProfileTableViewController {
+            destination.matchID = self.matchCard?.getID(FieldID.MatchCardID)
+        }
+    }
+    
+    
     // Data source helper methods
     
     func getModel(forIndexPath indexPath: NSIndexPath) -> [String:String] {
@@ -80,6 +99,9 @@ class MatchDetailTableViewController: ICTableViewController {
         let f: Fields = fields[sectionForDynamic]
         return matchDetails!.details[f]!
     }
+    
+    
+    
     
     
     
@@ -219,26 +241,6 @@ extension MatchDetailTableViewController {
 
 extension MatchDetailTableViewController: DilemmaCellExtendedButtonDelegate {
 
-    
-    func handleDecision(decisionState: DecisionState, startAnimation: () -> ()) {
-        
-        self.matchCard?.dispatchDecision(decisionState, callBack: { (error) -> () in
-            if let error = error {
-                super.performErrorHandling(error)
-                return
-            }
-            startAnimation()
-            switch decisionState {
-            case DecisionState.Accept:
-                self.delegate?.didAcceptMatch()
-            case DecisionState.Reject:
-                self.navigationController?.popViewControllerAnimated(true)
-                self.delegate?.didRejectMatch()
-            }
-        })
-    }
-    
-    
     func dilemmaCell(
         cell: UITableViewCell,
         didPressButtonForState decisionState: DecisionState,
@@ -247,24 +249,32 @@ extension MatchDetailTableViewController: DilemmaCellExtendedButtonDelegate {
         
             println("Dilemma cell delegate")
             
-            var ac: UIAlertController
+            if User.sharedInstance.mailIsVerified == false {
+                
+                let errorInfo = ICError.CustomErrorInfoType.EmailNotVerifiedError.errorInfo
+                ICAlertControllerTest.showEmailVerificationAlert(errorInfo, viewController: self)
+                
+            } else {
             
-            switch decisionState {
+                var ac: UIAlertController
                 
-            case DecisionState.Accept:
+                switch decisionState {
+                    
+                case DecisionState.Accept:
+                    
+                    ac = AcceptAlertController { () in
+                        self.handleDecision(decisionState, startAnimation: startAnimation)
+                    }.configureAlertController()
+                    
+                case DecisionState.Reject:
+                    
+                    ac = RejectAlertController { () in
+                        self.handleDecision(decisionState, startAnimation: startAnimation)
+                    }.configureAlertController()
+                }
                 
-                ac = AcceptAlertController { () -> Void in
-                    self.handleDecision(decisionState, startAnimation: startAnimation)
-                }.configureAlertController()
-                
-            case DecisionState.Reject:
-                
-                ac = RejectAlertController { () -> Void in
-                    self.handleDecision(decisionState, startAnimation: startAnimation)
-                }.configureAlertController()
+                self.presentViewController(ac, animated: true, completion: nil)
             }
-            
-            self.presentViewController(ac, animated: true, completion: nil)
     }
     
 
@@ -283,22 +293,27 @@ extension MatchDetailTableViewController: DilemmaCellExtendedButtonDelegate {
     }
     
     
-    // MARK: - Navigation
-    
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if let destination = segue.destinationViewController as? MatchProfileTableViewController {
-            destination.matchCard = self.matchCard
-        }
+    func handleDecision(decisionState: DecisionState, startAnimation: () -> ()) {
         
-        if let destination = segue.destinationViewController as? ConversationViewController {
-            destination.matchID = self.matchCard?.getID(FieldID.MatchCardID)
-            destination.matchCard = self.matchCard
-        }
-        
-        if let destination = segue.destinationViewController as? ClientProfileTableViewController {
-            destination.matchID = self.matchCard?.getID(FieldID.MatchCardID)
-        }
+        self.matchCard?.postDecision(decisionState, callBack: { (error) -> () in
+            if let error = error {
+                super.performErrorHandling(error)
+                return
+            }
+            startAnimation()
+            switch decisionState {
+                
+            case DecisionState.Accept:
+                
+                self.delegate?.didAcceptMatch()
+                
+            case DecisionState.Reject:
+                
+                self.navigationController?.popViewControllerAnimated(true)
+                self.delegate?.didRejectMatch()
+                
+            }
+        })
     }
 }
 

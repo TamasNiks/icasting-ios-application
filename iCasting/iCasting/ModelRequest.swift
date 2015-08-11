@@ -28,7 +28,7 @@ extension News : ModelRequest {
         
         request(Router.News.NewsItems).responseCollection { (_, _, collection: [NewsItem]?, error) -> Void in
         
-            var errors: ICErrorInfo? = ICError(error: error).getErrors()
+            var errors: ICErrorInfo? = ICError(error: error).errorInfo
             if let collection = collection {
                 self.newsItems = collection
             }
@@ -42,7 +42,7 @@ extension News : ModelRequest {
         let req = Router.Media.ImageWithSize(id, size.rawValue)
         request(req).response { (request, response, data, error) -> Void in
             
-            let error: ICErrorInfo? = ICError(error: error).getErrors()
+            let error: ICErrorInfo? = ICError(error: error).errorInfo
             callBack(success: data, failure: error)
         }
     }
@@ -54,15 +54,30 @@ extension News : ModelRequest {
 // OBJECT
 extension User : ModelRequest {
     
-    func get(callBack:RequestClosure) {
+    func get(callBack: RequestClosure) {
         
         let req = Router.User.ReadUser(Auth.passport!.user_id)
         request(req).responseObject { (_, _, object: User?, error) -> Void in
             
-            var errors: ICErrorInfo? = ICError(error: error).getErrors()
+            var errors: ICErrorInfo? = ICError(error: error).errorInfo
             callBack(failure: errors)
         }
     }
+    
+    
+    func verifyMail(callBack: RequestClosure) {
+        
+        let req = Router.User.VerifyEmailUser(Auth.passport!.user_id)
+        request(req).responseJSON { (_, _, json, error) -> Void in
+            var error: ICErrorInfo? = ICError(error: error).errorInfo
+            if let json: AnyObject = json {
+                error = ICError(json: JSON(json)).errorInfo
+            }
+            callBack(failure: error)
+        }
+        
+    }
+    
 }
 
 
@@ -73,9 +88,10 @@ extension Notifications : ModelRequest {
     
     func get(callBack: RequestClosure) {
     
-        request(Router.Notifications.Notifications).responseCollection { (request, response, collection: [NotificationItem]?, error) -> Void in
+        let req = Router.Notifications.NotificationsLimit(50)
+        request(req).responseCollection { (request, response, collection: [NotificationItem]?, error) -> Void in
             
-            var errors: ICErrorInfo? = ICError(error: error).getErrors()
+            var errors: ICErrorInfo? = ICError(error: error).errorInfo
             
             if let collection = collection {
                 self.notifications = collection
@@ -100,7 +116,7 @@ extension MatchCollection : ModelRequest {
         
         request(req).responseCollection { (_, _, collection: [MatchCard]?, error) -> Void in
             
-            var errors: ICErrorInfo? = ICError(error: error).getErrors()
+            var errors: ICErrorInfo? = ICError(error: error).errorInfo
             
             if let collection = collection {
 
@@ -123,7 +139,7 @@ extension CastingObject : ModelRequest {
         let req = Router.CastingObject.ReadUserCastingObjects(Auth.passport!.user_id)
         request(req).responseCollection { (_, _, collection: [CastingObject]?, error) -> Void in
             
-            var error: ICErrorInfo? = ICError(error: error).getErrors()
+            var error: ICErrorInfo? = ICError(error: error).errorInfo
             
             if let collection = collection {
                 println("SUCCESS: CastingObject - Request call success with collection")
@@ -147,12 +163,12 @@ extension Job : ModelRequest {
         let req = Router.Match.MatchPopulateJobOwner(self.matchID)
         request(req).responseJSON() { (request, response, json, error) -> Void in
             
-            var errors: ICErrorInfo? = ICError(error: error).getErrors()
+            var errors: ICErrorInfo? = ICError(error: error).errorInfo
             
             if let json: AnyObject = json {
                 
                 let json = JSON(json)
-                errors = ICError(json: json).getErrors()
+                errors = ICError(json: json).errorInfo
                 
                 if errors == nil {
                     self.populate(json)
@@ -167,7 +183,7 @@ extension Job : ModelRequest {
 
 
 
-extension MatchCard : ModelRequestID {
+extension MatchCard : ModelRequest {
 
     // OBJECT
     static func get(callBack: RequestCompletion, id: String) {
@@ -175,12 +191,13 @@ extension MatchCard : ModelRequestID {
         let req = Router.Match.MatchPopulateJobOwner(id)
         request(req).responseObject { (request, response, object: MatchCard?, error) -> Void in
 
-            let error: ICErrorInfo? = ICError(error: error).getErrors()
+            let error: ICErrorInfo? = ICError(error: error).errorInfo
             callBack(success: object, failure: error)
         }
     }
     
     func get(callBack: RequestClosure) {}
+    
     
     func rate(grade: String, callBack: RequestClosure) {
         
@@ -188,14 +205,56 @@ extension MatchCard : ModelRequestID {
         let req = Router.Match.MatchRateClient(self.getID(FieldID.MatchCardID) ?? "0", parameters: params)
         request(req).responseJSON() { (request, response, json, error) in
             
-            var error: ICErrorInfo? = ICError(error: error).getErrors()
+            var error: ICErrorInfo? = ICError(error: error).errorInfo
             if let _json: AnyObject = json {
-                error = ICError(json: JSON(_json)).getErrors()
+                error = ICError(json: JSON(_json)).errorInfo
             }
             
             callBack(failure: error)
         }
     }
+    
+    func postDecision(decision: DecisionState, callBack: RequestClosure) {
+        
+        if let ID = getID(.MatchCardID) {
+            
+            //            testDecision(decision, callBack: callBack)
+            //            return
+            
+            var req: URLRequestConvertible!
+            if decision == DecisionState.Accept {
+                req = Router.Match.MatchAcceptTalent(ID)
+            } else {
+                req = Router.Match.MatchRejectTalent(ID)
+            }
+            
+            request(req).responseJSON() { (request, response, json, error) in
+                
+                var errors: ICErrorInfo? = ICError(error: error).errorInfo
+                
+                if let json: AnyObject = json {
+                    
+                    let parsedJSON = JSON(json)
+                    errors = ICError(json: parsedJSON).errorInfo
+                    
+                    
+                    if errors == nil {
+                        // Before doing a success callback to the controller, first let observers know
+                        if decision == DecisionState.Accept {
+                            self.setStatus(FilterStatusFields.TalentAccepted)
+                            self.observer?.hasChangedStatus()
+                        }
+                        if decision == DecisionState.Reject {
+                            self.observer?.didRejectMatch()
+                        }
+                    }
+                }
+                
+                callBack(failure: errors)
+            }
+        }
+    }
+
 }
 
 extension Conversation : ModelRequest {
@@ -207,7 +266,7 @@ extension Conversation : ModelRequest {
         request(req).responseJSON() { (request, response, json, error) -> Void in
             
             // Network or general errors?
-            if let errors = ICError(error: error).getErrors() {
+            if let errors = ICError(error: error).errorInfo {
                 callBack(failure: errors)
             }
             
@@ -217,7 +276,7 @@ extension Conversation : ModelRequest {
                 let messagesJSON = JSON(_json)
                 
                 // API Errors?
-                if let errors = ICError(json: messagesJSON).getErrors() {
+                if let errors = ICError(json: messagesJSON).errorInfo {
                     println(error)
                     callBack(failure: errors)
                     return
@@ -238,7 +297,7 @@ extension Conversation : ModelRequest {
         self.requestConversationToken { (request, response, json, error) -> () in
             
             // Network or general errors?
-            if let errors = ICError(error: error).getErrors() {
+            if let errors = ICError(error: error).errorInfo {
                 callBack(failure: errors)
             }
             
@@ -248,7 +307,7 @@ extension Conversation : ModelRequest {
                 let tokenJSON = JSON(_json)
                 
                 // API Errors?
-                if let errors = ICError(json: tokenJSON).getErrors() {
+                if let errors = ICError(json: tokenJSON).errorInfo {
                     println(errors)
                     callBack(failure: errors)
                     return

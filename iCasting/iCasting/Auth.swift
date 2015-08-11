@@ -112,12 +112,12 @@ class Auth {
         
             request(Router.Auth.Logout).responseJSON(completionHandler: { (request, response, json, error) -> Void in
                 
-                var error: ICErrorInfo? = ICError(error: error).getErrors()
+                var error: ICErrorInfo? = ICError(error: error).errorInfo
                 
                 if let json: AnyObject = json {
                     
                     let json = JSON(json)
-                    error = ICError(json: json).getErrors()
+                    error = ICError(json: json).errorInfo
                     if error == nil {
                         Auth._passport.clearPassport()
                     }
@@ -159,14 +159,14 @@ class LoginRequest: RequestCommand {
         
         request(.POST, rp.url, parameters: rp.params).responseJSON() { (request, response, json, error) in
             
-            if let error = ICError(error: error).getErrors() {
+            if let error = ICError(error: error).errorInfo {
                 callBack(failure: error)
             }
             
             if let json: AnyObject = json {
                 
                 let parsedJSON = JSON(json)
-                if let error: ICErrorInfo = ICError(json: parsedJSON).getErrors() {
+                if let error: ICErrorInfo = ICError(json: parsedJSON).errorInfo {
                 
                     println(error)
                     callBack(failure: error)

@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 T. van Steenoven. All rights reserved.
 //
 
-import Foundation
+//import Foundation
 
    /*
     private func tryLoginSequence() {
@@ -50,7 +50,7 @@ import Foundation
                 if User.sharedInstance.isClient {
                     
                     let title = NSLocalizedString("Announcement", comment: "Title of alert")
-                    let message = NSLocalizedString("login.alert.client.notsupported", comment: "")
+                    let message = NSLocalizedString("alert.client.notsupported", comment: "")
                     let av = UIAlertView(title: title, message: message, delegate: nil, cancelButtonTitle: nil, otherButtonTitles: "Ok")
                     av.show()
                     

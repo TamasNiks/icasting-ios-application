@@ -80,7 +80,7 @@ struct SocketHandlers {
         
         if data == nil {
             //var error = NSError(domain: "Negotiation", code: 0, userInfo: [NSLocalizedDescriptionKey : "The data is Empty"])
-            let error = ICError(string: "Message contains no data").getErrors()!
+            let error = ICError(string: "Message contains no data").errorInfo!
             errorHandler(error: error)
             return true
         }
@@ -139,7 +139,7 @@ class SocketCommunicator {
                 if let errorString = data[0] as? String {
                     println("ERROR DATA AS STRING")
                     println(errorString)
-                    let error = ICError(string: errorString).getErrors()!
+                    let error = ICError(string: errorString).errorInfo!
                     dictionaryHandlers.errorHandler(error: error)
                 }
             }

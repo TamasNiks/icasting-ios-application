@@ -10,6 +10,7 @@ import Foundation
 import FBSDKCoreKit
 import FBSDKLoginKit
 
+
 class LoginSequenceController: NSObject {
     
     dynamic var tryToLogin: Bool = false
@@ -42,32 +43,32 @@ class LoginSequenceController: NSObject {
         
         Auth.login(c) { error in
             
-            // First do some error handling from the login
+            
+            // First do some error handling for the login request
             if let error = error {
                 result.failure(error: error)
                 return
             }
             
-            // Create a completionHandler which gets called after all the necessary requests are done
+            // Create a completionHandler which gets called after all the necessary requests are done. All the data is availabe to process completion requests
             let completionHandler: () -> () = {
                 
                 self.tryToLogin = false
                 
                 // Check if the user is client, because clients are not yet supported, show an alert and log out
-                
                 if User.sharedInstance.isClient {
                     
-                    let title = NSLocalizedString("Announcement", comment: "Title of alert")
-                    let message = NSLocalizedString("login.alert.client.notsupported", comment: "")
-                    let av = UIAlertView(title: title, message: message, delegate: nil, cancelButtonTitle: nil, otherButtonTitles: "Ok")
-                    av.show()
+                    result.failure(error: ICError.CustomErrorInfoType.ClientNotSupportedError.errorInfo)
                     
-                    Auth.logout({ (failure) -> () in println(failure) })
+                    Auth.logout { failure in println(failure) }
                     
-//                    Auth.logout({ (failure) -> () in
-//                      
-//                        println(failure)
-//                    })
+                    return
+                }
+                
+                // Check if the user e-mail is verified, if not give feedback to the user.
+                if User.sharedInstance.mailIsVerified == true {
+
+                    result.failure(error: ICError.CustomErrorInfoType.EmailNotVerifiedError.errorInfo)
                     
                     return
                 }

@@ -131,27 +131,37 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     }
     
     
-    private func performErrorHandling(errors: ICErrorInfo) {
+    private func performErrorHandling(errorInfo: ICErrorInfo) {
         
         loginSequenceController.tryToLogin = false
         
-        println(errors)
-        
-        if errors is ICAPIErrorInfo {
-            if (errors as! ICAPIErrorInfo).name == ICAPIErrorNames.PassportAuthenticationError.rawValue {
+        println(errorInfo)
+
+        if let errorInfo = errorInfo as? ICAPIErrorInfo {
+            if errorInfo.name == ICAPIErrorNames.PassportAuthenticationError.rawValue {
                 println("Should do custom facebook logout")
-                let login = FBSDKLoginManager()
-                login.logOut()
+                let loginManager = FBSDKLoginManager()
+                loginManager.logOut()
             }
         }
         
-        let message = errors.localizedFailureReason
-        let title = NSLocalizedString("Login Error", comment: "")
-        let alertView = UIAlertView(title: title, message: message, delegate: nil, cancelButtonTitle: nil, otherButtonTitles: "Ok")
-        alertView.show()
+        if errorInfo.error.code == kICErrorEmailNotVerified {
+        
+            ICAlertControllerTest.showEmailVerificationAlert(errorInfo, viewController: self, continueHandler: { [weak self] () in
+                    self?.performRightSegue()
+                }, cancelHandler: { () in
+                    Auth.logout() { failure in }
+                }
+            )
+        }
+        else {
+            
+            ICAlertControllerTest.showGeneralErrorAlert(errorInfo, viewController: self)
+            
+        }
     }
     
-    
+
     override func observeValueForKeyPath(keyPath: String, ofObject object: AnyObject, change: [NSObject : AnyObject], context: UnsafeMutablePointer<Void>) {
         
         if keyPath == kTryToLoginKeyPath {

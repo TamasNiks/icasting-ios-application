@@ -6,60 +6,46 @@
 //  Copyright (c) 2015 T. van Steenoven. All rights reserved.
 //
 
+
+//        let blurredBackgroundView = BlurredBackgroundView(frame: CGRectZero)
+//        tableView.backgroundView = blurredBackgroundView
+//        tableView.separatorEffect = UIVibrancyEffect(forBlurEffect: blurredBackgroundView.blurView.effect as! UIBlurEffect)
+
 import UIKit
 
-class NotificationsTableViewController: UITableViewController {
+class NotificationsTableViewController: ICTableViewController {
 
     let NUM_SECTIONS: Int = 1
     
-    var model: Notifications = Notifications()
+    var notifications: Notifications = Notifications()
     
     @IBAction func onStopTapped(sender: UIBarButtonItem) {
         
         dismissViewControllerAnimated(true, completion: nil)
-
     }
     
     // MARK: ViewController lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        setModel(notifications)
         firstLoadRequest()
     }
     
-    func firstLoadRequest() {
+    override func requestSucceedWithModel(model: ModelRequest) -> Bool {
         
-        tableView.separatorStyle = UITableViewCellSeparatorStyle.None
-        startAnimatingLoaderTitleView()
-        handleRequest()
-    }
-    
-    func endLoadRequest() {
-        
-        tableView.separatorStyle = UITableViewCellSeparatorStyle.SingleLine
-        
-//        let blurredBackgroundView = BlurredBackgroundView(frame: CGRectZero)
-//        tableView.backgroundView = blurredBackgroundView
-//        tableView.separatorEffect = UIVibrancyEffect(forBlurEffect: blurredBackgroundView.blurView.effect as! UIBlurEffect)
-        
-        stopAnimatingLoaderTitleView()
-        refreshControl?.endRefreshing()
-    }
-    
-    
-    func handleRequest() {
-    
-        model.get { (failure) -> () in
-            
-            self.endLoadRequest()
-            self.tableView.reloadData()
+        if self.notifications.isEmpty {
+            self.tableView.setTableHeaderViewWithoutResults(NSLocalizedString("NoResults", comment: ""))
+            return false
         }
+            
+        let localizedFormat = NSLocalizedString("notifications.tableview.header.last", comment: "")
+        let numberOfNotifications = self.notifications.count
+        self.tableView.setTableHeaderViewWithResults(String(format: localizedFormat, "\(numberOfNotifications)"))
+        return true
     }
     
-//    override func viewWillDisappear(animated: Bool) {
-//        self.setTabBarVisible(true, animated: true)
-//    }
-
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
@@ -73,13 +59,13 @@ class NotificationsTableViewController: UITableViewController {
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // Return the number of rows in the section.
-        return model.notifications.count
+        return notifications.count
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath) as! UITableViewCell
 
-        let item = model[indexPath.row]
+        let item = notifications[indexPath.row]
         cell.textLabel?.text = item.title
         
         var descAttrStr = NSMutableAttributedString(string: item.desc, attributes: [NSForegroundColorAttributeName: UIColor.ICTextLightGrayColor()])

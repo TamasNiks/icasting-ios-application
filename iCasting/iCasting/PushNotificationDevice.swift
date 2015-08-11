@@ -56,11 +56,11 @@ class PushNotificationDevice: PushNotificationProtocol {
                 let req = Router.Push.DeviceID(deviceIDResponse, parameters: parameters)
                 request(req).responseJSON() { (request, response, json, error) -> Void in
                 
-                    var error = ICError(error: error).getErrors()
+                    var error = ICError(error: error).errorInfo
 
                     if let _json: AnyObject = json {
                         let parsedJSON = JSON(_json)
-                        error = ICError(json: parsedJSON).getErrors()
+                        error = ICError(json: parsedJSON).errorInfo
                         println(parsedJSON)
                     }
                     
@@ -88,7 +88,7 @@ class PushNotificationDevice: PushNotificationProtocol {
             request(req).responseJSON() { (request, response, json, error) -> Void in
                 
                 // Network or general errors?
-                var error = ICError(error: error).getErrors()
+                var error = ICError(error: error).errorInfo
                 
                 // No network errors, extract json
                 if let _json: AnyObject = json {
@@ -96,7 +96,7 @@ class PushNotificationDevice: PushNotificationProtocol {
                     let parsedJSON = JSON(_json)
                     
                     // API Errors?
-                    error = ICError(json: parsedJSON).getErrors()
+                    error = ICError(json: parsedJSON).errorInfo
                     
                     // No errors at all?
                     if error == nil {

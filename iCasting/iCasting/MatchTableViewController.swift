@@ -96,6 +96,7 @@ class MatchTableViewController: ICTableViewController, MatchCardObserver {
     @IBAction func onFilterBarButtonTouch(sender: AnyObject) {
         
         let ac = FilterMatchAlertController(resource: match) {
+            
             self.tableView.reloadSections(NSIndexSet(index: 0), withRowAnimation: UITableViewRowAnimation.Fade)
             
             var statusFieldLocalizationKey: String = "ActiveFilter"
@@ -103,7 +104,9 @@ class MatchTableViewController: ICTableViewController, MatchCardObserver {
                 statusFieldLocalizationKey = currentStatusField.rawValue
             }
             self.tableView.setTableHeaderViewWithResults(NSLocalizedString(statusFieldLocalizationKey, comment: ""))
-            }.configureAlertController()
+            
+        }.configureAlertController()
+        
         self.presentViewController(ac, animated: true, completion: nil)
     }
     

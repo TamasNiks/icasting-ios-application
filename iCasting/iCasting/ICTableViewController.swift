@@ -96,7 +96,7 @@ class ICTableViewController: UITableViewController {
     
     func performErrorHandling(error: ICErrorInfo) {
         
-        let message: String = error.localizedFailureReason
+        let message: String = error.localizedDescription
         let ac = UIAlertController(
             title: NSLocalizedString("Error", comment: ""),
             message: message,

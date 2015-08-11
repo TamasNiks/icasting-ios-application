@@ -210,6 +210,7 @@ class ContractOfferMessageCellConfigurator : AbstractCellConfigurator {
         
         if let offer = message.offer {
         
+            var setCheckMark: Bool = false
             let checkMark = String.fontAwesomeIconWithName(FontAwesome.Check)+" "
             
             var isIncomming: Bool {
@@ -226,9 +227,9 @@ class ContractOfferMessageCellConfigurator : AbstractCellConfigurator {
                 case .BothAccepted:
                     
                     c.accepted = true
-                    statusText = checkMark+" "+NSLocalizedString("negotiation.state.bothaccepted", comment: "")
+                    statusText = checkMark+NSLocalizedString("negotiation.state.bothaccepted", comment: "")
                     c.activityIndicator.stopAnimating()
-                    
+                    setCheckMark = true
                 case .NeitherDecided:
                     
                     c.enabled = true
@@ -248,7 +249,7 @@ class ContractOfferMessageCellConfigurator : AbstractCellConfigurator {
                     let talentText = String.getLocalization("negotiation.state.notdecided", clientOrTalent: String.User.Talent)
                     let clientText = checkMark+String.getLocalization("negotiation.state.accepted", clientOrTalent: String.User.Client)
                     statusText = isIncomming ? clientText : talentText
-
+                    setCheckMark = true
                 case .ClientRejected:
                     
                     c.enabled = false
@@ -270,7 +271,7 @@ class ContractOfferMessageCellConfigurator : AbstractCellConfigurator {
                     let clientText = String.getLocalization("negotiation.state.notdecided", clientOrTalent: String.User.Client)
                     let talentText = checkMark+String.getLocalization("negotiation.state.accepted", clientOrTalent: String.User.Talent)
                     statusText = isIncomming ? clientText : talentText
-                    
+                    setCheckMark = true
                 case .TalentRejected:
                     
                     c.enabled = false
@@ -282,12 +283,17 @@ class ContractOfferMessageCellConfigurator : AbstractCellConfigurator {
                     statusText = isIncomming ? talentText : userText
                     
                     c.activityIndicator.stopAnimating()
-                    
                 }
                 
                 c.desc.text = NSLocalizedString("negotiation.contract.desc", comment:"")
-                c.subdescription.font = UIFont.fontAwesomeOfSize(14)
+                c.subdescription.font = UIFont.fontAwesomeOfSize(12)
                 c.subdescription.text = statusText
+                
+//                if setCheckMark {
+//                    c.subdescription.textWithPrefixedCheckIcon = statusText
+//                } else {
+//                    c.subdescription.text = statusText
+//                }
             }
         }
     }

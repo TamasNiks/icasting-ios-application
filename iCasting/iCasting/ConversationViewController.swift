@@ -114,6 +114,7 @@ DilemmaCellExtendedButtonDelegate
         
         addGestureRecognizer()
         
+        navigationItem.title = matchCard.title
         // tableView.rowHeight = UITableViewAutomaticDimension
         // tableView.estimatedRowHeight = 100
     }
@@ -166,24 +167,21 @@ DilemmaCellExtendedButtonDelegate
     
     private func performErrorHandling(errors: ICErrorInfo) {
         
-        let message = errors.localizedFailureReason
+        let message = errors.localizedDescription
         let title = NSLocalizedString("Error", comment: "")
         let alertController = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
         
         // Add a basic action for errors
-        var action: UIAlertAction = UIAlertAction(title: "Ok", style: UIAlertActionStyle.Cancel) { (action) -> Void in
-            alertController.removeFromParentViewController()
-        }
+        var action: UIAlertAction = UIAlertAction(title: "Ok", style: UIAlertActionStyle.Cancel) { action in }
         
         // If it is a specific network error, apperently the user could not connect because of unavailable internet connection
-        if errors.type == ICErrorType.NetworkErrorInfo {
+        if errors is ICGeneralErrorInfo {
             
-            println("ICErrorType.NetworkErrorInfo")
+            println("ICGeneralErrorInfo")
             
-            action = UIAlertAction(title: "Try again", style: UIAlertActionStyle.Default, handler: { (action) -> Void in
-                self.handleRequest()
-                alertController.removeFromParentViewController()
-            })
+            action = UIAlertAction(title: "Try again", style: UIAlertActionStyle.Default) { [weak self] action in
+                self?.handleRequest()
+            }
         }
         
         alertController.addAction(action)
@@ -305,17 +303,13 @@ extension ConversationViewController {
         // Check if a specific text type is bound with a cell identifier, extra safe check
         if let identifier = identifier {
             
-            // Exclude the cell, that should not get measured
-            if identifier != CellIdentifier.Message.SystemMessageCell {
+            // The sizing cell provider gets the right cell once depending on the identifier. It asks to configure the cell, so it can measure the height based on the content through an calculator strategy
+            height = sizingCellProvider.heightForCustomCell(
+                fromIdentifier: identifier,
+                configuratorType: message.type,
+                calculatorType:.AutoLayout) { cellConfigurator in
                 
-                // The sizing cell provider gets the right cell once depending on the identifier. It asks to configure the cell, so it can measure the height based on the content through an calculator strategy
-                height = sizingCellProvider.heightForCustomCell(
-                    fromIdentifier: identifier,
-                    configuratorType: message.type,
-                    calculatorType:.AutoLayout) { (cellConfigurator) -> () in
-                    
-                        cellConfigurator?.configureCellText(data: [.Model:message as Any])
-                }
+                    cellConfigurator?.configureCellText(data: [.Model:message as Any])
             }
         }
 
@@ -587,7 +581,7 @@ extension ConversationViewController : ConversationErrorDelegate {
         
         if context == &userAuthenticate {
             
-            showAnnouncement("Conversation active", state: PopUpState.Success)
+            showAnnouncement(NSLocalizedString("negotiations.overlay.message.conversationactive", comment: ""), state: PopUpState.Success)
         }
         
         super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
@@ -595,7 +589,7 @@ extension ConversationViewController : ConversationErrorDelegate {
     
     
     func receivedErrorForConversation(error: ICErrorInfo) {
-        showAnnouncement(error.localizedFailureReason, state: PopUpState.Error)
+        showAnnouncement(error.localizedDescription, state: PopUpState.Error)
     }
     
     func showAnnouncement(announcement: String, state: PopUpState) {

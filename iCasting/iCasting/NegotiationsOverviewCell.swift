@@ -1,5 +1,5 @@
 //
-//  ConversationOverviewCell.swift
+//  NegotiationsOverviewCell.swift
 //  iCasting
 //
 //  Created by Tim van Steenoven on 23/07/15.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ConversationOverviewCell: UITableViewCell {
+class NegotiationsOverviewCell: UITableViewCell {
 
     @IBOutlet weak var customTitle: UILabel!
     @IBOutlet weak var customSubtitle: UILabel!
@@ -21,10 +21,9 @@ class ConversationOverviewCell: UITableViewCell {
 }
 
 
-extension ConversationOverviewCell {
+extension NegotiationsOverviewCell {
     
     func configureCell(model: AnyObject) {
-        
         
         let matchCard = model as! MatchCard
         
@@ -52,29 +51,26 @@ extension ConversationOverviewCell {
                 cellText += String()
             }
             
-            customSubtitle.text = cellText//data[.ClientCompany]
+            customSubtitle.text = cellText
         }
         
         func setStatusText() {
+            
+            statusText.attributedText = NSAttributedString()
+            statusText.text = ""
+            
             if let status = matchCard.getStatus() {
-                
-                statusText.font = UIFont.fontAwesomeOfSize(statusText.font.pointSize)
-                statusText.text = ""
-                
-                let checkMark = String.fontAwesomeIconWithName(FontAwesome.Check)
                 
                 println("RAWVALUE: "+status.rawValue)
                 
                 if status == FilterStatusFields.Completed {
                     
                     if matchCard.talentHasRated {
-                        statusText.textColor = UIColor.ICGreenColor()
-                        statusText.text = checkMark+" "+"Onderhandeling afgerond"
+                        statusText.textWithPrefixedCheckIcon = " Onderhandeling afgerond"
                     } else {
                         statusText.textColor = UIColor.orangeColor()
-                        statusText.text = checkMark+" "+"Je moet de opdracht nog beoordelen"
+                        statusText.attributedText = NSAttributedString(string: " Beoordeel de opdracht")
                     }
-                    
                 }
             }
         }

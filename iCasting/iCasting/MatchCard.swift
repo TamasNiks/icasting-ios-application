@@ -11,7 +11,6 @@ import Foundation
 typealias ArrayStringValue = [[String:String]]
 typealias ArrayStringStringBool = [[String: [String:Bool]]]
 
-
 func ==(lhs: MatchCard, rhs: MatchCard) -> Bool {
     return lhs.getID(FieldID.MatchCardID) == rhs.getID(FieldID.MatchCardID)
 }
@@ -161,46 +160,6 @@ final class MatchCard : NSObject, Equatable, Printable, ResponseCollectionSerial
     }
     
     
-    func dispatchDecision(decision: DecisionState, callBack: RequestClosure) {
-        
-        if let ID = getID(.MatchCardID) {
-            
-//            testDecision(decision, callBack: callBack)
-//            return
-            
-            var req: URLRequestConvertible!
-            if decision == DecisionState.Accept {
-                req = Router.Match.MatchAcceptTalent(ID)
-            } else {
-                req = Router.Match.MatchRejectTalent(ID)
-            }
-            
-            request(req).responseJSON() { (request, response, json, error) in
-                
-                var errors: ICErrorInfo? = ICError(error: error).getErrors()
-                
-                if let json: AnyObject = json {
-                    
-                    let parsedJSON = JSON(json)
-                    errors = ICError(json: parsedJSON).getErrors()
-                    
-                    
-                    if errors == nil {
-                        // Before doing a success callback to the controller, first let observers know
-                        if decision == DecisionState.Accept {
-                            self.setStatus(FilterStatusFields.TalentAccepted)
-                            self.observer?.hasChangedStatus()
-                        }
-                        if decision == DecisionState.Reject {
-                            self.observer?.didRejectMatch()
-                        }
-                    }
-                }
-                
-                callBack(failure: errors)
-            }
-        }
-    }
     
     // Test methods
     
@@ -225,7 +184,7 @@ final class MatchCard : NSObject, Equatable, Printable, ResponseCollectionSerial
     }
     
     func testError(callBack: RequestClosure) {
-        var errorInfo: ICErrorInfo? = ICError(json: JSON("test")).getErrors()
+        var errorInfo: ICErrorInfo? = ICError(json: JSON("test")).errorInfo
         callBack(failure: errorInfo)
     }
 }

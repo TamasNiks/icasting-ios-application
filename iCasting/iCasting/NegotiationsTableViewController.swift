@@ -66,7 +66,7 @@ class NegotiationsTableViewController: ICTableViewController {
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifier.NegotiationOverview.Default.rawValue,
-            forIndexPath: indexPath) as! ConversationOverviewCell
+            forIndexPath: indexPath) as! NegotiationsOverviewCell
         
         let matchCard = self.getModel(forIndexPath: indexPath)
         cell.configureCell(matchCard)

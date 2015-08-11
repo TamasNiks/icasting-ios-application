@@ -24,7 +24,7 @@ enum CellIdentifier {
 
     enum NegotiationOverview: String, CellIdentifierProtocol {
         case
-        Default = "conversationCellidentifier"
+        Default = "negotiationsOverviewCell"
     }
     
     

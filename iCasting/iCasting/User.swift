@@ -16,18 +16,21 @@ protocol UserCastingObject {
 
 class User : Printable, ResponseObjectSerializable {
 
+    // Template of values for user
     struct Values : Printable {
-        let name: String
-        let first: String
-        let avatar: String
-        let credits: NSNumber
-        let roles: [String]
+        var name: String
+        var first: String
+        var avatar: String
+        var credits: NSNumber
+        var roles: [String]
+        var mailVerified: Bool
         
         var description: String {
-            return "name: \(name), first: \(first), credits: \(credits), roles\(roles)"
+            return "name: \(name), first: \(first), credits: \(credits), roles: \(roles), mailVerified: \(mailVerified)"
         }
     }
     
+    // Singleton
     static private var _sharedInstance: User = User()
     
     static var sharedInstance: User {
@@ -57,12 +60,12 @@ class User : Printable, ResponseObjectSerializable {
     }
     
     var isClient: Bool {
-        if let values = values {
-            return values.roles[0] == "client"
-        }
-        return false
+        return values!.roles[0] == "client"
     }
     
+    var mailIsVerified: Bool {
+        return values!.mailVerified
+    }
     
     var description: String {
         return "User: \(values?.description) \n castingObjects count: \(User.sharedInstance.castingObjects.count) \n castingObjectID: \(User.sharedInstance.castingObjectID) "
@@ -85,11 +88,12 @@ extension User : ValueProvider {
     private func setValues(json: JSON) {
         
         self.values = User.Values(
-            name:       json["name"]["display"].string ?? "No name",
-            first:      json["name"]["first"].string ?? "member",
-            avatar:     json["avatar"]["thumb"].string ?? "",
-            credits:    json["credits"]["total"].number ?? 0,
-            roles:      json["roles"].arrayValue.map { return $0.stringValue }
+            name:           json["name"]["display"].string ?? "No name",
+            first:          json["name"]["first"].string ?? "member",
+            avatar:         json["avatar"]["thumb"].string ?? "",
+            credits:        json["credits"]["total"].number ?? 0,
+            roles:          json["roles"].arrayValue.map { return $0.stringValue },
+            mailVerified:   json["email"]["verified"].bool ?? false
         )
     }
 }
@@ -118,7 +122,7 @@ extension User : UserCastingObject {
 
 class UserRequest: RequestCommand {
     func execute(callBack:LoginClosure) {
-        (User.sharedInstance as ModelRequest).get { (failure) -> () in
+        (User.sharedInstance as ModelRequest).get { failure in
             callBack(failure: failure)
         }
     }

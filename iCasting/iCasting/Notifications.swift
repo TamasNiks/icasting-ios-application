@@ -125,6 +125,15 @@ class Notifications: SubscriptType {
     subscript(index: Int) -> NotificationItem {
         return notifications[index]
     }
+    
+    var count: Int {
+        return notifications.count
+    }
+    
+    var isEmpty: Bool {
+        return notifications.isEmpty
+    }
+    
 }
 
 

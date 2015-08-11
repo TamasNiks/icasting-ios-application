@@ -35,14 +35,14 @@ extension Conversation : MessageCommunicationProtocol {
         self.socketCommunicator?.sendMessage(m.body!, acknowledged: { (data) -> () in
             
             if let d = data {
-                if let error: ICErrorInfo = ICError(string: d[0] as? String).getErrors() {
+                if let error: ICErrorInfo = ICError(string: d[0] as? String).errorInfo {
                     callBack(error: error)
                     return
                 }
                 self.messageList.addItem(m)
                 callBack(error: nil)
             }
-            callBack(error: ICError(string: "Could not send message").getErrors())
+            callBack(error: ICError(string: "Could not send message").errorInfo)
         })
     }
     
@@ -141,7 +141,7 @@ extension Conversation : MessageCommunicationProtocol {
     
     private func decideOfferAcceptRejection(data: NSArray, withMessageToUpdate message: Message) -> ICErrorInfo? {
         
-        let error: ICErrorInfo? = ICError(string: data[0] as? String).getErrors()
+        let error: ICErrorInfo? = ICError(string: data[0] as? String).errorInfo
         if error == nil {
             var accepted: Bool?     = (data[1] as! Int).toBool()
             var byWho: [String:Int] = (data[2] as! [String:Int])
@@ -153,7 +153,7 @@ extension Conversation : MessageCommunicationProtocol {
     
     private func validateAndSetMessageStatus(data: NSArray, withMessageToUpdate message: Message) -> ICErrorInfo? {
         
-        let error: ICErrorInfo? = ICError(string: data[0] as? String).getErrors()
+        let error: ICErrorInfo? = ICError(string: data[0] as? String).errorInfo
         if error == nil {
             let byWho = data[2] as! [String:AnyObject]
             self.setNewMessageStatusForTalentClient(forMessage: message, byWho: byWho, mustNotify: false)

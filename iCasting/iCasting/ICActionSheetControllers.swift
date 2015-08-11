@@ -1,5 +1,5 @@
 //
-//  FilterMatchAlertController.swift
+//  ICActionSheetControllers.swift
 //  iCasting
 //
 //  Created by Tim van Steenoven on 16/05/15.
@@ -12,10 +12,20 @@ protocol ICAlertController {
     func configureAlertController() -> UIAlertController
 }
 
+
+
+//class EmailVerificationAlertController : ICAlertController {
+//    
+//    
+//    
+//}
+
+
+
 class AcceptAlertController : ICAlertController {
     
     private let alertController: UIAlertController
-    let postAction: ()->Void
+    let postAction: () -> Void
     
     init(postAction: () -> Void) {
         self.postAction = postAction
@@ -39,10 +49,11 @@ class AcceptAlertController : ICAlertController {
 }
 
 
+
 class RejectAlertController : ICAlertController {
     
     private let alertController: UIAlertController
-    let postAction: ()->Void
+    let postAction: () -> Void
     
     init(postAction: () -> Void) {
         self.postAction = postAction
@@ -66,6 +77,7 @@ class RejectAlertController : ICAlertController {
         return alertController
     }
 }
+
 
 
 class FilterMatchAlertController : ICAlertController {
