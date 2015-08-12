@@ -15,4 +15,8 @@ extension UITableViewCell {
         return size.height
     }
     
+    // EXPERIMENT
+    func configureCell(model: AnyObject) {
+        // Abstract...
+    }
 }

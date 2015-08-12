@@ -22,9 +22,16 @@ protocol CellIdentifierPropertyProtocol : CellIdentifierProtocol {
 
 enum CellIdentifier {
 
+    enum NewsOverview: String, CellIdentifierProtocol {
+        case Default = "NewsItemCell"
+    }
+    
+    enum NotificationsOverview: String, CellIdentifierProtocol {
+        case Default = "notificationsOverviewCell"
+    }
+    
     enum NegotiationOverview: String, CellIdentifierProtocol {
-        case
-        Default = "negotiationsOverviewCell"
+        case Default = "negotiationsOverviewCell"
     }
     
     

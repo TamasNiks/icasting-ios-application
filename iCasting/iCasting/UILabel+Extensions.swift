@@ -10,6 +10,35 @@ import Foundation
 
 extension UILabel {
     
+    
+    var setPrefixedIcon: FontAwesome? {
+        
+        set {
+
+            if let newValue = newValue {
+                let icon = String.fontAwesomeIconWithName(newValue)
+                let _font = UIFont.fontAwesomeOfSize(self.font.pointSize)
+                let _color = self.textColor
+                var attributesForCheckIcon = [NSFontAttributeName : _font, NSForegroundColorAttributeName : _color]
+                
+                // Attributed strings
+                let attrCheck = NSMutableAttributedString(string: icon, attributes: attributesForCheckIcon)
+                let attrValue = NSAttributedString(string: " "+(self.text ?? ""), attributes: [NSForegroundColorAttributeName : _color])
+                
+                attrCheck.appendAttributedString(attrValue)
+                self.attributedText = attrCheck
+            } else {
+                self.attributedText = nil
+            }
+
+        }
+        
+        get {
+            return nil
+        }
+        
+    }
+    
     var textWithPrefixedCheckIcon: String {
         
         set {

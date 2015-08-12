@@ -53,7 +53,7 @@ class MatchTableViewController: ICTableViewController, MatchCardObserver {
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let matchCard: MatchCard = self.match.matches[indexPath.row]
-        let cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifier.Match.Detail.rawValue, forIndexPath: indexPath) as! MatchOverviewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifier.Match.Detail.rawValue, forIndexPath: indexPath) as! UITableViewCell
         cell.configureCell(matchCard)
         return cell
     }
@@ -91,7 +91,6 @@ class MatchTableViewController: ICTableViewController, MatchCardObserver {
     }
     
     func hasChangedStatus() {}
-    
     
     @IBAction func onFilterBarButtonTouch(sender: AnyObject) {
         

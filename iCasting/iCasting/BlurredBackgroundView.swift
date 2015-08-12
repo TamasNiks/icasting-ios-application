@@ -15,7 +15,7 @@ class BlurredBackgroundView: UIView {
     
     override init(frame: CGRect) {
         
-        let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.Light)
+        let blurEffect = UIBlurEffect(style: UIBlurEffectStyle.Dark)
         blurView = UIVisualEffectView(effect: blurEffect)
         imageView = UIImageView(image: UIImage(named: "Default"))
         

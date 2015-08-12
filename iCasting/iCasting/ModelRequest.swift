@@ -37,7 +37,7 @@ extension News : ModelRequest {
         }
     }
     
-    func image(id: String, size: ImageSize, callBack: RequestCompletion) {
+    static func image(id: String, size: ImageSize, callBack: RequestCompletion) {
         
         let req = Router.Media.ImageWithSize(id, size.rawValue)
         request(req).response { (request, response, data, error) -> Void in

@@ -22,7 +22,8 @@ class MatchHeaderCell: UITableViewCell {
 
 extension MatchHeaderCell {
     
-    func configureCell(item: MatchDetailType) {
+    
+    func configureCell(#item: MatchDetailType) {
         
         contentView.backgroundColor = UIColor.ICShadowRedColor()
         
@@ -34,9 +35,9 @@ extension MatchHeaderCell {
         customCompany.text = item.general[.ClientCompany] ?? "-"
         customClient.text = item.general[.ClientName] ?? "-"
         
-//        var talent = NSMutableAttributedString(string: "Talent: ", attributes: [NSFontAttributeName: UIFont.systemFontOfSize(14)])
-//        talent.appendAttributedString(NSAttributedString(string: item.job["talent"]!, attributes: [NSFontAttributeName: UIFont.boldSystemFontOfSize(14)]))
-//        customTalentLabel.attributedText = talent
+        //        var talent = NSMutableAttributedString(string: "Talent: ", attributes: [NSFontAttributeName: UIFont.systemFontOfSize(14)])
+        //        talent.appendAttributedString(NSAttributedString(string: item.job["talent"]!, attributes: [NSFontAttributeName: UIFont.boldSystemFontOfSize(14)]))
+        //        customTalentLabel.attributedText = talent
         //customTalentLabel.text = String(format: "Talent: %@", item.job["talent"]!)
         
         var base64: String = (item.general[.ClientAvatar] ?? "") ?? ""
@@ -47,7 +48,5 @@ extension MatchHeaderCell {
             customImageView.image = ICImages.PlaceHolderClientAvatar.image
         }
         customImageView.makeRound(40)
-        
     }
-    
 }

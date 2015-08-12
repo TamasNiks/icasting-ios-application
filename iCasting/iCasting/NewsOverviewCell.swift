@@ -46,5 +46,35 @@ class NewsOverviewCell: UITableViewCell {
         }
         
     }
+}
 
+
+
+extension NewsOverviewCell {
+    
+    override func configureCell(model: AnyObject) {
+        
+        if let item = model as? NewsItem {
+            
+            let newstitle: String    = item.title
+            let image: String        = item.imageID
+            let published: String?   = item.published.ICdateToString(ICDateFormat.News) //?? "no valid date"
+            
+            self.textLabel?.text = newstitle
+            self.detailTextLabel?.text = published
+            self.indentationLevel = 0
+            
+            // If the image has been set, the tag will change to 1
+            if self.imageView?.tag == 0 {
+                self.imageView?.image = PlaceholderView(frame: CGRectMake(0, 0, 100, 100)).image
+                
+                News.image(image, size: ImageSize.Thumbnail, callBack: { (success, failure) -> () in
+                    if let success: AnyObject = success {
+                        self._image = UIImage(data: success as! NSData)
+                    }
+                })
+                
+            }
+        }
+    }
 }

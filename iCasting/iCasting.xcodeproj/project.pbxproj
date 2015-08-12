@@ -225,7 +225,6 @@
 		2289BFFF1B0373DF00A7307C /* CastingObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2289BFFE1B0373DF00A7307C /* CastingObject.swift */; };
 		2289C0001B0373DF00A7307C /* CastingObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2289BFFE1B0373DF00A7307C /* CastingObject.swift */; };
 		2289C0021B0393BE00A7307C /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2289C0011B0393BE00A7307C /* MainTabBarController.swift */; };
-		2289C0031B0393BE00A7307C /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2289C0011B0393BE00A7307C /* MainTabBarController.swift */; };
 		2289C0051B03968600A7307C /* FamilyTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2289C0041B03968600A7307C /* FamilyTableViewController.swift */; };
 		228E35171ADC4655006D0BEA /* RequestFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220587F41AD565590010DA92 /* RequestFactory.swift */; };
 		228EAA821B2EF677009C4EAE /* MessageCellCongifuratorVisitors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 228EAA811B2EF677009C4EAE /* MessageCellCongifuratorVisitors.swift */; };
@@ -246,6 +245,8 @@
 		22B06AF41B1C4EF8002A7805 /* DilemmaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B06AF31B1C4EF8002A7805 /* DilemmaView.swift */; };
 		22B06AF51B1C538A002A7805 /* DilemmaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B06AF31B1C4EF8002A7805 /* DilemmaView.swift */; };
 		22B06AF81B1C53FC002A7805 /* DilemmaView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 22B06AF71B1C53FC002A7805 /* DilemmaView.xib */; };
+		22B96B231B7B897000C26710 /* NotificationView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 22B96B221B7B897000C26710 /* NotificationView.xib */; };
+		22B96B251B7B8AF700C26710 /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B96B241B7B8AF700C26710 /* NotificationView.swift */; };
 		22C224D11ADD175C00202BF9 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 226C27C21AD5310F00A6A2EE /* User.swift */; };
 		22C598CA1B2F12500008CFCD /* JSQMessagesAssets.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 22C598C21B2F12500008CFCD /* JSQMessagesAssets.bundle */; };
 		22C598CB1B2F12500008CFCD /* JSQMessagesAssets.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 22C598C21B2F12500008CFCD /* JSQMessagesAssets.bundle */; };
@@ -277,6 +278,8 @@
 		22E39EAC1AEFD3BB00F01BA0 /* News.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2273B75F1AD6AAC000CC3EFB /* News.swift */; };
 		22E5E47D1B7A3DDC003B0C6B /* ICAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E5E47C1B7A3DDC003B0C6B /* ICAlertController.swift */; };
 		22E5E47E1B7A4C2B003B0C6B /* ICAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E5E47C1B7A3DDC003B0C6B /* ICAlertController.swift */; };
+		22E5E4811B7B62CB003B0C6B /* NotificationsOverviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E5E4801B7B62CB003B0C6B /* NotificationsOverviewCell.swift */; };
+		22E5E4821B7B6FF3003B0C6B /* NotificationsOverviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E5E4801B7B62CB003B0C6B /* NotificationsOverviewCell.swift */; };
 		22EA18C41B4C16920064BF09 /* AbstractCellConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22EA18C31B4C16920064BF09 /* AbstractCellConfigurator.swift */; };
 		22EA18F71B4DB25F0064BF09 /* DilemmaCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22EA18F61B4DB25F0064BF09 /* DilemmaCell.swift */; };
 		22EA18FA1B4DC3820064BF09 /* DilemmaState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22EA18F91B4DC3820064BF09 /* DilemmaState.swift */; };
@@ -478,6 +481,8 @@
 		22AD1B351B5F95B7007DC0B7 /* StatusIndicatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatusIndicatorView.swift; sourceTree = "<group>"; };
 		22B06AF31B1C4EF8002A7805 /* DilemmaView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DilemmaView.swift; sourceTree = "<group>"; };
 		22B06AF71B1C53FC002A7805 /* DilemmaView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DilemmaView.xib; sourceTree = "<group>"; };
+		22B96B221B7B897000C26710 /* NotificationView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = NotificationView.xib; sourceTree = "<group>"; };
+		22B96B241B7B8AF700C26710 /* NotificationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationView.swift; sourceTree = "<group>"; };
 		22BB6D2C1ADEB43500C5C6C1 /* ValidatorPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = ValidatorPlayground.playground; sourceTree = "<group>"; };
 		22C598C21B2F12500008CFCD /* JSQMessagesAssets.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = JSQMessagesAssets.bundle; sourceTree = "<group>"; };
 		22C598C31B2F12500008CFCD /* JSQMessagesInputToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSQMessagesInputToolbar.h; sourceTree = "<group>"; };
@@ -505,6 +510,7 @@
 		22C9085F1AD5542E0067A378 /* EndpointsPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = EndpointsPlayground.playground; sourceTree = "<group>"; };
 		22C908641AD55FE50067A378 /* ICURL.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ICURL.swift; sourceTree = "<group>"; };
 		22E5E47C1B7A3DDC003B0C6B /* ICAlertController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ICAlertController.swift; sourceTree = "<group>"; };
+		22E5E4801B7B62CB003B0C6B /* NotificationsOverviewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationsOverviewCell.swift; sourceTree = "<group>"; };
 		22EA18C31B4C16920064BF09 /* AbstractCellConfigurator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AbstractCellConfigurator.swift; sourceTree = "<group>"; };
 		22EA18C71B4D89320064BF09 /* Error.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Error.playground; sourceTree = "<group>"; };
 		22EA18F61B4DB25F0064BF09 /* DilemmaCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DilemmaCell.swift; sourceTree = "<group>"; };
@@ -629,14 +635,6 @@
 			name = Negotiation;
 			sourceTree = "<group>";
 		};
-		222B69E31B5E518D003CF594 /* News */ = {
-			isa = PBXGroup;
-			children = (
-				222B69E01B5E5181003CF594 /* NewsOverviewCell.swift */,
-			);
-			name = News;
-			sourceTree = "<group>";
-		};
 		222CBB651B06641800D91137 /* Match */ = {
 			isa = PBXGroup;
 			children = (
@@ -675,6 +673,7 @@
 			isa = PBXGroup;
 			children = (
 				22B06AF71B1C53FC002A7805 /* DilemmaView.xib */,
+				22B96B221B7B897000C26710 /* NotificationView.xib */,
 			);
 			name = Nib;
 			sourceTree = "<group>";
@@ -929,6 +928,7 @@
 				22B06AF31B1C4EF8002A7805 /* DilemmaView.swift */,
 				22223E261B208780001711C4 /* MessageBalloonView.swift */,
 				222B69DD1B5E4889003CF594 /* PlaceholderView.swift */,
+				22B96B241B7B8AF700C26710 /* NotificationView.swift */,
 				224541211B72CA0B0057F8F1 /* Nib */,
 				22EA18C11B4C15A40064BF09 /* Cells */,
 				2268C5401ACE905D00E58BF4 /* LaunchScreen.xib */,
@@ -944,6 +944,8 @@
 			children = (
 				227B707B1B604BC700CD4DFE /* NegotiationsOverviewCell.swift */,
 				225C11521AE51C05008654A7 /* MatchOverviewCell.swift */,
+				22E5E4801B7B62CB003B0C6B /* NotificationsOverviewCell.swift */,
+				222B69E01B5E5181003CF594 /* NewsOverviewCell.swift */,
 			);
 			name = OverviewCells;
 			sourceTree = "<group>";
@@ -996,7 +998,6 @@
 				22A3B5AF1B78A63D009385CC /* OverviewCells */,
 				22EA19341B4DCFDF0064BF09 /* MatchCells */,
 				22EA19351B4DD0DE0064BF09 /* MessageCells */,
-				222B69E31B5E518D003CF594 /* News */,
 			);
 			name = Cells;
 			sourceTree = "<group>";
@@ -1166,6 +1167,7 @@
 				2268C5421ACE905D00E58BF4 /* LaunchScreen.xib in Resources */,
 				2268C53F1ACE905D00E58BF4 /* Images.xcassets in Resources */,
 				22B06AF81B1C53FC002A7805 /* DilemmaView.xib in Resources */,
+				22B96B231B7B897000C26710 /* NotificationView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1315,6 +1317,7 @@
 				2289BFFF1B0373DF00A7307C /* CastingObject.swift in Sources */,
 				226A9E8C1AEED71400AB9EFF /* Alamofire.swift in Sources */,
 				22E5E47D1B7A3DDC003B0C6B /* ICAlertController.swift in Sources */,
+				22E5E4811B7B62CB003B0C6B /* NotificationsOverviewCell.swift in Sources */,
 				2252C0D61B53C1090050DF8B /* UIViewController+Extensions.swift in Sources */,
 				22538B4C1B2AD96A00F80E77 /* MessageOffer.swift in Sources */,
 				22082CD91AFB927A00AF5EDB /* SocketEngine.swift in Sources */,
@@ -1332,6 +1335,7 @@
 				22082CED1AFB927A00AF5EDB /* WebSocket.swift in Sources */,
 				229A3C901B30270300D175F4 /* ChatTextInputViewController.swift in Sources */,
 				226D380E1B6B7F7B00FB6218 /* SocketMessageFactory.swift in Sources */,
+				22B96B251B7B8AF700C26710 /* NotificationView.swift in Sources */,
 				2256CE1C1AF2CD17005D40EB /* SideDrawerSectionHeaderView.swift in Sources */,
 				2252C0C71B53BF990050DF8B /* String+Extensions.swift in Sources */,
 				22060E921B1EEE30000A3F2C /* MessageCellConfigurators.swift in Sources */,
@@ -1429,7 +1433,6 @@
 				22EA19411B526BB70064BF09 /* MatchValueExtractor.swift in Sources */,
 				22392D291AD811720086BE5F /* ICType.swift in Sources */,
 				224A5A7A1ADE8F3C00E22DE1 /* ICValidator.swift in Sources */,
-				2289C0031B0393BE00A7307C /* MainTabBarController.swift in Sources */,
 				2259A61F1B7275480088622D /* RatingController.swift in Sources */,
 				229A3C8E1B301BE600D175F4 /* TextInputViewControllerTest.swift in Sources */,
 				226D380B1B6B6B3500FB6218 /* CellReuser.swift in Sources */,
@@ -1451,6 +1454,7 @@
 				226D380C1B6B6B8400FB6218 /* JobOverviewTableViewController.swift in Sources */,
 				22082CE61AFB927A00AF5EDB /* SocketPacket.swift in Sources */,
 				22082CD81AFB927A00AF5EDB /* SocketAnyEvent.swift in Sources */,
+				22E5E4821B7B6FF3003B0C6B /* NotificationsOverviewCell.swift in Sources */,
 				22392D281AD810B40086BE5F /* ICRouter.swift in Sources */,
 				22EA18FB1B4DC3820064BF09 /* DilemmaState.swift in Sources */,
 				22EA19441B526C4A0064BF09 /* OfferValueExtractor.swift in Sources */,
@@ -1682,7 +1686,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/Tim/Documents/FacebookSDK,

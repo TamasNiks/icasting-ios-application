@@ -64,32 +64,11 @@ class NewsTableViewController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("NewsItemCell", forIndexPath: indexPath) as! NewsOverviewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifier.NewsOverview.Default.rawValue, forIndexPath: indexPath) as! UITableViewCell
         
         //var summary:String = self.newsItems[indexPath.row]["summary"] as! String
-        
         let item: NewsItem = news.newsItems[indexPath.row]
-        
-        let newstitle: String    = item.title
-        let image: String        = item.imageID
-        let published: String?   = item.published.ICdateToString(ICDateFormat.News) //?? "no valid date"
-        
-        cell.textLabel?.text = newstitle
-        cell.detailTextLabel?.text = published
-        cell.indentationLevel = 0
-        
-        // If the image has been set, the tag will change to 1
-        if cell.imageView?.tag == 0 {
-            cell.imageView?.image = PlaceholderView(frame: CGRectMake(0, 0, 100, 100)).image
-
-            news.image(image, size: ImageSize.Thumbnail, callBack: { (success, failure) -> () in
-                if let success: AnyObject = success {
-                    cell._image = UIImage(data: success as! NSData)
-                }
-            })
-            
-        }
-        
+        cell.configureCell(item)
         return cell
     }
     
@@ -97,7 +76,6 @@ class NewsTableViewController: UITableViewController {
         
         selectedItem = news.newsItems[indexPath.row]
         performSegueWithIdentifier(SegueIdentifier.NewsDetail, sender: self)
-    
     }
 
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
@@ -105,9 +83,7 @@ class NewsTableViewController: UITableViewController {
     }
     
     override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        
         return 0
-        
     }
     
     // MARK: - Navigation

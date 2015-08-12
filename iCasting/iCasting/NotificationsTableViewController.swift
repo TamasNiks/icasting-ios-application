@@ -6,16 +6,11 @@
 //  Copyright (c) 2015 T. van Steenoven. All rights reserved.
 //
 
-
-//        let blurredBackgroundView = BlurredBackgroundView(frame: CGRectZero)
-//        tableView.backgroundView = blurredBackgroundView
-//        tableView.separatorEffect = UIVibrancyEffect(forBlurEffect: blurredBackgroundView.blurView.effect as! UIBlurEffect)
-
 import UIKit
 
 class NotificationsTableViewController: ICTableViewController {
 
-    let NUM_SECTIONS: Int = 1
+    let kNumSections: Int = 1
     
     var notifications: Notifications = Notifications()
     
@@ -28,7 +23,6 @@ class NotificationsTableViewController: ICTableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setModel(notifications)
         firstLoadRequest()
     }
@@ -54,7 +48,7 @@ class NotificationsTableViewController: ICTableViewController {
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         // Return the number of sections.
-        return NUM_SECTIONS
+        return kNumSections
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -63,22 +57,13 @@ class NotificationsTableViewController: ICTableViewController {
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath) as! UITableViewCell
-
+        let cell = tableView.dequeueReusableCellWithIdentifier(CellIdentifier.NotificationsOverview.Default.rawValue, forIndexPath: indexPath) as! UITableViewCell
         let item = notifications[indexPath.row]
-        cell.textLabel?.text = item.title
-        
-        var descAttrStr = NSMutableAttributedString(string: item.desc, attributes: [NSForegroundColorAttributeName: UIColor.ICTextLightGrayColor()])
-        var dateAttrStr = NSMutableAttributedString(string: item.date, attributes: [NSForegroundColorAttributeName: UIColor.ICTextDarkGrayColor()])
-        descAttrStr.appendAttributedString(NSMutableAttributedString(string:"\r"))
-        descAttrStr.appendAttributedString(dateAttrStr)
-        cell.detailTextLabel?.numberOfLines = 0
-        cell.detailTextLabel?.attributedText = descAttrStr
-        
+        cell.configureCell(item)
         return cell
     }
     
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 80
+        return 85
     }
 }

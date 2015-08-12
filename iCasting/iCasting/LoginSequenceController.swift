@@ -65,21 +65,22 @@ class LoginSequenceController: NSObject {
                     return
                 }
                 
-                // Check if the user e-mail is verified, if not give feedback to the user.
-                if User.sharedInstance.mailIsVerified == true {
-
-                    result.failure(error: ICError.CustomErrorInfoType.EmailNotVerifiedError.errorInfo)
-                    
-                    return
-                }
-                
                 // Try to register the device
-                
+
+                // TODO: Check if user has enabled notifications before registering
                 PushNotificationDevice.sharedInstance.registerDevice() { error in
                     
                     if let error = error {
                         println("DEBUG: Registering failure - \(error)")
                     }
+                }
+                
+                // Check if the user e-mail is verified, if not give feedback to the user.
+                if User.sharedInstance.mailIsVerified == false {
+
+                    result.failure(error: ICError.CustomErrorInfoType.EmailNotVerifiedError.errorInfo)
+                    
+                    return
                 }
                 
                 result.success()

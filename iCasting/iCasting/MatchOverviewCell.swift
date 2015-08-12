@@ -19,19 +19,53 @@ class MatchOverviewCell: UITableViewCell {
     @IBOutlet weak var statusIndicatorText: UILabel!
 
     var customImageView: UIImageView!
+    
+    var customTitleFontBold: Bool = false {
+        willSet {
+           
+            let pointSize = customTitle.font.pointSize
+            
+            if newValue == true {
+                 customTitle.font = UIFont.boldSystemFontOfSize(pointSize)
+            } else {
+                customTitle.font = UIFont.systemFontOfSize(pointSize)
+            }
+        }
+    }
+    
 }
 
 
 extension MatchOverviewCell {
     
-    func configureCell(data: MatchCard) {
+    override func configureCell(model: AnyObject) {
         
-        customImageView = UIImageView(frame: CGRectMake(0, 0, 70, 70))
-        customTitle.text = data.title
-        customSubtitle.text = String(format: "Talent: %@", data.talent) //data[.JobDescription]
-        customDate.text = String(format: "Start: %@", data.dateStart)
+        if let data = model as? MatchCard {
+            
+            customImageView = UIImageView(frame: CGRectMake(0, 0, 70, 70))
+            
+            setCustomTitle(data.title, read: true)
+            
+            customSubtitle.text = String(format: "Talent: %@", data.talent) //data[.JobDescription]
+            customDate.text = String(format: "Start: %@", data.dateStart)
+            
+            setAvatar(data.avatar)
+            
+            // Configure the cell conform the status of the match (ex: talent accepted, negotiation, pending, closed, finnished)
+            setStatus(data.getStatus())
+        }
+    }
+    
+    
+    func setCustomTitle(title: String, read: Bool) {
         
-        var base64: String = data.avatar
+        customTitleFontBold = read ? false : true
+        customTitle.text = title
+    }
+    
+    
+    func setAvatar(base64: String) {
+
         if let image: UIImage = ICImages.ImageWithString(base64).image {
             //customImageView = UIImageView(image: image)
             customImageView.image = image
@@ -39,9 +73,6 @@ extension MatchOverviewCell {
             //customImageView = UIImageView(image: ICImages.PlaceHolderClientAvatar.image)
             customImageView.image = ICImages.PlaceHolderClientAvatar.image
         }
-        
-        // Configure the cell conform the status of the match (ex: talent accepted, negotiation, pending, closed, finnished)
-        setStatus(data.getStatus())
     }
     
     

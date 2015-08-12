@@ -26,8 +26,8 @@ class MatchDefaultCell: UITableViewCell {
 
 extension MatchDefaultCell {
     
-    func configureCell(item: [String:String]) {
-     
+    func configureCell(#item: [String:String]) {
+        
         var key: String = item.keys.first!
         var value: String = item[key] ?? "-"
         
@@ -35,5 +35,4 @@ extension MatchDefaultCell {
         detailTextLabel?.text = value
     }
 
-    
 }

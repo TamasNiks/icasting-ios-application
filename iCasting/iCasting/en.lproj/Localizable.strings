@@ -62,9 +62,9 @@
 
 /* Alerts */
 "alert.client.notsupported" = "The client is not yet supported with this version of the app. We will let you know if client support is added in future versions.";
-"alert.user.emailnotverified" = "Your email address needs to be verified to accept matches. If you haven't received the email for verification, click the button below. After verification, please login again.";
+"alert.user.emailnotverified" = "Your e-mail address needs to be verified to accept matches. If you haven't received the e-mail for verification, click the button below. After verification, please login again.";
 "alert.user.emailverificationsend" = "An e-mail has been send to you. It can take a couple of minutes before it arrives. If you didn't receive anything, check your spam folder, else try to send a verification mail again.";
-"alert.user.resendverificationmail" = "Resend verification email";
+"alert.user.resendverificationmail" = "Resend verification e-mail";
 
 /* Family: Casting Objects */
 "castingobjects.navigationitem.title" = "Welcome %@";
@@ -169,6 +169,20 @@
 "notification.title.chat-message" = "You received a new message";
 "notification.title.chat-offer" = "You received a new offer!";
 
+/* Remote Notifications */
+"remote.notification.talent-matched.title" = "Voorselectie opdrachtgever";
+"remote.notification.match-client-accepted.title" = "Uitnodiging gesprek";
+"remote.notification.talent-job-reminder.title" = "Opdracht begint over 2 dagen";
+"remote.notification.talent-rated.title" = "Beoordeling ontvangen";
+"remote.notification.talent-creditslip.title" = "Betaling goedgekeurd";
+"remote.notification.first-conversation-message.title" = "Nieuw bericht";
+
+"remote.notification.talent-matched.message" = "You are in the preselection of a client! Respond now.";
+"remote.notification.match-client-accepted.message" = "A client has invited you for an online conversation.";
+"remote.notification.talent-job-reminder.message" = "Your job via iCasting starts in two days. If you need help or advice regarding the job, please contact us at support@icasting.com. Good luck with the job!";
+"remote.notification.talent-rated.message" = "A client has rated your job performance. View the rating on icasting.com/jobratings";
+"remote.notification.talent-creditslip.message" = "iCasting has received approval by the client for payment. The job fee has been transferred to your bank account.";
+"remote.notification.first-conversation-message.message" = "A client has sent you a message in an online conversation.";
 
 /* Matches */
 "matches.filter.actionsheet.title" = "Filter status";

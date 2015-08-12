@@ -23,7 +23,7 @@ class NegotiationsOverviewCell: UITableViewCell {
 
 extension NegotiationsOverviewCell {
     
-    func configureCell(model: AnyObject) {
+    override func configureCell(model: AnyObject) {
         
         let matchCard = model as! MatchCard
         
@@ -61,7 +61,7 @@ extension NegotiationsOverviewCell {
             
             if let status = matchCard.getStatus() {
                 
-                println("RAWVALUE: "+status.rawValue)
+                //println("RAWVALUE: "+status.rawValue)
                 
                 if status == FilterStatusFields.Completed {
                     
@@ -69,7 +69,8 @@ extension NegotiationsOverviewCell {
                         statusText.textWithPrefixedCheckIcon = " Onderhandeling afgerond"
                     } else {
                         statusText.textColor = UIColor.orangeColor()
-                        statusText.attributedText = NSAttributedString(string: " Beoordeel de opdracht")
+                        statusText.text = " Beoordeel de opdracht" //NSAttributedString(string: " Beoordeel de opdracht")
+                        statusText.setPrefixedIcon = FontAwesome.ExclamationCircle
                     }
                 }
             }

@@ -17,43 +17,44 @@ class MatchDecisionCell: DilemmaCell {
 
 extension MatchDecisionCell {
     
-    func configureCell(model: AnyObject) {
+    override func configureCell(model: AnyObject) {
         
-        let item = model as! MatchCard
-        
-        // Configure the cell depending on the status of a match
-        if let status: FilterStatusFields = item.getStatus() {
+        if let item = model as? MatchCard {
             
-            println(item.raw)
-            
-            let localizeComment = "The text to display after the user has made an true or false decision."
-            
-            switch status {
+            // Configure the cell depending on the status of a match
+            if let status: FilterStatusFields = item.getStatus() {
                 
-            case .TalentAccepted:
-                super.accepted = true
-                super.acceptedTitle = NSLocalizedString("match.decisionstate.accepted", comment: localizeComment)
-            case .Negotiations:
-                super.acceptedWithButton = true
-                super.acceptedTitle = NSLocalizedString("match.decisionstate.negotiation", comment: localizeComment)
-            case .Closed:
-                super.accepted = false
-                super.rejectedTitle = NSLocalizedString("match.decisionstate.closed", comment: localizeComment)
-            case .Completed:
+                println(item.raw)
                 
-                if item.talentHasRated == false {
-                    super.acceptedWithButton = true
-                } else {
+                let localizeComment = "The text to display after the user has made an true or false decision."
+                
+                switch status {
+                    
+                case .TalentAccepted:
                     super.accepted = true
+                    super.acceptedTitle = NSLocalizedString("match.decisionstate.accepted", comment: localizeComment)
+                case .Negotiations:
+                    super.acceptedWithButton = true
+                    super.acceptedTitle = NSLocalizedString("match.decisionstate.negotiation", comment: localizeComment)
+                case .Closed:
+                    super.accepted = false
+                    super.rejectedTitle = NSLocalizedString("match.decisionstate.closed", comment: localizeComment)
+                case .Completed:
+                    
+                    if item.talentHasRated == false {
+                        super.acceptedWithButton = true
+                    } else {
+                        super.accepted = true
+                    }
+                    super.acceptedTitle = NSLocalizedString("match.decisionstate.completed", comment: localizeComment)
+                    
+                case .Pending:
+                    super.accepted = nil
+                    super.acceptedTitle = NSLocalizedString("match.decisionstate.accepted", comment: localizeComment)
+                case .Conflict:
+                    super.accepted = false
+                    super.rejectedTitle = NSLocalizedString("match.decisionstate.conflict", comment: localizeComment)
                 }
-                super.acceptedTitle = NSLocalizedString("match.decisionstate.completed", comment: localizeComment)
-                
-            case .Pending:
-                super.accepted = nil
-                super.acceptedTitle = NSLocalizedString("match.decisionstate.accepted", comment: localizeComment)
-            case .Conflict:
-                super.accepted = false
-                super.rejectedTitle = NSLocalizedString("match.decisionstate.conflict", comment: localizeComment)
             }
         }
     }

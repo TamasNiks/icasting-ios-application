@@ -64,7 +64,7 @@
 
 /* Alerts */
 "alert.client.notsupported" = "Voor deze versie van de app wordt de client nog niet ondersteund. We laten het u weten als client ondersteuning wordt toegevoegd in toekomstige versies";
-"alert.user.emailnotverified" = "Uw email adres moet geverifieerd zijn alvorens een match te kunnen accepteren. Als u nog geen e-mail verificatie mail heeft ontvangen, Tap dan op onderstaande button. U kunt wel doorgaan met inloggen. Als u heeft geverifieerd, log dan opnieuw in.";
+"alert.user.emailnotverified" = "Uw e-mail adres moet geverifieerd zijn alvorens een match te kunnen accepteren. Als u nog geen e-mail verificatie mail heeft ontvangen, Tap dan op onderstaande button. U kunt wel doorgaan met inloggen. Als u heeft geverifieerd, log dan opnieuw in.";
 "alert.user.emailverificationsend" = "Er is een e-mail verstuurd. Het kan even duren voordat u de mail daadwerkelijk ontvangt. Als u niets heeft ontvangen, kijk dan in uw spam folder. Probeer anders nog een e-mail verificatie te versturen.";
 "alert.user.resendverificationmail" = "Opnieuw verificatiemail versturen";
 
@@ -171,6 +171,21 @@
 "notification.title.match-client_rejected" = "Je bent niet geselecteerd door de opdrachtgever";
 "notification.title.chat-message" = "U heeft een nieuw bericht ontvangen";
 "notification.title.chat-offer" = "Je hebt een nieuw aanbod ontvangen!";
+
+/* Remote Notifications */
+"remote.notification.talent-matched.title" = "Voorselectie opdrachtgever";
+"remote.notification.match-client-accepted.title" = "Uitnodiging gesprek";
+"remote.notification.talent-job-reminder.title" = "Opdracht begint over 2 dagen";
+"remote.notification.talent-rated.title" = "Beoordeling ontvangen";
+"remote.notification.talent-creditslip.title" = "Betaling goedgekeurd";
+"remote.notification.first-conversation-message.title" = "Nieuw bericht";
+
+"remote.notification.talent-matched.message" = "Je zit in de voorselectie van een opdrachtgever! Reageer nu.";
+"remote.notification.match-client-accepted.message" = "Een opdrachtgever heeft jou uitgenodigd voor een online gesprek.";
+"remote.notification.talent-job-reminder.message" = "Je opdracht via iCasting begint over twee dagen. Mocht je nog advies of hulp nodig hebben, neem dan contact op met support@icasting.com. Succes!";
+"remote.notification.talent-rated.message" = "Een opdrachtgever heeft je beoordeeld aan de hand van jouw prestatie tijdens een opdracht. Bekijk je rating op icasting.com/jobratings";
+"remote.notification.talent-creditslip.message" = "iCasting heeft goedkeuring gekregen om de uitgevoerde opdracht uit te betalen. De vergoeding is overgemaakt naar jouw rekening.";
+"remote.notification.first-conversation-message.message" = "Een opdrachtgever heeft een bericht naar jou gestuurd in een online chat.";
 
 /* Matches */
 "NoMatches" = "Er zijn geen matches.";

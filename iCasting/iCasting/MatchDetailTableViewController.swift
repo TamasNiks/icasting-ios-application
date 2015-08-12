@@ -135,15 +135,17 @@ class MatchDetailTableViewController: ICTableViewController {
         return cell
     }
     
+    
+    // TODO: Try to encapsulate this by creating an overloading class
     override func configureCell(cell: UITableViewCell, indexPath: NSIndexPath, identifier: CellIdentifierProtocol) {
         
         if let c = cell as? MatchHeaderCell {
             
-            c.configureCell(matchDetails!)
+            c.configureCell(item: matchDetails!)
             
         } else if let c = cell as? MatchSummaryCell {
             
-            c.configureCell(matchDetails!)
+            c.configureCell(item: matchDetails!)
             
         } else if let c = cell as? MatchDecisionCell {
             
@@ -155,7 +157,7 @@ class MatchDetailTableViewController: ICTableViewController {
             
             //let dict = getSectionOfModel(inSection: indexPath.section)
             let rowValue = getModel(forIndexPath: indexPath) //dict[indexPath.row]
-            c.configureCell(rowValue)
+            c.configureCell(item: rowValue)
             
         } else {
             

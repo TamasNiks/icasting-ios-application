@@ -31,9 +31,9 @@ class ICTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        println("VIEW DID LOAD")
         refreshControl?.addTarget(self, action: ("handleRefresh"), forControlEvents: UIControlEvents.ValueChanged)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "receivedNotification:", name: "PushNotification", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "firstLoadRequest", name: kReceivedRemoteNotificationKey, object: nil)
     }
     
     // Sometimes the data model in a detail view will change, for example, accepting / rejecting a match or rating a job. This should inflict the master view as well. When the user navigates back, the cell that presents this data must show the changes as well. Usually, when the model changes, all observers should be notified.
@@ -51,10 +51,11 @@ class ICTableViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    func receivedNotification(notification: NSNotification) {
-
-        println("Did received notification")
-    }
+//    func receivedRemoteNotification(sender: NSNotification) {
+//
+//        println("ICTableViewController: Did received notification for push")
+//        handleRequest()
+//    }
     
     func setModel(model: ModelRequest) {
         self.model = model
@@ -86,10 +87,19 @@ class ICTableViewController: UITableViewController {
     
     func handleRequest() {
         
-        model?.get { (failure) -> () in
-            self.endLoadRequest()
-            if self.requestSucceedWithModel(self.model!) {
-                self.tableView.reloadData()
+        model?.get { [weak self] failure in
+            
+            self?.endLoadRequest()
+            
+            if let errorInfo = failure {
+                self?.performErrorHandling(errorInfo)
+                return
+            }
+            
+            if let requestSucceed: Bool = self?.requestSucceedWithModel(self!.model!) {
+                if requestSucceed {
+                    self?.tableView.reloadData()
+                }
             }
         }
     }
@@ -105,6 +115,8 @@ class ICTableViewController: UITableViewController {
         ac.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.Cancel, handler: { (action) -> Void in }))
         self.presentViewController(ac, animated: true, completion: nil)
     }
+    
+    // Abstract methods
     
     func requestSucceedWithModel(model: ModelRequest) -> Bool {
         // Abstract...

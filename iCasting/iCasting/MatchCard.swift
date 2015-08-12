@@ -96,7 +96,12 @@ final class MatchCard : NSObject, Equatable, Printable, ResponseCollectionSerial
         
         let path: [SubscriptType] = Fields.Status.getPath()
         let status = matchCard[path].stringValue
-        println("status: "+status)
+        
+        let statusField = FilterStatusFields.allValues[status]
+        if statusField == nil {
+            println("DEBUG: status not recognized: "+status)
+        }
+        
         return FilterStatusFields.allValues[status]
     }
     
@@ -124,9 +129,7 @@ final class MatchCard : NSObject, Equatable, Printable, ResponseCollectionSerial
     var talentHasRated: Bool {
         
         if let rating = self.rating {
-            if let talent = rating.talent {
-                return true
-            }
+            if let talent = rating.talent { return true }
         }
         return false
     }
