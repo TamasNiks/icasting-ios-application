@@ -89,6 +89,8 @@
 		224B0EDC1B7D12580090EE5B /* Contract.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224B0EDA1B7D12580090EE5B /* Contract.swift */; };
 		224BF0301B2F04D300163949 /* MessageTerms.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224BF02F1B2F04D300163949 /* MessageTerms.swift */; };
 		224BF0311B2F04D300163949 /* MessageTerms.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224BF02F1B2F04D300163949 /* MessageTerms.swift */; };
+		224DBD651B7E0FE900EA431D /* PushToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224DBD641B7E0FE900EA431D /* PushToken.swift */; };
+		224DBD661B7E103400EA431D /* PushToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224DBD641B7E0FE900EA431D /* PushToken.swift */; };
 		224DE16E1B27308200A0752E /* SocketCommunicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224DE16D1B27308200A0752E /* SocketCommunicator.swift */; };
 		224DE1701B27362500A0752E /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224DE16F1B27362500A0752E /* Message.swift */; };
 		224DE1711B27364C00A0752E /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224DE16F1B27362500A0752E /* Message.swift */; };
@@ -370,6 +372,7 @@
 		224BF02F1B2F04D300163949 /* MessageTerms.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageTerms.swift; sourceTree = "<group>"; };
 		224CF7FB1AE10B720035DABF /* DataPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = DataPlayground.playground; sourceTree = "<group>"; };
 		224CF7FC1AE11B830035DABF /* SwiftSoda-HexToBinToHex.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "SwiftSoda-HexToBinToHex.playground"; sourceTree = "<group>"; };
+		224DBD641B7E0FE900EA431D /* PushToken.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushToken.swift; sourceTree = "<group>"; };
 		224DE16D1B27308200A0752E /* SocketCommunicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SocketCommunicator.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		224DE16F1B27362500A0752E /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		224F77F51AF0F6BE00D88F99 /* ICImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ICImage.swift; sourceTree = "<group>"; };
@@ -655,7 +658,7 @@
 			children = (
 				2256CDD31AF254FD005D40EB /* Auth.swift */,
 				2289BFFE1B0373DF00A7307C /* CastingObject.swift */,
-				2257A2E51B41897800F7962E /* PushNotificationDevice.swift */,
+				224DBD631B7E0FC600EA431D /* RemoteNotifications */,
 				226C27C21AD5310F00A6A2EE /* User.swift */,
 			);
 			name = User;
@@ -692,6 +695,15 @@
 				22EA18C01B4ADB4C0064BF09 /* Experiment */,
 			);
 			name = Message;
+			sourceTree = "<group>";
+		};
+		224DBD631B7E0FC600EA431D /* RemoteNotifications */ = {
+			isa = PBXGroup;
+			children = (
+				2257A2E51B41897800F7962E /* PushNotificationDevice.swift */,
+				224DBD641B7E0FE900EA431D /* PushToken.swift */,
+			);
+			name = RemoteNotifications;
 			sourceTree = "<group>";
 		};
 		2252C0C21B53BF0C0050DF8B /* Framework extensions */ = {
@@ -1314,6 +1326,7 @@
 				2256CE201AF2CD17005D40EB /* ExampleLeftSideDrawerViewController.swift in Sources */,
 				2273B7631AD6B54600CC3EFB /* ICType.swift in Sources */,
 				22060E901B1EEE30000A3F2C /* CellReuser.swift in Sources */,
+				224DBD651B7E0FE900EA431D /* PushToken.swift in Sources */,
 				226B2E9A1B07BE86001DA2BD /* MatchHeaderCell.swift in Sources */,
 				222B1CE11B5CD72F00A4B988 /* Request+Extensions.swift in Sources */,
 				2244AA2C1B78C87700C5624F /* Enum.swift in Sources */,
@@ -1490,6 +1503,7 @@
 				22C598EE1B2F366C0008CFCD /* AuthExtension.swift in Sources */,
 				22082CE01AFB927A00AF5EDB /* SocketFixUTF8.swift in Sources */,
 				2286D1871B70A8D800721095 /* SocketCommunicatorHandlerDelegate.swift in Sources */,
+				224DBD661B7E103400EA431D /* PushToken.swift in Sources */,
 				2252C0D11B53C01E0050DF8B /* UITableViewCell+Extensions.swift in Sources */,
 				22FB74CD1B16F70A000C6373 /* MatchSummaryCell.swift in Sources */,
 				224A5A771ADE8BDB00E22DE1 /* ICError.swift in Sources */,
