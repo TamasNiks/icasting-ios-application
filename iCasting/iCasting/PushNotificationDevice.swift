@@ -213,15 +213,13 @@ struct PatchIDResponse {
 
 
 
+// When the app starts, it receives a device token (push token) from the messenger service. Normally the app should register a device after login, but because it might be possible to get a token after the login has been finished (and thus could not register), the app will never register anymore for the current session, only after the user logged out manually and logged in again (because when the user doesn't logout, it steps over the login sequence), it is possible to register a device, because the push token has been set already into storage from the previous session. The PushTokenHandshaker wil solve this problem, because it only registers a device when a push token AND markToProceed has been set. You would set the markToProceed when login has been finised. 
+
+// In real life when the user terminates the app while logged in, the app memory will be reset. If the app starts again, cloud messenger service will deliver again a device token (new or the same). And after login suceed (if implemented, markToProceed has been called), it will update the device registration properly.
 
 protocol PushTokenHandshakerObserver {
-    
     func completedAddDeviceForRemoteNotificationWithFailure(failure: ICErrorInfo)
 }
-
-
-
-// When the app starts, it receives a device token (push token) from the messenger service. Normally the app should register a device after login, but because it might be possible to get a token after the login has been finished (and thus could not register), the app will never register anymore for the current session, only after the user logged out manually and logged in again (because when the user doesn't logout, it steps over the login sequence), it is possible to register a device, because the push token has been set already into storage from the previous session. The PushTokenHandshaker wil solve this problem, because it only registers a device when a push token AND markToProceed has been set. You would set the markToProceed when to login has been finised.
 
 class PushTokenHandshaker {
     
@@ -230,13 +228,13 @@ class PushTokenHandshaker {
     static let sharedInstance = PushTokenHandshaker()
     
     var hasPushToken: Bool = false {
-        willSet {
+        didSet {
             checkToProceed()
         }
     }
     
     var hasMarkedToProceed: Bool = false {
-        willSet {
+        didSet {
             checkToProceed()
         }
     }
@@ -246,14 +244,14 @@ class PushTokenHandshaker {
     }
     
     private func checkToProceed() {
-        
+        println("PushTokenHandshaker: checkToProceed with hasPushToken: \(hasPushToken), hasMarkedToProceed: \(hasMarkedToProceed)")
         if hasPushToken && hasMarkedToProceed {
             proceed()
         }
     }
     
     private func proceed() {
-        
+        println("PushTokenHandshaker: proceed")
         PushNotificationDevice.sharedInstance.addDeviceForRemoteNotifications() { possibleFailure in
             if let failure = possibleFailure {
                 self.delegate?.completedAddDeviceForRemoteNotificationWithFailure(failure)

@@ -354,7 +354,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GGLInstanceIDDelegate {
 
         if (registrationToken != nil) {
             self.registrationToken = registrationToken
-            println("Registration Token: \(registrationToken)")
+            println("AppDelegate: Registration Token: \(registrationToken)")
             self.subscribeToTopic()
             
             saveGCMRegistrationToken(registrationToken)
