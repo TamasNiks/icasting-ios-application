@@ -13,6 +13,7 @@ import Foundation
 public let kICErrorDomain: String = "ICErrorDomain"
 
 ///Error codes
+public let kICErrorLoginValidationError: Int = 0
 public let kICErrorAPI: Int = 100
 public let kICErrorClientNotSupported: Int = 101
 public let kICErrorEmailNotVerified: Int = 102
@@ -157,7 +158,7 @@ extension ICError {
     
      enum CustomErrorInfoType {
         
-        case ClientNotSupportedError, EmailNotVerifiedError
+        case ClientNotSupportedError, EmailNotVerifiedError, LoginValidationError(String)
         
         var errorInfo: ICErrorInfo {
             
@@ -175,6 +176,10 @@ extension ICError {
                 let error = NSError(domain: kICErrorDomain, code: kICErrorEmailNotVerified, userInfo: [NSLocalizedDescriptionKey : errorMessage])
                 return ICError(error: error).errorInfo!
                 
+            case .LoginValidationError(let errorMessage):
+                
+                let error = NSError(domain: kICErrorDomain, code: kICErrorLoginValidationError, userInfo: [NSLocalizedDescriptionKey : errorMessage])
+                return ICError(error: error).errorInfo!       
             }
         }
     }

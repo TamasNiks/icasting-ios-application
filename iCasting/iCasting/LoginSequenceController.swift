@@ -41,8 +41,46 @@ class LoginSequenceController: NSObject {
         
         self.tryToLogin = true
         
-        Auth.login(c) { error in
+        // Create a completionHandler which gets called after all the necessary requests are done. All the data is availabe to process completion requests
+        let completionHandler: () -> () = {
             
+            self.tryToLogin = false
+            
+            // Check if the user is client, because clients are not yet supported, show an alert and log out
+            if User.sharedInstance.isClient {
+                
+                result.failure(error: ICError.CustomErrorInfoType.ClientNotSupportedError.errorInfo)
+                
+                Auth.logout { failure in println(failure) }
+                
+                return
+            }
+            
+            // Try to register the device
+            
+            // TODO: Check if user has enabled notifications before registering
+            //                PushNotificationDevice.sharedInstance.addDeviceForRemoteNotifications() { error in
+            //                    if let error = error {
+            //                        println("DEBUG: LoginSequenceController: Registering device failure - \(error)")
+            //                    }
+            //                }
+            
+            // The app will register a device when it contains a device token (push token)
+            PushTokenHandshaker.sharedInstance.markToProceed()
+            
+            // Check if the user e-mail is verified, if not give feedback to the user. The user can proceed without verifing e-mail, but it cannot accept / reject matches
+            if User.sharedInstance.mailIsVerified == false {
+                
+                result.failure(error: ICError.CustomErrorInfoType.EmailNotVerifiedError.errorInfo)
+                
+                return
+            }
+            
+            result.success()
+        }
+        
+        
+        Auth.login(c) { error in
             
             // First do some error handling for the login request
             if let error = error {
@@ -50,44 +88,7 @@ class LoginSequenceController: NSObject {
                 return
             }
             
-            // Create a completionHandler which gets called after all the necessary requests are done. All the data is availabe to process completion requests
-            let completionHandler: () -> () = {
-                
-                self.tryToLogin = false
-                
-                // Check if the user is client, because clients are not yet supported, show an alert and log out
-                if User.sharedInstance.isClient {
-                    
-                    result.failure(error: ICError.CustomErrorInfoType.ClientNotSupportedError.errorInfo)
-                    
-                    Auth.logout { failure in println(failure) }
-                    
-                    return
-                }
-                
-                // Try to register the device
-
-                // TODO: Check if user has enabled notifications before registering
-                PushNotificationDevice.sharedInstance.addDeviceForRemoteNotifications() { error in
-                    if let error = error {
-                        println("DEBUG: LoginSequenceController: Registering device failure - \(error)")
-                    }
-                }
-                
-                // Check if the user e-mail is verified, if not give feedback to the user.
-                if User.sharedInstance.mailIsVerified == false {
-
-                    result.failure(error: ICError.CustomErrorInfoType.EmailNotVerifiedError.errorInfo)
-                    
-                    return
-                }
-                
-                result.success()
-            }
-            
-            
             // Do the following up HTTP requests to get the app data
-            
             // Get general user information
             UserRequest().execute { error -> () in
                 

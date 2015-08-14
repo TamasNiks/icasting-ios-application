@@ -371,6 +371,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GGLInstanceIDDelegate {
     
     
     func subscribeToTopic() {
+        
         // If the app has a registration token and is connected to GCM, proceed to subscribe to the
         // topic
         if(registrationToken != nil && connectedToGCM) {
@@ -402,19 +403,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GGLInstanceIDDelegate {
             handler: registrationHandler)
     }
     
-
-    func saveAPNSDeviceToken(token: NSData) {
-        
-        PushToken.token = PushNotificationDevice.convertDeviceTokenToHexadecimal(token)
-    }
-    
-    
     func saveGCMRegistrationToken(token: String) {
-        // TODO: It is not 100% guaranteed that a registration token will be set if a user logs in and want to register the device, come up with something that handles this.
+
         println("AppDelegate: GCM token will be saved")
         PushToken.token = token
     }
 
+    /*func saveAPNSDeviceToken(token: NSData) {
+    
+    PushToken.token = PushNotificationDevice.convertDeviceTokenToHexadecimal(token)
+    }*/
  
     /*func setupDrawerController() {
     drawerController.drawerVisualStateBlock = { (drawerController, drawerSide, percentVisible) in

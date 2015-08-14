@@ -18,9 +18,14 @@ protocol EndpointProtocol: URLRequestConvertible {
     func endpoint() -> String
     var method: Method { get }
     var url: URLStringConvertible { get }
+    
 }
 
-let POPULATE_KEY: String = "populate[]"
+protocol EndpointParameterProtocol: EndpointProtocol {
+    func addParameters(URLRequest: NSURLRequest) -> NSURLRequest
+}
+
+private let kPopulateKey: String = "populate[]"
 
 
 enum Router {
@@ -58,6 +63,7 @@ enum Router {
             mutableURLRequest.addAuthorizationHeaderField()
             return mutableURLRequest
         }
+        
     }
     
 
@@ -109,7 +115,7 @@ enum Router {
     
     
     
-    enum Auth: EndpointProtocol {
+    enum Auth: EndpointParameterProtocol {
         
         case
         Login([String : AnyObject]),
@@ -154,18 +160,11 @@ enum Router {
             
             let mutableURLRequest = NSMutableURLRequest(URL: self.url as! NSURL)
             mutableURLRequest.HTTPMethod = self.method.rawValue
-            
-            switch self {
-            case .Logout:
-                mutableURLRequest.addEmptyAuthorizationHeaderField()
-            default:
-                mutableURLRequest.addAuthorizationHeaderField()
-            }
-            
+            mutableURLRequest.addAuthorizationHeaderField()
             return addParameters(mutableURLRequest)
         }
         
-        private func addParameters(URLRequest: NSURLRequest) -> NSURLRequest {
+        internal func addParameters(URLRequest: NSURLRequest) -> NSURLRequest {
             
             let encoding = ParameterEncoding.JSON
             switch self {
@@ -265,7 +264,7 @@ enum Router {
     
     
     
-    enum Match: EndpointProtocol {
+    enum Match: EndpointParameterProtocol {
         
         case
         MatchCards,
@@ -333,11 +332,11 @@ enum Router {
             return addParameters(mutableURLRequest)
         }
         
-        private func addParameters(URLRequest: NSURLRequest) -> NSURLRequest {
+        internal func addParameters(URLRequest: NSURLRequest) -> NSURLRequest {
             
             switch self {
             case .MatchPopulateJobOwner:
-                return ParameterEncoding.URL.encode(URLRequest, parameters: [POPULATE_KEY : "job.owner"]).0
+                return ParameterEncoding.URL.encode(URLRequest, parameters: [kPopulateKey : "job.owner"]).0
             case .MatchRateClient(let id, let parameters):
                 return ParameterEncoding.JSON.encode(URLRequest, parameters: parameters).0
             default:
@@ -393,7 +392,7 @@ enum Router {
     
     
     
-    enum Push: EndpointProtocol {
+    enum Push: EndpointParameterProtocol {
         
         case
         Device(parameters: [String : AnyObject]),
@@ -430,7 +429,7 @@ enum Router {
             return addParameters(mutableURLRequest)
         }
         
-        private func addParameters(URLRequest: NSURLRequest) -> NSURLRequest {
+        internal func addParameters(URLRequest: NSURLRequest) -> NSURLRequest {
             let encoding = ParameterEncoding.JSON
             switch self {
             case .Device(let parameters):

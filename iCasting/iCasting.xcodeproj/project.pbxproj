@@ -71,7 +71,6 @@
 		22392D291AD811720086BE5F /* ICType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2273B7621AD6B54600CC3EFB /* ICType.swift */; };
 		223A7DD21AFD16B8002FB978 /* SwiftSpinner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223A7DD11AFD16B8002FB978 /* SwiftSpinner.swift */; };
 		223CB48A1B45A3F70040DFF2 /* ICTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223CB4891B45A3F70040DFF2 /* ICTableViewController.swift */; };
-		223CB48B1B45A3F70040DFF2 /* ICTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223CB4891B45A3F70040DFF2 /* ICTableViewController.swift */; };
 		223E49C21B02389B00BB6BB3 /* SettingTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223E49C11B02389B00BB6BB3 /* SettingTableViewController.swift */; };
 		2244AA2C1B78C87700C5624F /* Enum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2244AA271B78C87700C5624F /* Enum.swift */; };
 		2244AA2D1B78C87700C5624F /* Enum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2244AA271B78C87700C5624F /* Enum.swift */; };
@@ -1423,7 +1422,6 @@
 				2252C0DA1B53C18C0050DF8B /* CustomActivityIndicatorView.swift in Sources */,
 				22C598D11B2F12500008CFCD /* JSQMessagesComposerTextView.m in Sources */,
 				22082CEA1AFB927A00AF5EDB /* SocketTypes.swift in Sources */,
-				223CB48B1B45A3F70040DFF2 /* ICTableViewController.swift in Sources */,
 				226B2E941B079C06001DA2BD /* MatchOverviewCell.swift in Sources */,
 				227B707D1B604BC700CD4DFE /* NegotiationsOverviewCell.swift in Sources */,
 				22EA193E1B51D1730064BF09 /* ContractState.swift in Sources */,

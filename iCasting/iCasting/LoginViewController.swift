@@ -24,7 +24,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     var keyboardController: KeyboardController?
     
     
-    
     // MARK: ViewController life cycle
     
     override func viewDidLoad() {
@@ -44,15 +43,8 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         // TODO: Comment this line when going through App Review
         setTestDataOnInputFields()
         
-        // Try to login, if there's authentication data stored somewhere, it will login
-        loginSequenceController.tryLoginSequence((success: {
-        
-                self.performRightSegue()
-            
-            }, failure: { error in
-        
-                self.performErrorHandling(error)
-        }))
+        // Try to login, we don't provice any credentials, if there's authentication data stored somewhere, it will login else it won't
+        performLoginSequence()
     }
     
     
@@ -67,8 +59,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         // Dispose of any resources that can be recreated.
     }
 
-
-    // Normal login
     
     @IBAction func onButtonClickLogin(sender: UIButton) {
         
@@ -81,16 +71,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         // The credentials are valid, try to login the user with the given credentials
         let credentials = Credentials()
         credentials.userCredentials = c
-        
-        loginSequenceController.startLoginSequence(credentials, result: (success: {
-            
-                self.performRightSegue()
-            
-            }, failure: { error in
-        
-                self.performErrorHandling(error)
-            }
-        ))
+        performLoginSequence(credentials: credentials)
     }
     
     
@@ -106,13 +87,28 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
                 println("Error: \(error.getLocalizedDescription())")
             }
             
-            let title = NSLocalizedString("Error", comment: "")
-            let alertView = UIAlertView( title: title, message: message, delegate: nil, cancelButtonTitle: nil, otherButtonTitles: "Ok")
-            alertView.show()
+            self.performErrorHandling(ICError.CustomErrorInfoType.LoginValidationError(message).errorInfo)
             
             return false
         }
         return true
+    }
+    
+    
+    // Only this method deals with the loginSequenceController and the handling of results.
+    private func performLoginSequence(credentials: Credentials? = nil) {
+        
+        let result: LoginSequenceController.LoginResultType = (
+            success: { self.performRightSegue() },
+            failure: { self.performErrorHandling($0) })
+        
+        if let credentials = credentials  {
+            
+            loginSequenceController.startLoginSequence(credentials, result: result)
+        }
+        else {
+            loginSequenceController.tryLoginSequence(result)
+        }
     }
     
      
@@ -137,14 +133,13 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         
         println(errorInfo)
 
-        if let errorInfo = errorInfo as? ICAPIErrorInfo {
-            if errorInfo.name == ICAPIErrorNames.PassportAuthenticationError.rawValue {
-                println("Should do custom facebook logout")
-                let loginManager = FBSDKLoginManager()
-                loginManager.logOut()
-            }
+        if errorInfo.error.domain == ICAPIErrorNames.PassportAuthenticationError.rawValue {
+            
+            println("LoginViewController: Should do custom facebook logout")
+            let loginManager = FBSDKLoginManager()
+            loginManager.logOut()
         }
-        
+                
         if errorInfo.error.code == kICErrorEmailNotVerified {
         
             ICAlertControllerTest.showEmailVerificationAlert(errorInfo, viewController: self, continueHandler: { [weak self] () in
@@ -157,7 +152,6 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         else {
             
             ICAlertControllerTest.showGeneralErrorAlert(errorInfo, viewController: self)
-            
         }
     }
     
@@ -177,8 +171,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
-    
-    
+
     // MARK: Textfield Delegate Methods
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
@@ -208,17 +201,7 @@ extension LoginViewController : FBSDKLoginButtonDelegate {
             
             let credentials = Credentials()
             credentials.facebookCredentials = FacebookCredentials(userID: result.token.userID)
-
-            loginSequenceController.startLoginSequence(credentials, result: (success: {
-                
-                    self.performRightSegue()
-                
-                }, failure: { error in
-                    
-                    self.performErrorHandling(error)
-                    
-                }
-            ))
+            performLoginSequence(credentials: credentials)
         }
     }
     

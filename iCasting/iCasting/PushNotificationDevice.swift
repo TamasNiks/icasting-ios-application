@@ -17,53 +17,6 @@ protocol PushNotificationDeviceProtocol {
 
 
 
-protocol PushTokenLoginCheckObserver {
-    
-    func completedAddDeviceForRemoteNotificationWithFailure(failure: ICErrorInfo)
-    
-}
-
- class PushTokenLoginCheck {
-    
-    
-    var delegate: PushTokenLoginCheckObserver?
-    
-    static let sharedInstance = PushTokenLoginCheck()
-    
-    var hasPushToken: Bool = false {
-        willSet {
-            checkToProceed()
-        }
-    }
-    
-    var hasAccessToken: Bool = false {
-        willSet {
-            checkToProceed()
-        }
-    }
-    
-    private func checkToProceed() {
-        if hasPushToken && hasAccessToken {
-         
-            PushNotificationDevice.sharedInstance.addDeviceForRemoteNotifications() { possibleFailure in
-                
-                if let failure = possibleFailure {
-                    self.delegate?.completedAddDeviceForRemoteNotificationWithFailure(failure)
-                }
-            }
-            
-        }
-    }
-    
-    func addDeviceForRemoteNotifications(callBack: RequestClosure) {
-        
-    }
-    
-
-    
-}
-
-
 class PushNotificationDevice: PushNotificationDeviceProtocol {
     
     
@@ -260,6 +213,57 @@ struct PatchIDResponse {
 
 
 
+
+protocol PushTokenHandshakerObserver {
+    
+    func completedAddDeviceForRemoteNotificationWithFailure(failure: ICErrorInfo)
+}
+
+
+
+// When the app starts, it receives a device token (push token) from the messenger service. Normally the app should register a device after login, but because it might be possible to get a token after the login has been finished (and thus could not register), the app will never register anymore for the current session, only after the user logged out manually and logged in again (because when the user doesn't logout, it steps over the login sequence), it is possible to register a device, because the push token has been set already into storage from the previous session. The PushTokenHandshaker wil solve this problem, because it only registers a device when a push token AND markToProceed has been set. You would set the markToProceed when to login has been finised.
+
+class PushTokenHandshaker {
+    
+    var delegate: PushTokenHandshakerObserver?
+    
+    static let sharedInstance = PushTokenHandshaker()
+    
+    var hasPushToken: Bool = false {
+        willSet {
+            checkToProceed()
+        }
+    }
+    
+    var hasMarkedToProceed: Bool = false {
+        willSet {
+            checkToProceed()
+        }
+    }
+    
+    func markToProceed() {
+        hasMarkedToProceed = true
+    }
+    
+    private func checkToProceed() {
+        
+        if hasPushToken && hasMarkedToProceed {
+            proceed()
+        }
+    }
+    
+    private func proceed() {
+        
+        PushNotificationDevice.sharedInstance.addDeviceForRemoteNotifications() { possibleFailure in
+            if let failure = possibleFailure {
+                self.delegate?.completedAddDeviceForRemoteNotificationWithFailure(failure)
+            }
+        }
+    }
+}
+
+
+
 // The PushToken will be used by the App delegate to store the token from APNs or GCM to use by the provider (iCasting) for (de)register a device.
 struct PushToken {
     
@@ -271,6 +275,9 @@ struct PushToken {
             println("PushToken: Sets the new token from a Cloud Messenger Service")
             NSUserDefaults.standardUserDefaults().setValue(newValue, forKey: PushToken.New)
             NSUserDefaults.standardUserDefaults().synchronize()
+        
+            // The app will register a device when it has been marked to complete
+            PushTokenHandshaker.sharedInstance.hasPushToken = true
         }
         get {
             return NSUserDefaults.standardUserDefaults().stringForKey(PushToken.New)
