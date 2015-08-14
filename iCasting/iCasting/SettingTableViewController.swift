@@ -27,13 +27,19 @@ class SettingTableViewController: UITableViewController {
                     
                 case CellIdentifier.Settings.LogOut.rawValue:
                     
-                    Auth.logout() { failure in
-                        if failure == nil {
-                            println("Logout request successfully, unwind to login")
-                            self.performSegueWithIdentifier(SegueIdentifier.Unwind.Login, sender: self)
-                        } else {
-                            println("DEBUG: \(failure)")
+                    showWaitOverlay()
+                    
+                    Auth.logout() { [weak self] failure in
+                        
+                        self?.removeAllOverlays()
+                        
+                        if let failure = failure {
+                            println("DEBUG - SettingTableViewController: \(failure)")
+                            return
                         }
+                        
+                        println("Logout request successfully, unwind to login")
+                        self?.performSegueWithIdentifier(SegueIdentifier.Unwind.Login, sender: self)
                     }
                     
                 case CellIdentifier.Settings.ChangeCastingObject.rawValue:
@@ -41,7 +47,8 @@ class SettingTableViewController: UITableViewController {
                     self.performSegueWithIdentifier(SegueIdentifier.Unwind.CastingObjects, sender: self)
                     
                 default:
-                    println("Warning: Not added to reuseIdentifiers enum.")
+                    
+                    NSException(name: "CellIdentifierException", reason: "Not added to reuseIdentifiers enum.", userInfo: nil)
                 }
             }
             

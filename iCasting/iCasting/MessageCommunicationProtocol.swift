@@ -29,7 +29,7 @@ extension Conversation : MessageCommunicationProtocol {
     
     func sendMessage(text: String, callBack: MessageCommunicationCallBack) {
         
-        let m: Message = Message(id: String(), owner: Auth.passport!.user_id, role: MessageRole.Outgoing, type: TextType.Text)
+        let m: Message = Message(id: String(), owner: Auth.passport!.userID, role: MessageRole.Outgoing, type: TextType.Text)
         m.body = text
         
         self.socketCommunicator?.sendMessage(m.body!, acknowledged: { (data) -> () in

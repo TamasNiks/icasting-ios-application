@@ -155,8 +155,8 @@ class SocketCommunicator {
 
                     // User join
                     if name == On.UserJoin {
-                        if let user_id = data?[0] as? String {
-                            println(user_id)
+                        if let userID = data?[0] as? String {
+                            println(userID)
                         }
                         ack?("User has been joined", "test")
                     }

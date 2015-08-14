@@ -28,7 +28,7 @@ class LoginSequenceController: NSObject {
             // Because the user is still logged-in, we don't send credentials as a parameter
             startLoginSequence(nil, result: result)
         }
-            // If the user doesn't have a passport authentication stored, check if Facebook is still logged in, if it is, logout, because the try to login depends totally on the access_token and user_id of iCasting. If it isn't there, the user should login manually, hence logout on facebook
+            // If the user doesn't have a passport authentication stored, check if Facebook is still logged in, if it is, logout, because the try to login depends totally on the accessToken and userID of iCasting. If it isn't there, the user should login manually, hence logout on facebook
         else {
             if let fbsdkCurrentAccessToken = FBSDKAccessToken.currentAccessToken() {
                 FBSDKLoginManager().logOut()
@@ -68,10 +68,9 @@ class LoginSequenceController: NSObject {
                 // Try to register the device
 
                 // TODO: Check if user has enabled notifications before registering
-                PushNotificationDevice.sharedInstance.registerDevice() { error in
-                    
+                PushNotificationDevice.sharedInstance.addDeviceForRemoteNotifications() { error in
                     if let error = error {
-                        println("DEBUG: Registering failure - \(error)")
+                        println("DEBUG: LoginSequenceController: Registering device failure - \(error)")
                     }
                 }
                 

@@ -9,55 +9,119 @@
 import Foundation
 
 
-protocol PushNotificationProtocol {
-    func registerDevice(callBack: RequestClosure)
-    func deregisterDevice(callBack: RequestClosure)
+protocol PushNotificationDeviceProtocol {
+    
+    func addDeviceForRemoteNotifications(callBack: RequestClosure)
+    func removeDeviceForRemoteNotifications(callBack: RequestClosure)
 }
 
 
-class PushNotificationDevice: PushNotificationProtocol {
+
+protocol PushTokenLoginCheckObserver {
     
-    // After the registration of a device, the server will return a response with a device ID. The device ID string is given to the deviceIDresponse, and assigned to a computed property which will save the new value to persistent storage.
-    static var deviceIDResponse: DeviceIDResponse {
-        
-        set(newValue) {
-            newValue.save()
-        }
-        get {
-            return DeviceIDResponse()
+    func completedAddDeviceForRemoteNotificationWithFailure(failure: ICErrorInfo)
+    
+}
+
+ class PushTokenLoginCheck {
+    
+    
+    var delegate: PushTokenLoginCheckObserver?
+    
+    static let sharedInstance = PushTokenLoginCheck()
+    
+    var hasPushToken: Bool = false {
+        willSet {
+            checkToProceed()
         }
     }
     
-    // MARK: - Public interface
+    var hasAccessToken: Bool = false {
+        willSet {
+            checkToProceed()
+        }
+    }
+    
+    private func checkToProceed() {
+        if hasPushToken && hasAccessToken {
+         
+            PushNotificationDevice.sharedInstance.addDeviceForRemoteNotifications() { possibleFailure in
+                
+                if let failure = possibleFailure {
+                    self.delegate?.completedAddDeviceForRemoteNotificationWithFailure(failure)
+                }
+            }
+            
+        }
+    }
+    
+    func addDeviceForRemoteNotifications(callBack: RequestClosure) {
+        
+    }
+    
+
+    
+}
+
+
+class PushNotificationDevice: PushNotificationDeviceProtocol {
+    
     
     static let sharedInstance = PushNotificationDevice()
     
-    func registerDevice(callBack: RequestClosure) {
+    // MARK: - Public interface
+    
+    func addDeviceForRemoteNotifications(callBack: RequestClosure) {
         
-        
-        if PushToken.hasUpdatedToken || PushNotificationDevice.deviceIDResponse.deviceID == nil {
+        // First check if there is a new token available, because with this new token, we need to register the device
+        if PushToken.hasNewToken {
             
-            println("PushNotificationDevice: Update in device token: \(PushToken.hasUpdatedToken) || deviceIDResponse == nil: \(PushNotificationDevice.deviceIDResponse.deviceID)")
-            
-            requestForRegisterDevice(callBack)
-            
-        } else {
-            println("PushNotificationDevice: No update in device token and deviceIDResponse has been set")
+            // Because there is a new registration token available (or no older token exist), register the device on this token. Possible error: 
+            // If you clear data and you get the same token from GCM, hasNewToken return true and thus fail since you can only register once. 
+            // But in this case, there neither would be a patchID
+            println("PushNotificationDevice: Update in device token: \(PushToken.hasNewToken)")
+            registerDevice(callBack)
+            return
         }
+        
+        // If there is not a new token been found, try to patch it
+        if let patchID = PatchIDResponse.patchID {
+            
+            // No updated device token, enable the device on the current token
+            println("PushNotificationDevice: patchID has been found: \(patchID)")
+            patchDevice(true, callBack: callBack)
+            return
+        }
+        
+        // No patch ID is available, this can be a problem, because without a patch ID, a device cannot be enabled or disabled.
+        println("CRITICAL DEBUG - PushNotificationDevice: PatchID doesn't exist, remove app and install it again")
     }
     
+    
+    func removeDeviceForRemoteNotifications(callBack: RequestClosure) {
+        
+        patchDevice(false, callBack: callBack)
+    }
+    
+    
+    // MARK: - Private methods
 
-    func deregisterDevice(callBack: RequestClosure) {
-
-        if let deviceIDResponse = PushNotificationDevice.deviceIDResponse.deviceID {
+    private func patchDevice(enable: Bool, callBack: RequestClosure) {
+        
+        // A device can only be patched of there is a patchID available
+        if let patchID = PatchIDResponse.patchID {
             
-            if let parameters = getParametersForRegisterDevice(enabled: false) {
-                
-                let req = Router.Push.DeviceID(deviceIDResponse, parameters: parameters)
-                request(req).responseJSON() { (request, response, json, error) -> Void in
-                
-                    var error = ICError(error: error).errorInfo
+            // Parameters can only be created when authentication has been set, (after login) 
+            // and when a Push token is available (should be set by the AppDelegate once Device Token retreived.
+            if let parameters = getParametersForRegisterDevice(enabled: enable) {
 
+                let req = Router.Push.DeviceID(patchID, parameters: parameters)
+                request(req).responseJSON() { (request, response, json, error) -> Void in
+                    
+                    println("PushNotificationDevice - Patch device request completed")
+                    
+                    var error = ICError(error: error).errorInfo
+                    
                     if let _json: AnyObject = json {
                         let parsedJSON = JSON(_json)
                         error = ICError(json: parsedJSON).errorInfo
@@ -66,46 +130,45 @@ class PushNotificationDevice: PushNotificationProtocol {
                     
                     callBack(failure: error)
                 }
+                
             } else {
-                println("DEBUG - PushNotificationDevice: Parameters could not be set for DEregistering device, but the user should be able to logout anyway")
+                
+                println("DEBUG - PushNotificationDevice: Parameters could not be set for patching device, but the user should be able to continue anyway (authenticated? push token available?")
                 callBack(failure: nil)
             }
+
         } else {
-            println("DEBUG - PushNotificationDevice: deviceIDResponse has not been set while wanting to DEregister device, probably because of simulator")
+            
+            println("DEBUG - PushNotificationDevice: patchID has not been set while trying to patching device: set enable to: \(enable), probably because of simulator")
+            callBack(failure: nil)
         }
     }
     
     
-
-    // MARK: - Private methods
-    
-    // Do the actual request for registering a device at iCasting
-    private func requestForRegisterDevice(callBack: RequestClosure) {
+    // For the first time register a device
+    private func registerDevice(callBack: RequestClosure) {
         
         if let parameters = getParametersForRegisterDevice(enabled: true) {
             
             let req = Router.Push.Device(parameters: parameters)
             request(req).responseJSON() { (request, response, json, error) -> Void in
                 
-                // Network or general errors?
+                println("PushNotificationDevice - Register device request completed")
+                
                 var error = ICError(error: error).errorInfo
                 
-                // No network errors, extract json
                 if let _json: AnyObject = json {
                     
                     let parsedJSON = JSON(_json)
-                    
-                    // API Errors?
                     error = ICError(json: parsedJSON).errorInfo
                     
-                    // No errors at all?
                     if error == nil {
                         
                         println(parsedJSON)
-                        println("for token to save:")
-                        println(PushToken.token)
+                        println("for token to save: \(PushToken.token)")
+                        
                         // Only if the device has been registered successfully, the push token can be saved locally
-                        self.mapDeviceIDResponse(parsedJSON)
+                        self.mapPatchIDResponse(parsedJSON)
                         PushToken.save()
                     }
                 }
@@ -118,13 +181,14 @@ class PushNotificationDevice: PushNotificationProtocol {
         }
     }
     
-    // TODO: In general, maybe put the parameters somewhere else
-//    private func getParametersForDeregisterDevice() -> [String : AnyObject] {
-//        
-//        var params = [String: AnyObject]()
-//        params["enabled"] = false
-//        return params
-//    }
+    
+    private func mapPatchIDResponse(json: JSON) {
+        if let id = json["_id"].string {
+            PatchIDResponse(ID: id).save()
+        } else {
+            println("CRITICAL DEBUG - PushNotificationDevice: _id string does not exist in json, patch id not saved, cannot used for de/re register notifications")
+        }
+    }
     
     
     // The parameters are created for a register device HTTP request
@@ -136,7 +200,7 @@ class PushNotificationDevice: PushNotificationProtocol {
                 
                 var parameters: [String: AnyObject] = [String: AnyObject]()
                 parameters["application"]   = "android"
-                parameters["user"]          = passport.user_id
+                parameters["user"]          = passport.userID
                 
                 var pushNotifications = [String: AnyObject]()
                 pushNotifications["key"] = token
@@ -152,12 +216,6 @@ class PushNotificationDevice: PushNotificationProtocol {
         return nil
     }
 
-    
-    private func mapDeviceIDResponse(json: JSON) {
-        let id = json["_id"].stringValue
-        PushNotificationDevice.deviceIDResponse = DeviceIDResponse(_deviceID: id)
-    }
-    
     
     // The APNs can be converted to a string for further processing
     static func convertDeviceTokenToHexadecimal(deviceToken: NSData) -> String {
@@ -180,21 +238,26 @@ class PushNotificationDevice: PushNotificationProtocol {
 }
 
 
-// The DeviceIDResponse will represent the Device ID given back by the server after device registration. The deviceID is needed when doing a patch request for when the  registration token has been updated. This way, the registration token, coupled to a user, will be synchronised with the server provider (iCasting). The trouble is, when the device ID gets lost, there is no possibility to update a registration token with the iCasting server.
-struct DeviceIDResponse {
+
+
+// The PatchIDResponse will represent the Device ID given back by the server after device registration. The patchID is needed when doing a patch request for when the  registration token has been updated. This way, the registration token, coupled to a user, will be synchronised with the server provider (iCasting). The trouble is, when the device ID gets lost, there is no possibility to update a registration token with the iCasting server.
+
+struct PatchIDResponse {
     
     private static let Key: String = "DeviceID" // ID key from the API
     
-    private var _deviceID: String?
+    private var ID: String
     
     func save() {
-        NSUserDefaults.standardUserDefaults().setValue(_deviceID, forKey: DeviceIDResponse.Key)
+        NSUserDefaults.standardUserDefaults().setValue(ID, forKey: PatchIDResponse.Key)
+        NSUserDefaults.standardUserDefaults().synchronize()
     }
     
-    var deviceID: String? {
-        return NSUserDefaults.standardUserDefaults().stringForKey(DeviceIDResponse.Key)
+    static var patchID: String? {
+        return NSUserDefaults.standardUserDefaults().stringForKey(PatchIDResponse.Key)
     }
 }
+
 
 
 // The PushToken will be used by the App delegate to store the token from APNs or GCM to use by the provider (iCasting) for (de)register a device.
@@ -207,6 +270,7 @@ struct PushToken {
         set(newValue) {
             println("PushToken: Sets the new token from a Cloud Messenger Service")
             NSUserDefaults.standardUserDefaults().setValue(newValue, forKey: PushToken.New)
+            NSUserDefaults.standardUserDefaults().synchronize()
         }
         get {
             return NSUserDefaults.standardUserDefaults().stringForKey(PushToken.New)
@@ -220,18 +284,21 @@ struct PushToken {
     // Save the current token as an old token
     static private func save() {
         NSUserDefaults.standardUserDefaults().setValue(PushToken.token, forKey: PushToken.Old)
+        NSUserDefaults.standardUserDefaults().synchronize()
     }
     
     // Remove the old token
     static private func clear() {
         NSUserDefaults.standardUserDefaults().removeObjectForKey(PushToken.Old)
+        NSUserDefaults.standardUserDefaults().synchronize()
     }
     
     // A more convenient way of knowing whether the new token already exist or not. If a new token exist, it should be updated
-    static private var hasUpdatedToken: Bool {
+    static private var hasNewToken: Bool {
         if let oldToken = oldToken {
             return token == oldToken ? false : true
         }
+        // No old token, it assumes that never before has a token been set
         return true
     }
 }

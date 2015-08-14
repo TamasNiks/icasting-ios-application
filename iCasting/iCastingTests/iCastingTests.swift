@@ -66,7 +66,7 @@ class iCastingTests: XCTestCase {
     
     func testRequest() {
         
-        var params : [String:String] = ["access_token":"551d58a226042f74fb745533$aav7DtkBMnG/vBDzb5RHfIzuZY++39r1vCXrj4jxVHA="]
+        var params : [String:String] = ["accessToken":"551d58a226042f74fb745533$aav7DtkBMnG/vBDzb5RHfIzuZY++39r1vCXrj4jxVHA="]
         var type : RequestProtocol = RequestFactory.request(ICMethod.post)
         var request = type.create(Router.Auth.Logout, content: (insert: nil, params: params))
         
@@ -80,7 +80,7 @@ class iCastingTests: XCTestCase {
     
     func testRequestHeaderFields() {
         
-        var params : [String:String] = ["access_token":"placeholder_token"]
+        var params : [String:String] = ["accessToken":"placeholder_token"]
         
         var type : RequestProtocol = RequestFactory.request(ICMethod.post)
         var request = type.create(Router.Auth.Logout, content: (insert: nil, params: params))

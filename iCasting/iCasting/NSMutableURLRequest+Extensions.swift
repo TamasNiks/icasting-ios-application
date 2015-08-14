@@ -13,7 +13,13 @@ extension NSMutableURLRequest {
     func addAuthorizationHeaderField()  {
         
         if let passport = Auth.passport {
-            self.setValue("Bearer \(passport.access_token)", forHTTPHeaderField: "Authorization")
+            self.setValue("Bearer \(passport.accessToken)", forHTTPHeaderField: "Authorization")
         }
     }
+    
+    func addEmptyAuthorizationHeaderField() {
+        
+        self.setValue("", forHTTPHeaderField: "Authorization")
+    }
+    
 }

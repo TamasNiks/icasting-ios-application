@@ -8,6 +8,7 @@
 
 import Foundation
 
+// This is currently a mess
 
 protocol FieldPathProtocol {
     func getPath() -> [SubscriptType]

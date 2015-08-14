@@ -138,18 +138,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GGLInstanceIDDelegate {
         self.connectedToGCM = false
     }
 
+    
     func applicationWillEnterForeground(application: UIApplication) {
         // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
     }
+    
     
     func applicationWillResignActive(application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
     }
     
+    
     func applicationWillTerminate(application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
+    
     
     func application( application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData ) {
 
@@ -177,6 +181,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GGLInstanceIDDelegate {
         println("Registration for remote notification failed with error: \(error.localizedDescription)")
         let userInfo = ["error": error.localizedDescription]
         NSNotificationCenter.defaultCenter().postNotificationName(registrationKey, object: nil, userInfo: userInfo)
+    }
+    
+    
+    func configureAndRegisterRemoteNotifications(application: UIApplication) {
+        
+        // Register for remote notifications
+        var types: UIUserNotificationType = UIUserNotificationType.Badge |
+            UIUserNotificationType.Alert |
+            UIUserNotificationType.Sound
+        
+        var settings: UIUserNotificationSettings = UIUserNotificationSettings(forTypes: types, categories: nil)
+        
+        
+        // Users can change their notification settings at any time using the Settings app. Your app is added to the Settings app as soon as you call registerUserNotificationSettings:. Users can enable or disable notifications, as well as modify where and how notifications are presented. Because the user can change their initial setting at any time, call currentUserNotificationSettings before you do any work preparing a notification for presentation.
+        application.registerUserNotificationSettings(settings)
+        
+        application.registerForRemoteNotifications()
     }
     
     
@@ -236,24 +257,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GGLInstanceIDDelegate {
 //        println("--- User pressed an action from a local notification")
 //    }
     
-    
-    func configureAndRegisterRemoteNotifications(application: UIApplication) {
-        
-        // Register for remote notifications
-        var types: UIUserNotificationType = UIUserNotificationType.Badge |
-            UIUserNotificationType.Alert |
-            UIUserNotificationType.Sound
-        
-        var settings: UIUserNotificationSettings = UIUserNotificationSettings(forTypes: types, categories: nil)
-        
-        
-        // Users can change their notification settings at any time using the Settings app. Your app is added to the Settings app as soon as you call registerUserNotificationSettings:. Users can enable or disable notifications, as well as modify where and how notifications are presented. Because the user can change their initial setting at any time, call currentUserNotificationSettings before you do any work preparing a notification for presentation.
-        application.registerUserNotificationSettings(settings)
-        
-        application.registerForRemoteNotifications()
-    }
-    
-    
     func showBackgroundNotification(application: UIApplication, userInfo: [NSObject : AnyObject]) {
         
 //        let title = userInfo["title"] as? String
@@ -295,6 +298,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GGLInstanceIDDelegate {
             notification.notificationLabelBackgroundColor = UIColor.darkGrayColor()
             notification.notificationStyle = CWNotificationStyle.NavigationBarNotification
             notification.displayNotificationWithView(notificationView, forDuration: 10.0)
+            
             notification.notificationTappedBlock = {
                 
                 notification.dismissNotification()

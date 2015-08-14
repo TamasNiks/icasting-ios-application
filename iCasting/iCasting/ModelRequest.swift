@@ -56,7 +56,7 @@ extension User : ModelRequest {
     
     func get(callBack: RequestClosure) {
         
-        let req = Router.User.ReadUser(Auth.passport!.user_id)
+        let req = Router.User.ReadUser(Auth.passport!.userID)
         request(req).responseObject { (_, _, object: User?, error) -> Void in
             
             var errors: ICErrorInfo? = ICError(error: error).errorInfo
@@ -67,7 +67,7 @@ extension User : ModelRequest {
     
     func verifyMail(callBack: RequestClosure) {
         
-        let req = Router.User.VerifyEmailUser(Auth.passport!.user_id)
+        let req = Router.User.VerifyEmailUser(Auth.passport!.userID)
         request(req).responseJSON { (_, _, json, error) -> Void in
             var error: ICErrorInfo? = ICError(error: error).errorInfo
             if let json: AnyObject = json {
@@ -136,7 +136,7 @@ extension CastingObject : ModelRequest {
     
     func get(callBack: RequestClosure) {
         
-        let req = Router.CastingObject.ReadUserCastingObjects(Auth.passport!.user_id)
+        let req = Router.CastingObject.ReadUserCastingObjects(Auth.passport!.userID)
         request(req).responseCollection { (_, _, collection: [CastingObject]?, error) -> Void in
             
             var error: ICErrorInfo? = ICError(error: error).errorInfo

@@ -263,7 +263,7 @@ class OfferSocketDataExtractor: OfferDataExtractor {
 //        if let o = offer {
 //            
 //
-//            //String message	Object user_id	String message_id
+//            //String message	Object userID	String message_id
 //        }
 //        
 //        return nil

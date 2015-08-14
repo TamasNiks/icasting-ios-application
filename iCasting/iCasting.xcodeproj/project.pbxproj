@@ -86,6 +86,8 @@
 		224A5A771ADE8BDB00E22DE1 /* ICError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224A5A751ADE8BDB00E22DE1 /* ICError.swift */; };
 		224A5A791ADE8F3C00E22DE1 /* ICValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224A5A781ADE8F3C00E22DE1 /* ICValidator.swift */; };
 		224A5A7A1ADE8F3C00E22DE1 /* ICValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224A5A781ADE8F3C00E22DE1 /* ICValidator.swift */; };
+		224B0EDB1B7D12580090EE5B /* Contract.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224B0EDA1B7D12580090EE5B /* Contract.swift */; };
+		224B0EDC1B7D12580090EE5B /* Contract.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224B0EDA1B7D12580090EE5B /* Contract.swift */; };
 		224BF0301B2F04D300163949 /* MessageTerms.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224BF02F1B2F04D300163949 /* MessageTerms.swift */; };
 		224BF0311B2F04D300163949 /* MessageTerms.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224BF02F1B2F04D300163949 /* MessageTerms.swift */; };
 		224DE16E1B27308200A0752E /* SocketCommunicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224DE16D1B27308200A0752E /* SocketCommunicator.swift */; };
@@ -365,6 +367,7 @@
 		224A5A741ADE817300E22DE1 /* PropertiesPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = PropertiesPlayground.playground; sourceTree = "<group>"; };
 		224A5A751ADE8BDB00E22DE1 /* ICError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ICError.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		224A5A781ADE8F3C00E22DE1 /* ICValidator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ICValidator.swift; sourceTree = "<group>"; };
+		224B0EDA1B7D12580090EE5B /* Contract.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Contract.swift; sourceTree = "<group>"; };
 		224BF02F1B2F04D300163949 /* MessageTerms.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageTerms.swift; sourceTree = "<group>"; };
 		224CF7FB1AE10B720035DABF /* DataPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = DataPlayground.playground; sourceTree = "<group>"; };
 		224CF7FC1AE11B830035DABF /* SwiftSoda-HexToBinToHex.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = "SwiftSoda-HexToBinToHex.playground"; sourceTree = "<group>"; };
@@ -643,6 +646,7 @@
 				2259A61C1B7262860088622D /* MatchCardData.swift */,
 				222CBB691B0693FD00D91137 /* MatchFields.swift */,
 				2257A2E21B3DAF8000F7962E /* Job.swift */,
+				224B0EDA1B7D12580090EE5B /* Contract.swift */,
 			);
 			name = Match;
 			sourceTree = "<group>";
@@ -1385,6 +1389,7 @@
 				2256CDD41AF254FD005D40EB /* Auth.swift in Sources */,
 				22060E8E1B1EEE30000A3F2C /* SizingCellProvider.swift in Sources */,
 				2256CE1F1AF2CD17005D40EB /* ExampleCenterTableViewController.swift in Sources */,
+				224B0EDB1B7D12580090EE5B /* Contract.swift in Sources */,
 				2289C0051B03968600A7307C /* FamilyTableViewController.swift in Sources */,
 				2257A2E61B41897800F7962E /* PushNotificationDevice.swift in Sources */,
 				222CBB6A1B0693FD00D91137 /* MatchFields.swift in Sources */,
@@ -1514,6 +1519,7 @@
 				2252C0D41B53C0410050DF8B /* UIView+Extensions.swift in Sources */,
 				2289C0001B0373DF00A7307C /* CastingObject.swift in Sources */,
 				22528FE71AF3A7B700F550F8 /* SwiftyJSON.swift in Sources */,
+				224B0EDC1B7D12580090EE5B /* Contract.swift in Sources */,
 				228EAA831B2EF677009C4EAE /* MessageCellCongifuratorVisitors.swift in Sources */,
 				22C598CD1B2F12500008CFCD /* JSQMessagesInputToolbar.m in Sources */,
 				226680E51B62644300938C4F /* CWStatusBarNotification.m in Sources */,

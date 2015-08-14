@@ -28,7 +28,7 @@ enum MessageRole: Int {
     
     static func getRole(owner: String) -> MessageRole {
         // TODO: Get the id from a casting object
-        return (Auth.passport!.user_id == owner) ? MessageRole.Outgoing : MessageRole.Incomming
+        return (Auth.passport!.userID == owner) ? MessageRole.Outgoing : MessageRole.Incomming
     }
 }
 

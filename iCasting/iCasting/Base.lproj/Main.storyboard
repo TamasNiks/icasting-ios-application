@@ -1431,7 +1431,7 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Job overview" id="0i5-Nb-Vzi">
-                        <barButtonItem key="leftBarButtonItem" systemItem="stop" id="fVD-5U-gkX">
+                        <barButtonItem key="rightBarButtonItem" systemItem="stop" id="fVD-5U-gkX">
                             <connections>
                                 <action selector="onDoneTapped:" destination="dYb-VD-63S" id="fnR-u0-p2V"/>
                             </connections>
@@ -2115,7 +2115,7 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Notifications" id="EaP-dn-F0n">
-                        <barButtonItem key="leftBarButtonItem" systemItem="stop" id="0M7-BN-E68">
+                        <barButtonItem key="rightBarButtonItem" systemItem="stop" id="0M7-BN-E68">
                             <connections>
                                 <action selector="onStopTapped:" destination="4Aw-SL-Sdl" id="DTZ-QV-BYA"/>
                             </connections>

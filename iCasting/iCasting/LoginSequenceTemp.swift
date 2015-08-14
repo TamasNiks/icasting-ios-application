@@ -19,7 +19,7 @@
             // Because the user is still loged in, we give don't send credentials as parameters
             startLoginSequence(nil)
         }
-        // If the user doesn't have an passport authentication stored, check if Facebook is still logged in, if it is, logout, because the try to login depends totally on the access_token and user_id of iCasting. If it isn't there, the user should login manually, hence logout on facebook
+        // If the user doesn't have an passport authentication stored, check if Facebook is still logged in, if it is, logout, because the try to login depends totally on the accessToken and userID of iCasting. If it isn't there, the user should login manually, hence logout on facebook
         else {
             if let fbsdkCurrentAccessToken = FBSDKAccessToken.currentAccessToken() {
                 FBSDKLoginManager().logOut()

@@ -112,8 +112,8 @@ enum Router {
     enum Auth: EndpointProtocol {
         
         case
-        Login,
-        LoginFacebook,
+        Login([String : AnyObject]),
+        LoginFacebook([String : AnyObject]),
         LoginTwitter,
         LoginGoogle,
         Logout
@@ -138,10 +138,10 @@ enum Router {
             switch self {
             case
             .Login,
+            .LoginFacebook,
             .Logout:
                 return .POST
             case
-            .LoginFacebook,
             .LoginTwitter,
             .LoginGoogle:
                 return .GET
@@ -155,12 +155,27 @@ enum Router {
             let mutableURLRequest = NSMutableURLRequest(URL: self.url as! NSURL)
             mutableURLRequest.HTTPMethod = self.method.rawValue
             
-            if self == Auth.Logout {
-                mutableURLRequest.setValue("", forHTTPHeaderField: "Authorization")
+            switch self {
+            case .Logout:
+                mutableURLRequest.addEmptyAuthorizationHeaderField()
+            default:
+                mutableURLRequest.addAuthorizationHeaderField()
             }
             
-            mutableURLRequest.addAuthorizationHeaderField()
-            return mutableURLRequest
+            return addParameters(mutableURLRequest)
+        }
+        
+        private func addParameters(URLRequest: NSURLRequest) -> NSURLRequest {
+            
+            let encoding = ParameterEncoding.JSON
+            switch self {
+            case .Login(let parameters):
+                return encoding.encode(URLRequest, parameters: parameters).0
+            case .LoginFacebook(let parameters):
+                return encoding.encode(URLRequest, parameters: parameters).0
+            default:
+                return URLRequest
+            }
         }
     }
     
@@ -203,7 +218,6 @@ enum Router {
 
             let mutableURLRequest = NSMutableURLRequest(URL: self.url as! NSURL)
             mutableURLRequest.HTTPMethod = self.method.rawValue
-            //mutableURLRequest.addAuthorizationHeaderField()
             return mutableURLRequest
         }
     }
